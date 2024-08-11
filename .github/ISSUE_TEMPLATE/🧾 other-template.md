@@ -1,5 +1,5 @@
 ---
-name: "🧾Other Template"
+name: "🧾 Other Template"
 about: 네 가지 상황 이외의 이슈 템플릿입니다.
 title: "[Type] 작업 내용"
 labels: ""
