@@ -1,6 +1,6 @@
 ---
 name: "\U0001F3A8Other Template"
-about: 세 가지 상황 이외의 이슈 템플릿입니다.
+about: UI 및 CSS 관련 작업 시 사용하는 템플릿입니다.
 title: "[Design] 작업 내용"
 labels: design
 assignees: ""
