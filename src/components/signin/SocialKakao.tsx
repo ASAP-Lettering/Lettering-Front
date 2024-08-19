@@ -14,7 +14,7 @@ const SocialKakao = () => {
   return (
     <SocialLoginBox onClick={handleLogin}>
       <StyledImage
-        src="/assets/main/kakao_social.svg"
+        src="/assets/login/mobile_btn_login.svg"
         width={440}
         height={48}
         alt="kakao"
