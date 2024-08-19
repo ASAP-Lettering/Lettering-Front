@@ -27,12 +27,12 @@ export default SocialKakao;
 
 const SocialLoginBox = styled.div`
   width: 100%;
-  height: 48px;
+  height: 100%;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 2rem;
 `;
 
 const StyledImage = styled(Image)`

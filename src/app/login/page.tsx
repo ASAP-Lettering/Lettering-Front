@@ -13,8 +13,11 @@ export default function Login() {
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   min-height: 100%;
   padding: 20px;
+  flex-direction: column-reverse;
+  background-image: url('/assets/login/background_login.svg'); 
+  background-size: 100% auto; 
+  background-position: center;
+  background-repeat: no-repeat;
 `;
