@@ -6,7 +6,7 @@ type buttonType = "primary" | "secondary";
 type sizeType = "small" | "medium" | "large";
 
 interface ButtonProps {
-  buttonType?: buttonType;
+  buttonType: buttonType;
   size?: sizeType;
   width?: string;
   text: string;
@@ -15,16 +15,19 @@ interface ButtonProps {
 }
 
 const Button = (props: ButtonProps) => {
-  const { buttonType, size = "large", width, text, onClick, disabled } = props;
-
-  let buttonClassName = buttonType;
-  if (size) {
-    buttonClassName += " ${size}";
-  }
+  const {
+    buttonType = "primary",
+    size = "large",
+    width,
+    text,
+    onClick,
+    disabled,
+  } = props;
 
   return (
     <StyledButton
-      className={buttonType}
+      buttonType={buttonType}
+      size={size}
       onClick={onClick}
       disabled={disabled}
       width={width}
@@ -36,16 +39,21 @@ const Button = (props: ButtonProps) => {
 
 export default Button;
 
-const StyledButton = styled.button<{ width?: string }>`
+const StyledButton = styled.button<{
+  buttonType: buttonType;
+  size: sizeType;
+  width?: string;
+}>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ width }) => width || "100%"};
+  width: ${({ width, size }) =>
+    width ||
+    (size === "small" ? "90px" : size === "medium" ? "243px" : "100%")};
   padding: 18px;
   border-radius: 12px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.semiBold16};
-  white-space: nowrap;
   transition: color 200ms, background-color 200ms;
 
   &:disabled {
@@ -53,38 +61,16 @@ const StyledButton = styled.button<{ width?: string }>`
   }
 
   /*buttonType*/
-  &.primary {
-    background: ${theme.colors.main01};
-    &:disabled {
-      background: ${theme.colors.gray100};
-    }
-    &:hover {
-      background: ${theme.colors.sub01};
-    }
-    &:active {
-      background: ${theme.colors.sub01};
-    }
+  background-color: ${({ buttonType }) =>
+    buttonType === "primary" ? theme.colors.main01 : theme.colors.gray500};
+
+  &:hover {
+    background-color: ${({ buttonType }) =>
+      buttonType === "primary" ? theme.colors.sub01 : theme.colors.gray700};
   }
 
-  &.secondary {
-    background: ${theme.colors.gray500};
-    &:disabled {
-      background: ${theme.colors.gray100};
-    }
-    &:hover {
-      background: ${theme.colors.gray700};
-    }
-    &:active {
-      background: ${theme.colors.gray700};
-    }
-  }
-
-  /*size*/
-  &.medium {
-    width: ${({ width }) => width || "243px"};
-  }
-
-  &.small {
-    width: ${({ width }) => width || "243px"};
+  &:active {
+    background-color: ${({ buttonType }) =>
+      buttonType === "primary" ? theme.colors.sub01 : theme.colors.gray700};
   }
 `;
