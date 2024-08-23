@@ -39,6 +39,7 @@ const GuidePage = () => {
         text="Secondary Medium Button"
       />
       <Button buttonType="secondary" size="small" text="Button" />
+      <Button buttonType="secondary" size="default" text="Button" />
       <br />
       <h3>Check</h3>
       <Check

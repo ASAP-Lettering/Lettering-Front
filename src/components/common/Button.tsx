@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 
 type buttonType = "primary" | "secondary";
-type sizeType = "small" | "medium" | "large";
+type sizeType = "small" | "medium" | "large" | "default";
 
 interface ButtonProps {
   buttonType: buttonType;
@@ -49,12 +49,24 @@ const StyledButton = styled.button<{
   align-items: center;
   width: ${({ width, size }) =>
     width ||
-    (size === "small" ? "90px" : size === "medium" ? "243px" : "100%")};
+    (size === "small"
+      ? "128px"
+      : size === "medium"
+      ? "243px"
+      : size === "default"
+      ? "90px"
+      : "100%")};
   padding: 18px;
   border-radius: 12px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.semiBold16};
-  transition: color 200ms, background-color 200ms;
+  transition: color 200ms, opacity 300ms;
+
+  ${({ size }) =>
+    size === "small" &&
+    css`
+      height: 44px;
+    `}
 
   &:disabled {
     background: ${theme.colors.gray100};
@@ -64,13 +76,8 @@ const StyledButton = styled.button<{
   background-color: ${({ buttonType }) =>
     buttonType === "primary" ? theme.colors.main01 : theme.colors.gray500};
 
-  &:hover {
-    background-color: ${({ buttonType }) =>
-      buttonType === "primary" ? theme.colors.sub01 : theme.colors.gray700};
-  }
-
   &:active {
-    background-color: ${({ buttonType }) =>
-      buttonType === "primary" ? theme.colors.sub01 : theme.colors.gray700};
+    opacity: 0.8;
+    transition: opacity 500ms;
   }
 `;
