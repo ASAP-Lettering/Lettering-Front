@@ -2,7 +2,9 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
+import GuideText from "@/components/common/GuideText";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -90,6 +92,16 @@ const GuidePage = () => {
         text="Show Toast"
         onClick={handleShowToast}
       />
+      <br />
+      <h3>GuideText</h3>
+      <GuideText text="클릭하면 편지 내용을 확인할 수 있어요!" />
+      <br />
+      <h3>Tag</h3>
+      <Tag tagType="orbit" read={false} name="Orbit" />
+      <Tag tagType="orbit" read={true} name="Orbit" />
+      <Tag tagType="planet" name="Planet" icon="chevron" />
+      <Tag tagType="planet" name="Planet" icon="edit" />
+      <Tag tagType="letter" name="Letter" />
     </Container>
   );
 };
