@@ -2,6 +2,7 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
+import NavigatorBar from "@/components/common/NavigatorBar";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -26,7 +27,7 @@ const GuidePage = () => {
       <h3>Button</h3>
       <Button buttonType="primary" size="large" text="Primary Large Button" />
       <Button buttonType="primary" size="medium" text="Primary Medium Button" />
-      <Button buttonType="primary" size="small" text="Primary Small Button" />
+      <Button buttonType="primary" size="small" text="Button" />
       <Button
         buttonType="secondary"
         size="large"
@@ -35,13 +36,9 @@ const GuidePage = () => {
       <Button
         buttonType="secondary"
         size="medium"
-        text="Ssecondary Medium Button"
+        text="Secondary Medium Button"
       />
-      <Button
-        buttonType="secondary"
-        size="small"
-        text="Secondary Small Button"
-      />
+      <Button buttonType="secondary" size="small" text="Button" />
       <br />
       <h3>Check</h3>
       <Check
@@ -53,7 +50,7 @@ const GuidePage = () => {
         <SpaceBetween>
           <Gray>(필수)</Gray>
           <Image
-            src="/assets/icons/ic_arrow_right.svg"
+            src="/assets/icons/ic_chevron_right.svg"
             width={24}
             height={24}
             alt="arrow"
@@ -66,6 +63,10 @@ const GuidePage = () => {
         checked={isCheckedBox}
         onChange={handleBoxChange}
       />
+      <br />
+      <h3>NavigatorBar</h3>
+      <NavigatorBar cancel={false} />
+      <NavigatorBar title="NavigatorBar" cancel={true} />
     </Container>
   );
 };
