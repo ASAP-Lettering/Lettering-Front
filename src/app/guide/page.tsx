@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import GuideText from "@/components/common/GuideText";
+import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
@@ -23,6 +24,10 @@ const GuidePage = () => {
   const handleBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCheckedBox(e.target.checked);
   };
+
+  /* Input */
+  const [text, setText] = useState("");
+  const [textarea, setTextarea] = useState("");
 
   /* Toast */
   const [showToast, setShowToast] = useState(false);
@@ -77,6 +82,33 @@ const GuidePage = () => {
         label="Box Checkbox"
         checked={isCheckedBox}
         onChange={handleBoxChange}
+      />
+      <br />
+      <h3>Input</h3>
+      <Input
+        inputType="underline"
+        value={text}
+        onChange={setText}
+        placeholder="Underline Input"
+      />
+      <Input
+        inputType="boxText"
+        value={text}
+        onChange={setText}
+        placeholder="BoxText Input"
+      />
+      <Input
+        inputType="boxTextArea"
+        value={textarea}
+        onChange={setTextarea}
+        placeholder="BoxTexarea Input"
+      />
+      <Input
+        inputType="boxTextArea"
+        value={textarea}
+        onChange={setTextarea}
+        placeholder="BoxTexarea Input (height=150px)"
+        height="150px"
       />
       <br />
       <h3>NavigatorBar</h3>

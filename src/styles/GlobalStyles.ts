@@ -42,6 +42,12 @@ button {
   background: transparent;
 }
 
+input, textarea {
+  border: none;
+  outline: none;
+  resize: none;
+}
+
 @font-face {
     font-family: "Pretendard";
     src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 

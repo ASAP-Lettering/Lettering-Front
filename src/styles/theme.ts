@@ -34,6 +34,7 @@ const FONT = ({ weight, size }: Font): string => {
     font-weight : ${weight};
     font-size : ${size}px;
     line-height : ${size * 1.5}px;
+    letter-spacing: -0.42px;
     `;
 };
 
@@ -133,6 +134,10 @@ const fonts = {
   }),
 
   /*Medium*/
+  medium24: FONT({
+      weight: 500,
+      size: 24,
+  }),
   medium16: FONT({
       weight: 500,
       size: 16,
