@@ -3,12 +3,14 @@
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import Toast from "@/components/common/Toast";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
 import styled from "styled-components";
 
 const GuidePage = () => {
+  /* Check */
   const [isCheckedDefault, setIsCheckedDefault] = useState(false);
   const [isCheckedBox, setIsCheckedBox] = useState(false);
 
@@ -18,6 +20,16 @@ const GuidePage = () => {
 
   const handleBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCheckedBox(e.target.checked);
+  };
+
+  /* Toast */
+  const [showToast, setShowToast] = useState(false);
+
+  const handleShowToast = () => {
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
@@ -68,6 +80,16 @@ const GuidePage = () => {
       <h3>NavigatorBar</h3>
       <NavigatorBar cancel={false} />
       <NavigatorBar title="NavigatorBar" cancel={true} />
+      <br />
+      <h3>Toast</h3>
+      {showToast && <Toast text="Toast Msg" icon={false} />}
+      {showToast && <Toast text="Toast Msg" icon={true} />}
+      <Button
+        buttonType="secondary"
+        size="small"
+        text="Show Toast"
+        onClick={handleShowToast}
+      />
     </Container>
   );
 };
@@ -79,6 +101,7 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
   gap: 10px;
   padding: 20px;
   background-color: ${theme.colors.bg};
