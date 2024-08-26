@@ -1,6 +1,6 @@
 "use client";
 
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, keyframes } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`    
 * {
@@ -12,7 +12,7 @@ const GlobalStyles = createGlobalStyle`
 html {
   width: 100%;
   height: 100%;
-  max-width: 480px;
+  max-width: 393px;
   margin: 0 auto;
   box-shadow: 0px 0px 64px 0px rgba(30, 41, 59, 0.1);
 }
@@ -20,7 +20,7 @@ html {
 body {
   width: 100%;
   height: 100%;
-  max-width: 480px;
+  max-width: 393px;
   font-family: "Pretendard";
   white-space: pre-line;
 }
@@ -42,10 +42,33 @@ button {
   background: transparent;
 }
 
+input, textarea {
+  border: none;
+  outline: none;
+  resize: none;
+}
 
 @font-face {
     font-family: "Pretendard";
     src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+  }
+`;
+
+export const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+export const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 `;
 

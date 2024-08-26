@@ -1,8 +1,26 @@
 import { DefaultTheme } from "styled-components";
 
 const colors = {
-  white: "#FFFFFF",
-  black: "#000000",
+    main01: "#424DA0",
+    sub01: "#2C3361",
+    sub02: "#565C81",
+    sub03: "#424DA0",
+
+    gray900: "#FBFBFD",
+    gray800: "#202232",
+    gray700: "#2E3040",
+    gray600: "#3E4151",
+    gray500: "#5B5F70",
+    gray400: "#818491",
+    gray300: "#9FA1AC",
+    gray200: "#BEC0C8",
+    gray100: "#D5D7DE",
+    gray50: "#F7F8F9",
+    
+    bg: "#060812",
+    white: "#FFFFFF",
+
+
 } as const;
 
 interface Font {
@@ -16,10 +34,37 @@ const FONT = ({ weight, size }: Font): string => {
     font-weight : ${weight};
     font-size : ${size}px;
     line-height : ${size * 1.5}px;
+    letter-spacing: -0.42px;
     `;
 };
 
 const fonts = {
+    /* Design System */
+    heading01: FONT({
+        weight: 600,
+        size: 24,
+    }),
+    heading02: FONT({
+        weight: 400,
+        size: 24,
+    }),
+    title01: FONT({
+        weight: 600,
+        size: 20,
+    }),
+    title02: FONT({
+        weight: 600,
+        size: 18,
+    }),
+    subtitle: FONT({
+        weight: 600,
+        size: 16,
+    }),
+    body01: FONT({
+        weight: 500,
+        size: 24,
+    }),
+
   /*Bold*/
   bold45: FONT({
       weight: 700,
@@ -89,6 +134,10 @@ const fonts = {
   }),
 
   /*Medium*/
+  medium24: FONT({
+      weight: 500,
+      size: 24,
+  }),
   medium16: FONT({
       weight: 500,
       size: 16,
