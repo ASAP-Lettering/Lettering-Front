@@ -1,9 +1,10 @@
 "use client";
 
+import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 
 export default function Signin() {
-  return <Container>회원가입</Container>;
+  return <Container></Container>;
 }
 
 const Container = styled.div`

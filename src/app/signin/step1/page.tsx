@@ -5,6 +5,7 @@ import Check from "@/components/common/Check";
 import { useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import NavigatorBar from "@/components/common/NavigatorBar";
 
 export default function Signin() {
   const [isAllChecked, setIsAllChecked] = useState(false);
@@ -32,56 +33,56 @@ export default function Signin() {
 
   return (
     <Container>
-      <MainWrapper>
-        <PrevBtn>
-          <img src="/assets/icons/ic_prev.svg"></img>
-        </PrevBtn>
-        <HeaderTitle>
-          레터링을 이용하려면
-          <br /> 약관 동의가 필요해요
-        </HeaderTitle>
-        <Content>
-          <AllContainer>
-            <Check
-              checkType="box"
-              checked={isAllChecked}
-              onChange={handleAllCheckChange}
-              label="약관 전체 동의"
-              sublabel="(선택사항 포함)"
-            />
-          </AllContainer>
-          <SubContainer>
-            <Check
-              checkType="default"
-              checked={isSerivceChecked}
-              onChange={handleServiceCheckChange}
-              label="서비스 이용 약관"
-              sublabel="(필수)"
-            />
-            <img src="/assets/icons/ic_next.svg"></img>
-          </SubContainer>
-          <SubContainer>
-            <Check
-              checkType="default"
-              checked={isPersonalChecked}
-              onChange={handlePersonalChange}
-              label="개인정보 수집 및 이용 동의"
-              sublabel="(필수)"
-            />
-            <img src="/assets/icons/ic_next.svg"></img>
-          </SubContainer>
-          <SubContainer>
-            <Check
-              checkType="default"
-              checked={isMarketingChecked}
-              onChange={handleMarketingChange}
-              label="마케팅 수신 동의"
-              sublabel="(선택)"
-            />
-            <img src="/assets/icons/ic_next.svg"></img>
-          </SubContainer>
-        </Content>
-      </MainWrapper>
+      <div>
+        <NavigatorBar cancel={false} />
+        <MainWrapper>
+          <HeaderTitle>
+            레터링을 이용하려면
+            <br /> 약관 동의가 필요해요
+          </HeaderTitle>
+          <Content>
+            <AllContainer>
+              <Check
+                checkType="box"
+                checked={isAllChecked}
+                onChange={handleAllCheckChange}
+                label="약관 전체 동의"
+                sublabel="(선택사항 포함)"
+              />
+            </AllContainer>
+            <SubContainer>
+              <Check
+                checkType="default"
+                checked={isSerivceChecked}
+                onChange={handleServiceCheckChange}
+                label="서비스 이용 약관"
+                sublabel="(필수)"
+              />
+              <img src="/assets/icons/ic_next.svg"></img>
+            </SubContainer>
+            <SubContainer>
+              <Check
+                checkType="default"
+                checked={isPersonalChecked}
+                onChange={handlePersonalChange}
+                label="개인정보 수집 및 이용 동의"
+                sublabel="(필수)"
+              />
+              <img src="/assets/icons/ic_next.svg"></img>
+            </SubContainer>
+            <SubContainer>
+              <Check
+                checkType="default"
+                checked={isMarketingChecked}
+                onChange={handleMarketingChange}
+                label="마케팅 수신 동의"
+                sublabel="(선택)"
+              />
+              <img src="/assets/icons/ic_next.svg"></img>
+            </SubContainer>
+          </Content>
+        </MainWrapper>
+      </div>
       <Button
         buttonType="primary"
         text="다음"
@@ -99,29 +100,25 @@ const Container = styled.div`
     color: white;
     background:${(props) => props.theme.colors.bg};
     padding: 25px;
+    padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
     display: flex;
     flex-direction: column;
-`;
-
-const PrevBtn = styled.button`
-    width: 10px;
-    height: auto;
+    margin-top: 2.5rem;
 `;
 
 const HeaderTitle = styled.div`
     width: 100%;
     ${(props) => props.theme.fonts.heading01};
     padding: 10px;
-    margin-top: 2.5rem;
 `;
 
 const Content = styled.div`
     display: flex;
     flex-direction: column;
-    margin-top: 10rem;
+    margin-top: 6rem;
 `;
 
 const AllContainer = styled.div`
