@@ -2,37 +2,29 @@
 
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import styled from "styled-components";
 
 export default function Signin() {
   const router = useRouter();
-  const url = "code123923424";
-  //const url = null;
 
   const handleButtonClick = () => {
-    if (url) {
-      router.push(`/signin/url?${url}`);
-    } else {
-      router.push(`/signin/complete`);
-    }
+    router.push("/login");
   };
   return (
     <Container>
       <MainWrapper>
-        <NavigatorBar
-          cancel={false}
-          nextlabel={true}
-          nextClick={handleButtonClick}
-        />
+        <NavigatorBar cancel={false} />
         <Header>
-          <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
-          <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
+          <HeaderTitle>본인 인증이 완료되었어요</HeaderTitle>
+          <HeaderSubTitle>
+            받은 편지 속, 소중한 마음을 읽고 저장해볼까요?
+          </HeaderSubTitle>
         </Header>
       </MainWrapper>
       <Button
         buttonType="primary"
-        text="다음"
+        text="편지 바로 열기"
         onClick={handleButtonClick}
       ></Button>
     </Container>
@@ -45,9 +37,13 @@ const Container = styled.div`
     justify-content: space-between;
     min-height: 100%;
     color: white;
-    background:${(props) => props.theme.colors.bg};
     padding: 25px;
     padding-bottom: 40px;
+    background:${(props) => props.theme.colors.bg};
+    background-image: url('/assets/signin/bg_verify_complete.svg'); 
+    background-size: 550px auto; 
+    background-position: bottom 80px center;
+    background-repeat: no-repeat;
 `;
 
 const MainWrapper = styled.div`
