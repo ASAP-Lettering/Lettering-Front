@@ -3,16 +3,18 @@
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useState } from "react";
 
 export default function Signin() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push(`/signin/url/complete`);
+    router.push(`/verify/complete?url=${url}`);
   };
 
   return (

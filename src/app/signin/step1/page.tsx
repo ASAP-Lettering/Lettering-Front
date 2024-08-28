@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import { useState } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import NavigatorBar from "@/components/common/NavigatorBar";
 
 export default function Signin() {
@@ -13,9 +13,15 @@ export default function Signin() {
   const [isPersonalChecked, setIsPersonalChecked] = useState(false);
   const [isMarketingChecked, setIsMarketingChecked] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push("/signin/step2");
+    if (url) {
+      router.push(`/signin/step2?url=${url}`);
+    } else {
+      router.push("/signin/step2");
+    }
   };
 
   type SetCheckedFunction = React.Dispatch<React.SetStateAction<boolean>>;

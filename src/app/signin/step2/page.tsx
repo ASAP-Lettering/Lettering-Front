@@ -3,16 +3,16 @@
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Signin() {
   const router = useRouter();
-  const url = "code123923424";
-  //const url = null;
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
     if (url) {
-      router.push(`/signin/url?${url}`);
+      router.push(`/signin/complete?url=${url}`);
     } else {
       router.push(`/signin/complete`);
     }
