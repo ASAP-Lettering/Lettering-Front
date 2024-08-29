@@ -4,11 +4,11 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
-type iconType = "chevron" | "edit";
+type iconType = "chevron" | "edit" | "plus";
 
 interface TagProps {
   tagType: tagType;
-  name: string;
+  name?: string;
   read?: boolean;
   icon?: iconType;
 }
@@ -21,12 +21,14 @@ const Tag = (props: TagProps) => {
       return "/assets/icons/ic_chevron_right.svg";
     } else if (icon === "edit") {
       return "/assets/icons/ic_edit.svg";
+    } else if (icon === "plus") {
+      return "/assets/icons/ic_plus.svg";
     }
     return "";
   };
 
   return (
-    <Box $tagType={tagType} $hasEditIcon={icon === "edit"}>
+    <Box $tagType={tagType} $hasName={!!name} $hasEditIcon={icon === "edit"}>
       {name}
       {tagType === "orbit" && !read && <Circle />}
       {tagType === "planet" && (
@@ -38,13 +40,18 @@ const Tag = (props: TagProps) => {
 
 export default Tag;
 
-const Box = styled.button<{ $tagType: tagType; $hasEditIcon?: boolean }>`
+const Box = styled.button<{
+  $tagType: tagType;
+  $hasName?: boolean;
+  $hasEditIcon?: boolean;
+}>`
   width: fit-content;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border-radius: 100px;
   color: ${theme.colors.white};
+  white-space: nowrap;
 
   ${({ $tagType }) =>
     $tagType === "orbit" &&
@@ -57,7 +64,7 @@ const Box = styled.button<{ $tagType: tagType; $hasEditIcon?: boolean }>`
       ${(props) => props.theme.fonts.regular14};
     `}
 
-  ${({ $tagType, $hasEditIcon }) =>
+  ${({ $tagType, $hasName, $hasEditIcon }) =>
     $tagType === "planet" &&
     css`
       height: 37px;
@@ -68,7 +75,17 @@ const Box = styled.button<{ $tagType: tagType; $hasEditIcon?: boolean }>`
       display: flex;
       ${$hasEditIcon &&
       css`
+        height: 47px;
+        padding: 9px 18px;
+        border-radius: 200px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(2px);
+        ${(props) => props.theme.fonts.title01};
         gap: 4px;
+      `}
+      ${$hasName === false &&
+      css`
+        padding: 7.5px 13px 7.5px 13px;
       `}
     `}
   
