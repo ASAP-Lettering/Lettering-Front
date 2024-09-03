@@ -1,6 +1,7 @@
 "use client";
 
 import SocialKakao from "@/components/signin/SocialKakao";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 export default function Login() {

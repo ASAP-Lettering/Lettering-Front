@@ -1,10 +1,9 @@
 import { RegisterDataType } from "@/types/user";
 import { atom } from "recoil";
 
-export const userInfo = atom<RegisterDataType>({
+export const userInfo = atom({
   key: "RegisterUser",
   default: {
-    registerToken: "",
     servicePermission: false,
     privatePermission: false,
     marketingPermission: false,

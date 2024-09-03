@@ -12,7 +12,8 @@ const Auth = () => {
   const router = useRouter();
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const REDIRECT_URL = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  const storeUrl = localStorage.getItem("letter_url");
+  const storeUrl =
+    typeof window !== "undefined" ? localStorage.getItem("letter_url") : null;
 
   useEffect(() => {
     const getToken = async () => {
@@ -39,17 +40,8 @@ const Auth = () => {
         const kakao_accessToken = response.data.access_token;
         console.log(kakao_accessToken);
         if (kakao_accessToken) {
-          login("kakao", kakao_accessToken).then((res) => {
-            if (res.data.registerToken) {
-              console.log("registerToken", res.data.registerToken);
-              setRegisterToken(res.data.registerToken);
-              if (storeUrl) {
-                router.push(`/signin/step1?url=${storeUrl}`);
-                localStorage.removeItem("letter_url");
-              } else {
-                router.push("/signin/step1");
-              }
-            } else {
+          login("KAKAO", kakao_accessToken)
+            .then((res) => {
               console.log("accessToken", res.data.accessToken);
               localStorage.setItem("lettering_access", res.data.accessToken);
               localStorage.setItem("lettering_refresh", res.data.refreshToken);
@@ -59,8 +51,19 @@ const Auth = () => {
               } else {
                 router.push("/");
               }
-            }
-          });
+            })
+            .catch((error) => {
+              if (error.response && error.response.status === 401) {
+                console.log("registerToken", error.response.data.registerToken);
+                setRegisterToken(error.response.data.registerToken);
+                if (storeUrl) {
+                  router.push(`/signin/step1?url=${storeUrl}`);
+                  localStorage.removeItem("letter_url");
+                } else {
+                  router.push("/signin/step1");
+                }
+              }
+            });
         }
       } catch (error) {
         console.error(error);

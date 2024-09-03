@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = process.env.NEXT_BASE_URL;
 const client = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "https://api.lettering.world",
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",

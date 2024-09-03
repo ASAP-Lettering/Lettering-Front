@@ -2,12 +2,15 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { signinState, userInfo } from "@/recoil/signinStore";
+import { useRecoilState } from "recoil";
 
 export default function Signin() {
+  const [user, setUser] = useRecoilState(userInfo);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isSerivceChecked, setIsServiceChecked] = useState(false);
   const [isPersonalChecked, setIsPersonalChecked] = useState(false);
@@ -22,20 +25,67 @@ export default function Signin() {
     } else {
       router.push("/signin/step2");
     }
+
+    setUser({
+      ...user,
+      marketingPermission: isMarketingChecked,
+      servicePermission: isSerivceChecked,
+      privatePermission: isPersonalChecked,
+    });
   };
 
-  type SetCheckedFunction = React.Dispatch<React.SetStateAction<boolean>>;
+  const handleCheckChange = (type: string) => {
+    switch (type) {
+      case "all":
+        const newAllChecked = !isAllChecked;
+        setIsAllChecked(newAllChecked);
+        setIsServiceChecked(newAllChecked);
+        setIsPersonalChecked(newAllChecked);
+        setIsMarketingChecked(newAllChecked);
+        break;
+      case "service":
+        const newServiceChecked = !isSerivceChecked;
+        setIsServiceChecked(newServiceChecked);
+        updateAllChecked(
+          newServiceChecked,
+          isPersonalChecked,
+          isMarketingChecked
+        );
+        break;
+      case "personal":
+        const newPersonalChecked = !isPersonalChecked;
+        setIsPersonalChecked(newPersonalChecked);
+        updateAllChecked(
+          isSerivceChecked,
+          newPersonalChecked,
+          isMarketingChecked
+        );
+        break;
+      case "marketing":
+        const newMarketingChecked = !isMarketingChecked;
+        setIsMarketingChecked(newMarketingChecked);
+        updateAllChecked(
+          isSerivceChecked,
+          isPersonalChecked,
+          newMarketingChecked
+        );
+        break;
+      default:
+        break;
+    }
+  };
 
-  const handleCheckChange =
-    (setter: SetCheckedFunction) =>
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setter(e.target.checked);
-    };
-
-  const handleAllCheckChange = handleCheckChange(setIsAllChecked);
-  const handleServiceCheckChange = handleCheckChange(setIsServiceChecked);
-  const handlePersonalChange = handleCheckChange(setIsPersonalChecked);
-  const handleMarketingChange = handleCheckChange(setIsMarketingChecked);
+  const updateAllChecked = (
+    service: boolean,
+    personal: boolean,
+    marketing: boolean
+  ) => {
+    if (service && personal && marketing) {
+      setIsAllChecked(true);
+    } else {
+      setIsAllChecked(false);
+    }
+  };
 
   return (
     <Container>
@@ -51,7 +101,7 @@ export default function Signin() {
               <Check
                 checkType="box"
                 checked={isAllChecked}
-                onChange={handleAllCheckChange}
+                onChange={() => handleCheckChange("all")}
                 label="약관 전체 동의"
                 sublabel="(선택사항 포함)"
               />
@@ -60,7 +110,7 @@ export default function Signin() {
               <Check
                 checkType="default"
                 checked={isSerivceChecked}
-                onChange={handleServiceCheckChange}
+                onChange={() => handleCheckChange("service")}
                 label="서비스 이용 약관"
                 sublabel="(필수)"
               />
@@ -70,7 +120,7 @@ export default function Signin() {
               <Check
                 checkType="default"
                 checked={isPersonalChecked}
-                onChange={handlePersonalChange}
+                onChange={() => handleCheckChange("personal")}
                 label="개인정보 수집 및 이용 동의"
                 sublabel="(필수)"
               />
@@ -80,7 +130,7 @@ export default function Signin() {
               <Check
                 checkType="default"
                 checked={isMarketingChecked}
-                onChange={handleMarketingChange}
+                onChange={() => handleCheckChange("marketing")}
                 label="마케팅 수신 동의"
                 sublabel="(선택)"
               />

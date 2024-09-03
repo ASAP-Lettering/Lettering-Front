@@ -34,10 +34,12 @@ export default ScrollPicker;
 const ScrollContainer = styled.div`
   overflow-y: scroll;
   height: 200px;
+  color: white;
 `;
 
 const ScrollItem = styled.div<{ selected: boolean }>`
   display: flex;
+  color: white;
   justify-content: center;
   align-items: center;
   height: 40px;
