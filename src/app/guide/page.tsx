@@ -133,6 +133,7 @@ const GuidePage = () => {
       <Tag tagType="orbit" read={true} name="Orbit" />
       <Tag tagType="planet" name="Planet" icon="chevron" />
       <Tag tagType="planet" name="Planet" icon="edit" />
+      <Tag tagType="planet" name="" icon="plus" />
       <Tag tagType="letter" name="Letter" />
     </Container>
   );

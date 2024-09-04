@@ -59,7 +59,7 @@ const StyledButton = styled.button<{
   padding: 18px;
   border-radius: 12px;
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.semiBold16};
+  ${(props) => props.theme.fonts.button01};
   transition: color 200ms, opacity 300ms;
 
   ${({ $size }) =>

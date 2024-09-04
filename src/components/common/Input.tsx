@@ -71,7 +71,7 @@ const Container = styled.div`
 
 const Label = styled.label`
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.semiBold16};
+  ${(props) => props.theme.fonts.button01};
 `;
 
 const sharedStyles = `
@@ -82,11 +82,11 @@ const sharedStyles = `
   border-radius: 8px;
   background: ${theme.colors.gray800};
   color: ${theme.colors.white};
-  ${(props: any) => props.theme.fonts.medium14};
+  ${(props: any) => props.theme.fonts.body08};
 
   &::placeholder {
     color: ${theme.colors.gray500};
-    ${(props: any) => props.theme.fonts.regular14};
+    ${(props: any) => props.theme.fonts.body09};
   }
 
   &:disabled {
@@ -108,10 +108,10 @@ const StyledInput = styled.input<{ $inputType: inputType }>`
       border: none;
       border-bottom: 1px solid ${theme.colors.gray600};
       background: none;
-      ${(props: any) => props.theme.fonts.medium24};
+      ${(props: any) => props.theme.fonts.body01};
 
       &::placeholder {
-        ${(props: any) => props.theme.fonts.medium24};
+        ${(props: any) => props.theme.fonts.body01};
       }
     `}
 `;

@@ -30,5 +30,5 @@ const Container = styled.div`
   align-items: center;
   gap: 4px;
   color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.body09};
 `;

@@ -61,7 +61,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.semibold16};
+  ${(props) => props.theme.fonts.button01};
   margin-bottom: 8px;
 `;
 
@@ -82,7 +82,7 @@ const Orbits = styled.div`
 
 const NoOrbit = styled.div`
   color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.caption02};
 `;
 
 const Divider = styled.div`

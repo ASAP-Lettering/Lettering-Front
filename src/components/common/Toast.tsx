@@ -62,7 +62,7 @@ const Container = styled.div<{
   top: ${({ $top }) => $top};
   left: ${({ $left }) => $left};
   transform: translateX(-50%);
-  ${(props) => props.theme.fonts.medium14};
+  ${(props) => props.theme.fonts.body08};
   animation: ${(props) =>
     props.$visible
       ? css`

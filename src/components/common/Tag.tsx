@@ -11,10 +11,11 @@ interface TagProps {
   name?: string;
   read?: boolean;
   icon?: iconType;
+  onClick?: () => void;
 }
 
 const Tag = (props: TagProps) => {
-  const { tagType, name, read, icon } = props;
+  const { tagType, name, read, icon, onClick } = props;
 
   const renderIcon = () => {
     if (icon === "chevron") {
@@ -28,7 +29,12 @@ const Tag = (props: TagProps) => {
   };
 
   return (
-    <Box $tagType={tagType} $hasName={!!name} $hasEditIcon={icon === "edit"}>
+    <Box
+      $tagType={tagType}
+      $hasName={!!name}
+      $hasEditIcon={icon === "edit"}
+      onClick={onClick}
+    >
       {name}
       {tagType === "orbit" && !read && <Circle />}
       {tagType === "planet" && (
@@ -61,7 +67,7 @@ const Box = styled.button<{
       border-radius: 100px;
       background: ${theme.colors.gray700};
       position: relative;
-      ${(props) => props.theme.fonts.regular14};
+      ${(props) => props.theme.fonts.body09};
     `}
 
   ${({ $tagType, $hasName, $hasEditIcon }) =>
@@ -71,7 +77,7 @@ const Box = styled.button<{
       padding: 7.5px 4px 7.5px 16px;
       border-radius: 8px;
       background: ${theme.colors.gray800};
-      ${(props) => props.theme.fonts.medium14};
+      ${(props) => props.theme.fonts.body08};
       display: flex;
       ${$hasEditIcon &&
       css`
@@ -96,7 +102,7 @@ const Box = styled.button<{
       padding: 11px 26px;
       border-radius: 100px;
       background: ${theme.colors.sub01};
-      ${(props) => props.theme.fonts.regular16};
+      ${(props) => props.theme.fonts.body07};
 
       &:active {
         background: #565c81;
