@@ -5,19 +5,35 @@ import Button from "./Button";
 import { theme } from "@/styles/theme";
 import { ORBIT_MESSAGE } from "@/constants/orbit";
 
-const Bottom = () => {
+interface BottomProps {
+  onDragStart: (orbitId: number) => void;
+  orbitMessages: typeof ORBIT_MESSAGE;
+}
+
+const Bottom = (props: BottomProps) => {
+  const { onDragStart, orbitMessages } = props;
+
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    orbitId: number
+  ) => {
+    e.dataTransfer.setData("orbitId", orbitId.toString());
+    onDragStart(orbitId);
+  };
+
   return (
     <Container>
       <Title>나의 궤도 메세지</Title>
-      {ORBIT_MESSAGE ? (
+      {orbitMessages ? (
         <Orbits>
-          {ORBIT_MESSAGE.map((item) => (
-            <Tag
+          {orbitMessages.map((item) => (
+            <div
               key={item.id}
-              tagType="orbit"
-              read={item.read}
-              name={item.name}
-            />
+              draggable
+              onDragStart={(e) => handleDragStart(e, item.id)}
+            >
+              <Tag tagType="orbit" read={item.read} name={item.name} />
+            </div>
           ))}
         </Orbits>
       ) : (

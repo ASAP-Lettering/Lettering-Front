@@ -6,16 +6,29 @@ import Image from "next/image";
 import Bottom from "@/components/common/Bottom";
 import Planet from "@/components/common/Planet";
 import Tag from "@/components/common/Tag";
-import { ORBITS } from "@/constants/orbit";
+import { ORBIT_MESSAGE, ORBITS } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import Toast from "@/components/common/Toast";
+import { useRouter } from "next/navigation";
+import { OrbitMessage } from "@/types/orbit";
 
 const HomePage = () => {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
   const totalPage = 3;
+  const [currentOrbits, setCurrentOrbits] = useState(
+    ORBITS.slice(0, itemsPerPage)
+  );
 
+  const totalCount = 2;
+  const [showToast, setShowToast] = useState<boolean>(false);
+
+  const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
+  const [orbitMessages, setOrbitMessages] = useState(ORBIT_MESSAGE);
+
+  /* 페이지네이션 */
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -28,12 +41,12 @@ const HomePage = () => {
     }
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentOrbits = ORBITS.slice(startIndex, startIndex + itemsPerPage);
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    setCurrentOrbits(ORBITS.slice(startIndex, startIndex + itemsPerPage));
+  }, [currentPage]);
 
-  const totalCount = 2;
-  const [showToast, setShowToast] = useState<boolean>(false);
-
+  /* 토스트 메세지 */
   const handleShowToast = () => {
     setShowToast(true);
     setTimeout(() => {
@@ -44,6 +57,40 @@ const HomePage = () => {
   useEffect(() => {
     if (totalCount < 3) handleShowToast();
   }, []);
+
+  /* 드래그 앤 드롭 */
+  const handleOrbitDragStart = (orbitId: number) => {
+    const orbit = orbitMessages.find((item) => item.id === orbitId);
+    setDraggedOrbit(orbit || null);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!draggedOrbit) return;
+
+    // 나의 궤도 메세지 업데이트
+    const updatedOrbitMessages = orbitMessages.filter(
+      (item) => item.id !== draggedOrbit?.id
+    );
+
+    // Orbit 위치 재설정
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const updatedOrbits = [...currentOrbits];
+    updatedOrbits.unshift(draggedOrbit); // 첫 번째 값으로 추가
+
+    // 페이지 업데이트
+    setCurrentOrbits(
+      updatedOrbits.slice(startIndex, startIndex + itemsPerPage)
+    );
+
+    setOrbitMessages(updatedOrbitMessages);
+
+    setDraggedOrbit(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
 
   return (
     <Layout>
@@ -70,13 +117,20 @@ const HomePage = () => {
         </Top>
         <TagList>
           <Tag tagType="planet" name="민지님의 첫 행성" icon="chevron" />
-          <Tag tagType="planet" name="" icon="plus" />
+          <Tag
+            tagType="planet"
+            name=""
+            icon="plus"
+            onClick={() => router.push("/planet/add")}
+          />
         </TagList>
-        <Planet
-          planetType={0}
-          planet="민지님의 첫 행성"
-          orbits={currentOrbits}
-        />
+        <PlanetWrapper onDrop={handleDrop} onDragOver={handleDragOver}>
+          <Planet
+            planetType={0}
+            planet="민지님의 첫 행성"
+            orbits={currentOrbits}
+          />
+        </PlanetWrapper>
         <PageWrapper>
           {showToast && (
             <Toast
@@ -92,7 +146,10 @@ const HomePage = () => {
           />
         </PageWrapper>
       </Container>
-      <Bottom />
+      <Bottom
+        onDragStart={handleOrbitDragStart}
+        orbitMessages={orbitMessages}
+      />
     </Layout>
   );
 };
@@ -153,6 +210,12 @@ const TagList = styled.div`
   }
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
+`;
+
+const PlanetWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
 `;
 
 const PageWrapper = styled.div`
