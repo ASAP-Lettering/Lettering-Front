@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Bottom from "@/components/common/Bottom";
@@ -8,8 +8,23 @@ import Planet from "@/components/common/Planet";
 import Tag from "@/components/common/Tag";
 import { ORBITS } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
+import Pagination from "@/components/common/Pagination";
 
 const HomePage = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const totalPage = 3;
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
   return (
     <Layout>
       <Background
@@ -38,6 +53,14 @@ const HomePage = () => {
           <Tag tagType="planet" name="" icon="plus" />
         </TagList>
         <Planet planetType={0} planet="민지님의 첫 행성" orbits={ORBITS} />
+        <PageWrapper>
+          <Pagination
+            currentPage={currentPage}
+            totalPage={totalPage}
+            onPrevPage={handlePrevPage}
+            onNextPage={handleNextPage}
+          />
+        </PageWrapper>
       </Container>
       <Bottom />
     </Layout>
@@ -100,4 +123,10 @@ const TagList = styled.div`
   }
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
+`;
+
+const PageWrapper = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `;
