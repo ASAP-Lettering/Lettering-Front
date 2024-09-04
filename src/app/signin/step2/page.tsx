@@ -5,9 +5,10 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import DatePicker from "@/components/signin/DatePicker";
+// import DatePicker from "@/components/signin/DatePicker";
 import { useRecoilState } from "recoil";
 import { signinState, userInfo } from "@/recoil/signinStore";
+import DatePicker from "@/components/signin/FramerDatePicker";
 
 export interface DatePickerState {
   year: number;
@@ -96,12 +97,15 @@ export default function Signin() {
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
           <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
         </Header>
-        <DatePicker
-          date={date}
-          onYearChange={handleYearChange}
-          onMonthChange={handleMonthChange}
-          onDayChange={handleDayChange}
-        />
+        {/* {
+          <DatePicker
+            date={date}
+            onYearChange={handleYearChange}
+            onMonthChange={handleMonthChange}
+            onDayChange={handleDayChange}
+          />
+        } */}
+        <DatePicker initialDate={new Date()} />
       </MainWrapper>
       <Button
         buttonType="primary"
