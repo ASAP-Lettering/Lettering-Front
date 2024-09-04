@@ -69,7 +69,7 @@ const StyledButton = styled.button<{
     `}
 
   &:disabled {
-    background: ${theme.colors.gray100};
+    background: ${theme.colors.gray500};
   }
 
   /*buttonType*/
