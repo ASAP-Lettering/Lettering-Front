@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 // import DatePicker from "@/components/signin/DatePicker";
 import { useRecoilState } from "recoil";
 import { signinState, userInfo } from "@/recoil/signinStore";
-import DatePicker from "@/components/signin/FramerDatePicker";
+import ItemPicker from "@/components/signin/ItemPicker";
 
 export interface DatePickerState {
   year: number;
@@ -31,18 +31,22 @@ export default function Signin() {
   const formattedDay = String(date.day).padStart(2, "0");
   const newBirthday = `${date.year}-${formattedMonth}-${formattedDay}`;
   const [isBirthdayUpdated, setIsBirthdayUpdated] = useState(false);
+  const [selectedYear, setSelectedYear] = useState("2001");
+  const [selectedMonth, setSelectedMonth] = useState("1");
+  const [selecetedDate, setSelecetedDate] = useState("");
 
-  const handleYearChange = (year: number) => {
-    setDate({ ...date, year });
-  };
-
-  const handleMonthChange = (month: number) => {
-    setDate({ ...date, month });
-  };
-
-  const handleDayChange = (day: number) => {
-    setDate({ ...date, day });
-  };
+  const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
+  const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
+  const days = Array.from(
+    {
+      length: new Date(
+        parseInt(selectedYear),
+        parseInt(selectedMonth),
+        0
+      ).getDate(),
+    },
+    (_, i) => (1 + i).toString()
+  );
 
   useEffect(() => {
     if (isBirthdayUpdated) {
@@ -97,15 +101,11 @@ export default function Signin() {
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
           <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
         </Header>
-        {/* {
-          <DatePicker
-            date={date}
-            onYearChange={handleYearChange}
-            onMonthChange={handleMonthChange}
-            onDayChange={handleDayChange}
-          />
-        } */}
-        <DatePicker initialDate={new Date()} />
+        <ItemPickerWrapper>
+          <ItemPicker items={years} defaultItem={"2004"} unit="년" />
+          <ItemPicker items={months} defaultItem={"1"} unit="월" />
+          <ItemPicker items={days} defaultItem={"1"} unit="일" />
+        </ItemPickerWrapper>
       </MainWrapper>
       <Button
         buttonType="primary"
@@ -149,4 +149,15 @@ const HeaderSubTitle = styled.div`
     ${(props) => props.theme.fonts.regular16};
     color: ${(props) => props.theme.colors.gray300};
     padding-top: 10px;
+`;
+
+const ItemPickerWrapper = styled.div`
+    width: 100%;
+    overflow: hidden;
+    margin-top: 15vh;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    justify-content: center;
+    position: relative;
 `;
