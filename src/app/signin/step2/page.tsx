@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { signinState, userInfo } from "@/recoil/signinStore";
 import ItemPicker from "@/components/signin/ItemPicker";
+import { signin } from "@/api/login/user";
 
 export interface DatePickerState {
   year: number;
@@ -22,18 +23,25 @@ export default function Signin() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
-  const [date, setDate] = useState<DatePickerState>({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    day: new Date().getDate(),
-  });
-  const formattedMonth = String(date.month).padStart(2, "0");
-  const formattedDay = String(date.day).padStart(2, "0");
-  const newBirthday = `${date.year}-${formattedMonth}-${formattedDay}`;
   const [isBirthdayUpdated, setIsBirthdayUpdated] = useState(false);
   const [selectedYear, setSelectedYear] = useState("2001");
   const [selectedMonth, setSelectedMonth] = useState("1");
-  const [selecetedDate, setSelecetedDate] = useState("");
+  const [selecetedDate, setSelecetedDate] = useState("1");
+  const formattedMonth = String(selectedMonth).padStart(2, "0");
+  const formattedDay = String(selecetedDate).padStart(2, "0");
+  const newBirthday = `${selectedYear}-${formattedMonth}-${formattedDay}`;
+
+  const handleSelectYearChange = (year: string) => {
+    setSelectedYear(year);
+  };
+
+  const handleSelectMonthChange = (month: string) => {
+    setSelectedMonth(month);
+  };
+
+  const handleSelectDayChange = (day: string) => {
+    setSelecetedDate(day);
+  };
 
   const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
   const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
@@ -59,35 +67,45 @@ export default function Signin() {
     }
   }, [isBirthdayUpdated]);
 
+  const skipBirthday = () => {
+    if (url) {
+      router.push(`/signin/complete?url=${url}`);
+    } else {
+      router.push(`/signin/complete`);
+    }
+  };
+
   const handleButtonClick = async () => {
+    console.log(newBirthday);
     await setUser((prevUser) => ({
       ...prevUser,
       birthday: newBirthday,
     }));
 
-    // signin({
-    //   registerToken: registerToken,
-    //   privatePermission: user.privatePermission,
-    //   servicePermission: user.servicePermission,
-    //   marketingPermission: user.marketingPermission,
-    //   birthday: user.birthday,
-    // })
-    //   .then((res) => {
-    //     console.log("accessToken", res.data.accessToken);
-    //     localStorage.setItem("lettering_access", res.data.accessToken);
-    //     localStorage.setItem("lettering_refresh", res.data.refreshToken);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    signin({
+      registerToken: registerToken,
+      privatePermission: user.privatePermission,
+      servicePermission: user.servicePermission,
+      marketingPermission: user.marketingPermission,
+      birthday: user.birthday,
+    })
+      .then((res) => {
+        console.log("accessToken", res.data.accessToken);
+        localStorage.setItem("lettering_access", res.data.accessToken);
+        localStorage.setItem("lettering_refresh", res.data.refreshToken);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     setIsBirthdayUpdated(true);
-    // if (url) {
-    //   router.push(`/signin/complete?url=${url}`);
-    // } else {
-    //   router.push(`/signin/complete`);
-    //   console.log(user);
-    // }
+
+    if (url) {
+      router.push(`/signin/complete?url=${url}`);
+    } else {
+      router.push(`/signin/complete`);
+      console.log(user);
+    }
   };
   return (
     <Container>
@@ -95,16 +113,31 @@ export default function Signin() {
         <NavigatorBar
           cancel={false}
           nextlabel={true}
-          nextClick={handleButtonClick}
+          nextClick={skipBirthday}
         />
         <Header>
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
           <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
         </Header>
         <ItemPickerWrapper>
-          <ItemPicker items={years} defaultItem={"2004"} unit="년" />
-          <ItemPicker items={months} defaultItem={"1"} unit="월" />
-          <ItemPicker items={days} defaultItem={"1"} unit="일" />
+          <ItemPicker
+            items={years}
+            defaultItem={"2004"}
+            unit="년"
+            onChange={handleSelectYearChange}
+          />
+          <ItemPicker
+            items={months}
+            defaultItem={"1"}
+            unit="월"
+            onChange={handleSelectMonthChange}
+          />
+          <ItemPicker
+            items={days}
+            defaultItem={"1"}
+            unit="일"
+            onChange={handleSelectDayChange}
+          />
         </ItemPickerWrapper>
       </MainWrapper>
       <Button

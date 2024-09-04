@@ -8,6 +8,7 @@ interface ItemPickerProps {
   items: string[];
   defaultItem?: string;
   unit: string;
+  onChange: (item: string) => void;
 }
 
 interface ItemProps {
@@ -18,6 +19,7 @@ const ItemPicker: React.FC<ItemPickerProps> = ({
   items,
   defaultItem,
   unit,
+  onChange,
 }) => {
   const initialItem = defaultItem || items[0];
   const [selectedItem, setSelectedItem] = useState<string>(initialItem);
@@ -33,11 +35,24 @@ const ItemPicker: React.FC<ItemPickerProps> = ({
   };
 
   useEffect(() => {
+    const index = items.indexOf(selectedItem);
+    const currentElement = itemElementsRef.current[index];
+    if (currentElement && refContainer.current) {
+      const offsetTop = currentElement.offsetTop;
+      const scrollPosition =
+        offsetTop -
+        refContainer.current.offsetHeight / 2 +
+        currentElement.offsetHeight / 2;
+      refContainer.current.scrollTop = scrollPosition;
+    }
     observer.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           const itemStr = entry.target.getAttribute("data-item");
-          if (itemStr) setSelectedItem(itemStr);
+          if (itemStr) {
+            setSelectedItem(itemStr);
+            onChange(itemStr);
+          }
         }
       });
     }, observerOptions);
@@ -52,19 +67,6 @@ const ItemPicker: React.FC<ItemPickerProps> = ({
       });
       observer.current?.disconnect();
     };
-  }, []);
-
-  useEffect(() => {
-    const index = items.indexOf(selectedItem);
-    const currentElement = itemElementsRef.current[index];
-    if (currentElement && refContainer.current) {
-      const offsetTop = currentElement.offsetTop;
-      const scrollPosition =
-        offsetTop -
-        refContainer.current.offsetHeight / 2 +
-        currentElement.offsetHeight / 2;
-      refContainer.current.scrollTop = scrollPosition;
-    }
   }, []);
 
   return (
@@ -110,6 +112,8 @@ const ItemPickerContainer = styled.div`
 const Item = styled.div<ItemProps>`
   flex: 0 0 auto;
   height: 60px; 
+  box-sizing: border-box;
+  padding: 15px 0;
   line-height: 60px; 
   text-align: center;
   justify-content: center;

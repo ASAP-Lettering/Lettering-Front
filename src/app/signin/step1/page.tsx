@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import { signinState, userInfo } from "@/recoil/signinStore";
 import { useRecoilState } from "recoil";
+import { links } from "@/styles/theme";
 
 export default function Signin() {
   const [user, setUser] = useRecoilState(userInfo);
@@ -114,7 +115,12 @@ export default function Signin() {
                 label="서비스 이용 약관"
                 sublabel="(필수)"
               />
-              <img src="/assets/icons/ic_next.svg"></img>
+              <img
+                src="/assets/icons/ic_next.svg"
+                onClick={() => {
+                  window.open(links.service);
+                }}
+              ></img>
             </SubContainer>
             <SubContainer>
               <Check
@@ -124,7 +130,12 @@ export default function Signin() {
                 label="개인정보 수집 및 이용 동의"
                 sublabel="(필수)"
               />
-              <img src="/assets/icons/ic_next.svg"></img>
+              <img
+                src="/assets/icons/ic_next.svg"
+                onClick={() => {
+                  window.open(links.personal);
+                }}
+              ></img>
             </SubContainer>
             <SubContainer>
               <Check
@@ -134,7 +145,12 @@ export default function Signin() {
                 label="마케팅 수신 동의"
                 sublabel="(선택)"
               />
-              <img src="/assets/icons/ic_next.svg"></img>
+              <img
+                src="/assets/icons/ic_next.svg"
+                onClick={() => {
+                  window.open(links.marketing);
+                }}
+              ></img>
             </SubContainer>
           </Content>
         </MainWrapper>
