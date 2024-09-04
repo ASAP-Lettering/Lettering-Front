@@ -7,10 +7,12 @@ import styled, { css } from "styled-components";
 interface ToastProps {
   text: string;
   icon: boolean;
+  top?: string;
+  left?: string;
 }
 
 const Toast = (props: ToastProps) => {
-  const { text, icon } = props;
+  const { text, icon, top = "0px", left = "50%" } = props;
 
   const [visible, setVisible] = useState(true);
 
@@ -23,7 +25,7 @@ const Toast = (props: ToastProps) => {
   }, []);
 
   return (
-    <Container $icon={icon} $visible={visible}>
+    <Container $icon={icon} $visible={visible} $top={top} $left={left}>
       {icon && (
         <Image
           src="/assets/icons/ic_info.svg"
@@ -39,8 +41,13 @@ const Toast = (props: ToastProps) => {
 
 export default Toast;
 
-const Container = styled.div<{ $icon: boolean; $visible: boolean }>`
-  width: 100%;
+const Container = styled.div<{
+  $icon: boolean;
+  $visible: boolean;
+  $top: string;
+  $left: string;
+}>`
+  width: calc(100% - 50px);
   padding: 11px 30px;
   display: flex;
   justify-content: ${({ $icon }) => ($icon ? "flex-start" : "center")};
@@ -51,6 +58,10 @@ const Container = styled.div<{ $icon: boolean; $visible: boolean }>`
   background: rgba(62, 65, 81, 0.7);
   backdrop-filter: blur(4px);
   color: ${theme.colors.white};
+  position: absolute;
+  top: ${({ $top }) => $top};
+  left: ${({ $left }) => $left};
+  transform: translateX(-50%);
   ${(props) => props.theme.fonts.medium14};
   animation: ${(props) =>
     props.$visible

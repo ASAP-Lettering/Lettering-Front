@@ -21,7 +21,6 @@ const Pagination = (props: PaginationProps) => {
           width={16}
           height={16}
           alt="이전 페이지"
-          onClick={onPrevPage}
         />
       </IconButton>
       <Current>{currentPage}</Current> / {totalPage}
@@ -31,7 +30,6 @@ const Pagination = (props: PaginationProps) => {
           width={16}
           height={16}
           alt="다음 페이지"
-          onClick={onNextPage}
         />
       </IconButton>
     </Wrapper>
@@ -60,7 +58,6 @@ const IconButton = styled.button`
   }
 
   &:disabled {
-    cursor: not-allowed;
     opacity: 0.4;
   }
 `;
