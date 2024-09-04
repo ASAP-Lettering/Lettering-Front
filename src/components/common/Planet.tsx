@@ -30,9 +30,9 @@ const Planet = (props: PlanetProps) => {
         alt="planet"
       />
       {orbits.map((orbit, index) => {
-        const angle = (index / orbits.length) * 2 * Math.PI; // 각 Orbit 요소의 각도 계산
+        const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
         const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
-        const y = center + radius * Math.sin(angle) - 10; // Y좌표 계산
+        const y = center + radius * Math.sin(angle) - 5; // Y좌표 계산
 
         return (
           <OrbitTag
