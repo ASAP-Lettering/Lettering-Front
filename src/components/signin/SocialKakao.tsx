@@ -46,18 +46,18 @@ const SocialKakao = () => {
 export default SocialKakao;
 
 const SocialLoginBox = styled.div`
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 2rem;
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 const StyledImage = styled(Image)`
-  width: 100%;
-  height: 100%;
-  padding: 0 20px;
-  object-fit: contain;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    object-fit: contain;
 `;
