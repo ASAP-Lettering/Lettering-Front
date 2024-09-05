@@ -55,7 +55,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
       },
       {
         root: refContainer.current,
-        rootMargin: `-40px 0px -40px 0px`,
+        rootMargin: `-60px 0px -60px 0px`,
         threshold: 0.8,
       }
     );
@@ -69,21 +69,6 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
     };
   }, [items]);
 
-  useEffect(() => {
-    const index = items.indexOf(selectedItem);
-    const itemElement = itemElementsRef.current[index];
-    if (itemElement && refContainer.current) {
-      const topPosition =
-        itemElement.offsetTop -
-        (refContainer.current.offsetHeight / 2 - itemElement.offsetHeight / 2);
-
-      refContainer.current.scrollTo({
-        top: topPosition,
-        behavior: "smooth",
-      });
-    }
-  }, [selectedItem, items]);
-
   return (
     <ItemPickerContainer ref={refContainer}>
       {items.map((item, index) => (
@@ -96,7 +81,8 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
           isSelected={item === selectedItem}
           whileTap={{ scale: 0.95 }}
         >
-          {item} {unit}
+          {item}
+          {unit}
         </Item>
       ))}
     </ItemPickerContainer>
@@ -109,7 +95,7 @@ const ItemPickerContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 200px;
-  gap: 10px;
+  gap: 15px;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
@@ -126,7 +112,7 @@ const Item = styled(motion.div)<ItemProps>`
   flex: 0 0 auto;
   height: 60px;
   box-sizing: border-box;
-  padding: 15px 0;
+  padding: 10px 0;
   line-height: 60px;
   text-align: center;
   justify-content: center;
