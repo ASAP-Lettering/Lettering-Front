@@ -10,6 +10,7 @@ import { useRecoilState } from "recoil";
 import { signinState, userInfo } from "@/recoil/signinStore";
 import ItemPicker from "@/components/signin/ItemPicker";
 import { signin } from "@/api/login/user";
+import NewItemPicker from "@/components/signin/NewItemPicker";
 
 export interface DatePickerState {
   year: number;
@@ -33,6 +34,7 @@ export default function Signin() {
 
   const handleSelectYearChange = (year: string) => {
     setSelectedYear(year);
+    console.log(year);
   };
 
   const handleSelectMonthChange = (month: string) => {
@@ -63,7 +65,6 @@ export default function Signin() {
       } else {
         router.push(`/signin/complete`);
       }
-      setIsBirthdayUpdated(false);
     }
   }, [isBirthdayUpdated]);
 
@@ -76,8 +77,7 @@ export default function Signin() {
   };
 
   const handleButtonClick = async () => {
-    console.log(newBirthday);
-    await setUser((prevUser) => ({
+    setUser((prevUser) => ({
       ...prevUser,
       birthday: newBirthday,
     }));
@@ -87,7 +87,7 @@ export default function Signin() {
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
-      birthday: user.birthday,
+      birthday: newBirthday,
     })
       .then((res) => {
         console.log("accessToken", res.data.accessToken);
@@ -97,8 +97,6 @@ export default function Signin() {
       .catch((error) => {
         console.log(error);
       });
-
-    setIsBirthdayUpdated(true);
 
     if (url) {
       router.push(`/signin/complete?url=${url}`);
@@ -120,7 +118,7 @@ export default function Signin() {
           <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
         </Header>
         <ItemPickerWrapper>
-          <ItemPicker
+          {/* <ItemPicker
             items={years}
             defaultItem={"2004"}
             unit="년"
@@ -137,7 +135,25 @@ export default function Signin() {
             defaultItem={"1"}
             unit="일"
             onChange={handleSelectDayChange}
+          /> */}
+          <NewItemPicker
+            items={years}
+            defaultItem={"2004"}
+            unit="년"
+            onChange={handleSelectYearChange}
           />
+          <NewItemPicker
+            items={months}
+            defaultItem={"1"}
+            unit="월"
+            onChange={handleSelectMonthChange}
+          />
+          <NewItemPicker
+            items={days}
+            defaultItem={"1"}
+            unit="일"
+            onChange={handleSelectDayChange}
+          ></NewItemPicker>
         </ItemPickerWrapper>
       </MainWrapper>
       <Button
