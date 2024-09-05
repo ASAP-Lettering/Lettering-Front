@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
-import { login } from "@/api/login/user";
+import { useRecoilState } from "recoil";
+import { accessState } from "@/recoil/accessStore";
 
 const SocialKakao = () => {
   const router = useRouter();
@@ -10,19 +11,19 @@ const SocialKakao = () => {
   const url = searchParams.get("url");
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  const accessToken = localStorage.getItem("lettering_access_kakao");
+  const accessToken = localStorage.getItem("lettering_access");
   const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&url=${url}`;
+  const [localAccessToken, setAccessToken] = useRecoilState(accessState);
 
   const handleLogin = () => {
+    //이때 localStorage에 저장된 accessToken이 만료되었는지 확인해야함.
     // if (accessToken) {
-    //   login("kakao", accessToken).then((res) => {
-    //     if (res.status === 200) {
-    //       console.log(res.data);
-    //       if (url) {
-    //         router.push(`/verify?url=${url}`);
-    //       }
-    //     }
-    //   });
+    //   if (url) {
+    //     router.push(`/verify?url=${url}`);
+    //   } else {
+    //     router.push("/");
+    //   }
+    //   setAccessToken(accessToken);
     // } else {
     if (url) {
       localStorage.setItem("letter_url", url);
