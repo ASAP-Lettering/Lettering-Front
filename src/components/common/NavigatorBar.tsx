@@ -8,10 +8,12 @@ interface NavigatorBarProps {
   title?: string;
   url?: string;
   cancel: boolean;
+  nextlabel?: boolean;
+  nextClick?: Function;
 }
 
 const NavigatorBar = (props: NavigatorBarProps) => {
-  const { title, url, cancel = false } = props;
+  const { title, url, cancel = false, nextlabel = false, nextClick } = props;
   const router = useRouter();
 
   const handleChangePage = () => {
@@ -20,6 +22,10 @@ const NavigatorBar = (props: NavigatorBarProps) => {
 
   const handleCancelPage = () => {
     router.back();
+  };
+
+  const handleNextClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    nextClick?.(e);
   };
 
   return (
@@ -45,6 +51,7 @@ const NavigatorBar = (props: NavigatorBarProps) => {
           />
         </RightIcon>
       )}
+      {nextlabel && <NextLabel onClick={handleNextClick}>건너뛰기</NextLabel>}
     </Container>
   );
 };
@@ -74,4 +81,11 @@ const Title = styled.div`
   text-align: center;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.body04};
+`;
+
+const NextLabel = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray300};
+  ${(props) => props.theme.fonts.regular16};
+  cursor: pointer;
 `;

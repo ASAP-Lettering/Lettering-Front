@@ -1,26 +1,24 @@
 import { DefaultTheme } from "styled-components";
 
 const colors = {
-    main01: "#424DA0",
-    sub01: "#2C3361",
-    sub02: "#565C81",
-    sub03: "#424DA0",
+  main01: "#424DA0",
+  sub01: "#2C3361",
+  sub02: "#565C81",
+  sub03: "#424DA0",
 
-    gray900: "#FBFBFD",
-    gray800: "#202232",
-    gray700: "#2E3040",
-    gray600: "#3E4151",
-    gray500: "#5B5F70",
-    gray400: "#818491",
-    gray300: "#9FA1AC",
-    gray200: "#BEC0C8",
-    gray100: "#D5D7DE",
-    gray50: "#F7F8F9",
-    
-    bg: "#060812",
-    white: "#FFFFFF",
+  gray900: "#FBFBFD",
+  gray800: "#202232",
+  gray700: "#2E3040",
+  gray600: "#3E4151",
+  gray500: "#5B5F70",
+  gray400: "#818491",
+  gray300: "#9FA1AC",
+  gray200: "#BEC0C8",
+  gray100: "#D5D7DE",
+  gray50: "#F7F8F9",
 
-
+  bg: "#060812",
+  white: "#FFFFFF",
 } as const;
 
 interface Font {
@@ -131,7 +129,16 @@ const fonts = {
         weight: 400,
         size: 10,
     }),
-}
+};
+
+export const links = {
+  personal:
+    "https://sparkling-streetcar-d42.notion.site/Lettering-a4a1bfc211c147ab92b4b1a43b71d2c9",
+  service:
+    "https://sparkling-streetcar-d42.notion.site/4993fe0fe9204fb6806ce6422aa686b2",
+  marketing:
+    "https://sparkling-streetcar-d42.notion.site/0178d3b682e54799952075c4364e8994",
+};
 
 export type ColorsTypes = typeof colors;
 export type FontsTypes = typeof fonts;
