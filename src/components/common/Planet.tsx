@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import Tag from "./Tag";
+import Button from "./Button";
 
 interface Orbit {
   id: number;
@@ -18,9 +19,22 @@ interface PlanetProps {
 
 const Planet = (props: PlanetProps) => {
   const { planetType, planet, orbits, onEditPlanetName } = props;
+  const [hold, setHold] = useState<boolean>(false);
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
+
+  const handleShowHold = () => {
+    setHold(!hold);
+  };
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    setHold(false);
+  };
+
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+  };
 
   return (
     <Container>
@@ -42,7 +56,7 @@ const Planet = (props: PlanetProps) => {
               transform: `translate(${x}px, ${y}px)`,
             }}
           >
-            <Tag tagType="letter" name={orbit.name} />
+            <Tag tagType="letter" name={orbit.name} onClick={handleShowHold} />
           </OrbitTag>
         );
       })}
@@ -54,6 +68,22 @@ const Planet = (props: PlanetProps) => {
           onEdit={onEditPlanetName}
         />
       </PlanetTag>
+      {hold && (
+        <Overlay onClick={handleOverlayClick}>
+          <Button
+            buttonType="primary"
+            size="small"
+            text="이동하기"
+            onClick={handleButtonClick}
+          />
+          <Button
+            buttonType="secondary"
+            size="small"
+            text="삭제하기"
+            onClick={handleButtonClick}
+          />
+        </Overlay>
+      )}
     </Container>
   );
 };
@@ -94,4 +124,19 @@ const PlanetTag = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1;
+`;
+
+const Overlay = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  z-index: 15;
 `;
