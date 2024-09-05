@@ -30,6 +30,9 @@ export default function Signin() {
             편지에 담긴 진심으로 나만의 우주를 채워보세요!
           </HeaderSubTitle>
         </Header>
+        <ImageWrapper>
+          <Image src="/assets/signin/signin_image.png" />
+        </ImageWrapper>
       </MainWrapper>
       <Button
         buttonType="primary"
@@ -41,14 +44,16 @@ export default function Signin() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
     color: white;
-    padding: 25px;
-    padding-bottom: 40px;
-    background-image: url('/assets/signin/bg_signin_complete.svg'); 
+    display: flex;
+    box-sizing: border-box;
+    padding: 50px 20px;
+    height: 100%;
+    max-height: 852px;
+    flex-direction: column;
+    overflow: scroll;
+    justify-content: space-between;
+    background-image: url('/assets/signin/signin_bg.png'); 
     background-size: 100% auto; 
     background-position: center;
     background-repeat: no-repeat;
@@ -59,10 +64,17 @@ const MainWrapper = styled.div`
     flex-direction: column;
 `;
 
+const ImageWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+`;
+
 const Header = styled.div`
     display: flex;
+    box-sizing: border-box;
     flex-direction: column;
-    padding: 10px;
+    padding-left: 10px;
 `;
 
 const HeaderTitle = styled.div`
@@ -76,4 +88,13 @@ const HeaderSubTitle = styled.div`
     ${(props) => props.theme.fonts.regular16};
     color: ${(props) => props.theme.colors.gray300};
     padding-top: 10px;
+`;
+
+const Image = styled.img`
+    display: flex;
+    box-sizing: border-box;
+    width: 80%;
+    height: auto;
+    max-width: 520px;
+    max-height: 520px;
 `;
