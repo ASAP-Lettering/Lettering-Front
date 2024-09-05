@@ -13,7 +13,7 @@ import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { OrbitMessage } from "@/types/orbit";
 
-const HomePage = () => {
+const PlanetPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
@@ -165,7 +165,7 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default PlanetPage;
 
 const Layout = styled.div`
   width: 100%;

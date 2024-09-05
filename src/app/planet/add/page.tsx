@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
-import PlanetPalette from "@/components/home/PlanetPalette";
+import PlanetPalette from "@/components/planet/PlanetPalette";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +22,7 @@ const PlanetAddPage = () => {
   const handleAddPlanet = () => {
     /* 새 행성 추가하기 */
     // 추후 작성
-    router.push("/home");
+    router.push("/planet");
   };
 
   return (
