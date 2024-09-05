@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -13,13 +13,15 @@ interface TagProps {
   icon?: iconType;
   onClick?: () => void;
   onEdit?: (editedName: string) => void;
+  onHold?: () => void;
 }
 
 const Tag = (props: TagProps) => {
-  const { tagType, name, read, icon, onClick, onEdit } = props;
+  const { tagType, name, read, icon, onClick, onEdit, onHold } = props;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
+  const holdTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleEditClick = () => {
     if (icon === "edit") {
@@ -36,6 +38,23 @@ const Tag = (props: TagProps) => {
       onEdit(editedName);
     }
     setIsEditing(false);
+  };
+
+  const handleMouseDown = () => {
+    if (onHold) {
+      holdTimeout.current = setTimeout(() => {
+        onHold();
+      }, 3000);
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (holdTimeout.current) {
+      clearTimeout(holdTimeout.current);
+    }
+    if (onClick) {
+      onClick();
+    }
   };
 
   const renderIcon = () => {
@@ -55,6 +74,8 @@ const Tag = (props: TagProps) => {
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
       onClick={onClick}
+      onMouseDown={handleMouseDown} // 마우스를 누를 때
+      onMouseUp={handleMouseUp} // 마우스를 뗄 때
     >
       {isEditing ? (
         <NameInput

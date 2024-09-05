@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import Tag from "./Tag";
 import Button from "./Button";
+import { useRouter } from "next/navigation";
 
 interface Orbit {
   id: number;
@@ -19,7 +20,9 @@ interface PlanetProps {
 
 const Planet = (props: PlanetProps) => {
   const { planetType, planet, orbits, onEditPlanetName } = props;
+
   const [hold, setHold] = useState<boolean>(false);
+  const router = useRouter();
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -34,6 +37,10 @@ const Planet = (props: PlanetProps) => {
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+  };
+
+  const handleTagClick = (id: number) => {
+    router.push(`/letter/${id}`);
   };
 
   return (
@@ -56,7 +63,14 @@ const Planet = (props: PlanetProps) => {
               transform: `translate(${x}px, ${y}px)`,
             }}
           >
-            <Tag tagType="letter" name={orbit.name} onClick={handleShowHold} />
+            <Tag
+              tagType="letter"
+              name={orbit.name}
+              onClick={() => {
+                handleTagClick(orbit.id);
+              }}
+              onHold={handleShowHold}
+            />
           </OrbitTag>
         );
       })}
