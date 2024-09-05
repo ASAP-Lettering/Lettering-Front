@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Tag from "./Tag";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
+import ConfirmModal from "./ConfirmModal";
 
 interface Orbit {
   id: number;
@@ -21,11 +22,16 @@ interface PlanetProps {
 const Planet = (props: PlanetProps) => {
   const { planetType, planet, orbits, onEditPlanetName } = props;
 
-  const [hold, setHold] = useState<boolean>(false);
   const router = useRouter();
+  const [hold, setHold] = useState<boolean>(false);
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
+
+  const handleTagClick = (id: number) => {
+    router.push(`/letter/${id}`);
+  };
 
   const handleShowHold = () => {
     setHold(!hold);
@@ -35,12 +41,24 @@ const Planet = (props: PlanetProps) => {
     setHold(false);
   };
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMoveButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    router.push(`/planet/move?letter=${id}`);
   };
 
-  const handleTagClick = (id: number) => {
-    router.push(`/letter/${id}`);
+  const handleDeleteButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setHold(false);
+    setConfirmDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // 편지 삭제 API
+    setConfirmDeleteModal(false);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDeleteModal(false);
   };
 
   return (
@@ -88,15 +106,23 @@ const Planet = (props: PlanetProps) => {
             buttonType="primary"
             size="small"
             text="이동하기"
-            onClick={handleButtonClick}
+            onClick={handleMoveButtonClick}
           />
           <Button
             buttonType="secondary"
             size="small"
             text="삭제하기"
-            onClick={handleButtonClick}
+            onClick={handleDeleteButtonClick}
           />
         </Overlay>
+      )}
+      {confirmDeleteModal && (
+        <ConfirmModal
+          title="해당 편지를 정말 삭제할까요?"
+          sub="삭제된 편지는 복구되지 않아요."
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
       )}
     </Container>
   );

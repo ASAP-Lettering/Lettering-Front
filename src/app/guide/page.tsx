@@ -2,6 +2,7 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import GuideText from "@/components/common/GuideText";
 import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -37,6 +38,22 @@ const GuidePage = () => {
     setTimeout(() => {
       setShowToast(false);
     }, 3000);
+  };
+
+  /* Confirm Modal */
+  const [confirmModal, setConfirmModal] = useState(false);
+
+  const handleShowConfirmModal = () => {
+    setConfirmModal(true);
+  };
+
+  const handleConfirm = () => {
+    alert("삭제 완료");
+    setConfirmModal(false);
+  };
+
+  const handleCancel = () => {
+    setConfirmModal(false);
   };
 
   return (
@@ -135,6 +152,23 @@ const GuidePage = () => {
       <Tag tagType="planet" name="Planet" icon="edit" />
       <Tag tagType="planet" name="" icon="plus" />
       <Tag tagType="letter" name="Letter" />
+      <br />
+      <h3>Confirm Modal</h3>
+      {confirmModal && (
+        <ConfirmModal
+          title="Title Text"
+          sub="Sub Text"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
+      <Button
+        buttonType="secondary"
+        size="small"
+        text="Show Confirm Modal"
+        onClick={handleShowConfirmModal}
+        width="100%"
+      />
     </Container>
   );
 };
