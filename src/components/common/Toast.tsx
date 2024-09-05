@@ -41,7 +41,7 @@ export default Toast;
 
 const Container = styled.div<{ $icon: boolean; $visible: boolean }>`
   width: 100%;
-  padding: 11px 30px;
+  padding: 15px 30px;
   display: flex;
   justify-content: ${({ $icon }) => ($icon ? "flex-start" : "center")};
   align-items: center;

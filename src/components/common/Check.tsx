@@ -8,13 +8,14 @@ type checkType = "box" | "default";
 interface CheckProps {
   checkType: checkType;
   label?: string;
+  sublabel?: string;
   text?: string;
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: ReactNode;
 }
 const Check = (props: CheckProps) => {
-  const { checkType, label, checked, onChange, children } = props;
+  const { checkType, label, checked, onChange, children, sublabel } = props;
 
   const renderSvg = () => {
     let filename = "";
@@ -48,6 +49,7 @@ const Check = (props: CheckProps) => {
         <LabelText>
           {label}
           {children}
+          {sublabel && <LabelSubText>{sublabel}</LabelSubText>}
         </LabelText>
       )}
     </CheckContainer>
@@ -95,5 +97,16 @@ const LabelText = styled.span`
   gap: 10px;
   ${(props) => props.theme.fonts.regular16};
   color: ${theme.colors.white};
+  white-space: nowrap;
+`;
+
+const LabelSubText = styled.span`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  ${(props) => props.theme.fonts.regular14};
+  color: ${theme.colors.gray400};
   white-space: nowrap;
 `;
