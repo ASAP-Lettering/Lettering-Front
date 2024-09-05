@@ -6,7 +6,7 @@ const colors = {
   sub02: "#565C81",
   sub03: "#424DA0",
 
-  gray900: "#FBFBFD",
+  gray900: "#181B29",
   gray800: "#202232",
   gray700: "#2E3040",
   gray600: "#3E4151",
