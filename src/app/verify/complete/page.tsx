@@ -22,11 +22,16 @@ export default function Signin() {
           </HeaderSubTitle>
         </Header>
       </MainWrapper>
-      <Button
-        buttonType="primary"
-        text="편지 바로 열기"
-        onClick={handleButtonClick}
-      ></Button>
+      <div>
+        <ImageWrapper>
+          <Image src="/assets/signin/verify_image.png" />
+        </ImageWrapper>
+        <Button
+          buttonType="primary"
+          text="편지 바로 열기"
+          onClick={handleButtonClick}
+        ></Button>
+      </div>
     </Container>
   );
 }
@@ -35,15 +40,18 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100%;
+    box-sizing: border-box;
+    height: 100%;
+    max-height: 852px;
     color: white;
     padding: 25px;
+    overflow-x: hidden;
     padding-bottom: 40px;
     background:${(props) => props.theme.colors.bg};
-    background-image: url('/assets/signin/bg_verify_complete.svg'); 
+    /* background-image: url('/assets/signin/verify_image.png'); 
     background-size: 550px auto; 
     background-position: bottom 80px center;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
 `;
 
 const MainWrapper = styled.div`
@@ -68,4 +76,17 @@ const HeaderSubTitle = styled.div`
     ${(props) => props.theme.fonts.regular16};
     color: ${(props) => props.theme.colors.gray300};
     padding-top: 10px;
+`;
+
+const ImageWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
+const Image = styled.img`
+    display: flex;
+    width: 140%;
+    height: auto;
+    max-width: 537px;
+    max-height: 400px;
 `;

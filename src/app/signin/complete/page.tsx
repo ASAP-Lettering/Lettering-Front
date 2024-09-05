@@ -20,7 +20,7 @@ export default function Signin() {
   return (
     <Container>
       <MainWrapper>
-        <NavigatorBar cancel={false} />
+        <NavigatorBar cancel={false} url="/login" />
         <Header>
           <HeaderTitle>
             회원가입 완료!
@@ -36,7 +36,7 @@ export default function Signin() {
       </MainWrapper>
       <Button
         buttonType="primary"
-        text={url ? "본인인증하고 편지 열기" : "다음"}
+        text={url ? "본인인증하고 편지 열기" : "나의 스페이스에 접속하기"}
         onClick={handleButtonClick}
       ></Button>
     </Container>

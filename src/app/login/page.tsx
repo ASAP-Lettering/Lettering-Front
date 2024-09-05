@@ -24,8 +24,8 @@ const Container = styled.div`
   box-sizing: border-box;
   padding: 50px 20px;
   height: 100%;
-  min-height: 800px;
-  max-height: 852px;
+  min-height: 754px;
+  max-height: 852px; 
   flex-direction: column;
   justify-content: space-between;
   background-image: url('/assets/login/login_bg.png'); 

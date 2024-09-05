@@ -167,8 +167,12 @@ export default function Signin() {
             </SubContainer>
           </Content>
         </MainWrapper>
+        <ToastContainer>
+          {showToast && (
+            <Toast text={`필수 항목에 동의해주세요!`} icon={true} />
+          )}
+        </ToastContainer>
       </div>
-      {showToast && <Toast text={`필수 항목에 동의해주세요!`} icon={true} />}
       <Button
         buttonType="primary"
         text="다음"
@@ -181,6 +185,7 @@ export default function Signin() {
 const Container = styled.div`
     display: flex;
     flex-direction: column;
+    width: 100%;
     justify-content: space-between;
     min-height: 100%;
     color: white;
@@ -222,4 +227,14 @@ const SubContainer = styled.div`
     flex-direction: row;
     width: 100%;
     padding: 10px 15px;
+`;
+
+const ToastContainer = styled.div`
+    display: flex;
+    box-sizing: border-box;
+    max-width: 80%;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    bottom: 120px;
 `;

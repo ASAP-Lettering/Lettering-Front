@@ -68,18 +68,10 @@ export default function Signin() {
     }
   }, [isBirthdayUpdated]);
 
-  const skipBirthday = () => {
-    if (url) {
-      router.push(`/signin/complete?url=${url}`);
-    } else {
-      router.push(`/signin/complete`);
-    }
-  };
-
-  const handleButtonClick = async () => {
+  const handleButtonClick = async (mybirthday: string) => {
     setUser((prevUser) => ({
       ...prevUser,
-      birthday: newBirthday,
+      birthday: mybirthday,
     }));
 
     signin({
@@ -87,7 +79,7 @@ export default function Signin() {
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
-      birthday: newBirthday,
+      birthday: mybirthday,
     })
       .then((res) => {
         console.log("accessToken", res.data.accessToken);
@@ -96,6 +88,8 @@ export default function Signin() {
       })
       .catch((error) => {
         console.log(error);
+        router.push("/error");
+        return;
       });
 
     if (url) {
@@ -111,31 +105,13 @@ export default function Signin() {
         <NavigatorBar
           cancel={false}
           nextlabel={true}
-          nextClick={skipBirthday}
+          nextClick={() => handleButtonClick("")}
         />
         <Header>
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
           <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
         </Header>
         <ItemPickerWrapper>
-          {/* <ItemPicker
-            items={years}
-            defaultItem={"2004"}
-            unit="년"
-            onChange={handleSelectYearChange}
-          />
-          <ItemPicker
-            items={months}
-            defaultItem={"1"}
-            unit="월"
-            onChange={handleSelectMonthChange}
-          />
-          <ItemPicker
-            items={days}
-            defaultItem={"1"}
-            unit="일"
-            onChange={handleSelectDayChange}
-          /> */}
           <NewItemPicker
             items={years}
             defaultItem={"2004"}
@@ -160,7 +136,7 @@ export default function Signin() {
       <Button
         buttonType="primary"
         text="다음"
-        onClick={handleButtonClick}
+        onClick={() => handleButtonClick(newBirthday)}
       ></Button>
     </Container>
   );
