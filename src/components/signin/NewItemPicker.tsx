@@ -109,17 +109,18 @@ const ItemPickerContainer = styled.div`
 `;
 
 const Item = styled(motion.div)<ItemProps>`
-  flex: 0 0 auto;
-  height: 60px;
-  box-sizing: border-box;
-  padding: 10px 0;
-  line-height: 60px;
-  text-align: center;
-  justify-content: center;
-  scroll-snap-align: center;
-  ${(isSelected) =>
-    isSelected ? theme.fonts.medium24 : theme.fonts.regular25};
-  color: ${({ isSelected }) => (isSelected ? "white" : theme.colors.gray600)};
-  transition: color 0.7s;
-  cursor: pointer;
+    flex: 0 0 auto;
+    height: 60px;
+    width: 85px;
+    box-sizing: border-box;
+    padding: 10px 0;
+    line-height: 60px;
+    text-align: center;
+    justify-content: center;
+    scroll-snap-align: center;
+    font-weight: ${({ isSelected }) => (isSelected ? "500" : "400")};
+    font-size: ${({ isSelected }) => (isSelected ? "24px" : "20px")};
+    color: ${({ isSelected }) => (isSelected ? "white" : theme.colors.gray600)};
+    transition: color 0.7s;
+    cursor: pointer;
 `;

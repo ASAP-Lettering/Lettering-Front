@@ -154,6 +154,7 @@ export default function Signin() {
             unit="일"
             onChange={handleSelectDayChange}
           ></NewItemPicker>
+          <PickedItemContainer />
         </ItemPickerWrapper>
       </MainWrapper>
       <Button
@@ -206,7 +207,17 @@ const ItemPickerWrapper = styled.div`
     margin-top: 15vh;
     display: flex;
     flex-direction: row;
-    gap: 50px;
+    gap: 12px;
     justify-content: center;
     position: relative;
+`;
+
+const PickedItemContainer = styled.div`
+    position: absolute;
+    top: 79px;
+    width: 95%;
+    height: 60px;
+    background-color: ${(props) => props.theme.colors.gray800};
+    border-radius: 8px;
+    z-index: 2;
 `;
