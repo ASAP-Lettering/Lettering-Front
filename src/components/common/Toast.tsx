@@ -8,11 +8,13 @@ interface ToastProps {
   text: string;
   icon: boolean;
   top?: string;
+  bottom?: string;
   left?: string;
+  right?: string;
 }
 
 const Toast = (props: ToastProps) => {
-  const { text, icon, top = "0px", left = "50%" } = props;
+  const { text, icon, top, bottom, left, right } = props;
 
   const [visible, setVisible] = useState(true);
 
@@ -25,7 +27,14 @@ const Toast = (props: ToastProps) => {
   }, []);
 
   return (
-    <Container $icon={icon} $visible={visible} $top={top} $left={left}>
+    <Container
+      $icon={icon}
+      $visible={visible}
+      $top={top}
+      $bottom={bottom}
+      $left={left}
+      $right={right}
+    >
       {icon && (
         <Image
           src="/assets/icons/ic_info.svg"
@@ -44,8 +53,10 @@ export default Toast;
 const Container = styled.div<{
   $icon: boolean;
   $visible: boolean;
-  $top: string;
-  $left: string;
+  $top?: string;
+  $bottom?: string;
+  $left?: string;
+  $right?: string;
 }>`
   width: calc(100% - 50px);
   padding: 11px 30px;
@@ -60,7 +71,9 @@ const Container = styled.div<{
   color: ${theme.colors.white};
   position: absolute;
   top: ${({ $top }) => $top};
+  bottom: ${({ $bottom }) => $bottom};
   left: ${({ $left }) => $left};
+  right: ${({ $right }) => $right};
   transform: translateX(-50%);
   ${(props) => props.theme.fonts.body08};
   animation: ${(props) =>

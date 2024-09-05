@@ -145,6 +145,8 @@ const HomePage = () => {
             <Toast
               text="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
               icon={false}
+              top="0px"
+              left="50%"
             />
           )}
           <Pagination
