@@ -10,25 +10,24 @@ const SocialKakao = () => {
   const url = searchParams.get("url");
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  const accessToken = localStorage.getItem("lettering_access");
+  const accessToken = localStorage.getItem("lettering_access_kakao");
   const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&url=${url}`;
 
   const handleLogin = () => {
-    if (accessToken) {
-      login("kakao", accessToken).then((res) => {
-        if (res.status === 200) {
-          console.log(res.data);
-          if (url) {
-            router.push(`/verify?url=${url}`);
-          }
-        }
-      });
-    } else {
-      if (url) {
-        localStorage.setItem("letter_url", url);
-      }
-      window.location.href = KAKAO_URL;
+    // if (accessToken) {
+    //   login("kakao", accessToken).then((res) => {
+    //     if (res.status === 200) {
+    //       console.log(res.data);
+    //       if (url) {
+    //         router.push(`/verify?url=${url}`);
+    //       }
+    //     }
+    //   });
+    // } else {
+    if (url) {
+      localStorage.setItem("letter_url", url);
     }
+    window.location.href = KAKAO_URL;
   };
 
   return (
