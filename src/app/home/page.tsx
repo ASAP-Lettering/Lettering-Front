@@ -28,6 +28,14 @@ const HomePage = () => {
   const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState(ORBIT_MESSAGE);
 
+  /* 행성 이름 변경 */
+  const [planetName, setPlanetName] = useState<string>("민지님의 첫 행성");
+
+  const handleEditPlanetName = (newName: string) => {
+    // 행성 이름 수정 API
+    setPlanetName(newName);
+  };
+
   /* 페이지네이션 */
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -116,7 +124,7 @@ const HomePage = () => {
           />
         </Top>
         <TagList>
-          <Tag tagType="planet" name="민지님의 첫 행성" icon="chevron" />
+          <Tag tagType="planet" name={planetName} icon="chevron" />
           <Tag
             tagType="planet"
             name=""
@@ -127,8 +135,9 @@ const HomePage = () => {
         <PlanetWrapper onDrop={handleDrop} onDragOver={handleDragOver}>
           <Planet
             planetType={0}
-            planet="민지님의 첫 행성"
+            planet={planetName}
             orbits={currentOrbits}
+            onEditPlanetName={handleEditPlanetName}
           />
         </PlanetWrapper>
         <PageWrapper>

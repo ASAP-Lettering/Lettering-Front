@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -12,10 +12,29 @@ interface TagProps {
   read?: boolean;
   icon?: iconType;
   onClick?: () => void;
+  onEdit?: (editedName: string) => void;
 }
 
 const Tag = (props: TagProps) => {
-  const { tagType, name, read, icon, onClick } = props;
+  const { tagType, name, read, icon, onClick, onEdit } = props;
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(name);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedName(e.target.value);
+  };
+
+  const handleBlur = () => {
+    if (onEdit && editedName) {
+      onEdit(editedName);
+    }
+    setIsEditing(false);
+  };
 
   const renderIcon = () => {
     if (icon === "chevron") {
@@ -35,10 +54,26 @@ const Tag = (props: TagProps) => {
       $hasEditIcon={icon === "edit"}
       onClick={onClick}
     >
-      {name}
+      {isEditing ? (
+        <NameInput
+          type="text"
+          value={editedName}
+          onChange={handleNameChange}
+          onBlur={handleBlur}
+          autoFocus
+        />
+      ) : (
+        name
+      )}
       {tagType === "orbit" && !read && <Circle />}
       {tagType === "planet" && (
-        <Image src={renderIcon()} width={24} height={24} alt="planet" />
+        <Image
+          src={renderIcon()}
+          width={24}
+          height={24}
+          alt="planet"
+          onClick={handleEditClick}
+        />
       )}
     </Box>
   );
@@ -108,6 +143,13 @@ const Box = styled.button<{
         background: #565c81;
       }
     `}
+`;
+
+const NameInput = styled.input`
+  width: calc(100% + 128px);
+  color: ${theme.colors.white};
+  ${(props) => props.theme.fonts.title01};
+  background-color: transparent;
 `;
 
 const Circle = styled.div`

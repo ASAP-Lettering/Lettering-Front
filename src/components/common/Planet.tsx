@@ -13,10 +13,11 @@ interface PlanetProps {
   planetType: number;
   planet: string;
   orbits: Orbit[];
+  onEditPlanetName: (newName: string) => void;
 }
 
 const Planet = (props: PlanetProps) => {
-  const { planetType, planet, orbits } = props;
+  const { planetType, planet, orbits, onEditPlanetName } = props;
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -46,7 +47,12 @@ const Planet = (props: PlanetProps) => {
         );
       })}
       <PlanetTag>
-        <Tag tagType="planet" name={planet} icon="edit" />
+        <Tag
+          tagType="planet"
+          name={planet}
+          icon="edit"
+          onEdit={onEditPlanetName}
+        />
       </PlanetTag>
     </Container>
   );
