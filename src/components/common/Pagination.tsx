@@ -17,7 +17,7 @@ const Pagination = (props: PaginationProps) => {
     <Wrapper>
       <IconButton onClick={onPrevPage} disabled={currentPage === 1}>
         <Image
-          src="/assets/icons/ic_prev.svg"
+          src="/assets/icons/ic_page_prev.svg"
           width={16}
           height={16}
           alt="이전 페이지"
@@ -26,7 +26,7 @@ const Pagination = (props: PaginationProps) => {
       <Current>{currentPage}</Current> / {totalPage}
       <IconButton onClick={onNextPage} disabled={currentPage === totalPage}>
         <Image
-          src="/assets/icons/ic_next.svg"
+          src="/assets/icons/ic_page_next.svg"
           width={16}
           height={16}
           alt="다음 페이지"
