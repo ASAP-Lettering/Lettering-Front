@@ -22,7 +22,9 @@ const Tag = (props: TagProps) => {
   const [editedName, setEditedName] = useState(name);
 
   const handleEditClick = () => {
-    setIsEditing(true);
+    if (icon === "edit") {
+      setIsEditing(true);
+    }
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

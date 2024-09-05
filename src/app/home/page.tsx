@@ -175,6 +175,12 @@ const Layout = styled.div`
   gap: 10px;
   padding: 74px 0px 0px 0px;
   position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Background = styled(Image)`
