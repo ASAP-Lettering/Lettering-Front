@@ -93,8 +93,9 @@ const HeaderSubTitle = styled.div`
 const Image = styled.img`
     display: flex;
     box-sizing: border-box;
+    margin-top: 20px;
     width: 80%;
     height: auto;
     max-width: 520px;
-    max-height: 520px;
+    max-height: 400px;
 `;

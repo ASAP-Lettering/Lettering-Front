@@ -24,6 +24,7 @@ const Container = styled.div`
   box-sizing: border-box;
   padding: 50px 20px;
   height: 100%;
+  min-height: 800px;
   max-height: 852px;
   flex-direction: column;
   justify-content: space-between;
@@ -31,12 +32,13 @@ const Container = styled.div`
   background-size: 100% auto; 
   background-position: center;
   background-repeat: no-repeat;
+  overflow-y: scroll;
 `;
 
 const LogoTitle = styled.img`
     display: flex;
     box-sizing: border-box;
-    width: 80%;
+    width: 70%;
     height: auto;
     max-width: 257px;
     max-height: 150px;
@@ -44,7 +46,6 @@ const LogoTitle = styled.img`
 
 const LogoText = styled.div`
     display: flex;
-    box-sizing: border-box;
     width: 100%;
     color: rgba(255, 255, 255, 0.80);
     text-align: center;
@@ -56,7 +57,6 @@ const LogoText = styled.div`
 
 const LogoImage = styled.img`
     display: flex;
-    box-sizing: border-box;
     width: 150%;
     height: auto;
     max-width: 520px;
