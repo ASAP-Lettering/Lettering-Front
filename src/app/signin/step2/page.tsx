@@ -11,6 +11,7 @@ import { signinState, userInfo } from "@/recoil/signinStore";
 import ItemPicker from "@/components/signin/ItemPicker";
 import { signin } from "@/api/login/user";
 import NewItemPicker from "@/components/signin/NewItemPicker";
+import { setTokens } from "@/utils/storage";
 
 export interface DatePickerState {
   year: number;
@@ -83,8 +84,7 @@ export default function Signin() {
     })
       .then((res) => {
         console.log("accessToken", res.data.accessToken);
-        localStorage.setItem("lettering_access", res.data.accessToken);
-        localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        setTokens(res.data.accessToken, res.data.refreshToken);
       })
       .catch((error) => {
         console.log(error);
@@ -143,57 +143,57 @@ export default function Signin() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ItemPickerWrapper = styled.div`
-    width: 100%;
-    overflow: hidden;
-    margin-top: 15vh;
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    justify-content: center;
-    position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-top: 15vh;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
 `;
 
 const PickedItemContainer = styled.div`
-    position: absolute;
-    top: 79px;
-    width: 95%;
-    height: 60px;
-    background-color: ${(props) => props.theme.colors.gray800};
-    border-radius: 8px;
-    z-index: 2;
+  position: absolute;
+  top: 79px;
+  width: 95%;
+  height: 60px;
+  background-color: ${(props) => props.theme.colors.gray800};
+  border-radius: 8px;
+  z-index: 2;
 `;
