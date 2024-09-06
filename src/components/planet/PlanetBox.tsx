@@ -1,18 +1,19 @@
 import { theme } from "@/styles/theme";
-import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Check from "../common/Check";
 
 interface PlanetBoxProps {
+  id: number;
   planetName: string;
   count: number;
-  checked: boolean;
+  checked: number;
   current?: boolean;
   onClick?: () => void;
 }
 
 const PlanetBox = (props: PlanetBoxProps) => {
-  const { planetName, count, checked, current, onClick } = props;
+  const { id, planetName, count, checked, current, onClick } = props;
 
   return (
     <Box onClick={onClick}>
@@ -24,12 +25,9 @@ const PlanetBox = (props: PlanetBoxProps) => {
           </Top>
           {count}개의 편지
         </LeftWrapper>
-        <Image
-          src={`/assets/icons/${checked ? "ic_check" : "ic_check_not"}.svg`}
-          width={20}
-          height={20}
-          alt="check"
-        />
+        <CheckWrapper>
+          <Check checkType="default" checked={checked === id} />
+        </CheckWrapper>
       </ContentWrapper>
     </Box>
   );
@@ -73,8 +71,11 @@ const Top = styled.div`
 `;
 
 const CurrentLabel = styled.div`
-  width: 39px;
   padding: 0 9px;
   border-radius: 4px;
+  text-align: center;
   background: ${theme.colors.sub01};
+  white-space: nowrap;
 `;
+
+const CheckWrapper = styled.div``;

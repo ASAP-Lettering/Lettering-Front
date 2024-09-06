@@ -11,7 +11,7 @@ interface CheckProps {
   sublabel?: string;
   text?: string;
   checked: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: ReactNode;
 }
 const Check = (props: CheckProps) => {
@@ -43,6 +43,7 @@ const Check = (props: CheckProps) => {
         checked={checked}
         onChange={onChange}
         $checkType={checkType}
+        $label={!!label}
       />
       {renderSvg()}
       {label && (
@@ -65,12 +66,12 @@ const CheckContainer = styled.label<{ $checkType: checkType }>`
   position: relative;
 `;
 
-const CheckInput = styled.input<{ $checkType: checkType }>`
+const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
   appearance: none;
   flex-shrink: 0;
   width: 32px;
   height: 32px;
-  margin-right: 17px;
+  margin-right: ${({ $label }) => ($label ? "17px" : "0px")};
   border-radius: 4px;
   background-color: ${(props) =>
     props.$checkType === "box"
