@@ -2,6 +2,7 @@
 
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import Letter from "@/components/letter/Letter";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -26,6 +27,12 @@ export default function Signin() {
             편지는 전달 받은 링크를 통해 나중에도 등록할 수 있어요
           </HeaderSubTitle>
         </Header>
+        <Letter
+          templateType={1}
+          name="승효"
+          content="안녕하세요"
+          date="2024-09-04"
+        />
       </MainWrapper>
       <ButtonContainer>
         <Button
