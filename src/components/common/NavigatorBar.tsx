@@ -80,7 +80,7 @@ const Title = styled.div`
   flex-grow: 1;
   text-align: center;
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.medium18};
+  ${(props) => props.theme.fonts.body04};
 `;
 
 const NextLabel = styled.div`

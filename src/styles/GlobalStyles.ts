@@ -1,6 +1,7 @@
 "use client";
 
 import { createGlobalStyle, keyframes } from "styled-components";
+import { theme } from "./theme";
 
 const GlobalStyles = createGlobalStyle`    
 * {

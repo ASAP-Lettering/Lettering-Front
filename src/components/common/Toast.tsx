@@ -7,10 +7,14 @@ import styled, { css } from "styled-components";
 interface ToastProps {
   text: string;
   icon: boolean;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
 }
 
 const Toast = (props: ToastProps) => {
-  const { text, icon } = props;
+  const { text, icon, top, bottom, left, right } = props;
 
   const [visible, setVisible] = useState(true);
 
@@ -23,7 +27,14 @@ const Toast = (props: ToastProps) => {
   }, []);
 
   return (
-    <Container $icon={icon} $visible={visible}>
+    <Container
+      $icon={icon}
+      $visible={visible}
+      $top={top}
+      $bottom={bottom}
+      $left={left}
+      $right={right}
+    >
       {icon && (
         <Image
           src="/assets/icons/ic_info.svg"
@@ -39,9 +50,16 @@ const Toast = (props: ToastProps) => {
 
 export default Toast;
 
-const Container = styled.div<{ $icon: boolean; $visible: boolean }>`
-  width: 100%;
-  padding: 15px 30px;
+const Container = styled.div<{
+  $icon: boolean;
+  $visible: boolean;
+  $top?: string;
+  $bottom?: string;
+  $left?: string;
+  $right?: string;
+}>`
+  width: calc(100% - 50px);
+  padding: 11px 30px;
   display: flex;
   justify-content: ${({ $icon }) => ($icon ? "flex-start" : "center")};
   align-items: center;
@@ -51,7 +69,13 @@ const Container = styled.div<{ $icon: boolean; $visible: boolean }>`
   background: rgba(62, 65, 81, 0.7);
   backdrop-filter: blur(4px);
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.medium14};
+  position: absolute;
+  top: ${({ $top }) => $top};
+  bottom: ${({ $bottom }) => $bottom};
+  left: ${({ $left }) => $left};
+  right: ${({ $right }) => $right};
+  transform: translateX(-50%);
+  ${(props) => props.theme.fonts.body08};
   animation: ${(props) =>
     props.$visible
       ? css`

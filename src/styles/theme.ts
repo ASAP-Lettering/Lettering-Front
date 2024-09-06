@@ -6,7 +6,7 @@ const colors = {
   sub02: "#565C81",
   sub03: "#424DA0",
 
-  gray900: "#FBFBFD",
+  gray900: "#181B29",
   gray800: "#202232",
   gray700: "#2E3040",
   gray600: "#3E4151",
@@ -37,159 +37,98 @@ const FONT = ({ weight, size }: Font): string => {
 };
 
 const fonts = {
-  /* Design System */
-  heading01: FONT({
-    weight: 600,
-    size: 24,
-  }),
-  heading02: FONT({
-    weight: 400,
-    size: 24,
-  }),
-  title01: FONT({
-    weight: 600,
-    size: 20,
-  }),
-  title02: FONT({
-    weight: 600,
-    size: 18,
-  }),
-  subtitle: FONT({
-    weight: 600,
-    size: 16,
-  }),
-  body01: FONT({
-    weight: 500,
-    size: 24,
-  }),
+    /* Design System */
+    heading01: FONT({
+        weight: 600,
+        size: 24,
+    }),
+    heading02: FONT({
+        weight: 400,
+        size: 24,
+    }),
+    title01: FONT({
+        weight: 600,
+        size: 20,
+    }),
+    title02: FONT({
+        weight: 600,
+        size: 18,
+    }),
+    subtitle: FONT({
+        weight: 600,
+        size: 16,
+    }),
 
-  /*Bold*/
-  bold45: FONT({
-    weight: 700,
-    size: 45,
-  }),
-  bold32: FONT({
-    weight: 700,
-    size: 32,
-  }),
-  bold25: FONT({
-    weight: 700,
-    size: 25,
-  }),
-  bold22: FONT({
-    weight: 700,
-    size: 22,
-  }),
-  bold20: FONT({
-    weight: 700,
-    size: 20,
-  }),
-  bold18: FONT({
-    weight: 700,
-    size: 18,
-  }),
-  bold16: FONT({
-    weight: 700,
-    size: 16,
-  }),
-  bold14: FONT({
-    weight: 700,
-    size: 14,
-  }),
-  bold12: FONT({
-    weight: 700,
-    size: 12,
-  }),
-  bold11: FONT({
-    weight: 700,
-    size: 11,
-  }),
-  bold10: FONT({
-    weight: 700,
-    size: 10,
-  }),
+    body01: FONT({
+        weight: 500,
+        size: 24,
+    }),
+    body02: FONT({
+        weight: 500,
+        size: 20,
+    }),
+    body03: FONT({
+        weight: 400,
+        size: 20,
+    }),
+    body04: FONT({
+        weight: 500,
+        size: 18,
+    }),
+    body05: FONT({
+        weight: 400,
+        size: 18,
+    }),
+    body06: FONT({
+        weight: 500,
+        size: 16,
+    }),
+    body07: FONT({
+        weight: 400,
+        size: 16,
+    }),
+    body08: FONT({
+        weight: 500,
+        size: 14,
+    }),
+    body09: FONT({
+        weight: 400,
+        size: 14,
+    }),
+    
+    button01: FONT({
+        weight: 600,
+        size: 16,
+    }),
+    button02: FONT({
+        weight: 600,
+        size: 14,
+    }),
+    button03: FONT({
+        weight: 400,
+        size: 12,
+    }),
 
-  /*SemiBold*/
-  semiBold18: FONT({
-    weight: 600,
-    size: 18,
-  }),
-  semiBold16: FONT({
-    weight: 600,
-    size: 16,
-  }),
-  semiBold15: FONT({
-    weight: 600,
-    size: 15,
-  }),
-  semiBold14: FONT({
-    weight: 600,
-    size: 14,
-  }),
-  semiBold12: FONT({
-    weight: 600,
-    size: 12,
-  }),
-
-  /*Medium*/
-  medium24: FONT({
-    weight: 500,
-    size: 24,
-  }),
-  medium16: FONT({
-    weight: 500,
-    size: 16,
-  }),
-  medium15: FONT({
-    weight: 500,
-    size: 15,
-  }),
-  medium14: FONT({
-    weight: 500,
-    size: 14,
-  }),
-  medium11: FONT({
-    weight: 500,
-    size: 11,
-  }),
-
-  /*Regular*/
-  regular35: FONT({
-    weight: 400,
-    size: 35,
-  }),
-  regular28: FONT({
-    weight: 400,
-    size: 28,
-  }),
-  regular25: FONT({
-    weight: 400,
-    size: 25,
-  }),
-  regular20: FONT({
-    weight: 400,
-    size: 20,
-  }),
-  regular18: FONT({
-    weight: 400,
-    size: 18,
-  }),
-  regular16: FONT({
-    weight: 400,
-    size: 16,
-  }),
-  regular14: FONT({
-    weight: 400,
-    size: 14,
-  }),
-  regular12: FONT({
-    weight: 400,
-    size: 12,
-  }),
-  regular8: FONT({
-    weight: 400,
-    size: 8,
-  }),
+    caption01: FONT({
+        weight: 500,
+        size: 14,
+    }),
+    caption02: FONT({
+        weight: 400,
+        size: 14,
+    }),
+    caption03: FONT({
+        weight: 500,
+        size: 12,
+    }),
+    caption04: FONT({
+        weight: 400,
+        size: 12,
+    }),
+    caption05: FONT({
+        weight: 400,
+        size: 10,
+    }),
 };
 
 export const links = {

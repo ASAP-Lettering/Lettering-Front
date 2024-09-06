@@ -95,7 +95,7 @@ const LabelText = styled.span`
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  ${(props) => props.theme.fonts.regular16};
+  ${(props) => props.theme.fonts.body07};
   color: ${theme.colors.white};
   white-space: nowrap;
 `;

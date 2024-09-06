@@ -2,11 +2,11 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { signinState, userInfo } from "@/recoil/signinStore";
+import { userInfo } from "@/recoil/signinStore";
 import { useRecoilState } from "recoil";
 import { links } from "@/styles/theme";
 import Toast from "@/components/common/Toast";
@@ -166,12 +166,15 @@ export default function Signin() {
               ></img>
             </SubContainer>
           </Content>
-        </MainWrapper>
-        <ToastContainer>
           {showToast && (
-            <Toast text={`필수 항목에 동의해주세요!`} icon={true} />
+            <Toast
+              text={`필수 항목에 동의해주세요!`}
+              icon={true}
+              bottom="120px"
+              left="50%"
+            />
           )}
-        </ToastContainer>
+        </MainWrapper>
       </div>
       <Button
         buttonType="primary"
@@ -183,58 +186,52 @@ export default function Signin() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
+  position: relative;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-top: 2.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2.5rem;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    padding: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  padding: 10px;
 `;
 
 const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-top: 6rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 6rem;
 `;
 
 const AllContainer = styled.div`
-    display: flex;
-    border-radius: 0.5rem;
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: ${(props) => props.theme.colors.gray800};
-    flex-direction: row;
+  display: flex;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: ${(props) => props.theme.colors.gray800};
+  flex-direction: row;
 `;
 
 const SubContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    padding: 10px 15px;
-`;
-
-const ToastContainer = styled.div`
-    display: flex;
-    box-sizing: border-box;
-    max-width: 80%;
-    flex-direction: column;
-    justify-content: center;
-    position: absolute;
-    bottom: 120px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 10px 15px;
 `;
