@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -10,6 +10,7 @@ import { PLANETS } from "@/constants/planet";
 import PlanetList from "@/components/planet/PlanetList";
 import Image from "next/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import Toast from "@/components/common/Toast";
 
 const PlanetManagePage = () => {
   const router = useRouter();
@@ -18,6 +19,8 @@ const PlanetManagePage = () => {
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [checkedPlanets, setCheckedPlanets] = useState<number[]>([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
+  const [deletePlanet, setDeletePlanet] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
@@ -40,10 +43,19 @@ const PlanetManagePage = () => {
     // 추후 작성
     setConfirmDeleteModal(false);
     setDeleteMode(false);
+    setDeletePlanet("ASAP"); // 삭제한 행성명으로
+    handleShowToast();
   };
 
   const handleCancelDeletePlanet = () => {
     setConfirmDeleteModal(false);
+  };
+
+  const handleShowToast = () => {
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
@@ -103,6 +115,14 @@ const PlanetManagePage = () => {
           sub="행성에 등록된 편지들도 함께 삭제됩니다."
           onConfirm={handleConfirmDeletePlanet}
           onCancel={handleCancelDeletePlanet}
+        />
+      )}
+      {showToast && (
+        <Toast
+          text={`${deletePlanet} 행성과 등록된 편지들이 함께 삭제 되었어요`}
+          icon={false}
+          bottom="65px"
+          left="50%"
         />
       )}
     </Layout>
