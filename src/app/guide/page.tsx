@@ -8,6 +8,7 @@ import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
+import NewItemPicker from "@/components/signin/NewItemPicker";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -54,6 +55,14 @@ const GuidePage = () => {
 
   const handleCancel = () => {
     setConfirmModal(false);
+  };
+
+  //ItemPicker
+  const [item, setItem] = useState("item4");
+
+  const items = ["item1", "item2", "item3", "item4", "item5", "item6", "item7"];
+  const handleItemChange = (item: string) => {
+    setItem(item);
   };
 
   return (
@@ -169,6 +178,15 @@ const GuidePage = () => {
         onClick={handleShowConfirmModal}
         width="100%"
       />
+      <h3>ItemPicker</h3>
+      <PickedItemContainer>
+        <NewItemPicker
+          items={items}
+          defaultItem={"item4"}
+          unit=""
+          onChange={handleItemChange}
+        />
+      </PickedItemContainer>
     </Container>
   );
 };
@@ -199,4 +217,12 @@ const SpaceBetween = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+`;
+
+const PickedItemContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
 `;
