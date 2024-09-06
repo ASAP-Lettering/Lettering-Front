@@ -16,7 +16,7 @@ const PlanetBox = (props: PlanetBoxProps) => {
   const { id, planetName, count, checked, current, onClick } = props;
 
   return (
-    <Box onClick={onClick}>
+    <Box onClick={onClick} $checked={checked === id}>
       <ContentWrapper>
         <LeftWrapper>
           <Top>
@@ -35,16 +35,16 @@ const PlanetBox = (props: PlanetBoxProps) => {
 
 export default PlanetBox;
 
-const Box = styled.div`
+const Box = styled.div<{ $checked: boolean }>`
   width: 100%;
   display: flex;
   padding: 10px 12px 10px 16px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  align-self: stretch;
   border-radius: 8px;
-  background: var(--Gray_800, #202232);
+  background: ${({ theme, $checked }) =>
+    $checked ? theme.colors.gray800 : "transparent"};
 `;
 
 const ContentWrapper = styled.div`
@@ -68,6 +68,7 @@ const Top = styled.div`
   align-items: center;
   gap: 6px;
   color: ${theme.colors.white};
+  ${(props) => props.theme.fonts.body06};
 `;
 
 const CurrentLabel = styled.div`
@@ -75,6 +76,7 @@ const CurrentLabel = styled.div`
   border-radius: 4px;
   text-align: center;
   background: ${theme.colors.sub01};
+  ${(props) => props.theme.fonts.caption03};
   white-space: nowrap;
 `;
 
