@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 
-type checkType = "box" | "default";
+type checkType = "box" | "default" | "round";
 
 interface CheckProps {
   checkType: checkType;
@@ -11,7 +11,7 @@ interface CheckProps {
   sublabel?: string;
   text?: string;
   checked: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: ReactNode;
 }
 const Check = (props: CheckProps) => {
@@ -23,13 +23,15 @@ const Check = (props: CheckProps) => {
       filename = "ic_checkbox";
     } else if (checkType === "default") {
       filename = checked ? "ic_check" : "ic_check_not";
+    } else if (checkType === "round") {
+      filename = checked ? "ic_check_circle" : "ic_check_circle_not";
     }
 
     return (
       <StyledImage
         src={`/assets/icons/${filename}.svg`}
-        width={20}
-        height={20}
+        width={checkType === "round" ? 24 : 20}
+        height={checkType === "round" ? 24 : 20}
         alt="check"
         $checkType={checkType}
       />
@@ -43,6 +45,7 @@ const Check = (props: CheckProps) => {
         checked={checked}
         onChange={onChange}
         $checkType={checkType}
+        $label={!!label}
       />
       {renderSvg()}
       {label && (
@@ -65,12 +68,12 @@ const CheckContainer = styled.label<{ $checkType: checkType }>`
   position: relative;
 `;
 
-const CheckInput = styled.input<{ $checkType: checkType }>`
+const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
   appearance: none;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  margin-right: 17px;
+  width: ${({ $checkType }) => ($checkType ? "24px" : "32px")};
+  height: ${({ $checkType }) => ($checkType ? "24px" : "32px")};
+  margin-right: ${({ $label }) => ($label ? "17px" : "0px")};
   border-radius: 4px;
   background-color: ${(props) =>
     props.$checkType === "box"
@@ -83,8 +86,8 @@ const CheckInput = styled.input<{ $checkType: checkType }>`
 
 const StyledImage = styled(Image)<{ $checkType: checkType }>`
   position: absolute;
-  top: 6px;
-  left: 6px;
+  top: ${({ $checkType }) => ($checkType ? "0px" : "6px")};
+  left: ${({ $checkType }) => ($checkType ? "0px" : "6px")};
   pointer-events: none;
   z-index: 10;
 `;
