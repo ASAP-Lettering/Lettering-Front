@@ -47,7 +47,6 @@ export default SwipeableContent;
 
 const SwipeableContainer = styled.div`
   width: 100%;
-  overflow: hidden; 
 `;
 
 const ContentSlider = styled.div`

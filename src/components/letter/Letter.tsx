@@ -95,9 +95,7 @@ const Date = styled.div`
 
 const Content = styled.div`
     width: 100%;
-    display: flex;
-    box-sizing: border-box;
-    padding: 2.5rem 0;
+    height: auto;
     ${(props: any) => props.theme.fonts.body04};
     overflow: hidden;
     -webkit-user-select:none;
