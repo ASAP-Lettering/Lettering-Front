@@ -69,6 +69,11 @@ const GuidePage = () => {
 
   //Letter
   const letterData = LETTER_DATA[0];
+  const imageData = [
+    "https://via.assets.so/album.png?id=1&q=95&w=360&h=360&fit=fill",
+    "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
+    "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
+  ];
 
   return (
     <Container>
@@ -195,9 +200,17 @@ const GuidePage = () => {
       <h3>Letter</h3>
       <Letter
         templateType={letterData.templateType}
-        name={letterData.receiver}
+        name={letterData.sender}
         content={letterData.content}
         date={letterData.date}
+        isImage={false}
+      />
+      <Letter
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        images={imageData}
+        date={letterData.date}
+        isImage={true}
       />
     </Container>
   );

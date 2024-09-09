@@ -6,16 +6,9 @@ import { motion } from "framer-motion";
 interface PaginationProps {
   currentPage: number;
   totalPage: number;
-  onPrevPage: () => void;
-  onNextPage: () => void;
 }
 
-const Pagination = ({
-  currentPage,
-  totalPage,
-  onPrevPage,
-  onNextPage,
-}: PaginationProps) => {
+const Pagination = ({ currentPage, totalPage }: PaginationProps) => {
   return (
     <Wrapper>
       <PaginationWrapper>
@@ -35,8 +28,10 @@ const Pagination = ({
 export default Pagination;
 
 const Wrapper = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   color: ${theme.colors.gray400};
 `;
@@ -44,6 +39,7 @@ const Wrapper = styled.div`
 const PaginationWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
   width: 100%;
 `;
 

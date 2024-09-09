@@ -5,8 +5,8 @@ import { useSwipeable } from "react-swipeable";
 interface SwipeableContentProps {
   content: string[];
   setPage: (page: number) => void;
-  direction: number; // This could be used to set the swipe direction
   totalPage: number;
+  isImage: boolean;
   page: number;
 }
 
@@ -14,7 +14,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
   content,
   setPage,
   totalPage,
-  direction,
+  isImage,
   page,
 }) => {
   const handlers = useSwipeable({
@@ -29,9 +29,15 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
   return (
     <SwipeableContainer {...handlers}>
       <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
-        {content.map((item, index) => (
-          <ContentItem key={index}>{item}</ContentItem>
-        ))}
+        {content.map((item, index) =>
+          isImage ? (
+            <ContentItem key={index}>
+              <ContentImage src={content[index]}></ContentImage>
+            </ContentItem>
+          ) : (
+            <ContentItem key={index}>{item}</ContentItem>
+          )
+        )}
       </ContentSlider>
     </SwipeableContainer>
   );
@@ -46,13 +52,27 @@ const SwipeableContainer = styled.div`
 
 const ContentSlider = styled.div`
   display: flex;
-  transition: transform 0.3s ease-out; 
+  transition: transform 0.5s ease-out; 
 `;
 
 const ContentItem = styled.div`
-  width: 100%;
-  flex-shrink: 0; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    flex-shrink: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ContentImage = styled.img`
+    width: 300px;
+    height: auto;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 `;

@@ -1,55 +1,53 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import Button from "../common/Button";
+import styled from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
 
 interface LetterProps {
   templateType: number;
   name: string;
-  content: string;
+  content?: string;
   date: string;
+  isImage: boolean;
   images?: string[];
 }
 
 const Letter = (props: LetterProps) => {
-  const { templateType, name, content, date, images } = props;
+  const { templateType, name, content, date, isImage, images } = props;
   const [currentPage, setCurrentPage] = useState(0);
-  const newContent = ["content", content, content];
-  const totalPage = newContent.length;
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  const paginateContent = (content: string, maxCharsPerPage: number) => {
+    const pages = [];
+    for (let i = 0; i < content.length; i += maxCharsPerPage) {
+      pages.push(
+        content.substring(i, Math.min(content.length, i + maxCharsPerPage))
+      );
+    }
+    return pages;
   };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPage ? prev + 1 : prev));
-  };
+  const contentPages = isImage ? images : paginateContent(content!, 150);
+  const totalPage = isImage ? images!.length : contentPages!.length;
 
   return (
     <Container templateType={templateType}>
       <TopContainer>
-        <button onClick={handleNextPage}>next</button>
-        <button onClick={handlePrevPage}>prev</button>
         <Name>From.{name}</Name>
-        <img src="/assets/icons/ic_more.svg" />
+        <button>
+          <img src="/assets/icons/ic_more.svg" />
+        </button>
       </TopContainer>
       <Date>{date}</Date>
       <Content>
         <SwipeableContent
-          content={newContent}
+          content={isImage ? images! : contentPages!}
           setPage={setCurrentPage}
-          direction={0}
-          totalPage={totalPage}
+          totalPage={totalPage ? totalPage : 0}
+          isImage={isImage}
           page={currentPage}
         />
       </Content>
       <Pagination
         currentPage={currentPage}
-        totalPage={totalPage}
-        onPrevPage={handlePrevPage}
-        onNextPage={handleNextPage}
+        totalPage={totalPage ? totalPage : 0}
       />
     </Container>
   );
@@ -97,14 +95,13 @@ const Date = styled.div`
 
 const Content = styled.div`
     width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 2.5rem 0;
     ${(props: any) => props.theme.fonts.body04};
     overflow: hidden;
-`;
-
-const Image = styled.div`
-    width: 100%;
-`;
-
-const PageNation = styled.div`
-    width: 100%;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
 `;
