@@ -7,14 +7,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useState } from "react";
 
-export default function Verify() {
+export default function SigninStep3() {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push(`/verify/complete?url=${url}`);
+    router.push(`/signin/complete`);
   };
 
   return (

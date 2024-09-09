@@ -1,26 +1,38 @@
 "use client";
 
 import Button from "@/components/common/Button";
-import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
-import { useRouter } from "next/navigation";
+import { LETTER_DATA } from "@/constants/letter";
+import { LetterType } from "@/types/letter";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-export default function Signin() {
+export default function VerifyLetter() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
+  const [letterData, setLetterData] = useState<LetterType>();
 
   const handleButtonClick = () => {
     router.push("/");
   };
 
-  const senderName = "동우";
+  useEffect(() => {
+    //LetterData 받아오는 로직
+    for (let i = 0; i < LETTER_DATA.length; i++) {
+      if (LETTER_DATA[i].url === url) {
+        setLetterData(LETTER_DATA[i]);
+      }
+    }
+  }, []);
 
-  return (
+  return letterData ? (
     <Container>
       <MainWrapper>
         <Header>
           <HeaderTitle>
-            {senderName}님이 보낸 편지 속 <br />
+            {letterData.sender}님이 보낸 편지 속 <br />
             소중한 마음을 읽어보세요
           </HeaderTitle>
           <HeaderSubTitle>
@@ -28,10 +40,10 @@ export default function Signin() {
           </HeaderSubTitle>
         </Header>
         <Letter
-          templateType={1}
-          name="승효"
-          content="안녕하세요"
-          date="2024-09-04"
+          templateType={letterData.templateType}
+          name={letterData.receiver}
+          content={letterData.content}
+          date={letterData.date}
         />
       </MainWrapper>
       <ButtonContainer>
@@ -49,6 +61,8 @@ export default function Signin() {
         />
       </ButtonContainer>
     </Container>
+  ) : (
+    <></>
   );
 }
 

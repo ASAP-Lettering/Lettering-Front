@@ -63,7 +63,7 @@ export default function Signin() {
       if (url) {
         router.push(`/signin/complete?url=${url}`);
       } else {
-        router.push(`/signin/complete`);
+        router.push(`/signin/step3`);
       }
     }
   }, [isBirthdayUpdated]);
