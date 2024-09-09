@@ -44,10 +44,11 @@ const PaginationWrapper = styled.div`
 `;
 
 const Circle = styled(motion.div)<{ $isActive: boolean }>`
-  width: 10px;
-  height: 10px;
-  border-radius: ${({ $isActive }) => ($isActive ? "30%" : "50%")};
-  background-color: ${({ $isActive }) => ($isActive ? "gray" : "white")};
-  width: ${({ $isActive }) => ($isActive ? "20px" : "10px")}; 
+  width: 6px;
+  height: 6px;
+  border-radius: ${({ $isActive }) => ($isActive ? "174px" : "50%")};
+  background-color: ${({ $isActive }) =>
+    $isActive ? theme.colors.white : theme.colors.gray500};
+  width: ${({ $isActive }) => ($isActive ? "16px" : "6px")}; 
   margin: 0 3px;
 `;

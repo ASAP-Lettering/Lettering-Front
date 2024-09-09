@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
+import { theme } from "@/styles/theme";
 
 interface LetterProps {
   templateType: number;
@@ -90,12 +91,13 @@ const Name = styled.div`
 
 const Date = styled.div`
     width: 100%;
-    ${(props: any) => props.theme.fonts.body06};
+    ${(props: any) => props.theme.fonts.body09};
+    color: ${theme.colors.gray400};
 `;
 
 const Content = styled.div`
     width: 100%;
-    height: auto;
+    height: 90%;
     ${(props: any) => props.theme.fonts.body04};
     overflow: hidden;
     -webkit-user-select:none;

@@ -238,7 +238,7 @@ const GuidePage = () => {
         <Button
           buttonType="secondary"
           size="default"
-          text="안보이게"
+          text="display"
           onClick={handleDisplay}
         />
       </ButtonContainer>
