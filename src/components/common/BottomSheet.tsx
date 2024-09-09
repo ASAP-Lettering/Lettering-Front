@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDragControls } from "framer-motion";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import useMeasure from "react-use-measure";
+import { theme } from "@/styles/theme";
+import Button from "./Button";
 
 const BottomSheet = ({
   viewport = "100dvh",
@@ -10,21 +12,29 @@ const BottomSheet = ({
   subtitle,
   button = "",
   subButton = "",
+  isOpen,
+  handleOpen,
 }: {
   viewport: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   button?: string;
   subButton?: string;
+  isOpen: boolean;
+  handleOpen: (state: boolean) => void;
 }) => {
-  const [isOpened, setIsOpened] = useState(false);
+  //const [isOpened, setIsOpened] = useState(isOpen);
   const [contentRef, contentBounds] = useMeasure();
   const dragControls = useDragControls();
 
-  const animateState = isOpened ? "opened" : "closed";
+  //   useEffect(() => {
+  //     setIsOpened(isOpen);
+  //   }, [isOpen]);
+
+  const animateState = isOpen ? "opened" : "closed";
 
   const expandedHeight = useMemo(
-    () => Math.min(contentBounds.height + 50, window.innerHeight - 50),
+    () => Math.min(contentBounds.height - 180, window.innerHeight - 50),
     [contentBounds.height]
   );
 
@@ -45,14 +55,17 @@ const BottomSheet = ({
             opacity: 0,
           },
         }}
-        onTap={() => setIsOpened(false)}
+        onTap={() => {
+          //setIsOpened(false);
+          handleOpen(false);
+        }}
       />
 
       <SheetBackground
         initial="closed"
         animate={animateState}
         variants={{
-          opened: { top: `calc(${viewport} - ${expandedHeight}px)` },
+          opened: { top: `calc(${viewport}  - ${expandedHeight}px)` },
           closed: { top: `calc(${viewport} - 60px)` },
         }}
         transition={{ type: "spring", bounce: 0, duration: 0.5 }}
@@ -78,14 +91,29 @@ const BottomSheet = ({
 
           const newIsOpened = info.offset.y < 0;
 
-          setIsOpened(newIsOpened);
+          //setIsOpened(newIsOpened);
+          handleOpen(newIsOpened);
         }}
       >
         <BottomHeader onPointerDown={(e) => dragControls.start(e)}>
           <HandleBar style={{ borderRadius: 9999 }} />
         </BottomHeader>
         <SheetContentWrapper style={{ height: 500 }} ref={contentRef}>
-          <SheetContent>{title}</SheetContent>
+          <SheetContent>
+            <TitleWrapper>
+              <SheetTitle>{title}</SheetTitle>
+              <SheetSubTitle>{subtitle}</SheetSubTitle>
+            </TitleWrapper>
+            <Button
+              buttonType="primary"
+              size="large"
+              text="확인 완료"
+              onClick={() => handleOpen(false)}
+            />
+          </SheetContent>
+          <WriteAgain onClick={() => handleOpen(false)}>
+            다시 수정하기
+          </WriteAgain>
         </SheetContentWrapper>
       </SheetBackground>
     </>
@@ -110,7 +138,7 @@ const SheetBackground = styled(motion.div)`
   left: 0;
   width: 100%;
   height: 100lvh;
-  background: white;
+  background:${theme.colors.gray900};
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
   border-radius: 24px 24px 0 0;
   padding: 12px 0 24px 0;
@@ -125,8 +153,8 @@ const BottomHeader = styled.div`
 
 const HandleBar = styled.div`
   width: 58px;
-  height: 8px;
-  background: #dfdfdf;
+  height: 4px;
+  background: ${theme.colors.gray700};
   margin: 0 auto;
   /* border: 1px solid red; */
 `;
@@ -139,4 +167,32 @@ const SheetContentWrapper = styled.div`
 
 const SheetContent = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const TitleWrapper = styled.div`
+  margin-bottom: 50px;
+`;
+
+const SheetTitle = styled.div`
+    ${theme.fonts.title01}
+    color: white;
+    padding: 5px 0;
+`;
+
+const SheetSubTitle = styled.div`
+    ${theme.fonts.body07}
+    color: ${theme.colors.gray300};
+`;
+
+const WriteAgain = styled.button`
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    ${theme.fonts.caption02}
+    color: ${theme.colors.gray200};
 `;
