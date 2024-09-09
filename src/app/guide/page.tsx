@@ -8,7 +8,9 @@ import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
+import Letter from "@/components/letter/Letter";
 import NewItemPicker from "@/components/signin/NewItemPicker";
+import { LETTER_DATA } from "@/constants/letter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -64,6 +66,9 @@ const GuidePage = () => {
   const handleItemChange = (item: string) => {
     setItem(item);
   };
+
+  //Letter
+  const letterData = LETTER_DATA[0];
 
   return (
     <Container>
@@ -187,6 +192,13 @@ const GuidePage = () => {
           onChange={handleItemChange}
         />
       </PickedItemContainer>
+      <h3>Letter</h3>
+      <Letter
+        templateType={letterData.templateType}
+        name={letterData.receiver}
+        content={letterData.content}
+        date={letterData.date}
+      />
     </Container>
   );
 };

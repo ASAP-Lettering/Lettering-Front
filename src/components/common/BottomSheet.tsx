@@ -4,7 +4,19 @@ import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import useMeasure from "react-use-measure";
 
-const BottomSheet = ({ viewport = "100dvh" }: { viewport: string }) => {
+const BottomSheet = ({
+  viewport = "100dvh",
+  title,
+  subtitle,
+  button = "",
+  subButton = "",
+}: {
+  viewport: string;
+  title: string;
+  subtitle: string;
+  button?: string;
+  subButton?: string;
+}) => {
   const [isOpened, setIsOpened] = useState(false);
   const [contentRef, contentBounds] = useMeasure();
   const dragControls = useDragControls();
@@ -73,7 +85,7 @@ const BottomSheet = ({ viewport = "100dvh" }: { viewport: string }) => {
           <HandleBar style={{ borderRadius: 9999 }} />
         </BottomHeader>
         <SheetContentWrapper style={{ height: 500 }} ref={contentRef}>
-          <SheetContent>까꿍 안녕</SheetContent>
+          <SheetContent>{title}</SheetContent>
         </SheetContentWrapper>
       </SheetBackground>
     </>
