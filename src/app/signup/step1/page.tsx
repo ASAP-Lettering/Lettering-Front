@@ -6,12 +6,12 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { userInfo } from "@/recoil/signinStore";
+import { userInfo } from "@/recoil/signupStore";
 import { useRecoilState } from "recoil";
 import { links } from "@/styles/theme";
 import Toast from "@/components/common/Toast";
 
-export default function Signin() {
+export default function Signup() {
   const [user, setUser] = useRecoilState(userInfo);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isSerivceChecked, setIsServiceChecked] = useState(false);
@@ -25,9 +25,9 @@ export default function Signin() {
   const handleButtonClick = () => {
     if (isSerivceChecked && isPersonalChecked) {
       if (url) {
-        router.push(`/signin/step2?url=${url}`);
+        router.push(`/signup/step2?url=${url}`);
       } else {
-        router.push("/signin/step2");
+        router.push("/signup/step2");
       }
 
       setUser({

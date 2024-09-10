@@ -3,7 +3,7 @@
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 
-export default function Signin() {
+export default function Signup() {
   return <Container></Container>;
 }
 

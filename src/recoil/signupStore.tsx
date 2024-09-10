@@ -11,7 +11,7 @@ export const userInfo = atom({
   },
 });
 
-export const signinState = atom({
+export const signupState = atom({
   key: "registerToken",
   default: "",
 });

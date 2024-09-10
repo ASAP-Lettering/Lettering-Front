@@ -2,7 +2,7 @@
 
 import { login } from "@/api/login/user";
 import Loader from "@/components/common/Loader";
-import { signinState } from "@/recoil/signinStore";
+import { signupState } from "@/recoil/signupStore";
 import { clearLetterUrl, getLetterUrl, setTokens } from "@/utils/storage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const Auth = () => {
-  const [registerToken, setRegisterToken] = useRecoilState(signinState);
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const router = useRouter();
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const REDIRECT_URL = process.env.NEXT_PUBLIC_REDIRECT_URI;
@@ -58,10 +58,10 @@ const Auth = () => {
                 console.log("registerToken", error.response.data.registerToken);
                 setRegisterToken(error.response.data.registerToken);
                 if (storeUrl) {
-                  router.push(`/signin/step1?url=${storeUrl}`);
+                  router.push(`/signup/step1?url=${storeUrl}`);
                   clearLetterUrl();
                 } else {
-                  router.push("/signin/step1");
+                  router.push("/signup/step1");
                 }
               }
             });

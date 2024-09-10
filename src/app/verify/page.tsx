@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useState } from "react";
 
-export default function Signin() {
+export default function Signup() {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();

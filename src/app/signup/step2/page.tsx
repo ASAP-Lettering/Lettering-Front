@@ -5,12 +5,12 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-// import DatePicker from "@/components/signin/DatePicker";
+// import DatePicker from "@/components/signup/DatePicker";
 import { useRecoilState } from "recoil";
-import { signinState, userInfo } from "@/recoil/signinStore";
-import ItemPicker from "@/components/signin/ItemPicker";
-import { signin } from "@/api/login/user";
-import NewItemPicker from "@/components/signin/NewItemPicker";
+import { signupState, userInfo } from "@/recoil/signupStore";
+import ItemPicker from "@/components/signup/ItemPicker";
+import { signup } from "@/api/login/user";
+import NewItemPicker from "@/components/signup/NewItemPicker";
 import { setTokens } from "@/utils/storage";
 
 export interface DatePickerState {
@@ -19,8 +19,8 @@ export interface DatePickerState {
   day: number;
 }
 
-export default function Signin() {
-  const [registerToken, setRegisterToken] = useRecoilState(signinState);
+export default function Signup() {
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -62,9 +62,9 @@ export default function Signin() {
   useEffect(() => {
     if (isBirthdayUpdated) {
       if (url) {
-        router.push(`/signin/complete?url=${url}`);
+        router.push(`/signup/complete?url=${url}`);
       } else {
-        router.push(`/signin/complete`);
+        router.push(`/signup/complete`);
       }
     }
   }, [isBirthdayUpdated]);
@@ -75,7 +75,7 @@ export default function Signin() {
       birthday: mybirthday,
     }));
 
-    signin({
+    signup({
       registerToken: registerToken,
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
@@ -93,9 +93,9 @@ export default function Signin() {
       });
 
     if (url) {
-      router.push(`/signin/complete?url=${url}`);
+      router.push(`/signup/complete?url=${url}`);
     } else {
-      router.push(`/signin/complete`);
+      router.push(`/signup/complete`);
       console.log(user);
     }
   };
