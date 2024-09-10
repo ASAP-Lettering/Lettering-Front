@@ -78,7 +78,8 @@ const Container = styled.div<{ templateType: number }>`
     height: auto;
     padding: 34px;
     max-width: 345px;
-    min-height: 354px;
+    max-height: 349px;
+    min-height: 349px;
     background-image: ${({ templateType }) =>
       `url('/assets/letter/background_${templateType}.png')`};
     background-size: 100% auto; 
@@ -86,6 +87,8 @@ const Container = styled.div<{ templateType: number }>`
     background-repeat: no-repeat;
     color: white;
     position: relative;
+    border-radius: 12px;
+    border: 1px solid ${theme.colors.gray700};
 `;
 
 const TopContainer = styled.div`
