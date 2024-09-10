@@ -5,7 +5,7 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-export default function Signin() {
+export default function Signup() {
   const router = useRouter();
 
   const handleButtonClick = () => {
@@ -24,7 +24,7 @@ export default function Signin() {
       </MainWrapper>
       <div>
         <ImageWrapper>
-          <Image src="/assets/signin/verify_image.png" />
+          <Image src="/assets/signup/verify_image.png" />
         </ImageWrapper>
         <Button
           buttonType="primary"
@@ -37,56 +37,56 @@ export default function Signin() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    height: 100%;
-    max-height: 852px;
-    color: white;
-    padding: 25px;
-    overflow-x: hidden;
-    padding-bottom: 40px;
-    background:${(props) => props.theme.colors.bg};
-    /* background-image: url('/assets/signin/verify_image.png'); 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 100%;
+  max-height: 852px;
+  color: white;
+  padding: 25px;
+  overflow-x: hidden;
+  padding-bottom: 40px;
+  background: ${(props) => props.theme.colors.bg};
+  /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
     background-position: bottom 80px center;
     background-repeat: no-repeat; */
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ImageWrapper = styled.div`
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 `;
 
 const Image = styled.img`
-    display: flex;
-    width: 140%;
-    height: auto;
-    max-width: 537px;
-    max-height: 400px;
+  display: flex;
+  width: 140%;
+  height: auto;
+  max-width: 537px;
+  max-height: 400px;
 `;

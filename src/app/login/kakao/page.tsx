@@ -2,7 +2,8 @@
 
 import { login } from "@/api/login/user";
 import Loader from "@/components/common/Loader";
-import { signinState } from "@/recoil/signinStore";
+import { signupState } from "@/recoil/signupStore";
+import { clearLetterUrl, getLetterUrl, setTokens } from "@/utils/storage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -10,12 +11,11 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const Auth = () => {
-  const [registerToken, setRegisterToken] = useRecoilState(signinState);
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const router = useRouter();
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const REDIRECT_URL = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  const storeUrl =
-    typeof window !== "undefined" ? localStorage.getItem("letter_url") : null;
+  const storeUrl = getLetterUrl();
 
   useEffect(() => {
     const getToken = async () => {
@@ -26,7 +26,7 @@ const Auth = () => {
       if (!AUTHORIZATION_CODE) {
         console.error("Authorization Code is missing");
         if (storeUrl) {
-          localStorage.removeItem("letter_url");
+          clearLetterUrl();
         }
         return;
       }
@@ -45,11 +45,10 @@ const Auth = () => {
           login("KAKAO", kakao_accessToken)
             .then((res) => {
               console.log("accessToken", res.data.accessToken);
-              localStorage.setItem("lettering_access", res.data.accessToken);
-              localStorage.setItem("lettering_refresh", res.data.refreshToken);
+              setTokens(res.data.accessToken, res.data.refreshToken);
               if (storeUrl) {
                 router.push(`/verify?url=${storeUrl}`);
-                localStorage.removeItem("letter_url");
+                clearLetterUrl();
               } else {
                 router.push("/");
               }
@@ -59,10 +58,10 @@ const Auth = () => {
                 console.log("registerToken", error.response.data.registerToken);
                 setRegisterToken(error.response.data.registerToken);
                 if (storeUrl) {
-                  router.push(`/signin/step1?url=${storeUrl}`);
-                  localStorage.removeItem("letter_url");
+                  router.push(`/signup/step1?url=${storeUrl}`);
+                  clearLetterUrl();
                 } else {
-                  router.push("/signin/step1");
+                  router.push("/signup/step1");
                 }
               }
             });
@@ -98,26 +97,25 @@ const Container = styled.div`
   height: 100%;
   padding: 25px;
   max-height: 852px;
-  background:${(props) => props.theme.colors.bg};
+  background: ${(props) => props.theme.colors.bg};
 `;
 
 const LoaderContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    min-height: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Guidetext = styled.div`
-    width: 100%;
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;

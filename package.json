@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "axios": "^1.7.7",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",
     "framer-motion": "^11.4.0",
@@ -35,5 +36,10 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "typescript": "^5"
-  }
+  },
+  "description": "- 프레임워크: Next.js\r - 언어: TypeScript\r - 패키지 매니저: npm\r - CSS 프레임워크: styled-components\r - 전역상태관리: Recoil\r - 통신: Axios\r - 그외: Lint & Prettier",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -1,11 +1,13 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import styled from "styled-components";
 
-export default function Signin() {
+const Signup = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
@@ -31,7 +33,7 @@ export default function Signin() {
           </HeaderSubTitle>
         </Header>
         <ImageWrapper>
-          <Image src="/assets/signin/signin_image.png" />
+          <Image src="/assets/signup/signup_image.png" />
         </ImageWrapper>
       </MainWrapper>
       <Button
@@ -41,61 +43,75 @@ export default function Signin() {
       ></Button>
     </Container>
   );
+};
+
+export default function SignupPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Signup />
+    </Suspense>
+  );
 }
 
 const Container = styled.div`
-    color: white;
-    display: flex;
-    box-sizing: border-box;
-    padding: 50px 20px;
-    width: 100%;
-    max-height: 852px;
-    flex-direction: column;
-    overflow: scroll;
-    justify-content: space-between;
-    background-image: url('/assets/signin/signin_bg.png'); 
-    background-size: 100% auto; 
-    background-position: center;
-    background-repeat: no-repeat;
+  color: white;
+  display: flex;
+  box-sizing: border-box;
+  padding: 50px 20px;
+  height: 100%;
+  max-height: 852px;
+  flex-direction: column;
+  overflow: scroll;
+  justify-content: space-between;
+  background-image: url("/assets/signup/signup_bg.png");
+  background-size: 100% auto;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ImageWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 `;
 
 const Header = styled.div`
-    display: flex;
-    box-sizing: border-box;
-    flex-direction: column;
-    padding-left: 10px;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding-left: 10px;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const Image = styled.img`
-    display: flex;
-    box-sizing: border-box;
-    margin-top: 20px;
-    width: 80%;
-    height: auto;
-    max-width: 520px;
-    max-height: 400px;
+  display: flex;
+  box-sizing: border-box;
+  margin-top: 20px;
+  width: 80%;
+  height: auto;
+  max-width: 520px;
+  max-height: 400px;
 `;

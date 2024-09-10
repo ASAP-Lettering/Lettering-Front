@@ -5,16 +5,17 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-export default function Verify() {
+const Verify = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push(`/verify/complete?url=${url}`);
+    // router.push(`/verify/complete?url=${url}`);
   };
 
   return (
@@ -49,60 +50,74 @@ export default function Verify() {
       </ButtonWrapper>
     </Container>
   );
+};
+
+export default function VerifyPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Verify />
+    </Suspense>
+  );
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 100px;
 `;
 
 const InputWrapper = styled.div`
-    padding: 10px;
+  padding: 10px;
 `;
 
 const DescriptionText = styled.div`
-    ${(props) => props.theme.fonts.regular14};
-    color: ${(props) => props.theme.colors.gray400};
-    text-decoration: underline;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 23px;
-    cursor: pointer;
+  ${(props) => props.theme.fonts.regular14};
+  color: ${(props) => props.theme.colors.gray400};
+  text-decoration: underline;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  cursor: pointer;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;

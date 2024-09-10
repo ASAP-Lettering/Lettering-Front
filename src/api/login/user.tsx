@@ -8,7 +8,7 @@ export const login = async (loginType: string, accessToken: string) => {
   });
 };
 
-export const signin = async ({
+export const signup = async ({
   registerToken,
   servicePermission,
   privatePermission,

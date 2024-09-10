@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -8,10 +8,11 @@ import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PlanetBox from "@/components/planet/PlanetBox";
 import { PLANETS } from "@/constants/planet";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const PlanetMovePage = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   // const { letterId } = searchParams.get("letter");
 
   const name = "규리";
@@ -74,7 +75,19 @@ const PlanetMovePage = () => {
   );
 };
 
-export default PlanetMovePage;
+export default function PlanetMovePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <PlanetMovePage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;

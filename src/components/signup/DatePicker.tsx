@@ -1,6 +1,6 @@
 // components/common/DatePicker.tsx
 
-import { DatePickerState } from "@/app/signin/step2/page";
+import { DatePickerState } from "@/app/signup/step2/page";
 import React from "react";
 import styled from "styled-components";
 
