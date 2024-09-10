@@ -14,6 +14,7 @@ export const signin = async ({
   privatePermission,
   marketingPermission,
   birthday,
+  realName,
 }: RegisterDataType) => {
   return await client.post(`/api/v1/users`, {
     registerToken: registerToken,
@@ -21,5 +22,6 @@ export const signin = async ({
     privatePermission: privatePermission,
     marketingPermission: marketingPermission,
     birthday: birthday,
+    realName: realName,
   });
 };

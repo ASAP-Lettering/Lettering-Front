@@ -5,17 +5,41 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { signinState, userInfo } from "@/recoil/signinStore";
+import { signin } from "@/api/login/user";
 
 export default function SigninStep3() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [isVaild, setIsVaild] = useState(true);
-
-  const searchParams = useSearchParams();
+  const [user, setUser] = useRecoilState(userInfo);
+  const [registerToken, setRegisterToken] = useRecoilState(signinState);
 
   const handleButtonClick = () => {
+    //router.push(`/signin/complete`);
+    signin({
+      registerToken: registerToken,
+      privatePermission: user.privatePermission,
+      servicePermission: user.servicePermission,
+      marketingPermission: user.marketingPermission,
+      birthday: user.birthday,
+      realName: name,
+    })
+      .then((res) => {
+        console.log("accessToken", res.data.accessToken);
+        localStorage.setItem("lettering_access", res.data.accessToken);
+        localStorage.setItem("lettering_refresh", res.data.refreshToken);
+      })
+      .catch((error) => {
+        console.log(error);
+        router.push("/error");
+        return;
+      });
+
     router.push(`/signin/complete`);
+    console.log(user);
   };
 
   return (
