@@ -122,5 +122,8 @@ const Item = styled(motion.div)<ItemProps>`
     font-size: ${({ isSelected }) => (isSelected ? "24px" : "20px")};
     color: ${({ isSelected }) => (isSelected ? "white" : theme.colors.gray600)};
     transition: color 0.7s;
-    cursor: pointer;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
 `;

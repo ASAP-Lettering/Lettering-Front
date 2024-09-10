@@ -7,15 +7,26 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useState } from "react";
 
-export default function Verify() {
+export default function SigninStep3() {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push(`/verify/complete?url=${url}`);
+    router.push(`/signin/complete`);
   };
+
+  function isValidKoreanInput(input: string): boolean {
+    // 자음
+    const consonants = /[\u1100-\u115F\uA960-\uA97F]/;
+    // 모음
+    const vowels = /[\u1160-\u11A7\uD7B0-\uD7C6]/;
+    if (consonants.test(input) || vowels.test(input)) {
+      return false;
+    }
+    return true;
+  }
 
   return (
     <Container>
@@ -23,11 +34,12 @@ export default function Verify() {
         <NavigatorBar cancel={false} />
         <Header>
           <HeaderTitle>
-            편지를 열람하기 전<br />
+            회원가입을 하기 전
+            <br />
             먼저 본인 인증이 필요해요
           </HeaderTitle>
           <HeaderSubTitle>
-            정확한 인증을 위해 실명을 입력해주세요
+            별명이 아닌 정확한 실명을 입력해주세요
           </HeaderSubTitle>
         </Header>
         <InputWrapper>
@@ -40,7 +52,9 @@ export default function Verify() {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText>왜 실명 인증이 필요한가요?</DescriptionText>
+        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
+          왜 실명 인증이 필요한가요?
+        </DescriptionText>
         <Button
           buttonType="primary"
           text="다음"
@@ -78,7 +92,7 @@ const InputWrapper = styled.div`
     padding: 10px;
 `;
 
-const DescriptionText = styled.div`
+const DescriptionText = styled.button`
     ${(props) => props.theme.fonts.regular14};
     color: ${(props) => props.theme.colors.gray400};
     text-decoration: underline;
@@ -97,7 +111,7 @@ const HeaderTitle = styled.div`
 
 const HeaderSubTitle = styled.div`
     width: 100%;
-    ${(props) => props.theme.fonts.regular16};
+    ${(props) => props.theme.fonts.body07};
     color: ${(props) => props.theme.colors.gray300};
     padding-top: 10px;
 `;
