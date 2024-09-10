@@ -30,7 +30,10 @@ const Container = styled.div`
   background-size: 100% auto; 
   background-position: center;
   background-repeat: no-repeat;
-  overflow-y: scroll;
+//overflow-y: scroll;
+  -webkit-scrollbar {
+        display: none; 
+    }
 `;
 
 const LogoTitle = styled.img`
