@@ -4,7 +4,7 @@ export const LETTER_DATA: LetterType[] = [
   {
     id: 0,
     url: "aa",
-    templateType: 1,
+    templateType: 3,
     sender: "승효",
     receiver: "유진주",
     date: "2024-09-04",

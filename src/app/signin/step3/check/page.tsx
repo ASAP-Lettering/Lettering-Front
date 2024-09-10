@@ -3,18 +3,13 @@
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import Input from "@/components/common/Input";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function SigninStep3() {
+export default function SigninStep3Check() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const searchParams = useSearchParams();
-  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push(`/signin/complete`);
+    router.back();
   };
 
   return (
@@ -22,31 +17,14 @@ export default function SigninStep3() {
       <MainWrapper>
         <NavigatorBar cancel={false} />
         <Header>
-          <HeaderTitle>
-            회원가입을 하기 전
-            <br />
-            먼저 본인 인증이 필요해요
-          </HeaderTitle>
-          <HeaderSubTitle>
-            별명이 아닌 정확한 실명을 입력해주세요
-          </HeaderSubTitle>
+          <HeaderTitle>왜 실명 인증이 필요한가요?</HeaderTitle>
         </Header>
-        <InputWrapper>
-          <Input
-            inputType="underline"
-            value={name}
-            onChange={setName}
-            placeholder="ex)홍길동"
-          />
-        </InputWrapper>
+        <ContentWrapper></ContentWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
-          왜 실명 인증이 필요한가요?
-        </DescriptionText>
         <Button
           buttonType="primary"
-          text="다음"
+          text="확인"
           onClick={handleButtonClick}
         ></Button>
       </ButtonWrapper>
@@ -77,11 +55,11 @@ const Header = styled.div`
     margin-bottom: 100px;
 `;
 
-const InputWrapper = styled.div`
+const ContentWrapper = styled.div`
     padding: 10px;
 `;
 
-const DescriptionText = styled.button`
+const DescriptionText = styled.div`
     ${(props) => props.theme.fonts.regular14};
     color: ${(props) => props.theme.colors.gray400};
     text-decoration: underline;

@@ -45,6 +45,19 @@ export default function Signin() {
     setSelecetedDate(day);
   };
 
+  const handleButtonClick = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      birthday: newBirthday,
+    }));
+    if (url) {
+      router.push(`/signin/complete?url=${url}`);
+    } else {
+      router.push(`/signin/`);
+      console.log(user);
+    }
+  };
+
   const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
   const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
   const days = Array.from(
@@ -58,54 +71,54 @@ export default function Signin() {
     (_, i) => (1 + i).toString()
   );
 
-  useEffect(() => {
-    if (isBirthdayUpdated) {
-      if (url) {
-        router.push(`/signin/complete?url=${url}`);
-      } else {
-        router.push(`/signin/step3`);
-      }
-    }
-  }, [isBirthdayUpdated]);
+  //   useEffect(() => {
+  //     if (isBirthdayUpdated) {
+  //       if (url) {
+  //         router.push(`/signin/complete?url=${url}`);
+  //       } else {
+  //         router.push(`/signin/step3`);
+  //       }
+  //     }
+  //   }, [isBirthdayUpdated]);
 
-  const handleButtonClick = async (mybirthday: string) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      birthday: mybirthday,
-    }));
+  //   const handleButtonClick = async (mybirthday: string) => {
+  //     setUser((prevUser) => ({
+  //       ...prevUser,
+  //       birthday: mybirthday,
+  //     }));
 
-    signin({
-      registerToken: registerToken,
-      privatePermission: user.privatePermission,
-      servicePermission: user.servicePermission,
-      marketingPermission: user.marketingPermission,
-      birthday: mybirthday,
-    })
-      .then((res) => {
-        console.log("accessToken", res.data.accessToken);
-        localStorage.setItem("lettering_access", res.data.accessToken);
-        localStorage.setItem("lettering_refresh", res.data.refreshToken);
-      })
-      .catch((error) => {
-        console.log(error);
-        router.push("/error");
-        return;
-      });
+  //     signin({
+  //       registerToken: registerToken,
+  //       privatePermission: user.privatePermission,
+  //       servicePermission: user.servicePermission,
+  //       marketingPermission: user.marketingPermission,
+  //       birthday: mybirthday,
+  //     })
+  //       .then((res) => {
+  //         console.log("accessToken", res.data.accessToken);
+  //         localStorage.setItem("lettering_access", res.data.accessToken);
+  //         localStorage.setItem("lettering_refresh", res.data.refreshToken);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //         router.push("/error");
+  //         return;
+  //       });
 
-    if (url) {
-      router.push(`/signin/complete?url=${url}`);
-    } else {
-      router.push(`/signin/complete`);
-      console.log(user);
-    }
-  };
+  //     if (url) {
+  //       router.push(`/signin/complete?url=${url}`);
+  //     } else {
+  //       router.push(`/signin/complete`);
+  //       console.log(user);
+  //     }
+  //   };
   return (
     <Container>
       <MainWrapper>
         <NavigatorBar
           cancel={false}
           nextlabel={true}
-          nextClick={() => handleButtonClick("")}
+          nextClick={() => handleButtonClick()}
         />
         <Header>
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
@@ -136,7 +149,7 @@ export default function Signin() {
       <Button
         buttonType="primary"
         text="다음"
-        onClick={() => handleButtonClick(newBirthday)}
+        onClick={() => handleButtonClick()}
       ></Button>
     </Container>
   );

@@ -46,10 +46,12 @@ const Letter = (props: LetterProps) => {
           page={currentPage}
         />
       </Content>
-      <Pagination
-        currentPage={currentPage}
-        totalPage={totalPage ? totalPage : 0}
-      />
+      {totalPage > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPage={totalPage ? totalPage : 0}
+        />
+      )}
     </Container>
   );
 };
@@ -59,9 +61,10 @@ export default Letter;
 const Container = styled.div<{ templateType: number }>`
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     width: 100%;
     height: auto;
-    padding: 20px;
+    padding: 34px;
     max-width: 354px;
     min-height: 357px;
     background-image: ${({ templateType }) =>

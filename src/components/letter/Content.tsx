@@ -46,12 +46,12 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
 export default SwipeableContent;
 
 const SwipeableContainer = styled.div`
-  width: 100%;
+    width: 100%;
 `;
 
 const ContentSlider = styled.div`
-  display: flex;
-  transition: transform 0.5s ease-out; 
+    display: flex;
+    transition: transform 0.5s ease-out; 
 `;
 
 const ContentItem = styled.div`
