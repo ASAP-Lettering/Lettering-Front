@@ -5,9 +5,10 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-export default function SignupStep3() {
+const SignupStep3 = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
@@ -62,6 +63,20 @@ export default function SignupStep3() {
         ></Button>
       </ButtonWrapper>
     </Container>
+  );
+};
+
+export default function SignupStep3Paging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SignupStep3 />
+    </Suspense>
   );
 }
 

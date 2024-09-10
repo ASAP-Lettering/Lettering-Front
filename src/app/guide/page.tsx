@@ -1,6 +1,6 @@
 "use client";
 
-import BottomSheet from "@/components/common/BottomSheet";
+// import BottomSheet from "@/components/common/BottomSheet";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -245,7 +245,7 @@ const GuidePage = () => {
         />
       </ButtonContainer>
 
-      <Background>
+      {/* <Background>
         <Mobile ref={viewportRef}>
           <Content>테스트</Content>
           {isDisplayed && (
@@ -258,7 +258,7 @@ const GuidePage = () => {
             />
           )}
         </Mobile>
-      </Background>
+      </Background> */}
     </Container>
   );
 };
