@@ -78,7 +78,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
             itemElementsRef.current[index] = el;
           }}
           data-item={item}
-          isSelected={item === selectedItem}
+          $isSelected={item === selectedItem}
           whileTap={{ scale: 0.95 }}
         >
           {item}
@@ -108,22 +108,22 @@ const ItemPickerContainer = styled.div`
   }
 `;
 
-const Item = styled(motion.div)<ItemProps>`
-    flex: 0 0 auto;
-    height: 60px;
-    width: 85px;
-    box-sizing: border-box;
-    padding: 10px 0;
-    line-height: 60px;
-    text-align: center;
-    justify-content: center;
-    scroll-snap-align: center;
-    font-weight: ${({ isSelected }) => (isSelected ? "500" : "400")};
-    font-size: ${({ isSelected }) => (isSelected ? "24px" : "20px")};
-    color: ${({ isSelected }) => (isSelected ? "white" : theme.colors.gray600)};
-    transition: color 0.7s;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none
+const Item = styled(motion.div)<{ $isSelected: boolean }>`
+  flex: 0 0 auto;
+  height: 60px;
+  width: 85px;
+  box-sizing: border-box;
+  padding: 10px 0;
+  line-height: 60px;
+  text-align: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  font-weight: ${({ $isSelected }) => ($isSelected ? "500" : "400")};
+  font-size: ${({ $isSelected }) => ($isSelected ? "24px" : "20px")};
+  color: ${({ $isSelected }) => ($isSelected ? "white" : theme.colors.gray600)};
+  transition: color 0.7s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;

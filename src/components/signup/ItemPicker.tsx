@@ -79,7 +79,7 @@ const ItemPicker: React.FC<ItemPickerProps> = ({
           }}
           as={motion.div}
           data-item={item}
-          isSelected={item === selectedItem}
+          $isSelected={item === selectedItem}
           whileTap={{ scale: 0.95 }}
         >
           {item}
@@ -95,7 +95,7 @@ export default ItemPicker;
 const ItemPickerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 150px; 
+  height: 150px;
   padding-top: 60px;
   gap: 10px;
   padding-bottom: 60px;
@@ -109,18 +109,18 @@ const ItemPickerContainer = styled.div`
   }
 `;
 
-const Item = styled.div<ItemProps>`
+const Item = styled.div<{ $isSelected: boolean }>`
   flex: 0 0 auto;
-  height: 60px; 
+  height: 60px;
   box-sizing: border-box;
   padding: 15px 0;
-  line-height: 60px; 
+  line-height: 60px;
   text-align: center;
   justify-content: center;
-  scroll-snap-align: center; 
-  ${(isSelected) =>
-    isSelected ? theme.fonts.medium24 : theme.fonts.regular25};
-  color: ${({ isSelected }) => (isSelected ? "white" : theme.colors.gray600)};
+  scroll-snap-align: center;
+  ${($isSelected) =>
+    $isSelected ? theme.fonts.medium24 : theme.fonts.regular25};
+  color: ${({ $isSelected }) => ($isSelected ? "white" : theme.colors.gray600)};
   transition: color 0.3s, border 0.3s;
   &:hover {
     cursor: pointer;
