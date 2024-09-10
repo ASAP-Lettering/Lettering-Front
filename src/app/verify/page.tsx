@@ -6,15 +6,40 @@ import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { signinState, userInfo } from "@/recoil/signinStore";
+import { signin } from "@/api/login/user";
 
 export default function Verify() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const [isVaild, setIsVaild] = useState(true);
+  const [user, setUser] = useRecoilState(userInfo);
+  const [registerToken, setRegisterToken] = useRecoilState(signinState);
 
   const handleButtonClick = () => {
-    router.push(`/verify/complete?url=${url}`);
+    //router.push(`/signin/complete`);
+    signin({
+      registerToken: registerToken,
+      privatePermission: user.privatePermission,
+      servicePermission: user.servicePermission,
+      marketingPermission: user.marketingPermission,
+      birthday: user.birthday,
+      realName: name,
+    })
+      .then((res) => {
+        console.log("accessToken", res.data.accessToken);
+        localStorage.setItem("lettering_access", res.data.accessToken);
+        localStorage.setItem("lettering_refresh", res.data.refreshToken);
+      })
+      .catch((error) => {
+        console.log(error);
+        router.push("/error");
+        return;
+      });
+
+    router.push(`/verify/`);
+    console.log(user);
   };
 
   return (
@@ -36,11 +61,14 @@ export default function Verify() {
             value={name}
             onChange={setName}
             placeholder="ex)홍길동"
+            isValid={isVaild}
+            isValidChange={setIsVaild}
+            errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
           />
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("signin/step3/check")}>
+        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button
@@ -99,7 +127,7 @@ const HeaderTitle = styled.div`
 
 const HeaderSubTitle = styled.div`
     width: 100%;
-    ${(props) => props.theme.fonts.regular16};
+    ${(props) => props.theme.fonts.body07};
     color: ${(props) => props.theme.colors.gray300};
     padding-top: 10px;
 `;

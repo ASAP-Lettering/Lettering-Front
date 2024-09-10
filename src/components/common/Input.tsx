@@ -24,6 +24,10 @@ function isValidKoreanInput(input: string): boolean {
     /[\u1100-\u115F\uA960-\uA97F\u3131-\u314E\u3165-\u3186]/;
   const loneVowels = /[\u1160-\u11A7\uD7B0-\uD7C6\u314F-\u3163\u3187-\u318E]/;
 
+  if (input.length === 0) {
+    return true;
+  }
+
   if (loneConsonants.test(input) || loneVowels.test(input)) {
     return false;
   }
@@ -56,8 +60,6 @@ const Input = (props: InputProps) => {
     isValidChange(isValidKoreanInput(newValue));
 
     onChange(newValue.replace(regex, "")); // 특수문자입력불가
-    console.log(isValid);
-    console.log(value);
   };
 
   const isTextarea = inputType === "boxTextArea";

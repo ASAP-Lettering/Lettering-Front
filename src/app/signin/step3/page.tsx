@@ -5,19 +5,45 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { signinState, userInfo } from "@/recoil/signinStore";
 import { signin } from "@/api/login/user";
+import Toast from "@/components/common/Toast";
+import useMeasure from "react-use-measure";
+import BottomSheet from "@/components/common/BottomSheet";
 
 export default function SigninStep3() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [isPopupToast, setisPopupToast] = useState(false);
+  const [viewportRef, { height: viewportHeight }] = useMeasure();
+  const [isBottomUp, setIsBottomUp] = useState(false);
+  const [isDisplayed, setIsDisplayed] = useState(false);
   const [isVaild, setIsVaild] = useState(true);
   const [user, setUser] = useRecoilState(userInfo);
   const [registerToken, setRegisterToken] = useRecoilState(signinState);
 
   const handleButtonClick = () => {
+    if (canSignin()) {
+      setIsBottomUp(true);
+    } else {
+      handleShowToast();
+      setIsDisplayed(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isBottomUp) {
+      setIsDisplayed(true);
+    } else {
+      setTimeout(() => {
+        setIsDisplayed(false);
+      }, 490);
+    }
+  }, [isBottomUp]);
+
+  const handleLoginClick = () => {
     //router.push(`/signin/complete`);
     signin({
       registerToken: registerToken,
@@ -42,8 +68,42 @@ export default function SigninStep3() {
     console.log(user);
   };
 
+  //   useEffect(() => {
+  //     console.log(isVaild);
+  //   }, [name]);
+
+  const canSignin = () => {
+    if (isVaild && name.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleShowToast = () => {
+    setisPopupToast(true);
+    setTimeout(() => {
+      setisPopupToast(false);
+    }, 3000);
+  };
+
+  const handleBottomUpChange = (state: boolean) => {
+    setIsBottomUp(state);
+  };
+
   return (
-    <Container>
+    <Container ref={viewportRef}>
+      {isDisplayed && (
+        <BottomSheet
+          viewport={`${viewportHeight - 30}px`}
+          title={`'${name}'가 본인 이름이 맞나요?`}
+          subtitle="본인의 이름이 아닐 경우, 편지를 보내거나 받을 때에
+          오류가 발생할 수 있어요"
+          isOpen={isBottomUp}
+          handleOpen={handleBottomUpChange}
+          onConfirm={handleLoginClick}
+        />
+      )}
       <MainWrapper>
         <NavigatorBar cancel={false} />
         <Header>
@@ -67,6 +127,14 @@ export default function SigninStep3() {
             errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
           />
         </InputWrapper>
+        {isPopupToast && (
+          <Toast
+            text={`형식에 맞지 않는 이름입니다!`}
+            icon={true}
+            bottom="120px"
+            left="50%"
+          />
+        )}
       </MainWrapper>
       <ButtonWrapper>
         <DescriptionText onClick={() => router.push("/signin/step3/check")}>
@@ -85,16 +153,20 @@ export default function SigninStep3() {
 const Container = styled.div`
     display: flex;
     flex-direction: column;
+    width: 100%;
     justify-content: space-between;
     min-height: 100%;
     color: white;
     background:${(props) => props.theme.colors.bg};
     padding: 25px;
     padding-bottom: 40px;
+    position: relative;
+    overflow: hidden;
 `;
 
 const MainWrapper = styled.div`
     display: flex;
+    width: 100%;
     flex-direction: column;
 `;
 
