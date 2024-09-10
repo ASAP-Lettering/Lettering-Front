@@ -5,9 +5,10 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-export default function Signup() {
+const Signup = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
@@ -48,6 +49,20 @@ export default function Signup() {
         ></Button>
       </ButtonWrapper>
     </Container>
+  );
+};
+
+export default function SignupPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Signup />
+    </Suspense>
   );
 }
 

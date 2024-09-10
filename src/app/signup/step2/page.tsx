@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 // import DatePicker from "@/components/signup/DatePicker";
 import { useRecoilState } from "recoil";
 import { signupState, userInfo } from "@/recoil/signupStore";
@@ -12,6 +12,7 @@ import ItemPicker from "@/components/signup/ItemPicker";
 import { signup } from "@/api/login/user";
 import NewItemPicker from "@/components/signup/NewItemPicker";
 import { setTokens } from "@/utils/storage";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 export interface DatePickerState {
   year: number;
@@ -19,7 +20,7 @@ export interface DatePickerState {
   day: number;
 }
 
-export default function Signup() {
+const Signup = () => {
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
@@ -139,6 +140,20 @@ export default function Signup() {
         onClick={() => handleButtonClick(newBirthday)}
       ></Button>
     </Container>
+  );
+};
+
+export default function SignupPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Signup />
+    </Suspense>
   );
 }
 

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { accessState } from "@/recoil/accessStore";
 import { getAccessToken, setLetterUrl } from "@/utils/storage";
+import Loader, { LoaderContainer } from "../common/Loader";
 
 const SocialKakao = () => {
   const router = useRouter();
@@ -44,7 +45,19 @@ const SocialKakao = () => {
   );
 };
 
-export default SocialKakao;
+export default function SocialKakaoPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SocialKakao />
+    </Suspense>
+  );
+}
 
 const SocialLoginBox = styled.div`
   display: flex;

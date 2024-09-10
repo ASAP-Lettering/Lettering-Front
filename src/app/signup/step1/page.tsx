@@ -2,7 +2,7 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -10,8 +10,9 @@ import { userInfo } from "@/recoil/signupStore";
 import { useRecoilState } from "recoil";
 import { links } from "@/styles/theme";
 import Toast from "@/components/common/Toast";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-export default function Signup() {
+const Signup = () => {
   const [user, setUser] = useRecoilState(userInfo);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isSerivceChecked, setIsServiceChecked] = useState(false);
@@ -182,6 +183,20 @@ export default function Signup() {
         onClick={handleButtonClick}
       ></Button>
     </Container>
+  );
+};
+
+export default function SignupPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Signup />
+    </Suspense>
   );
 }
 
