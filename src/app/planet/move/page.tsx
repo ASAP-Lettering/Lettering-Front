@@ -11,7 +11,7 @@ import { PLANETS } from "@/constants/planet";
 
 const PlanetMovePage = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   // const { letterId } = searchParams.get("letter");
 
   const name = "규리";
