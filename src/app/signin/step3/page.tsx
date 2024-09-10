@@ -17,6 +17,17 @@ export default function SigninStep3() {
     router.push(`/signin/complete`);
   };
 
+  function isValidKoreanInput(input: string): boolean {
+    // 자음
+    const consonants = /[\u1100-\u115F\uA960-\uA97F]/;
+    // 모음
+    const vowels = /[\u1160-\u11A7\uD7B0-\uD7C6]/;
+    if (consonants.test(input) || vowels.test(input)) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <Container>
       <MainWrapper>

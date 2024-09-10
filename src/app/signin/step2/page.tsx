@@ -18,7 +18,7 @@ export interface DatePickerState {
   day: number;
 }
 
-export default function Signin() {
+export default function SigninStep2() {
   const [registerToken, setRegisterToken] = useRecoilState(signinState);
   const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
@@ -53,7 +53,7 @@ export default function Signin() {
     if (url) {
       router.push(`/signin/complete?url=${url}`);
     } else {
-      router.push(`/signin/`);
+      router.push(`/signin/step3`);
       console.log(user);
     }
   };

@@ -48,7 +48,7 @@ const Container = styled.div`
     display: flex;
     box-sizing: border-box;
     padding: 50px 20px;
-    height: 100%;
+    width: 100%;
     max-height: 852px;
     flex-direction: column;
     overflow: scroll;
