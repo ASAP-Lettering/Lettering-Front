@@ -49,12 +49,12 @@ const Container = styled.div`
     box-sizing: border-box;
     padding: 50px 20px;
     width: 100%;
-    max-height: 852px;
+    height: 100%;
     flex-direction: column;
     overflow: scroll;
     justify-content: space-between;
     background-image: url('/assets/signin/signin_bg.png'); 
-    background-size: 100% auto; 
+    background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
 `;

@@ -5,28 +5,18 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SigninStep3() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [isVaild, setIsVaild] = useState(true);
+
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
     router.push(`/signin/complete`);
   };
-
-  function isValidKoreanInput(input: string): boolean {
-    // 자음
-    const consonants = /[\u1100-\u115F\uA960-\uA97F]/;
-    // 모음
-    const vowels = /[\u1160-\u11A7\uD7B0-\uD7C6]/;
-    if (consonants.test(input) || vowels.test(input)) {
-      return false;
-    }
-    return true;
-  }
 
   return (
     <Container>
@@ -48,6 +38,9 @@ export default function SigninStep3() {
             value={name}
             onChange={setName}
             placeholder="ex)홍길동"
+            isValid={isVaild}
+            isValidChange={setIsVaild}
+            errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
           />
         </InputWrapper>
       </MainWrapper>

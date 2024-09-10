@@ -19,6 +19,7 @@ const colors = {
 
   bg: "#060812",
   white: "#FFFFFF",
+  red: "#E1303E",
 } as const;
 
 interface Font {
@@ -37,98 +38,98 @@ const FONT = ({ weight, size }: Font): string => {
 };
 
 const fonts = {
-    /* Design System */
-    heading01: FONT({
-        weight: 600,
-        size: 24,
-    }),
-    heading02: FONT({
-        weight: 400,
-        size: 24,
-    }),
-    title01: FONT({
-        weight: 600,
-        size: 20,
-    }),
-    title02: FONT({
-        weight: 600,
-        size: 18,
-    }),
-    subtitle: FONT({
-        weight: 600,
-        size: 16,
-    }),
+  /* Design System */
+  heading01: FONT({
+    weight: 600,
+    size: 24,
+  }),
+  heading02: FONT({
+    weight: 400,
+    size: 24,
+  }),
+  title01: FONT({
+    weight: 600,
+    size: 20,
+  }),
+  title02: FONT({
+    weight: 600,
+    size: 18,
+  }),
+  subtitle: FONT({
+    weight: 600,
+    size: 16,
+  }),
 
-    body01: FONT({
-        weight: 500,
-        size: 24,
-    }),
-    body02: FONT({
-        weight: 500,
-        size: 20,
-    }),
-    body03: FONT({
-        weight: 400,
-        size: 20,
-    }),
-    body04: FONT({
-        weight: 500,
-        size: 18,
-    }),
-    body05: FONT({
-        weight: 400,
-        size: 18,
-    }),
-    body06: FONT({
-        weight: 500,
-        size: 16,
-    }),
-    body07: FONT({
-        weight: 400,
-        size: 16,
-    }),
-    body08: FONT({
-        weight: 500,
-        size: 14,
-    }),
-    body09: FONT({
-        weight: 400,
-        size: 14,
-    }),
-    
-    button01: FONT({
-        weight: 600,
-        size: 16,
-    }),
-    button02: FONT({
-        weight: 600,
-        size: 14,
-    }),
-    button03: FONT({
-        weight: 400,
-        size: 12,
-    }),
+  body01: FONT({
+    weight: 500,
+    size: 24,
+  }),
+  body02: FONT({
+    weight: 500,
+    size: 20,
+  }),
+  body03: FONT({
+    weight: 400,
+    size: 20,
+  }),
+  body04: FONT({
+    weight: 500,
+    size: 18,
+  }),
+  body05: FONT({
+    weight: 400,
+    size: 18,
+  }),
+  body06: FONT({
+    weight: 500,
+    size: 16,
+  }),
+  body07: FONT({
+    weight: 400,
+    size: 16,
+  }),
+  body08: FONT({
+    weight: 500,
+    size: 14,
+  }),
+  body09: FONT({
+    weight: 400,
+    size: 14,
+  }),
 
-    caption01: FONT({
-        weight: 500,
-        size: 14,
-    }),
-    caption02: FONT({
-        weight: 400,
-        size: 14,
-    }),
-    caption03: FONT({
-        weight: 500,
-        size: 12,
-    }),
-    caption04: FONT({
-        weight: 400,
-        size: 12,
-    }),
-    caption05: FONT({
-        weight: 400,
-        size: 10,
-    }),
+  button01: FONT({
+    weight: 600,
+    size: 16,
+  }),
+  button02: FONT({
+    weight: 600,
+    size: 14,
+  }),
+  button03: FONT({
+    weight: 400,
+    size: 12,
+  }),
+
+  caption01: FONT({
+    weight: 500,
+    size: 14,
+  }),
+  caption02: FONT({
+    weight: 400,
+    size: 14,
+  }),
+  caption03: FONT({
+    weight: 500,
+    size: 12,
+  }),
+  caption04: FONT({
+    weight: 400,
+    size: 12,
+  }),
+  caption05: FONT({
+    weight: 400,
+    size: 10,
+  }),
 };
 
 export const links = {
