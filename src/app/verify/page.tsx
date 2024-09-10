@@ -8,7 +8,7 @@ import Input from "@/components/common/Input";
 import { Suspense, useState } from "react";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-const Signup = () => {
+const Verify = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
@@ -52,7 +52,7 @@ const Signup = () => {
   );
 };
 
-export default function SignupPaging() {
+export default function VerifyPaging() {
   return (
     <Suspense
       fallback={
@@ -61,7 +61,7 @@ export default function SignupPaging() {
         </LoaderContainer>
       }
     >
-      <Signup />
+      <Verify />
     </Suspense>
   );
 }

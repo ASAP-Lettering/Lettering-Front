@@ -20,7 +20,7 @@ export interface DatePickerState {
   day: number;
 }
 
-const Signup = () => {
+const SignupStep2 = () => {
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
@@ -47,6 +47,19 @@ const Signup = () => {
     setSelecetedDate(day);
   };
 
+  const handleButtonClick = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      birthday: newBirthday,
+    }));
+    if (url) {
+      router.push(`/signin/complete?url=${url}`);
+    } else {
+      router.push(`/signin/step3`);
+      console.log(user);
+    }
+  };
+
   const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
   const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
   const days = Array.from(
@@ -70,43 +83,44 @@ const Signup = () => {
     }
   }, [isBirthdayUpdated]);
 
-  const handleButtonClick = async (mybirthday: string) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      birthday: mybirthday,
-    }));
+  // const handleButtonClick = async (mybirthday: string) => {
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     birthday: mybirthday,
+  //   }));
 
-    signup({
-      registerToken: registerToken,
-      privatePermission: user.privatePermission,
-      servicePermission: user.servicePermission,
-      marketingPermission: user.marketingPermission,
-      birthday: mybirthday,
+  signup({
+    registerToken: registerToken,
+    privatePermission: user.privatePermission,
+    servicePermission: user.servicePermission,
+    marketingPermission: user.marketingPermission,
+    // birthday: mybirthday,
+    birthday: "", // "" 값으로 임시
+  })
+    .then((res) => {
+      console.log("accessToken", res.data.accessToken);
+      setTokens(res.data.accessToken, res.data.refreshToken);
     })
-      .then((res) => {
-        console.log("accessToken", res.data.accessToken);
-        setTokens(res.data.accessToken, res.data.refreshToken);
-      })
-      .catch((error) => {
-        console.log(error);
-        router.push("/error");
-        return;
-      });
+    .catch((error) => {
+      console.log(error);
+      router.push("/error");
+      return;
+    });
 
-    if (url) {
-      router.push(`/signup/complete?url=${url}`);
-    } else {
-      router.push(`/signup/complete`);
-      console.log(user);
-    }
-  };
+  if (url) {
+    router.push(`/signup/complete?url=${url}`);
+  } else {
+    router.push(`/signup/complete`);
+    console.log(user);
+  }
+
   return (
     <Container>
       <MainWrapper>
         <NavigatorBar
           cancel={false}
           nextlabel={true}
-          nextClick={() => handleButtonClick("")}
+          nextClick={() => handleButtonClick()}
         />
         <Header>
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
@@ -137,7 +151,7 @@ const Signup = () => {
       <Button
         buttonType="primary"
         text="다음"
-        onClick={() => handleButtonClick(newBirthday)}
+        onClick={() => handleButtonClick()}
       ></Button>
     </Container>
   );
@@ -152,7 +166,7 @@ export default function SignupPaging() {
         </LoaderContainer>
       }
     >
-      <Signup />
+      <SignupStep2 />
     </Suspense>
   );
 }

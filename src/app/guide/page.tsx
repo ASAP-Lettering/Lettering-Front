@@ -1,5 +1,6 @@
 "use client";
 
+import BottomSheet from "@/components/common/BottomSheet";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -8,9 +9,13 @@ import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
+import Letter from "@/components/letter/Letter";
+import NewItemPicker from "@/components/signin/NewItemPicker";
+import { LETTER_DATA } from "@/constants/letter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
+import useMeasure from "react-use-measure";
 import styled from "styled-components";
 
 const GuidePage = () => {
@@ -54,6 +59,35 @@ const GuidePage = () => {
 
   const handleCancel = () => {
     setConfirmModal(false);
+  };
+
+  //ItemPicker
+  const [item, setItem] = useState("item4");
+
+  const items = ["item1", "item2", "item3", "item4", "item5", "item6", "item7"];
+  const handleItemChange = (item: string) => {
+    setItem(item);
+  };
+
+  //Letter
+  const letterData = LETTER_DATA[0];
+  const imageData = [
+    "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
+    "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
+    "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
+  ];
+
+  //bottomSheet
+  const [viewportRef, { height: viewportHeight }] = useMeasure();
+  const [isBottomUp, setIsBottomUp] = useState(false);
+  const [isDisplayed, setIsDisplayed] = useState(true);
+
+  const handleBottomUpChange = (state: boolean) => {
+    setIsBottomUp(state);
+  };
+
+  const handleDisplay = () => {
+    setIsDisplayed(!isDisplayed);
   };
 
   return (
@@ -169,6 +203,62 @@ const GuidePage = () => {
         onClick={handleShowConfirmModal}
         width="100%"
       />
+      <h3>ItemPicker</h3>
+      <PickedItemContainer>
+        <NewItemPicker
+          items={items}
+          defaultItem={"item4"}
+          unit=""
+          onChange={handleItemChange}
+        />
+      </PickedItemContainer>
+      <h3>Letter</h3>
+      <Letter
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        content={letterData.content}
+        date={letterData.date}
+        isImage={false}
+      />
+      <Letter
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        images={imageData}
+        date={letterData.date}
+        isImage={true}
+      />
+      <h3>BottomSheet</h3>
+      <ButtonContainer>
+        <Button
+          buttonType="secondary"
+          size="default"
+          text="Click It!"
+          onClick={() => handleBottomUpChange(!isBottomUp)}
+        />
+        <Button
+          buttonType="secondary"
+          size="default"
+          text="display"
+          onClick={handleDisplay}
+        />
+      </ButtonContainer>
+
+      <Background>
+        <Mobile ref={viewportRef}>
+          <Content>테스트</Content>
+          {isDisplayed && (
+            <BottomSheet
+              viewport={`${viewportHeight}px`}
+              title="타이틀입니다."
+              subtitle="서브타이틀입니다."
+              isOpen={isBottomUp}
+              handleOpen={handleBottomUpChange}
+            />
+          )}
+        </Mobile>
+      </Background>
     </Container>
   );
 };
@@ -199,4 +289,39 @@ const SpaceBetween = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+`;
+
+const PickedItemContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+`;
+
+const Background = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+  background-color: white;
+`;
+
+const Mobile = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+  height: 600px;
+  overflow: hidden;
+  box-shadow: 0 0 50px 1px rgba(0, 0, 0, .2);
+`;
+
+const Content = styled.div`
+    width: 100%;
+    padding: 24px;
+`;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
 `;
