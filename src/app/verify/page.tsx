@@ -40,7 +40,9 @@ export default function Verify() {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText>왜 실명 인증이 필요한가요?</DescriptionText>
+        <DescriptionText onClick={() => router.push("signin/step3/check")}>
+          왜 실명 인증이 필요한가요?
+        </DescriptionText>
         <Button
           buttonType="primary"
           text="다음"
@@ -78,7 +80,7 @@ const InputWrapper = styled.div`
     padding: 10px;
 `;
 
-const DescriptionText = styled.div`
+const DescriptionText = styled.button`
     ${(props) => props.theme.fonts.regular14};
     color: ${(props) => props.theme.colors.gray400};
     text-decoration: underline;

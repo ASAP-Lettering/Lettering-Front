@@ -2,8 +2,6 @@
 
 import SocialKakao from "@/components/signin/SocialKakao";
 import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import styled from "styled-components";
 
 export default function Login() {

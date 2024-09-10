@@ -25,9 +25,9 @@ const Auth = () => {
 
       if (!AUTHORIZATION_CODE) {
         console.error("Authorization Code is missing");
-        if (storeUrl) {
-          localStorage.removeItem("letter_url");
-        }
+        // if (storeUrl) {
+        //   localStorage.removeItem("letter_url");
+        // }
         return;
       }
 

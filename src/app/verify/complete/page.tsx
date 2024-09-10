@@ -2,14 +2,16 @@
 
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
 export default function Signin() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push("/login");
+    router.push(`/verify/letter?url=${url}`);
   };
   return (
     <Container>
