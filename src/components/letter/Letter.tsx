@@ -3,8 +3,10 @@ import styled from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
+import { useRouter } from "next/navigation";
 
 interface LetterProps {
+  id: number;
   templateType: number;
   name: string;
   content?: string;
@@ -14,7 +16,7 @@ interface LetterProps {
 }
 
 const Letter = (props: LetterProps) => {
-  const { templateType, name, content, date, isImage, images } = props;
+  const { id, templateType, name, content, date, isImage, images } = props;
   const [currentPage, setCurrentPage] = useState(0);
   const paginateContent = (content: string, maxCharsPerPage: number) => {
     const pages = [];
@@ -25,14 +27,24 @@ const Letter = (props: LetterProps) => {
     }
     return pages;
   };
-  const contentPages = isImage ? images : paginateContent(content!, 150);
+  const contentPages = isImage ? images : paginateContent(content!, 210);
   const totalPage = isImage ? images!.length : contentPages!.length;
+  const [isPopup, setIsPopup] = useState(false);
+  const router = useRouter();
 
   return (
     <Container templateType={templateType}>
+      {isPopup && (
+        <PopupContainer>
+          <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
+            수정
+          </EditBtn>
+          <DeleteBtn>삭제</DeleteBtn>
+        </PopupContainer>
+      )}
       <TopContainer>
         <Name>From.{name}</Name>
-        <button>
+        <button onClick={() => setIsPopup(!isPopup)}>
           <img src="/assets/icons/ic_more.svg" />
         </button>
       </TopContainer>
@@ -65,14 +77,15 @@ const Container = styled.div<{ templateType: number }>`
     width: 100%;
     height: auto;
     padding: 34px;
-    max-width: 354px;
-    min-height: 357px;
+    max-width: 345px;
+    min-height: 354px;
     background-image: ${({ templateType }) =>
       `url('/assets/letter/background_${templateType}.png')`};
     background-size: 100% auto; 
     background-position: center;
     background-repeat: no-repeat;
     color: white;
+    position: relative;
 `;
 
 const TopContainer = styled.div`
@@ -101,10 +114,46 @@ const Date = styled.div`
 const Content = styled.div`
     width: 100%;
     height: 90%;
-    ${(props: any) => props.theme.fonts.body04};
+    display: flex;
+    box-sizing: border-box;
+    padding: 10px 0;
+    ${(props: any) => props.theme.fonts.body07};
     overflow: hidden;
     -webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
     user-select:none
+`;
+
+const PopupContainer = styled.div`
+    width: 88px;
+    height: 124px;
+    flex-shrink: 0;
+    position: absolute;
+    top: 74px;
+    right: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(62, 65, 81, 0.70);
+    backdrop-filter: blur(8px);
+    z-index: 1;
+    padding: 12px;
+    box-sizing: border-box;
+
+`;
+
+const EditBtn = styled.button`
+    ${(props: any) => props.theme.fonts.button01};
+    color: ${(props: any) => props.theme.colors.white};
+    padding: 12px;
+    border-bottom: 1px solid #5B5F70;
+    ;
+`;
+
+const DeleteBtn = styled.button`
+    ${(props: any) => props.theme.fonts.button01};
+    color: ${(props: any) => props.theme.colors.white};
+    padding: 12px;
 `;

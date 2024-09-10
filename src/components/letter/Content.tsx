@@ -32,7 +32,8 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
         {content.map((item, index) =>
           isImage ? (
             <ContentItem key={index}>
-              <ContentImage src={content[index]}></ContentImage>
+              {/* <ContentImage src={content[index]}></ContentImage> */}
+              <ImageContainer src={content[index]} />
             </ContentItem>
           ) : (
             <ContentItem key={index}>{item}</ContentItem>
@@ -46,7 +47,12 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
 export default SwipeableContent;
 
 const SwipeableContainer = styled.div`
+    overflow: hidden;
     width: 100%;
+    max-width: 272px; 
+    height: auto;
+    box-sizing: border-box;
+    border-radius: 10px;
 `;
 
 const ContentSlider = styled.div`
@@ -60,11 +66,40 @@ const ContentItem = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    /* position: relative; */
 `;
 
-const ContentImage = styled.img`
-    width: 300px;
-    height: auto;
+// const ContentImage = styled.img`
+//     width: 100%;
+//     height: 100%;
+//     object-fit: fill;
+//     object-position: center;
+//     position: absolute;
+//     width: 100%;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+
+//     -webkit-user-select: none;
+//     -khtml-user-select: none;
+//     -moz-user-select: none;
+//     -o-user-select: none;
+//     user-select: none;
+//     -webkit-user-drag: none;
+//     -khtml-user-drag: none;
+//     -moz-user-drag: none;
+//     -o-user-drag: none;
+// `;
+
+const ImageContainer = styled.div<{ src: string }>`
+    width: 100%;
+    height: 100%;
+    min-height: 219px;
+    background-image: url(${(props) => props.src});
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;

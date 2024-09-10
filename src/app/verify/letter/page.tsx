@@ -40,10 +40,12 @@ export default function VerifyLetter() {
           </HeaderSubTitle>
         </Header>
         <Letter
+          id={letterData.id}
           templateType={letterData.templateType}
           name={letterData.receiver}
           content={letterData.content}
           date={letterData.date}
+          isImage={false}
         />
       </MainWrapper>
       <ButtonContainer>

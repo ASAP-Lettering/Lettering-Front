@@ -72,7 +72,7 @@ const GuidePage = () => {
   //Letter
   const letterData = LETTER_DATA[0];
   const imageData = [
-    "https://via.assets.so/album.png?id=1&q=95&w=360&h=360&fit=fill",
+    "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
     "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
     "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
   ];
@@ -214,6 +214,7 @@ const GuidePage = () => {
       </PickedItemContainer>
       <h3>Letter</h3>
       <Letter
+        id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
         content={letterData.content}
@@ -221,6 +222,7 @@ const GuidePage = () => {
         isImage={false}
       />
       <Letter
+        id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
         images={imageData}
@@ -315,8 +317,8 @@ const Mobile = styled.div`
 `;
 
 const Content = styled.div`
-  width: 100%;
-  padding: 24px;
+    width: 100%;
+    padding: 24px;
 `;
 
 const ButtonContainer = styled.div`
