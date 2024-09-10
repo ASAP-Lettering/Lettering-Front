@@ -95,7 +95,7 @@ const Container = styled.div`
   overflow-x: hidden;
   padding-bottom: 40px;
   background: ${(props) => props.theme.colors.bg};
-  /* background-image: url('/assets/signin/verify_image.png'); 
+  /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
     background-position: bottom 80px center;
     background-repeat: no-repeat; */

@@ -7,14 +7,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useState } from "react";
 
-export default function SigninStep3() {
+export default function SignupStep3() {
   const router = useRouter();
   const [name, setName] = useState("");
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
 
   const handleButtonClick = () => {
-    router.push(`/signin/complete`);
+    router.push(`/signup/complete`);
   };
 
   function isValidKoreanInput(input: string): boolean {
@@ -52,7 +52,7 @@ export default function SigninStep3() {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
+        <DescriptionText onClick={() => router.push("/signup/step3/check")}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button
@@ -66,57 +66,57 @@ export default function SigninStep3() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 100px;
 `;
 
 const InputWrapper = styled.div`
-    padding: 10px;
+  padding: 10px;
 `;
 
 const DescriptionText = styled.button`
-    ${(props) => props.theme.fonts.regular14};
-    color: ${(props) => props.theme.colors.gray400};
-    text-decoration: underline;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 23px;
-    cursor: pointer;
+  ${(props) => props.theme.fonts.regular14};
+  color: ${(props) => props.theme.colors.gray400};
+  text-decoration: underline;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  cursor: pointer;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.body07};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.body07};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;

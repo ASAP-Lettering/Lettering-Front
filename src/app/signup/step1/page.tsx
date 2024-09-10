@@ -12,7 +12,7 @@ import { links } from "@/styles/theme";
 import Toast from "@/components/common/Toast";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-const Signup = () => {
+const SignupStep1 = () => {
   const [user, setUser] = useRecoilState(userInfo);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isSerivceChecked, setIsServiceChecked] = useState(false);
@@ -186,7 +186,7 @@ const Signup = () => {
   );
 };
 
-export default function SignupPaging() {
+export default function SignupStep1Paging() {
   return (
     <Suspense
       fallback={
@@ -195,7 +195,7 @@ export default function SignupPaging() {
         </LoaderContainer>
       }
     >
-      <Signup />
+      <SignupStep1 />
     </Suspense>
   );
 }

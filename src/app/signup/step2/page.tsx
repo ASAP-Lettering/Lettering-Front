@@ -53,9 +53,9 @@ const SignupStep2 = () => {
       birthday: newBirthday,
     }));
     if (url) {
-      router.push(`/signin/complete?url=${url}`);
+      router.push(`/signup/complete?url=${url}`);
     } else {
-      router.push(`/signin/step3`);
+      router.push(`/signup/step3`);
       console.log(user);
     }
   };
@@ -157,7 +157,7 @@ const SignupStep2 = () => {
   );
 };
 
-export default function SignupPaging() {
+export default function SignupStep2Paging() {
   return (
     <Suspense
       fallback={
