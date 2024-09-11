@@ -1,6 +1,6 @@
 // styles/DatePickerStyles.ts
 import styled from "styled-components";
-import { animate, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { theme } from "@/styles/theme";
 
@@ -15,7 +15,7 @@ interface ItemProps {
   isSelected: boolean;
 }
 
-const NewItemPicker: React.FC<ItemPickerProps> = ({
+const ItemPicker: React.FC<ItemPickerProps> = ({
   items,
   defaultItem,
   unit,
@@ -26,6 +26,13 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   const refContainer = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
   const itemElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  const halfItemHeight = 10;
+  const observerOptions = {
+    root: refContainer.current,
+    rootMargin: `-${halfItemHeight}px 0px -${halfItemHeight}px 0px`,
+    threshold: 0.8,
+  };
 
   useEffect(() => {
     const index = items.indexOf(selectedItem);
@@ -38,36 +45,29 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
         currentElement.offsetHeight / 2;
       refContainer.current.scrollTop = scrollPosition;
     }
-  }, []);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const itemStr = entry.target.getAttribute("data-item");
-            if (itemStr) {
-              setSelectedItem(itemStr);
-              onChange(itemStr);
-            }
+    observer.current = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const itemStr = entry.target.getAttribute("data-item");
+          if (itemStr) {
+            setSelectedItem(itemStr);
+            onChange(itemStr);
           }
-        });
-      },
-      {
-        root: refContainer.current,
-        rootMargin: `-60px 0px -60px 0px`,
-        threshold: 0.8,
-      }
-    );
+        }
+      });
+    }, observerOptions);
 
-    const elements = itemElementsRef.current.filter(Boolean);
-    elements.forEach((elem) => observer.current?.observe(elem!));
+    itemElementsRef.current.forEach((elem) => {
+      if (elem) observer.current?.observe(elem);
+    });
 
     return () => {
-      elements.forEach((elem) => observer.current?.unobserve(elem!));
+      itemElementsRef.current.forEach((elem) => {
+        if (elem) observer.current?.unobserve(elem);
+      });
       observer.current?.disconnect();
     };
-  }, [items]);
+  }, []);
 
   return (
     <ItemPickerContainer ref={refContainer}>
@@ -77,8 +77,9 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
           ref={(el) => {
             itemElementsRef.current[index] = el;
           }}
+          as={motion.div}
           data-item={item}
-          isSelected={item === selectedItem}
+          $isSelected={item === selectedItem}
           whileTap={{ scale: 0.95 }}
         >
           {item}
@@ -89,18 +90,18 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   );
 };
 
-export default NewItemPicker;
+export default ItemPicker;
 
 const ItemPickerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 200px;
-  gap: 15px;
+  height: 150px;
+  padding-top: 60px;
+  gap: 10px;
+  padding-bottom: 60px;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
-  padding-top: 70px;
-  padding-bottom: 70px;
   scrollbar-width: none;
   z-index: 10;
   &::-webkit-scrollbar {
@@ -108,22 +109,20 @@ const ItemPickerContainer = styled.div`
   }
 `;
 
-const Item = styled(motion.div)<ItemProps>`
-    flex: 0 0 auto;
-    height: 60px;
-    width: 85px;
-    box-sizing: border-box;
-    padding: 10px 0;
-    line-height: 60px;
-    text-align: center;
-    justify-content: center;
-    scroll-snap-align: center;
-    font-weight: ${({ isSelected }) => (isSelected ? "500" : "400")};
-    font-size: ${({ isSelected }) => (isSelected ? "24px" : "20px")};
-    color: ${({ isSelected }) => (isSelected ? "white" : theme.colors.gray600)};
-    transition: color 0.7s;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none
+const Item = styled.div<{ $isSelected: boolean }>`
+  flex: 0 0 auto;
+  height: 60px;
+  box-sizing: border-box;
+  padding: 15px 0;
+  line-height: 60px;
+  text-align: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  ${($isSelected) =>
+    $isSelected ? theme.fonts.medium24 : theme.fonts.regular25};
+  color: ${({ $isSelected }) => ($isSelected ? "white" : theme.colors.gray600)};
+  transition: color 0.3s, border 0.3s;
+  &:hover {
+    cursor: pointer;
+  }
 `;

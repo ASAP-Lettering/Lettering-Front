@@ -1,28 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PlanetBox from "@/components/planet/PlanetBox";
 import { PLANETS } from "@/constants/planet";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const PlanetMovePage = () => {
   const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const { letterId } = searchParams.get("letter");
+
   const name = "규리";
-  const [planet, setPlanet] = useState<string>("");
-  const [planetType, setPlanetType] = useState<number>(0);
+  const [checkePlanet, setCheckedPlanet] = useState<number>(PLANETS[0].id);
 
   const handleChangeChecked = (id: number) => {
-    setPlanetType(id);
+    setCheckedPlanet(id);
   };
 
   const handleMovePlanet = () => {
     /* 편지 이동하기 */
     // 추후 작성
     router.push("/planet");
+  };
+
+  const handleMoveOrbit = () => {
+    /* 편지 궤도로 보내기 */
   };
 
   return (
@@ -35,9 +42,10 @@ const PlanetMovePage = () => {
           {PLANETS.map((item) => (
             <PlanetBox
               key={item.id}
+              id={item.id}
               planetName={item.name}
               count={item.count}
-              checked={item.checked}
+              checked={checkePlanet}
               current={item.current}
               onClick={() => {
                 handleChangeChecked(item.id);
@@ -46,7 +54,7 @@ const PlanetMovePage = () => {
           ))}
         </PlanetBoxList>
         <SendOrbitAreaWrapper>
-          <SendOrbitArea>
+          <SendOrbitArea onClick={handleMoveOrbit}>
             행성 궤도로 보내기
             <Small>
               궤도로 옮겨질 시, 홈에서 끌어당겨 언제든 추가할 수 있어요
@@ -58,6 +66,7 @@ const PlanetMovePage = () => {
             buttonType="primary"
             size="large"
             text="이동하기"
+            disabled={checkePlanet === PLANETS[0].id}
             onClick={handleMovePlanet}
           />
         </ButtonWrapper>
@@ -66,7 +75,19 @@ const PlanetMovePage = () => {
   );
 };
 
-export default PlanetMovePage;
+export default function PlanetMovePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <PlanetMovePage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;

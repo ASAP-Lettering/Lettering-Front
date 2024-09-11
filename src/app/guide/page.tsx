@@ -1,6 +1,6 @@
 "use client";
 
-import BottomSheet from "@/components/common/BottomSheet";
+// import BottomSheet from "@/components/common/BottomSheet";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -10,7 +10,7 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
 import Letter from "@/components/letter/Letter";
-import NewItemPicker from "@/components/signin/NewItemPicker";
+import NewItemPicker from "@/components/signup/NewItemPicker";
 import { LETTER_DATA } from "@/constants/letter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -245,7 +245,7 @@ const GuidePage = () => {
         />
       </ButtonContainer>
 
-      <Background>
+      {/* <Background>
         <Mobile ref={viewportRef}>
           <Content>테스트</Content>
           {isDisplayed && (
@@ -258,7 +258,7 @@ const GuidePage = () => {
             />
           )}
         </Mobile>
-      </Background>
+      </Background> */}
     </Container>
   );
 };
@@ -292,11 +292,11 @@ const SpaceBetween = styled.div`
 `;
 
 const PickedItemContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: relative;
 `;
 
 const Background = styled.div`
@@ -313,15 +313,15 @@ const Mobile = styled.div`
   max-width: 350px;
   height: 600px;
   overflow: hidden;
-  box-shadow: 0 0 50px 1px rgba(0, 0, 0, .2);
+  box-shadow: 0 0 50px 1px rgba(0, 0, 0, 0.2);
 `;
 
 const Content = styled.div`
-    width: 100%;
-    padding: 24px;
+  width: 100%;
+  padding: 24px;
 `;
 
 const ButtonContainer = styled.div`
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 `;

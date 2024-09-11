@@ -25,6 +25,7 @@ const Planet = (props: PlanetProps) => {
   const router = useRouter();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
+  const [orbitId, setOrbitId] = useState<number>();
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -33,7 +34,8 @@ const Planet = (props: PlanetProps) => {
     router.push(`/letter/${id}`);
   };
 
-  const handleShowHold = () => {
+  const handleShowHold = (orbitId: number) => {
+    setOrbitId(orbitId);
     setHold(!hold);
   };
 
@@ -43,7 +45,7 @@ const Planet = (props: PlanetProps) => {
 
   const handleMoveButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    router.push(`/planet/move?letter=${id}`);
+    router.push(`/planet/move?letter=${orbitId}`);
   };
 
   const handleDeleteButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -87,7 +89,9 @@ const Planet = (props: PlanetProps) => {
               onClick={() => {
                 handleTagClick(orbit.id);
               }}
-              onHold={handleShowHold}
+              onHold={() => {
+                handleShowHold(orbit.id);
+              }}
             />
           </OrbitTag>
         );

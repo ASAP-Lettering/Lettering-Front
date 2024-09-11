@@ -5,15 +5,17 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { signinState, userInfo } from "@/recoil/signinStore";
-import { signin } from "@/api/login/user";
 import Toast from "@/components/common/Toast";
 import useMeasure from "react-use-measure";
 import BottomSheet from "@/components/common/BottomSheet";
+import { Suspense, useState } from "react";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
+import { signupState, userInfo } from "@/recoil/signupStore";
+import { signup } from "@/api/login/user";
 
-export default function SigninStep3() {
+const SignupStep3 = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [isPopupToast, setisPopupToast] = useState(false);
@@ -22,7 +24,7 @@ export default function SigninStep3() {
   const [isDisplayed, setIsDisplayed] = useState(false);
   const [isVaild, setIsVaild] = useState(true);
   const [user, setUser] = useRecoilState(userInfo);
-  const [registerToken, setRegisterToken] = useRecoilState(signinState);
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
 
   const handleButtonClick = () => {
     if (canSignin()) {
@@ -31,6 +33,7 @@ export default function SigninStep3() {
       handleShowToast();
       setIsDisplayed(false);
     }
+    router.push(`/signup/complete`);
   };
 
   useEffect(() => {
@@ -45,7 +48,7 @@ export default function SigninStep3() {
 
   const handleLoginClick = () => {
     //router.push(`/signin/complete`);
-    signin({
+    signup({
       registerToken: registerToken,
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
@@ -137,7 +140,7 @@ export default function SigninStep3() {
         )}
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
+        <DescriptionText onClick={() => router.push("/signup/step3/check")}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button
@@ -147,6 +150,20 @@ export default function SigninStep3() {
         ></Button>
       </ButtonWrapper>
     </Container>
+  );
+};
+
+export default function SignupStep3Paging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SignupStep3 />
+    </Suspense>
   );
 }
 
@@ -171,41 +188,41 @@ const MainWrapper = styled.div`
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 100px;
 `;
 
 const InputWrapper = styled.div`
-    padding: 10px;
+  padding: 10px;
 `;
 
 const DescriptionText = styled.button`
-    ${(props) => props.theme.fonts.regular14};
-    color: ${(props) => props.theme.colors.gray400};
-    text-decoration: underline;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 23px;
-    cursor: pointer;
+  ${(props) => props.theme.fonts.regular14};
+  color: ${(props) => props.theme.colors.gray400};
+  text-decoration: underline;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  cursor: pointer;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.body07};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.body07};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;

@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { accessState } from "@/recoil/accessStore";
+import { getAccessToken, setLetterUrl } from "@/utils/storage";
+import Loader, { LoaderContainer } from "../common/Loader";
 
 const SocialKakao = () => {
   const router = useRouter();
@@ -11,7 +13,7 @@ const SocialKakao = () => {
   const url = searchParams.get("url");
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  const accessToken = localStorage.getItem("lettering_access");
+  const accessToken = getAccessToken();
   const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&url=${url}`;
   const [localAccessToken, setAccessToken] = useRecoilState(accessState);
 
@@ -26,7 +28,7 @@ const SocialKakao = () => {
     //   setAccessToken(accessToken);
     // } else {
     if (url) {
-      localStorage.setItem("letter_url", url);
+      setLetterUrl(url);
     }
     window.location.href = KAKAO_URL;
   };
@@ -43,21 +45,33 @@ const SocialKakao = () => {
   );
 };
 
-export default SocialKakao;
+export default function SocialKakaoPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SocialKakao />
+    </Suspense>
+  );
+}
 
 const SocialLoginBox = styled.div`
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledImage = styled(Image)`
-    width: 100%;
-    height: 100%;
-    padding: 0 20px;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+  object-fit: contain;
 `;

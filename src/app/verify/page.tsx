@@ -5,21 +5,22 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRecoilState } from "recoil";
-import { signinState, userInfo } from "@/recoil/signinStore";
-import { signin } from "@/api/login/user";
+import { signup } from "@/api/login/user";
+import { signupState, userInfo } from "@/recoil/signupStore";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-export default function Verify() {
+const Verify = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [isVaild, setIsVaild] = useState(true);
   const [user, setUser] = useRecoilState(userInfo);
-  const [registerToken, setRegisterToken] = useRecoilState(signinState);
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
 
   const handleButtonClick = () => {
     //router.push(`/signin/complete`);
-    signin({
+    signup({
       registerToken: registerToken,
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
@@ -79,33 +80,47 @@ export default function Verify() {
       </ButtonWrapper>
     </Container>
   );
+};
+
+export default function VerifyPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Verify />
+    </Suspense>
+  );
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 100px;
 `;
 
 const InputWrapper = styled.div`
-    padding: 10px;
+  padding: 10px;
 `;
 
 const DescriptionText = styled.button`
@@ -120,9 +135,9 @@ const DescriptionText = styled.button`
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
@@ -133,6 +148,6 @@ const HeaderSubTitle = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;

@@ -2,13 +2,14 @@
 
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
+import { clearTokens, getAccessToken } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 export default function Home() {
   const router = useRouter();
-  const accessToken = localStorage.getItem("lettering_access");
+  const accessToken = getAccessToken();
   const [isloading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -20,8 +21,7 @@ export default function Home() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("lettering_access");
-    localStorage.removeItem("lettering_refresh");
+    clearTokens();
     router.push("/login");
   };
 
@@ -54,15 +54,14 @@ const Container = styled.div`
   height: 100%;
   padding: 25px;
   max-height: 852px;
-  background:${(props) => props.theme.colors.bg};
+  background: ${(props) => props.theme.colors.bg};
 `;
 
 const LoaderContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

@@ -124,7 +124,14 @@ const PlanetPage = () => {
           />
         </Top>
         <TagList>
-          <Tag tagType="planet" name={planetName} icon="chevron" />
+          <Tag
+            tagType="planet"
+            name={planetName}
+            icon="chevron"
+            onClick={() => {
+              router.push("/planet/manage");
+            }}
+          />
           <Tag
             tagType="planet"
             name=""

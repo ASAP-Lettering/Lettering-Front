@@ -4,13 +4,15 @@ import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-// import DatePicker from "@/components/signin/DatePicker";
+import { Suspense, useEffect, useState } from "react";
+// import DatePicker from "@/components/signup/DatePicker";
 import { useRecoilState } from "recoil";
-import { signinState, userInfo } from "@/recoil/signinStore";
-import ItemPicker from "@/components/signin/ItemPicker";
-import { signin } from "@/api/login/user";
-import NewItemPicker from "@/components/signin/NewItemPicker";
+import { signupState, userInfo } from "@/recoil/signupStore";
+import ItemPicker from "@/components/signup/ItemPicker";
+import { signup } from "@/api/login/user";
+import NewItemPicker from "@/components/signup/NewItemPicker";
+import { setTokens } from "@/utils/storage";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 export interface DatePickerState {
   year: number;
@@ -18,8 +20,8 @@ export interface DatePickerState {
   day: number;
 }
 
-export default function SigninStep2() {
-  const [registerToken, setRegisterToken] = useRecoilState(signinState);
+const SignupStep2 = () => {
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,9 +53,9 @@ export default function SigninStep2() {
       birthday: newBirthday,
     }));
     if (url) {
-      router.push(`/signin/complete?url=${url}`);
+      router.push(`/signup/complete?url=${url}`);
     } else {
-      router.push(`/signin/step3`);
+      router.push(`/signup/step3`);
       console.log(user);
     }
   };
@@ -71,47 +73,47 @@ export default function SigninStep2() {
     (_, i) => (1 + i).toString()
   );
 
-  //   useEffect(() => {
-  //     if (isBirthdayUpdated) {
-  //       if (url) {
-  //         router.push(`/signin/complete?url=${url}`);
-  //       } else {
-  //         router.push(`/signin/step3`);
-  //       }
-  //     }
-  //   }, [isBirthdayUpdated]);
+  useEffect(() => {
+    if (isBirthdayUpdated) {
+      if (url) {
+        router.push(`/signup/complete?url=${url}`);
+      } else {
+        router.push(`/signup/complete`);
+      }
+    }
+  }, [isBirthdayUpdated]);
 
-  //   const handleButtonClick = async (mybirthday: string) => {
-  //     setUser((prevUser) => ({
-  //       ...prevUser,
-  //       birthday: mybirthday,
-  //     }));
+  // const handleButtonClick = async (mybirthday: string) => {
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     birthday: mybirthday,
+  //   }));
 
-  //     signin({
-  //       registerToken: registerToken,
-  //       privatePermission: user.privatePermission,
-  //       servicePermission: user.servicePermission,
-  //       marketingPermission: user.marketingPermission,
-  //       birthday: mybirthday,
-  //     })
-  //       .then((res) => {
-  //         console.log("accessToken", res.data.accessToken);
-  //         localStorage.setItem("lettering_access", res.data.accessToken);
-  //         localStorage.setItem("lettering_refresh", res.data.refreshToken);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //         router.push("/error");
-  //         return;
-  //       });
+  signup({
+    registerToken: registerToken,
+    privatePermission: user.privatePermission,
+    servicePermission: user.servicePermission,
+    marketingPermission: user.marketingPermission,
+    // birthday: mybirthday,
+    birthday: "", // "" 값으로 임시
+  })
+    .then((res) => {
+      console.log("accessToken", res.data.accessToken);
+      setTokens(res.data.accessToken, res.data.refreshToken);
+    })
+    .catch((error) => {
+      console.log(error);
+      router.push("/error");
+      return;
+    });
 
-  //     if (url) {
-  //       router.push(`/signin/complete?url=${url}`);
-  //     } else {
-  //       router.push(`/signin/complete`);
-  //       console.log(user);
-  //     }
-  //   };
+  if (url) {
+    router.push(`/signup/complete?url=${url}`);
+  } else {
+    router.push(`/signup/complete`);
+    console.log(user);
+  }
+
   return (
     <Container>
       <MainWrapper>
@@ -153,60 +155,74 @@ export default function SigninStep2() {
       ></Button>
     </Container>
   );
+};
+
+export default function SignupStep2Paging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SignupStep2 />
+    </Suspense>
+  );
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ItemPickerWrapper = styled.div`
-    width: 100%;
-    overflow: hidden;
-    margin-top: 15vh;
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    justify-content: center;
-    position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-top: 15vh;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
 `;
 
 const PickedItemContainer = styled.div`
-    position: absolute;
-    top: 79px;
-    width: 95%;
-    height: 60px;
-    background-color: ${(props) => props.theme.colors.gray800};
-    border-radius: 8px;
-    z-index: 2;
+  position: absolute;
+  top: 79px;
+  width: 95%;
+  height: 60px;
+  background-color: ${(props) => props.theme.colors.gray800};
+  border-radius: 8px;
+  z-index: 2;
 `;

@@ -1,14 +1,15 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 import Letter from "@/components/letter/Letter";
 import { LETTER_DATA } from "@/constants/letter";
 import { LetterType } from "@/types/letter";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
-export default function VerifyLetter() {
+const VerifyLetter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
@@ -66,53 +67,67 @@ export default function VerifyLetter() {
   ) : (
     <></>
   );
+};
+
+export default function VerifyLetterPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <VerifyLetter />
+    </Suspense>
+  );
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    height: 100%;
-    max-height: 852px;
-    color: white;
-    padding: 25px;
-    overflow-x: hidden;
-    padding-bottom: 40px;
-    background:${(props) => props.theme.colors.bg};
-    /* background-image: url('/assets/signin/verify_image.png'); 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 100%;
+  max-height: 852px;
+  color: white;
+  padding: 25px;
+  overflow-x: hidden;
+  padding-bottom: 40px;
+  background: ${(props) => props.theme.colors.bg};
+  /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
     background-position: bottom 80px center;
     background-repeat: no-repeat; */
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 2.5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.regular16};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.regular16};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ButtonContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 12px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 12px;
 `;
