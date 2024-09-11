@@ -12,10 +12,18 @@ const SocialKakao = () => {
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
   const accessToken = getAccessToken();
-  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&url=${url}`;
+  const [absoluteUrl, setabsoluteUrl] = useState("");
+  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${absoluteUrl}&response_type=code&url=${url}`;
   const [localAccessToken, setAccessToken] = useRecoilState(accessState);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setabsoluteUrl(
+        window.location.protocol + "//" + window.location.host + "/login/kakao"
+      );
+    }
+  }, []);
 
   const handleLogin = () => {
     //이때 localStorage에 저장된 accessToken이 만료되었는지 확인해야함.
