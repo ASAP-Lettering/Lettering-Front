@@ -10,6 +10,7 @@ import { useRecoilState } from "recoil";
 import { signup } from "@/api/login/user";
 import { signupState, userInfo } from "@/recoil/signupStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import { setTokens } from "@/utils/storage";
 
 const Verify = () => {
   const router = useRouter();
@@ -30,8 +31,9 @@ const Verify = () => {
     })
       .then((res) => {
         console.log("accessToken", res.data.accessToken);
-        localStorage.setItem("lettering_access", res.data.accessToken);
-        localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        // localStorage.setItem("lettering_access", res.data.accessToken);
+        // localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        setTokens(res.data.accessToken, res.data.refreshToken);
       })
       .catch((error) => {
         console.log(error);

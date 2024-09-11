@@ -14,6 +14,7 @@ import { Suspense, useState } from "react";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import { signupState, userInfo } from "@/recoil/signupStore";
 import { signup } from "@/api/login/user";
+import { setTokens } from "@/utils/storage";
 
 const SignupStep3 = () => {
   const router = useRouter();
@@ -25,6 +26,8 @@ const SignupStep3 = () => {
   const [isVaild, setIsVaild] = useState(true);
   const [user, setUser] = useRecoilState(userInfo);
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
     if (canSignin()) {
@@ -57,8 +60,16 @@ const SignupStep3 = () => {
     })
       .then((res) => {
         console.log("accessToken", res.data.accessToken);
-        localStorage.setItem("lettering_access", res.data.accessToken);
-        localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        // localStorage.setItem("lettering_access", res.data.accessToken);
+        // localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        setTokens(res.data.accessToken, res.data.refreshToken);
+        // router.push(`/signup/complete`);
+        if (url) {
+          router.push(`/signup/complete?url=${url}`);
+        } else {
+          router.push(`/signup/complete`);
+          console.log(user);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -66,7 +77,6 @@ const SignupStep3 = () => {
         return;
       });
 
-    router.push(`/signup/complete`);
     console.log(user);
   };
 

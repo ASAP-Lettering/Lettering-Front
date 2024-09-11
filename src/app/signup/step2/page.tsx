@@ -53,7 +53,7 @@ const SignupStep2 = () => {
       birthday: newBirthday,
     }));
     if (url) {
-      router.push(`/signup/complete?url=${url}`);
+      router.push(`/signup/step3?url=${url}`);
     } else {
       router.push(`/signup/step3`);
       console.log(user);

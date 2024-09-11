@@ -14,9 +14,9 @@ const Signup = () => {
 
   const handleButtonClick = () => {
     if (url) {
-      router.push(`/verify?url=${url}`);
+      router.push(`/verify/letter?url=${url}`);
     } else {
-      router.push("/guide");
+      router.push("/");
     }
   };
   return (
@@ -38,7 +38,7 @@ const Signup = () => {
       </MainWrapper>
       <Button
         buttonType="primary"
-        text={url ? "본인인증하고 편지 열기" : "나의 스페이스에 접속하기"}
+        text={url ? "나에게 온 편지 열기" : "나의 스페이스에 접속하기"}
         onClick={handleButtonClick}
       ></Button>
     </Container>

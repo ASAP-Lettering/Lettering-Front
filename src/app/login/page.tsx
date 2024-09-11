@@ -34,6 +34,7 @@ const Container = styled.div`
   -webkit-scrollbar {
         display: none; 
     }
+
 `;
 
 const LogoTitle = styled.img`
@@ -43,6 +44,16 @@ const LogoTitle = styled.img`
   height: auto;
   max-width: 257px;
   max-height: 150px;
+    //드래그방지
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 `;
 
 const LogoText = styled.div`
@@ -54,6 +65,16 @@ const LogoText = styled.div`
   letter-spacing: -0.6px;
   ${theme.fonts.regular16}
   justify-content: center;
+    //드래그방지
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 `;
 
 const LogoImage = styled.img`
@@ -62,6 +83,16 @@ const LogoImage = styled.img`
   height: auto;
   max-width: 520px;
   max-height: 520px;
+    //드래그방지
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 `;
 
 const ImageWrapper = styled.div`
