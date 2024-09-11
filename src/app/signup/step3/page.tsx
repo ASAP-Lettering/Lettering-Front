@@ -33,7 +33,6 @@ const SignupStep3 = () => {
       handleShowToast();
       setIsDisplayed(false);
     }
-    router.push(`/signup/complete`);
   };
 
   useEffect(() => {
@@ -67,7 +66,7 @@ const SignupStep3 = () => {
         return;
       });
 
-    router.push(`/signin/complete`);
+    router.push(`/signup/complete`);
     console.log(user);
   };
 

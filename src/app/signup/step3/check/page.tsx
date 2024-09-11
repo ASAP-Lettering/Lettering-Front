@@ -5,7 +5,7 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 
-export default function SignupStep3Check() {
+export default function SigninStep3Check() {
   const router = useRouter();
 
   const handleButtonClick = () => {
@@ -43,19 +43,19 @@ export default function SignupStep3Check() {
 }
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100%;
-  color: white;
-  background: ${(props) => props.theme.colors.bg};
-  padding: 25px;
-  padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    color: white;
+    background:${(props) => props.theme.colors.bg};
+    padding: 25px;
+    padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 `;
 
 const Header = styled.div`
@@ -71,12 +71,12 @@ const ContentWrapper = styled.div`
 `;
 
 const HeaderTitle = styled.div`
-  width: 100%;
-  ${(props) => props.theme.fonts.heading01};
-  margin-top: 2.5rem;
+    width: 100%;
+    ${(props) => props.theme.fonts.heading01};
+    margin-top: 2.5rem;
 `;
 
 const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 `;

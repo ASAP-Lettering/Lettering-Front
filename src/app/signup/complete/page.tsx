@@ -69,7 +69,7 @@ const Container = styled.div`
     flex-direction: column;
     //overflow: scroll;
     justify-content: space-between;
-    background-image: url('/assets/signin/signin_bg.png'); 
+    background-image: url('/assets/signup/signup_bg.png'); 
     background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
