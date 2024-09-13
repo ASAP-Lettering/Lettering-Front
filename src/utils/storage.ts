@@ -1,3 +1,6 @@
+import { getNewTokens } from "@/api/login/user";
+import { useRouter } from "next/navigation";
+
 /* accessToken, refreshToken */
 export const setTokens = (accessToken: string, refreshToken: string) => {
   if (typeof window !== "undefined") {
@@ -42,4 +45,17 @@ export const getLetterUrl = () => {
 
 export const clearLetterUrl = () => {
   localStorage.removeItem("letter_url");
+};
+
+export const getSession = async () => {
+  const router = useRouter();
+  await getNewTokens()
+    .then((res) => {
+      console.log("Refresh new Token!");
+      setTokens(res.data.accessToken, res.data.refreshToken);
+    })
+    .catch((error) => {
+      console.log(`Cannot Refresh: ${error.response.message}`);
+      router.push("/login");
+    });
 };

@@ -40,3 +40,12 @@ export const getNewTokens = async () => {
   }
   return null;
 };
+
+//테스트용 api
+export const getAllSpaceName = async (accessToken: string) => {
+  return await client.get(`/api/v1/spaces`, {
+    headers: {
+      Authorization: `${accessToken}`,
+    },
+  });
+};

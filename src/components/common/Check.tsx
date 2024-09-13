@@ -86,8 +86,8 @@ const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
 
 const StyledImage = styled(Image)<{ $checkType: checkType }>`
   position: absolute;
-  top: ${({ $checkType }) => ($checkType ? "0px" : "6px")};
-  left: ${({ $checkType }) => ($checkType ? "0px" : "6px")};
+  top: ${({ $checkType }) => ($checkType ? "2px" : "6px")};
+  left: ${({ $checkType }) => ($checkType ? "2px" : "6px")};
   pointer-events: none;
   z-index: 10;
 `;
