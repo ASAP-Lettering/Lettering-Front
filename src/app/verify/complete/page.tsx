@@ -1,11 +1,13 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import styled from "styled-components";
 
-export default function Signup() {
+const VerifyComplete = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
@@ -35,6 +37,20 @@ export default function Signup() {
         ></Button>
       </div>
     </Container>
+  );
+};
+
+export default function VerifyCompletePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <VerifyComplete />
+    </Suspense>
   );
 }
 
