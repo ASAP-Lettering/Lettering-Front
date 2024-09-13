@@ -13,10 +13,20 @@ interface LetterProps {
   date: string;
   isImage: boolean;
   images?: string[];
+  readOnly?: boolean;
 }
 
 const Letter = (props: LetterProps) => {
-  const { id, templateType, name, content, date, isImage, images } = props;
+  const {
+    id,
+    templateType,
+    name,
+    content,
+    date,
+    isImage,
+    images,
+    readOnly = false,
+  } = props;
   const [currentPage, setCurrentPage] = useState(0);
   const paginateContent = (content: string, maxCharsPerPage: number) => {
     const pages = [];
@@ -34,7 +44,7 @@ const Letter = (props: LetterProps) => {
 
   return (
     <Container $templateType={templateType}>
-      {isPopup && (
+      {!readOnly && isPopup && (
         <PopupContainer>
           <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
             수정
@@ -44,9 +54,11 @@ const Letter = (props: LetterProps) => {
       )}
       <TopContainer>
         <Name>From.{name}</Name>
-        <button onClick={() => setIsPopup(!isPopup)}>
-          <img src="/assets/icons/ic_more.svg" />
-        </button>
+        {!readOnly && (
+          <button onClick={() => setIsPopup(!isPopup)}>
+            <img src="/assets/icons/ic_more.svg" />
+          </button>
+        )}
       </TopContainer>
       <Date>{date}</Date>
       <Content>

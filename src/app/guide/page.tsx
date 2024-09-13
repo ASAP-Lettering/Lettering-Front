@@ -225,10 +225,20 @@ const GuidePage = () => {
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
+        content={letterData.content}
+        date={letterData.date}
+        isImage={false}
+        readOnly={true}
+      />
+      <Letter
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
         images={imageData}
         date={letterData.date}
         isImage={true}
       />
+
       <h3>BottomSheet</h3>
       <ButtonContainer>
         <Button
