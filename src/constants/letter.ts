@@ -1,4 +1,4 @@
-import { LetterType } from "@/types/letter";
+import { LetterDetailType, LetterType } from "@/types/letter";
 
 export const LETTER_DATA: LetterType[] = [
   {
@@ -42,5 +42,214 @@ export const LETTER_DATA: LetterType[] = [
     date: "2024-08-21",
     content: "",
     images: [],
+  },
+];
+
+export const LETTER_DETAIL_DATA: LetterDetailType[] = [
+  {
+    id: 1,
+    url: "https://example.com/letter1",
+    templateType: 1,
+    sender: "철수",
+    receiver: "영희",
+    content: "안녕, 영희야! 잘 지내고 있지?",
+    images: [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg",
+    ],
+    date: "2024-09-01",
+    space_name: "학교",
+    letter_count: 1,
+    next_letter: {
+      letter_id: "2",
+      sender_name: "영희",
+    },
+  },
+  {
+    id: 2,
+    url: "https://example.com/letter/1",
+    templateType: 1,
+    sender: "홍길동",
+    receiver: "김철수",
+    content:
+      "안녕하세요, 철수님. 오랜만에 편지를 쓰게 되어 기쁩니다. 지난번에 함께 했던 시간들이 아직도 생생하게 떠오릅니다. 우리가 함께 나눈 대화와 웃음은 저에게 큰 힘이 되었습니다. 요즘 어떻게 지내고 계신가요? 저도 나름 바쁜 일상을 보내고 있지만, 문득문득 철수님 생각이 나서 이렇게 편지를 쓰게 되었습니다. 앞으로도 서로에게 힘이 되는 좋은 친구로 남길 바랍니다. 언제든 시간이 되면 함께 만나서 좋은 시간을 보내면 좋겠습니다. 다시 한 번 감사의 마음을 전하며 이만 줄이겠습니다.",
+    images: [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg",
+    ],
+    date: "2024-09-01",
+    space_name: "이것 저것",
+    letter_count: 1,
+    prev_letter: undefined,
+    next_letter: {
+      letter_id: "2",
+      sender_name: "이영희",
+    },
+  },
+  {
+    id: 3,
+    url: "https://example.com/letter/2",
+    templateType: 2,
+    sender: "이영희",
+    receiver: "박민수",
+    content:
+      "민수님, 안녕하세요. 지난번에 함께 했던 여행이 기억에 남아 이렇게 편지를 쓰게 되었습니다. 그때의 즐거웠던 추억이 아직도 저를 미소 짓게 만듭니다. 함께 했던 시간들은 저에게 큰 의미로 다가왔고, 앞으로도 자주 만나서 좋은 시간을 보낼 수 있으면 좋겠습니다. 요즘 날씨가 많이 선선해졌는데, 건강은 잘 챙기고 계신가요? 저는 새로운 취미를 시작했는데, 나중에 기회가 된다면 함께 공유하고 싶습니다. 항상 응원하겠습니다. 좋은 하루 되세요.",
+    images: ["https://example.com/image3.jpg"],
+    date: "2024-09-02",
+    space_name: "카페",
+    letter_count: 2,
+    prev_letter: {
+      letter_id: "1",
+      sender_name: "홍길동",
+    },
+    next_letter: {
+      letter_id: "3",
+      sender_name: "최영준",
+    },
+  },
+  {
+    id: 4,
+    url: "https://example.com/letter4",
+    templateType: 1,
+    sender: "지은",
+    receiver: "민수",
+    content: "민수야, 잘 지내고 있는지 궁금해!",
+    images: ["https://example.com/image6.jpg"],
+    date: "2024-09-04",
+    space_name: "회사",
+    letter_count: 4,
+    prev_letter: {
+      letter_id: "3",
+      sender_name: "민수",
+    },
+    next_letter: {
+      letter_id: "5",
+      sender_name: "수현",
+    },
+  },
+  {
+    id: 5,
+    url: "https://example.com/letter5",
+    templateType: 2,
+    sender: "수현",
+    receiver: "지은",
+    content: "지은아, 오랜만이야!",
+    images: [
+      "https://example.com/image7.jpg",
+      "https://example.com/image8.jpg",
+    ],
+    date: "2024-09-05",
+    space_name: "공원",
+    letter_count: 5,
+    prev_letter: {
+      letter_id: "4",
+      sender_name: "지은",
+    },
+    next_letter: {
+      letter_id: "6",
+      sender_name: "준호",
+    },
+  },
+  {
+    id: 6,
+    url: "https://example.com/letter6",
+    templateType: 3,
+    sender: "준호",
+    receiver: "수현",
+    content: "수현아, 오랜만이야. 어떻게 지내?",
+    images: ["https://example.com/image9.jpg"],
+    date: "2024-09-06",
+    space_name: "체육관",
+    letter_count: 6,
+    prev_letter: {
+      letter_id: "5",
+      sender_name: "수현",
+    },
+    next_letter: {
+      letter_id: "7",
+      sender_name: "유나",
+    },
+  },
+  {
+    id: 7,
+    url: "https://example.com/letter7",
+    templateType: 1,
+    sender: "유나",
+    receiver: "준호",
+    content: "준호야, 잘 지내고 있니?",
+    images: [
+      "https://example.com/image10.jpg",
+      "https://example.com/image11.jpg",
+    ],
+    date: "2024-09-07",
+    space_name: "쇼핑몰",
+    letter_count: 7,
+    prev_letter: {
+      letter_id: "6",
+      sender_name: "준호",
+    },
+    next_letter: {
+      letter_id: "8",
+      sender_name: "석진",
+    },
+  },
+  {
+    id: 8,
+    url: "https://example.com/letter8",
+    templateType: 2,
+    sender: "석진",
+    receiver: "유나",
+    content: "유나야, 오랜만에 연락해!",
+    images: ["https://example.com/image12.jpg"],
+    date: "2024-09-08",
+    space_name: "해변",
+    letter_count: 8,
+    prev_letter: {
+      letter_id: "7",
+      sender_name: "유나",
+    },
+    next_letter: {
+      letter_id: "9",
+      sender_name: "서현",
+    },
+  },
+  {
+    id: 9,
+    url: "https://example.com/letter9",
+    templateType: 3,
+    sender: "서현",
+    receiver: "석진",
+    content: "석진아, 잘 지내고 있지?",
+    images: [
+      "https://example.com/image13.jpg",
+      "https://example.com/image14.jpg",
+    ],
+    date: "2024-09-09",
+    space_name: "레스토랑",
+    letter_count: 9,
+    prev_letter: {
+      letter_id: "8",
+      sender_name: "석진",
+    },
+    next_letter: {
+      letter_id: "10",
+      sender_name: "하늘",
+    },
+  },
+  {
+    id: 10,
+    url: "https://example.com/letter10",
+    templateType: 1,
+    sender: "하늘",
+    receiver: "서현",
+    content: "서현아, 마지막 편지를 보내.",
+    images: ["https://example.com/image15.jpg"],
+    date: "2024-09-10",
+    space_name: "스튜디오",
+    letter_count: 10,
+    prev_letter: {
+      letter_id: "9",
+      sender_name: "서현",
+    },
   },
 ];

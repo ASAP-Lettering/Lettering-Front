@@ -37,7 +37,7 @@ const Letter = (props: LetterProps) => {
     }
     return pages;
   };
-  const contentPages = isImage ? images : paginateContent(content!, 210);
+  const contentPages = isImage ? images : paginateContent(content!, 190);
   const totalPage = isImage ? images!.length : contentPages!.length;
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();

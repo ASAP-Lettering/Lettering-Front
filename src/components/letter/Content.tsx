@@ -53,6 +53,8 @@ const SwipeableContainer = styled.div`
     height: auto;
     box-sizing: border-box;
     border-radius: 10px;
+    display: flex;
+    justify-content: center
 `;
 
 const ContentSlider = styled.div`
