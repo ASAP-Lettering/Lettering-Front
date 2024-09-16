@@ -14,9 +14,9 @@ const Signup = () => {
 
   const handleButtonClick = () => {
     if (url) {
-      router.push(`/verify?url=${url}`);
+      router.push(`/verify/letter?url=${url}`);
     } else {
-      router.push("/guide");
+      router.push("/");
     }
   };
   return (
@@ -38,7 +38,7 @@ const Signup = () => {
       </MainWrapper>
       <Button
         buttonType="primary"
-        text={url ? "본인인증하고 편지 열기" : "나의 스페이스에 접속하기"}
+        text={url ? "나에게 온 편지 열기" : "나의 스페이스에 접속하기"}
         onClick={handleButtonClick}
       ></Button>
     </Container>
@@ -60,19 +60,19 @@ export default function SignupPaging() {
 }
 
 const Container = styled.div`
-  color: white;
-  display: flex;
-  box-sizing: border-box;
-  padding: 50px 20px;
-  height: 100%;
-  max-height: 852px;
-  flex-direction: column;
-  overflow: scroll;
-  justify-content: space-between;
-  background-image: url("/assets/signup/signup_bg.png");
-  background-size: 100% auto;
-  background-position: center;
-  background-repeat: no-repeat;
+    color: white;
+    display: flex;
+    box-sizing: border-box;
+    padding: 50px 20px;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    //overflow: scroll;
+    justify-content: space-between;
+    background-image: url('/assets/signup/signup_bg.png'); 
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
 `;
 
 const MainWrapper = styled.div`

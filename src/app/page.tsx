@@ -1,5 +1,6 @@
 "use client";
 
+import { getAllSpaceName } from "@/api/login/user";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import { clearTokens, getAccessToken } from "@/utils/storage";
@@ -17,6 +18,14 @@ export default function Home() {
       router.push("/login");
     } else {
       setIsLoading(false);
+      //token이 유효한지 테스트용
+      getAllSpaceName(accessToken)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     }
   }, []);
 

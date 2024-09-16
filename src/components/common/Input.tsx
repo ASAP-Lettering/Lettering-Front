@@ -1,5 +1,5 @@
 import { theme } from "@/styles/theme";
-import React from "react";
+import React, { useEffect } from "react";
 import styled, { css } from "styled-components";
 
 type inputType = "underline" | "boxText" | "boxTextArea";
@@ -13,6 +13,30 @@ interface InputProps {
   readonly?: boolean;
   disabled?: boolean;
   height?: string;
+  isValid?: boolean;
+  isValidChange?: (vaild: boolean) => void;
+  errorMessage?: string;
+}
+
+function isValidKoreanInput(input: string): boolean {
+  const completeSyllable = /[\uAC00-\uD7A3]/;
+  const loneConsonants =
+    /[\u1100-\u115F\uA960-\uA97F\u3131-\u314E\u3165-\u3186]/;
+  const loneVowels = /[\u1160-\u11A7\uD7B0-\uD7C6\u314F-\u3163\u3187-\u318E]/;
+
+  if (input.length === 0) {
+    return true;
+  }
+
+  if (loneConsonants.test(input) || loneVowels.test(input)) {
+    return false;
+  }
+
+  if (completeSyllable.test(input)) {
+    return true;
+  }
+
+  return false;
 }
 
 const Input = (props: InputProps) => {
@@ -25,10 +49,17 @@ const Input = (props: InputProps) => {
     readonly = false,
     disabled = false,
     height,
+    isValid = true,
+    isValidChange = (isVaild: boolean) => {},
+    errorMessage,
   } = props;
 
+  const regex = /[^a-zA-Z0-9\u1100-\u11FF\u3131-\u318E\uAC00-\uD7AF\s]/g; // 특수문자
   const handleChange = (event: any) => {
-    onChange(event.target.value);
+    const newValue = event.target.value;
+    isValidChange(isValidKoreanInput(newValue));
+
+    onChange(newValue.replace(regex, "")); // 특수문자입력불가
   };
 
   const isTextarea = inputType === "boxTextArea";
@@ -49,6 +80,7 @@ const Input = (props: InputProps) => {
       ) : (
         <StyledInput
           $inputType={inputType}
+          $isVaild={isValid}
           type={"text"}
           value={value}
           onChange={handleChange}
@@ -57,6 +89,7 @@ const Input = (props: InputProps) => {
           disabled={disabled}
         />
       )}
+      {!isValid && <ValidationMessage>{errorMessage}</ValidationMessage>}
     </Container>
   );
 };
@@ -96,7 +129,7 @@ const sharedStyles = `
   }
 `;
 
-const StyledInput = styled.input<{ $inputType: inputType }>`
+const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
   ${sharedStyles}
   height: 52px;
   padding: 12px 20px;
@@ -114,6 +147,11 @@ const StyledInput = styled.input<{ $inputType: inputType }>`
         ${(props: any) => props.theme.fonts.body01};
       }
     `}
+    ${({ $isVaild }) =>
+      !$isVaild &&
+      css`
+      border-bottom: 1px solid ${theme.colors.red};
+    `}
 `;
 
 const StyledTextarea = styled.textarea<{
@@ -129,4 +167,10 @@ const StyledTextarea = styled.textarea<{
     ${(props: any) => props.theme.fonts.regular14};
     letter-spacing: 1px;
   }
+`;
+
+const ValidationMessage = styled.div`
+  color: ${theme.colors.red}; 
+  ${(props) => props.theme.fonts.body08};
+  margin-top: -8px; 
 `;

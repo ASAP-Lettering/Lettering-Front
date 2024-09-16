@@ -6,16 +6,43 @@ import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { Suspense, useState } from "react";
+import { useRecoilState } from "recoil";
+import { signup } from "@/api/login/user";
+import { signupState, userInfo } from "@/recoil/signupStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import { setTokens } from "@/utils/storage";
 
 const Verify = () => {
   const router = useRouter();
   const [name, setName] = useState("");
-  const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const [isVaild, setIsVaild] = useState(true);
+  const [user, setUser] = useRecoilState(userInfo);
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
 
   const handleButtonClick = () => {
-    // router.push(`/verify/complete?url=${url}`);
+    //router.push(`/signin/complete`);
+    signup({
+      registerToken: registerToken,
+      privatePermission: user.privatePermission,
+      servicePermission: user.servicePermission,
+      marketingPermission: user.marketingPermission,
+      birthday: user.birthday,
+      realName: name,
+    })
+      .then((res) => {
+        console.log("accessToken", res.data.accessToken);
+        // localStorage.setItem("lettering_access", res.data.accessToken);
+        // localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        setTokens(res.data.accessToken, res.data.refreshToken);
+      })
+      .catch((error) => {
+        console.log(error);
+        router.push("/error");
+        return;
+      });
+
+    router.push(`/verify/`);
+    console.log(user);
   };
 
   return (
@@ -37,11 +64,16 @@ const Verify = () => {
             value={name}
             onChange={setName}
             placeholder="ex)홍길동"
+            isValid={isVaild}
+            isValidChange={setIsVaild}
+            errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
           />
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText>왜 실명 인증이 필요한가요?</DescriptionText>
+        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
+          왜 실명 인증이 필요한가요?
+        </DescriptionText>
         <Button
           buttonType="primary"
           text="다음"
@@ -93,15 +125,15 @@ const InputWrapper = styled.div`
   padding: 10px;
 `;
 
-const DescriptionText = styled.div`
-  ${(props) => props.theme.fonts.regular14};
-  color: ${(props) => props.theme.colors.gray400};
-  text-decoration: underline;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 23px;
-  cursor: pointer;
+const DescriptionText = styled.button`
+    ${(props) => props.theme.fonts.regular14};
+    color: ${(props) => props.theme.colors.gray400};
+    text-decoration: underline;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 23px;
+    cursor: pointer;
 `;
 
 const HeaderTitle = styled.div`
@@ -111,10 +143,10 @@ const HeaderTitle = styled.div`
 `;
 
 const HeaderSubTitle = styled.div`
-  width: 100%;
-  ${(props) => props.theme.fonts.regular16};
-  color: ${(props) => props.theme.colors.gray300};
-  padding-top: 10px;
+    width: 100%;
+    ${(props) => props.theme.fonts.body07};
+    color: ${(props) => props.theme.colors.gray300};
+    padding-top: 10px;
 `;
 
 const ButtonWrapper = styled.div`

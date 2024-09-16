@@ -59,6 +59,7 @@ const Container = styled.div<{
   $right?: string;
 }>`
   width: calc(100% - 50px);
+  max-width: 343px;
   padding: 11px 30px;
   display: flex;
   justify-content: ${({ $icon }) => ($icon ? "flex-start" : "center")};
