@@ -53,7 +53,7 @@ const SignupStep2 = () => {
       birthday: newBirthday,
     }));
     if (url) {
-      router.push(`/signup/complete?url=${url}`);
+      router.push(`/signup/step3?url=${url}`);
     } else {
       router.push(`/signup/step3`);
       console.log(user);
@@ -89,30 +89,30 @@ const SignupStep2 = () => {
   //     birthday: mybirthday,
   //   }));
 
-  signup({
-    registerToken: registerToken,
-    privatePermission: user.privatePermission,
-    servicePermission: user.servicePermission,
-    marketingPermission: user.marketingPermission,
-    // birthday: mybirthday,
-    birthday: "", // "" 값으로 임시
-  })
-    .then((res) => {
-      console.log("accessToken", res.data.accessToken);
-      setTokens(res.data.accessToken, res.data.refreshToken);
-    })
-    .catch((error) => {
-      console.log(error);
-      router.push("/error");
-      return;
-    });
+  //   signup({
+  //     registerToken: registerToken,
+  //     privatePermission: user.privatePermission,
+  //     servicePermission: user.servicePermission,
+  //     marketingPermission: user.marketingPermission,
+  //     // birthday: mybirthday,
+  //     birthday: "", // "" 값으로 임시
+  //   })
+  //     .then((res) => {
+  //       console.log("accessToken", res.data.accessToken);
+  //       setTokens(res.data.accessToken, res.data.refreshToken);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       router.push("/error");
+  //       return;
+  //     });
 
-  if (url) {
-    router.push(`/signup/complete?url=${url}`);
-  } else {
-    router.push(`/signup/complete`);
-    console.log(user);
-  }
+  //   if (url) {
+  //     router.push(`/signup/complete?url=${url}`);
+  //   } else {
+  //     router.push(`/signup/complete`);
+  //     console.log(user);
+  //   }
 
   return (
     <Container>

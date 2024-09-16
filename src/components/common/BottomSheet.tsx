@@ -14,6 +14,7 @@ const BottomSheet = ({
   subButton = "",
   isOpen,
   handleOpen,
+  onConfirm,
 }: {
   viewport: string;
   title: string;
@@ -22,6 +23,7 @@ const BottomSheet = ({
   subButton?: string;
   isOpen: boolean;
   handleOpen: (state: boolean) => void;
+  onConfirm: () => void;
 }) => {
   //const [isOpened, setIsOpened] = useState(isOpen);
   const [contentRef, contentBounds] = useMeasure();
@@ -108,11 +110,11 @@ const BottomSheet = ({
               buttonType="primary"
               size="large"
               text="확인 완료"
-              onClick={() => handleOpen(false)}
+              onClick={onConfirm}
             />
           </SheetContent>
           <WriteAgain onClick={() => handleOpen(false)}>
-            다시 수정하기
+            다시 수정할게요
           </WriteAgain>
         </SheetContentWrapper>
       </SheetBackground>

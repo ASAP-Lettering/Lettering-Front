@@ -6,7 +6,7 @@ import { signupState } from "@/recoil/signupStore";
 import { clearLetterUrl, getLetterUrl, setTokens } from "@/utils/storage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -14,10 +14,20 @@ const Auth = () => {
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const router = useRouter();
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const REDIRECT_URL = process.env.NEXT_PUBLIC_REDIRECT_URI;
+  const [absoluteUrl, setAbsoluteUrl] = useState("");
   const storeUrl = getLetterUrl();
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = `${window.location.protocol}//${window.location.host}/login/kakao`;
+      setAbsoluteUrl(url);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!absoluteUrl) {
+      return;
+    }
     const getToken = async () => {
       const AUTHORIZATION_CODE = new URL(window.location.href).searchParams.get(
         "code"
@@ -33,7 +43,7 @@ const Auth = () => {
 
       try {
         const response = await axios.post(
-          `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URL}&code=${AUTHORIZATION_CODE}`,
+          `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${REST_API_KEY}&redirect_uri=${absoluteUrl}&code=${AUTHORIZATION_CODE}`,
           {
             headers: { "Content-Type": "application/json" },
           }
@@ -72,7 +82,7 @@ const Auth = () => {
       }
     };
     getToken();
-  }, []);
+  }, [absoluteUrl]);
 
   return (
     <Container>
