@@ -38,14 +38,14 @@ const LetterPage = () => {
         <Header>
           <HeaderTitle>
             {letterData.space_name} <br />
-            행성에 있는 편지예요!
+            <span>행성에 있는 편지예요!</span>
           </HeaderTitle>
           <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
         </Header>
         <Letter
           id={letterData.id}
           templateType={letterData.templateType}
-          name={letterData.receiver}
+          name={letterData.sender}
           content={letterData.content}
           date={letterData.date}
           isImage={false}
@@ -127,6 +127,9 @@ const HeaderTitle = styled.div`
   ${(props) => props.theme.fonts.heading01};
   margin-top: 1rem;
   flex:2;
+  span {
+    ${(props) => props.theme.fonts.heading02};
+  }
 `;
 
 // const HeaderSubTitle = styled.div`
