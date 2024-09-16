@@ -50,11 +50,10 @@ const SwipeableContainer = styled.div`
     overflow: hidden;
     width: 100%;
     max-width: 272px; 
+    min-height: 200px;
     height: auto;
     box-sizing: border-box;
     border-radius: 10px;
-    display: flex;
-    justify-content: center
 `;
 
 const ContentSlider = styled.div`
@@ -68,6 +67,8 @@ const ContentItem = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 200px;
+    
     /* position: relative; */
 `;
 

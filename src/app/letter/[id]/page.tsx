@@ -5,20 +5,26 @@ import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
 import { LETTER_DETAIL_DATA } from "@/constants/letter";
-import { LetterDetailType, LetterType } from "@/types/letter";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { LetterDetailType } from "@/types/letter";
+import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const LetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
+  const [key, setKey] = useState(1);
   //const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
 
   const handleButtonClick = () => {
     router.push("/");
+  };
+
+  const changeImageorContent = () => {
+    setIsImage(!isImage);
+    setKey(key + 1);
   };
 
   useEffect(() => {
@@ -42,14 +48,33 @@ const LetterPage = () => {
           </HeaderTitle>
           <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
         </Header>
-        <Letter
-          id={letterData.id}
-          templateType={letterData.templateType}
-          name={letterData.sender}
-          content={letterData.content}
-          date={letterData.date}
-          isImage={false}
-        />
+        {isImage ? (
+          <Letter
+            key={key}
+            id={letterData.id}
+            templateType={letterData.templateType}
+            name={letterData.sender}
+            images={letterData.images}
+            date={letterData.date}
+            isImage={true}
+          />
+        ) : (
+          <Letter
+            key={key}
+            id={letterData.id}
+            templateType={letterData.templateType}
+            name={letterData.sender}
+            content={letterData.content}
+            date={letterData.date}
+            isImage={false}
+          />
+        )}
+        <ChangeButtonWrapper onClick={changeImageorContent}>
+          <img src="/assets/icons/ic_change_image.svg"></img>
+          <div>
+            클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
+          </div>
+        </ChangeButtonWrapper>
       </MainWrapper>
       <ButtonContainer>
         <Button
@@ -103,12 +128,15 @@ const Container = styled.div`
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   padding: 10px;
+  width: 100%;
 `;
 
 const LetterCount = styled.div`
@@ -165,4 +193,22 @@ const Guidetext = styled.div`
   ${(props) => props.theme.fonts.regular16};
   color: ${(props) => props.theme.colors.gray300};
   padding-top: 10px;
+`;
+
+const ChangeButtonWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    justify-content: center;
+    cursor: pointer;
+    ${(props) => props.theme.fonts.caption03};
+    color: ${(props) => props.theme.colors.gray400};
+    gap: 4px;
+    padding: 10px;
+    img{
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
 `;

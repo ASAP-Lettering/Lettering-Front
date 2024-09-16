@@ -54,8 +54,9 @@ export const LETTER_DETAIL_DATA: LetterDetailType[] = [
     receiver: "영희",
     content: "안녕, 영희야! 잘 지내고 있지?",
     images: [
-      "https://example.com/image1.jpg",
-      "https://example.com/image2.jpg",
+      "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
+      "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
+      "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
     ],
     date: "2024-09-01",
     space_name: "학교",
@@ -74,8 +75,9 @@ export const LETTER_DETAIL_DATA: LetterDetailType[] = [
     content:
       "안녕하세요, 철수님. 오랜만에 편지를 쓰게 되어 기쁩니다. 지난번에 함께 했던 시간들이 아직도 생생하게 떠오릅니다. 우리가 함께 나눈 대화와 웃음은 저에게 큰 힘이 되었습니다. 요즘 어떻게 지내고 계신가요? 저도 나름 바쁜 일상을 보내고 있지만, 문득문득 철수님 생각이 나서 이렇게 편지를 쓰게 되었습니다. 앞으로도 서로에게 힘이 되는 좋은 친구로 남길 바랍니다. 언제든 시간이 되면 함께 만나서 좋은 시간을 보내면 좋겠습니다. 다시 한 번 감사의 마음을 전하며 이만 줄이겠습니다.",
     images: [
-      "https://example.com/image1.jpg",
-      "https://example.com/image2.jpg",
+      "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
+      "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
+      "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
     ],
     date: "2024-09-01",
     space_name: "이것 저것",
@@ -94,7 +96,11 @@ export const LETTER_DETAIL_DATA: LetterDetailType[] = [
     receiver: "박민수",
     content:
       "민수님, 안녕하세요. 지난번에 함께 했던 여행이 기억에 남아 이렇게 편지를 쓰게 되었습니다. 그때의 즐거웠던 추억이 아직도 저를 미소 짓게 만듭니다. 함께 했던 시간들은 저에게 큰 의미로 다가왔고, 앞으로도 자주 만나서 좋은 시간을 보낼 수 있으면 좋겠습니다. 요즘 날씨가 많이 선선해졌는데, 건강은 잘 챙기고 계신가요? 저는 새로운 취미를 시작했는데, 나중에 기회가 된다면 함께 공유하고 싶습니다. 항상 응원하겠습니다. 좋은 하루 되세요.",
-    images: ["https://example.com/image3.jpg"],
+    images: [
+      "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
+      "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
+      "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
+    ],
     date: "2024-09-02",
     space_name: "카페",
     letter_count: 2,
