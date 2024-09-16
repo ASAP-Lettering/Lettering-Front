@@ -43,9 +43,10 @@ const VerifyLetter = () => {
         <Letter
           id={letterData.id}
           templateType={letterData.templateType}
-          name={letterData.receiver}
+          name={letterData.sender}
           content={letterData.content}
           date={letterData.date}
+          readOnly={true}
           isImage={false}
         />
       </MainWrapper>

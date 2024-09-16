@@ -75,6 +75,25 @@ const LetterPage = () => {
             클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
           </div>
         </ChangeButtonWrapper>
+        <PaginationWrapper>
+          {letterData.prev_letter ? (
+            <Page>
+              <img src="/assets/icons/ic_arrow_left.svg" />
+              {letterData.prev_letter.sender_name}
+            </Page>
+          ) : (
+            <></>
+          )}
+          <CurrentPage>{letterData.sender}</CurrentPage>
+          {letterData.next_letter ? (
+            <Page>
+              {letterData.next_letter.sender_name}
+              <img src="/assets/icons/ic_arrow_right.svg" />
+            </Page>
+          ) : (
+            <></>
+          )}
+        </PaginationWrapper>
       </MainWrapper>
       <ButtonContainer>
         <Button
@@ -205,10 +224,43 @@ const ChangeButtonWrapper = styled.div`
     ${(props) => props.theme.fonts.caption03};
     color: ${(props) => props.theme.colors.gray400};
     gap: 4px;
-    padding: 10px;
+    padding: 16px;
     img{
         width: 20px;
         height: 20px;
         flex-shrink: 0;
     }
+`;
+
+const PaginationWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 4px;
+    padding-bottom: 30px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    ${(props) => props.theme.fonts.body07};
+    color: ${(props) => props.theme.colors.gray500};
+    gap: 24px;
+`;
+
+const Page = styled.div`
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+`;
+
+const CurrentPage = styled.div`
+    display: flex;
+    height: 33px;
+    padding: 3px 22px;
+    justify-content: center;
+    cursor: pointer;
+    align-items: center;
+    gap: 10px;
+    border-radius: 200px;
+    ${(props) => props.theme.fonts.body04};
+    color: ${(props) => props.theme.colors.white};
+    background-color: ${(props) => props.theme.colors.gray800};
 `;

@@ -82,7 +82,10 @@ export const LETTER_DETAIL_DATA: LetterDetailType[] = [
     date: "2024-09-01",
     space_name: "이것 저것",
     letter_count: 1,
-    prev_letter: undefined,
+    prev_letter: {
+      letter_id: "1",
+      sender_name: "홍길동",
+    },
     next_letter: {
       letter_id: "2",
       sender_name: "이영희",
