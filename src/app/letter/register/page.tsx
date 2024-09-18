@@ -55,7 +55,7 @@ const LetterRegisterPage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
-    router.push("/letter/paper");
+    router.push("/letter/template");
   };
 
   return (
