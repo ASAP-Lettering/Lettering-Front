@@ -18,8 +18,8 @@ const LetterPage = () => {
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
 
-  const handleButtonClick = () => {
-    router.push("/");
+  const handleButtonClick = (id: string) => {
+    router.push(`/letter/${id}`);
   };
 
   const changeImageorContent = () => {
@@ -69,15 +69,23 @@ const LetterPage = () => {
             isImage={false}
           />
         )}
-        <ChangeButtonWrapper onClick={changeImageorContent}>
-          <img src="/assets/icons/ic_change_image.svg"></img>
-          <div>
-            클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
-          </div>
-        </ChangeButtonWrapper>
+        {letterData.images.length > 0 ? (
+          <ChangeButtonWrapper onClick={changeImageorContent}>
+            <img src="/assets/icons/ic_change_image.svg"></img>
+            <div>
+              클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
+            </div>
+          </ChangeButtonWrapper>
+        ) : (
+          <WhiteSpace />
+        )}
         <PaginationWrapper>
           {letterData.prev_letter ? (
-            <Page>
+            <Page
+              onClick={() =>
+                handleButtonClick(letterData.prev_letter!.letter_id)
+              }
+            >
               <img src="/assets/icons/ic_arrow_left.svg" />
               {letterData.prev_letter.sender_name}
             </Page>
@@ -86,7 +94,11 @@ const LetterPage = () => {
           )}
           <CurrentPage>{letterData.sender}</CurrentPage>
           {letterData.next_letter ? (
-            <Page>
+            <Page
+              onClick={() =>
+                handleButtonClick(letterData.next_letter!.letter_id)
+              }
+            >
               {letterData.next_letter.sender_name}
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
@@ -96,12 +108,7 @@ const LetterPage = () => {
         </PaginationWrapper>
       </MainWrapper>
       <ButtonContainer>
-        <Button
-          buttonType="primary"
-          size="large"
-          text="답장하기"
-          onClick={handleButtonClick}
-        />
+        <Button buttonType="primary" size="large" text="답장하기" />
       </ButtonContainer>
     </Container>
   ) : (
@@ -263,4 +270,8 @@ const CurrentPage = styled.div`
     ${(props) => props.theme.fonts.body04};
     color: ${(props) => props.theme.colors.white};
     background-color: ${(props) => props.theme.colors.gray800};
+`;
+
+const WhiteSpace = styled.div`
+    height: 44px;
 `;
