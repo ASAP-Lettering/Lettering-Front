@@ -31,8 +31,8 @@ const FONT = ({ weight, size }: Font): string => {
     font-family : "Pretendard";
     font-weight : ${weight};
     font-size : ${size}px;
-    line-height : ${size * 1.5}px;
-    letter-spacing: -0.42px;
+    line-height : ${size * 1.6}px;
+    letter-spacing: -0.48px;
     `;
 };
 
