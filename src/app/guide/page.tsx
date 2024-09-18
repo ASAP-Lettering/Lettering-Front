@@ -214,6 +214,7 @@ const GuidePage = () => {
       </PickedItemContainer>
       <h3>Letter</h3>
       <Letter
+        showType="receive"
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
@@ -222,6 +223,25 @@ const GuidePage = () => {
         isImage={false}
       />
       <Letter
+        showType="receive"
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        images={imageData}
+        date={letterData.date}
+        isImage={true}
+      />
+      <Letter
+        showType="preview"
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        content={letterData.content}
+        date={letterData.date}
+        isImage={false}
+      />
+      <Letter
+        showType="preview"
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
