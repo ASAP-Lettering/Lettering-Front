@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -24,6 +24,14 @@ const PlanetManagePage = () => {
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
+  };
+
+  const handleClickCheckAll = () => {
+    if (checkedPlanets.length === PLANETS.length) {
+      setCheckedPlanets([]);
+    } else {
+      setCheckedPlanets(PLANETS.map((planet) => planet.id));
+    }
   };
 
   const handleChangeChecked = (id: number) => {
@@ -64,21 +72,21 @@ const PlanetManagePage = () => {
       <Container>
         <Top>
           <Label>총 {count}개</Label>
-          <DeleteModeButton onClick={handleClickDeleteMode}>
-            {deleteMode ? (
-              <DeleteModeButtonRow>
-                <Image
-                  src="/assets/icons/ic_check_small.svg"
-                  width={13}
-                  height={9}
-                  alt="check"
-                />
-                전체 선택
-              </DeleteModeButtonRow>
-            ) : (
-              <DeleteModeButtonRow>삭제</DeleteModeButtonRow>
-            )}
-          </DeleteModeButton>
+          {deleteMode ? (
+            <CheckAllButton onClick={handleClickCheckAll}>
+              <Image
+                src="/assets/icons/ic_check_small.svg"
+                width={13}
+                height={9}
+                alt="check"
+              />
+              전체 선택
+            </CheckAllButton>
+          ) : (
+            <DeleteModeButton onClick={handleClickDeleteMode}>
+              삭제
+            </DeleteModeButton>
+          )}
         </Top>
         <Divider />
         <PlanetBoxList>
@@ -99,6 +107,13 @@ const PlanetManagePage = () => {
         </PlanetBoxList>
         {deleteMode && (
           <ButtonWrapper>
+            <Button
+              buttonType="secondary"
+              text="취소"
+              width="90px"
+              disabled={checkedPlanets?.length === 0}
+              onClick={handleClickDeleteMode}
+            />
             <Button
               buttonType="primary"
               size="large"
@@ -162,17 +177,19 @@ const Label = styled.div`
   ${(props) => props.theme.fonts.subtitle};
 `;
 
-const DeleteModeButton = styled.button`
+const CheckAllButton = styled.button`
   display: flex;
+  gap: 6px;
   align-items: center;
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.body09};
 `;
 
-const DeleteModeButtonRow = styled.div`
+const DeleteModeButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 6px;
+  color: ${theme.colors.gray300};
+  ${(props) => props.theme.fonts.body09};
 `;
 
 const Divider = styled.div`
@@ -191,6 +208,8 @@ const PlanetBoxList = styled.div`
 
 const ButtonWrapper = styled.div`
   width: 100%;
+  display: flex;
+  gap: 15px;
   position: absolute;
   padding: 0 20px;
   bottom: 40px;
