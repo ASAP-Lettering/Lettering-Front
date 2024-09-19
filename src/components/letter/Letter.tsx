@@ -5,7 +5,10 @@ import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 
+type showType = "preview" | "receive";
+
 interface LetterProps {
+  showType: showType;
   id: number;
   templateType: number;
   name: string;
@@ -13,27 +16,61 @@ interface LetterProps {
   date: string;
   isImage: boolean;
   images?: string[];
+  width?: string;
+  height?: string;
+  padding?: string;
 }
 
 const Letter = (props: LetterProps) => {
-  const { id, templateType, name, content, date, isImage, images } = props;
+  const {
+    showType,
+    id,
+    templateType,
+    name,
+    content,
+    date,
+    isImage,
+    images,
+    width,
+    height,
+    padding,
+  } = props;
   const [currentPage, setCurrentPage] = useState(0);
-  const paginateContent = (content: string, maxCharsPerPage: number) => {
+  // const paginateContent = (content: string, maxCharsPerPage: number) => {
+  //   const pages = [];
+  //   for (let i = 0; i < content.length; i += maxCharsPerPage) {
+  //     pages.push(
+  //       content.substring(i, Math.min(content.length, i + maxCharsPerPage))
+  //     );
+  //   }
+  //   return pages;
+  // };
+
+  /* 한 페이지에 최대 7줄의 텍스트를 표시하도록 조정 */
+  const paginateContent = (content: string, maxLinesPerPage: number) => {
+    const lines = content.split("\n"); // 줄바꿈 기준
     const pages = [];
-    for (let i = 0; i < content.length; i += maxCharsPerPage) {
-      pages.push(
-        content.substring(i, Math.min(content.length, i + maxCharsPerPage))
-      );
+
+    for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+      pages.push(lines.slice(i, i + maxLinesPerPage).join("\n")); // 최대 7줄씩 분리하여 각 페이지로 나눔
     }
+
     return pages;
   };
-  const contentPages = isImage ? images : paginateContent(content!, 210);
+
+  // const contentPages = isImage ? images : paginateContent(content!, 210);
+  const contentPages = isImage ? images : paginateContent(content!, 7); // 한 페이지에 최대 7줄 설정
   const totalPage = isImage ? images!.length : contentPages!.length;
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
 
   return (
-    <Container $templateType={templateType}>
+    <Container
+      $templateType={templateType}
+      $width={width}
+      $height={height}
+      $padding={padding}
+    >
       {isPopup && (
         <PopupContainer>
           <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
@@ -42,14 +79,18 @@ const Letter = (props: LetterProps) => {
           <DeleteBtn>삭제</DeleteBtn>
         </PopupContainer>
       )}
-      <TopContainer>
-        <Name>From.{name}</Name>
-        <button onClick={() => setIsPopup(!isPopup)}>
-          <img src="/assets/icons/ic_more.svg" />
-        </button>
-      </TopContainer>
-      <Date>{date}</Date>
-      <Content>
+      {showType === "receive" && (
+        <>
+          <TopContainer>
+            <Name $showType={showType}>From.{name}</Name>
+            <button onClick={() => setIsPopup(!isPopup)}>
+              <img src="/assets/icons/ic_more.svg" />
+            </button>
+          </TopContainer>
+          <Date $showType={showType}>{date}</Date>
+        </>
+      )}
+      <Content $showType={showType}>
         <SwipeableContent
           content={isImage ? images! : contentPages!}
           setPage={setCurrentPage}
@@ -58,6 +99,14 @@ const Letter = (props: LetterProps) => {
           page={currentPage}
         />
       </Content>
+      {showType === "preview" && (
+        <>
+          <BottomContainer>
+            <Name $showType={showType}>From.{name}</Name>
+            <Date $showType={showType}>{date}</Date>
+          </BottomContainer>
+        </>
+      )}
       {totalPage > 1 && (
         <Pagination
           currentPage={currentPage}
@@ -70,16 +119,23 @@ const Letter = (props: LetterProps) => {
 
 export default Letter;
 
-const Container = styled.div<{ $templateType: number }>`
+const Container = styled.div<{
+  $templateType: number;
+  $width?: string;
+  $height?: string;
+  $padding?: string;
+}>`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   height: auto;
-  padding: 34px;
-  max-width: 345px;
-  max-height: 349px;
-  min-height: 349px;
+  padding: ${({ $padding }) => ($padding ? $padding : "34px")};
+  max-width: ${({ $width }) => ($width ? $width : "345px")};
+  min-width: ${({ $width }) => ($width ? $width : "345px")};
+  max-height: ${({ $height }) => ($height ? $height : "349px")};
+  min-height: ${({ $height }) => ($height ? $height : "349px")};
   background-image: ${({ $templateType }) =>
     `url('/assets/letter/background_${$templateType}.png')`};
   background-size: 100% auto;
@@ -101,26 +157,46 @@ const TopContainer = styled.div`
   }
 `;
 
-const Name = styled.div`
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
+const Name = styled.div<{ $showType: string }>`
   display: flex;
   align-items: center;
   text-align: center;
-  ${(props: any) => props.theme.fonts.title01};
+  ${(props) =>
+    props.$showType === "preview"
+      ? props.theme.fonts.caption01
+      : props.theme.fonts.title01};
 `;
 
-const Date = styled.div`
-  width: 100%;
-  ${(props: any) => props.theme.fonts.body09};
+const Date = styled.div<{ $showType: string }>`
   color: ${theme.colors.gray400};
+  ${(props) =>
+    props.$showType === "preview"
+      ? props.theme.fonts.caption04
+      : props.theme.fonts.body09};
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ $showType: string }>`
   width: 100%;
-  height: 90%;
+  ${(props) =>
+    props.$showType === "preview"
+      ? `flex: 1; height: calc(100% - 80px);`
+      : `height: 90%;`}
   display: flex;
+  align-items: center;
   box-sizing: border-box;
   padding: 10px 0;
-  ${(props: any) => props.theme.fonts.body07};
+  ${(props) =>
+    props.$showType === "preview"
+      ? props.theme.fonts.caption09
+      : props.theme.fonts.body07};
   overflow: hidden;
   -webkit-user-select: none;
   -moz-user-select: none;

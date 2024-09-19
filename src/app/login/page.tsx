@@ -11,8 +11,10 @@ export default function Login() {
         <LogoTitle src="/assets/login/login_text.png" />
         <LogoText>편지로 수놓는 나의 스페이스</LogoText>
         <LogoImage src="/assets/login/login_logo.png" />
+        <SocialKakaoWrapper>
+          <SocialKakao />
+        </SocialKakaoWrapper>
       </ImageWrapper>
-      <SocialKakao />
     </Container>
   );
 }
@@ -20,14 +22,12 @@ export default function Login() {
 const Container = styled.div`
   display: flex;
   box-sizing: border-box;
-  padding: 50px 20px;
-  height: 100%;
+  height: 100vh;
   min-height: 754px;
-  max-height: 852px;
   flex-direction: column;
   justify-content: space-between;
   background-image: url("/assets/login/login_bg.png");
-  background-size: 100% auto;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 //overflow-y: scroll;
@@ -63,7 +63,7 @@ const LogoText = styled.div`
   text-align: center;
   line-height: 134%; /* 26.8px */
   letter-spacing: -0.6px;
-  ${theme.fonts.regular16}
+  ${theme.fonts.body07}
   justify-content: center;
     //드래그방지
     -webkit-user-select: none;
@@ -79,8 +79,9 @@ const LogoText = styled.div`
 
 const LogoImage = styled.img`
   display: flex;
-  width: 150%;
-  height: auto;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
   max-width: 520px;
   max-height: 520px;
     //드래그방지
@@ -98,10 +99,21 @@ const LogoImage = styled.img`
 const ImageWrapper = styled.div`
   display: flex;
   box-sizing: border-box;
-  padding-top: 50px;
+  padding-top: 100px;
   width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+`;
+
+const SocialKakaoWrapper = styled.div`
+  width: 100%;
+  max-width: 393px;
+  padding: 0 4px;
+  display: flex;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translate(-50%);
 `;

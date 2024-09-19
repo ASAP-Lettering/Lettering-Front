@@ -41,6 +41,7 @@ const VerifyLetter = () => {
           </HeaderSubTitle>
         </Header>
         <Letter
+          showType="receive"
           id={letterData.id}
           templateType={letterData.templateType}
           name={letterData.receiver}

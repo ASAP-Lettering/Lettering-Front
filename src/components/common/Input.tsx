@@ -167,6 +167,24 @@ const StyledTextarea = styled.textarea<{
     ${(props: any) => props.theme.fonts.regular14};
     letter-spacing: 1px;
   }
+
+  ::-webkit-scrollbar {
+    width: 5px; /* 스크롤바의 너비 */
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; /* 스크롤바 트랙의 배경색 */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${theme.colors.gray600}; /* 스크롤바 thumb의 배경색 */
+    border-radius: 200px; /* 스크롤바 thumb의 둥글기 */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 스크롤바 thumb에 마우스를 올렸을 때의 배경색 */
+  }
 `;
 
 const ValidationMessage = styled.div`

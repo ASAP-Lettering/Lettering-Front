@@ -47,26 +47,27 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
 export default SwipeableContent;
 
 const SwipeableContainer = styled.div`
-    overflow: hidden;
-    width: 100%;
-    max-width: 272px; 
-    height: auto;
-    box-sizing: border-box;
-    border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 272px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 10px;
 `;
 
 const ContentSlider = styled.div`
-    display: flex;
-    transition: transform 0.5s ease-out; 
+  display: flex;
+  transition: transform 0.5s ease-out;
 `;
 
 const ContentItem = styled.div`
-    width: 100%;
-    flex-shrink: 0; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* position: relative; */
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* position: relative; */
 `;
 
 // const ContentImage = styled.img`
@@ -92,21 +93,21 @@ const ContentItem = styled.div`
 // `;
 
 const ImageContainer = styled.div<{ src: string }>`
-    width: 100%;
-    min-height: 230px;
-    max-height: 100%;
-    background-image: url(${(props) => props.src});
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
+  width: 100%;
+  min-height: 230px;
+  max-height: 100%;
+  background-image: url(${(props) => props.src});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
