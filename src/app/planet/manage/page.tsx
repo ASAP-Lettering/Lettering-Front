@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -11,16 +11,18 @@ import PlanetList from "@/components/planet/PlanetList";
 import Image from "next/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Toast from "@/components/common/Toast";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const PlanetManagePage = () => {
   const router = useRouter();
 
   const count = 7;
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
-  const [checkedPlanets, setCheckedPlanets] = useState<number[]>([]);
+  const [checkedPlanets, setCheckedPlanets] = useState<string[]>([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [deletePlanet, setDeletePlanet] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [changedOrder, setChangedOrder] = useState([]);
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
@@ -34,7 +36,7 @@ const PlanetManagePage = () => {
     }
   };
 
-  const handleChangeChecked = (id: number) => {
+  const handleChangeChecked = (id: string) => {
     if (checkedPlanets.includes(id)) {
       setCheckedPlanets(checkedPlanets.filter((planetId) => planetId !== id));
     } else {
@@ -66,6 +68,41 @@ const PlanetManagePage = () => {
     }, 3000);
   };
 
+  const [planets, setPlanets] = useState(PLANETS);
+
+  // 드래그 앤 드롭 완료 시 실행되는 함수
+  // const handleDragEnd = (result: any) => {
+  //   alert("드래그");
+  //   const { destination, source } = result;
+
+  //   // 목적지가 없거나 위치가 변하지 않았을 때
+  //   if (!destination || destination.index === source.index) return;
+
+  //   const reorderedPlanets = Array.from(planets);
+  //   const [removed] = reorderedPlanets.splice(source.index, 1);
+  //   reorderedPlanets.splice(destination.index, 0, removed);
+
+  //   setPlanets(reorderedPlanets);
+  // };
+
+  const onDragEnd = ({
+    source,
+    destination,
+  }: {
+    source: any;
+    destination: any;
+  }) => {
+    console.log("dragEnd");
+    if (!destination) return; // destination이 없다면 return
+    const items = JSON.parse(JSON.stringify(planets));
+    const [targetItem] = items.splice(source.index, 1);
+    items.splice(destination.index, 0, targetItem);
+    setPlanets(items);
+    // 변경된 순서 업데이트
+    const newOrder = items.map((item: any) => item.id);
+    setChangedOrder(newOrder);
+  };
+
   return (
     <Layout>
       <NavigatorBar title="나의 행성 관리" cancel={false} />
@@ -89,29 +126,50 @@ const PlanetManagePage = () => {
           )}
         </Top>
         <Divider />
-        <PlanetBoxList>
-          {PLANETS.map((item) => (
-            <PlanetList
-              key={item.id}
-              id={item.id}
-              planetName={item.name}
-              count={item.count}
-              checked={checkedPlanets}
-              deleteMode={deleteMode}
-              isMain={item.current}
-              onClick={() => {
-                handleChangeChecked(item.id);
-              }}
-            />
-          ))}
-        </PlanetBoxList>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="planet">
+            {(provided) => (
+              <PlanetBoxList
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {planets.map((planet, index) => (
+                  <Draggable
+                    key={planet.id + "-button"}
+                    draggableId={planet.id}
+                    index={index}
+                    disableInteractiveElementBlocking
+                  >
+                    {(provided) => (
+                      <PlanetList
+                        id={planet.id}
+                        planetName={planet.name}
+                        count={planet.count}
+                        checked={checkedPlanets}
+                        deleteMode={deleteMode}
+                        onClick={() => {
+                          handleChangeChecked(planet.id);
+                        }}
+                        isMain={index === 0}
+                        innerRef={provided.innerRef}
+                        dragHandleProps={provided.dragHandleProps}
+                        draggableProps={provided.draggableProps}
+                        modify={true}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </PlanetBoxList>
+            )}
+          </Droppable>
+        </DragDropContext>
         {deleteMode && (
           <ButtonWrapper>
             <Button
               buttonType="secondary"
               text="취소"
               width="90px"
-              disabled={checkedPlanets?.length === 0}
               onClick={handleClickDeleteMode}
             />
             <Button
@@ -148,7 +206,7 @@ export default PlanetManagePage;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -203,7 +261,6 @@ const Divider = styled.div`
 const PlanetBoxList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
 `;
 
 const ButtonWrapper = styled.div`

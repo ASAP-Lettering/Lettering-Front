@@ -1,24 +1,46 @@
 import { theme } from "@/styles/theme";
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Check from "../common/Check";
+import {
+  DraggableProvidedDraggableProps,
+  DraggableProvidedDragHandleProps,
+} from "react-beautiful-dnd";
 
 interface PlanetListProps {
-  id: number;
+  id: string;
   planetName: string;
   count: number;
-  checked: number[];
+  checked: string[];
   deleteMode: boolean;
   isMain?: boolean;
   onClick?: () => void;
+  children?: React.ReactNode;
+  innerRef?: (element: HTMLElement | null) => void;
+  dragHandleProps?: DraggableProvidedDragHandleProps | null;
+  draggableProps?: DraggableProvidedDraggableProps | null;
+  modify?: boolean;
 }
 
 const PlanetList = (props: PlanetListProps) => {
-  const { id, planetName, count, checked, deleteMode, isMain, onClick } = props;
+  const {
+    id,
+    planetName,
+    count,
+    checked,
+    deleteMode,
+    isMain,
+    onClick,
+    children,
+    innerRef,
+    dragHandleProps,
+    draggableProps,
+    modify,
+  } = props;
 
   return (
-    <Box onClick={onClick}>
+    <Box ref={innerRef} onClick={onClick} {...draggableProps}>
       <ContentWrapper>
         <LeftWrapper>
           {deleteMode && (
@@ -34,13 +56,18 @@ const PlanetList = (props: PlanetListProps) => {
             {count}개의 편지
           </TextWrapper>
         </LeftWrapper>
-        <Image
-          src="/assets/icons/ic_hamburger_menu.svg"
-          width={24}
-          height={24}
-          alt="list"
-        />
+        {modify && (
+          <DragButton type="button" {...dragHandleProps}>
+            <Image
+              src="/assets/icons/ic_hamburger_menu.svg"
+              width={24}
+              height={24}
+              alt="list"
+            />
+          </DragButton>
+        )}
       </ContentWrapper>
+      {children}
     </Box>
   );
 };
@@ -50,7 +77,7 @@ export default PlanetList;
 const Box = styled.div`
   width: 100%;
   display: flex;
-  padding: 10px 12px 10px 16px;
+  padding: 14px 12px 14px 16px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -101,3 +128,11 @@ const MainLabel = styled.div`
 `;
 
 const CheckWrapper = styled.div``;
+
+const DragButton = styled.button`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
