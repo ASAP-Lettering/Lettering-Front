@@ -3,39 +3,46 @@ import styled from "styled-components";
 import Tag from "./Tag";
 import Button from "./Button";
 import { theme } from "@/styles/theme";
-import { ORBIT_MESSAGE } from "@/constants/orbit";
+import { Orbit } from "@/constants/orbit";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
 interface BottomProps {
-  onDragStart: (orbitId: number) => void;
-  orbitMessages: typeof ORBIT_MESSAGE;
+  orbitMessages: Orbit[] | null;
 }
 
 const Bottom = (props: BottomProps) => {
-  const { onDragStart, orbitMessages } = props;
-
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    orbitId: number
-  ) => {
-    e.dataTransfer.setData("orbitId", orbitId.toString());
-    onDragStart(orbitId);
-  };
+  const { orbitMessages } = props;
 
   return (
     <Container>
       <Title>나의 궤도 메세지</Title>
       {orbitMessages ? (
-        <Orbits>
-          {orbitMessages.map((item) => (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, item.id)}
-            >
-              <Tag tagType="orbit" read={item.read} name={item.name} />
-            </div>
-          ))}
-        </Orbits>
+        <Droppable droppableId="droppable-bottom">
+          {(provided) => (
+            <Orbits ref={provided.innerRef} {...provided.droppableProps}>
+              {orbitMessages.map((item, index) => (
+                <Draggable
+                  key={`${item.id}-orbits`}
+                  draggableId={item.id.toString()}
+                  index={index}
+                  disableInteractiveElementBlocking
+                >
+                  {(provided) => (
+                    <Tag
+                      tagType="orbit"
+                      read={item.read}
+                      name={item.name}
+                      innerRef={provided.innerRef}
+                      dragHandleProps={provided.dragHandleProps}
+                      draggableProps={provided.draggableProps}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </Orbits>
+          )}
+        </Droppable>
       ) : (
         <NoOrbit>등록된 편지가 없습니다. 편지를 등록해볼까요?</NoOrbit>
       )}

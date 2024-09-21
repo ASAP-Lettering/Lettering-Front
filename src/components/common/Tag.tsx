@@ -1,6 +1,10 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
+import {
+  DraggableProvidedDraggableProps,
+  DraggableProvidedDragHandleProps,
+} from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -14,10 +18,24 @@ interface TagProps {
   onClick?: () => void;
   onEdit?: (editedName: string) => void;
   onHold?: () => void;
+  innerRef?: (element: HTMLElement | null) => void;
+  dragHandleProps?: DraggableProvidedDragHandleProps | null;
+  draggableProps?: DraggableProvidedDraggableProps | null;
 }
 
 const Tag = (props: TagProps) => {
-  const { tagType, name, read, icon, onClick, onEdit, onHold } = props;
+  const {
+    tagType,
+    name,
+    read,
+    icon,
+    onClick,
+    onEdit,
+    onHold,
+    innerRef,
+    dragHandleProps,
+    draggableProps,
+  } = props;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
@@ -76,11 +94,14 @@ const Tag = (props: TagProps) => {
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
-      onClick={handleHoldEnd}
+      onClick={onHold ? handleHoldEnd : onClick}
       onMouseDown={handleHoldStart} // 마우스를 누를 때
       onMouseUp={handleHoldEnd} // 마우스를 뗄 때
       onTouchStart={handleHoldStart} // 터치 시작
       onTouchEnd={handleHoldEnd} // 터치 종료
+      ref={innerRef}
+      {...draggableProps}
+      {...dragHandleProps}
     >
       {isEditing ? (
         <NameInput

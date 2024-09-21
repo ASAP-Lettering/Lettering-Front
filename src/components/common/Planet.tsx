@@ -9,7 +9,7 @@ import { useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
 
 interface Orbit {
-  id: number;
+  id: string;
   name: string;
   date: string;
 }
@@ -27,18 +27,18 @@ const Planet = (props: PlanetProps) => {
   const router = useRouter();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
-  const [orbitId, setOrbitId] = useState<number>();
+  const [orbitId, setOrbitId] = useState<string>();
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
 
   const setToast = useSetRecoilState(toastState);
 
-  const handleTagClick = (id: number) => {
+  const handleTagClick = (id: string) => {
     router.push(`/letter/${id}`);
   };
 
-  const handleShowHold = (orbitId: number) => {
+  const handleShowHold = (orbitId: string) => {
     setOrbitId(orbitId);
     setHold(!hold);
   };
