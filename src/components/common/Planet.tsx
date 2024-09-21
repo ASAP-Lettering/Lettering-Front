@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import Tag from "./Tag";
@@ -94,6 +94,7 @@ const Planet = (props: PlanetProps) => {
             key={orbit.id}
             style={{
               transform: `translate(${x}px, ${y}px)`,
+              transition: "transform 0.8s ease",
             }}
           >
             <Tag

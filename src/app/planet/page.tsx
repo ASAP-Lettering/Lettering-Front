@@ -96,11 +96,18 @@ const PlanetPage = () => {
         (_, index) => index !== source.index
       );
 
-      setCurrentPage(1);
-
       if (draggedOrbit) {
         setOrbits((prevOrbits) => [draggedOrbit, ...prevOrbits]);
+
+        // 궤도 이동 애니메이션을 위해 잠시 대기
+        setTimeout(() => {
+          setOrbitMessages(updatedOrbitMessages || null);
+        }, 500);
       }
+
+      setTimeout(() => {
+        setCurrentPage(1);
+      }, 500);
 
       setOrbitMessages(updatedOrbitMessages || null);
 
