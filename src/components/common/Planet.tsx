@@ -70,6 +70,7 @@ const Planet = (props: PlanetProps) => {
         width={400}
         height={400}
         alt="planet"
+        priority
       />
       {orbits.map((orbit, index) => {
         const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
