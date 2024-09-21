@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Bottom from "@/components/common/Bottom";
@@ -12,6 +12,8 @@ import Pagination from "@/components/common/Pagination";
 import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { OrbitMessage } from "@/types/orbit";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { toastState } from "@/recoil/toastStore";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -23,13 +25,25 @@ const PlanetPage = () => {
   );
 
   const totalCount = 2;
-  const [showToast, setShowToast] = useState<boolean>(false);
 
   const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState(ORBIT_MESSAGE);
 
   /* 행성 이름 변경 */
   const [planetName, setPlanetName] = useState<string>("민지님의 첫 행성");
+
+  const { show, message, close } = useRecoilValue(toastState);
+  const setToast = useSetRecoilState(toastState);
+
+  useEffect(() => {
+    if (show) {
+      const timer = setTimeout(() => {
+        setToast({ show: false, message: "", close: false });
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [show, setToast]);
 
   const handleEditPlanetName = (newName: string) => {
     // 행성 이름 수정 API
@@ -55,15 +69,15 @@ const PlanetPage = () => {
   }, [currentPage]);
 
   /* 토스트 메세지 */
-  const handleShowToast = () => {
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
-  };
-
+  /* 편지 등록 개수 3개 미만일 경우*/
   useEffect(() => {
-    if (totalCount < 3) handleShowToast();
+    if (totalCount < 3) {
+      setToast({
+        show: true,
+        message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
+        close: true,
+      });
+    }
   }, []);
 
   /* 드래그 앤 드롭 */
@@ -148,12 +162,14 @@ const PlanetPage = () => {
           />
         </PlanetWrapper>
         <PageWrapper>
-          {showToast && (
+          {show && (
             <Toast
-              text="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
+              text={message}
               icon={false}
               top="0px"
               left="50%"
+              padding="11px 0px"
+              close={close}
             />
           )}
           <Pagination

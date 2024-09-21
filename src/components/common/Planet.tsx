@@ -5,6 +5,8 @@ import Tag from "./Tag";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
+import { useSetRecoilState } from "recoil";
+import { toastState } from "@/recoil/toastStore";
 
 interface Orbit {
   id: number;
@@ -29,6 +31,8 @@ const Planet = (props: PlanetProps) => {
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
+
+  const setToast = useSetRecoilState(toastState);
 
   const handleTagClick = (id: number) => {
     router.push(`/letter/${id}`);
@@ -57,6 +61,14 @@ const Planet = (props: PlanetProps) => {
   const handleConfirmDelete = () => {
     // 편지 삭제 API
     setConfirmDeleteModal(false);
+
+    // 토스트 메세지
+    const orbit = orbits.find((item) => item.id === orbitId);
+    setToast({
+      show: true,
+      message: `${orbit?.name} 님의 편지가 삭제되었어요`,
+      close: false,
+    });
   };
 
   const handleCancelDelete = () => {

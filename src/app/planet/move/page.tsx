@@ -7,25 +7,37 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PlanetBox from "@/components/planet/PlanetBox";
-import { PLANETS } from "@/constants/planet";
+import { Planet, PLANETS } from "@/constants/planet";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import { useSetRecoilState } from "recoil";
+import { toastState } from "@/recoil/toastStore";
 
 const PlanetMovePage = () => {
   const router = useRouter();
   // const searchParams = useSearchParams();
   // const { letterId } = searchParams.get("letter");
+  const setToast = useSetRecoilState(toastState);
 
   const name = "규리";
-  const [checkePlanet, setCheckedPlanet] = useState<number>(PLANETS[0].id);
+  const [checkePlanet, setCheckedPlanet] = useState<string>(PLANETS[0].id);
+  const [checkePlanetName, setCheckedPlanetName] = useState<string>("");
 
-  const handleChangeChecked = (id: number) => {
-    setCheckedPlanet(id);
+  const handleChangeChecked = (item: Planet) => {
+    setCheckedPlanet(item.id);
+    setCheckedPlanetName(item.name);
   };
 
   const handleMovePlanet = () => {
     /* 편지 이동하기 */
     // 추후 작성
     router.push("/planet");
+
+    // 토스트 메세지
+    setToast({
+      show: true,
+      message: `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
+      close: false,
+    });
   };
 
   const handleMoveOrbit = () => {
@@ -48,7 +60,7 @@ const PlanetMovePage = () => {
               checked={checkePlanet}
               current={item.current}
               onClick={() => {
-                handleChangeChecked(item.id);
+                handleChangeChecked(item);
               }}
             />
           ))}
