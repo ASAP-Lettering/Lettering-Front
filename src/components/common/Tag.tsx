@@ -21,6 +21,7 @@ const Tag = (props: TagProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
+  const [isHoldTriggered, setIsHoldTriggered] = useState<boolean>(false);
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleEditClick = () => {
@@ -40,7 +41,8 @@ const Tag = (props: TagProps) => {
     setIsEditing(false);
   };
 
-  const handleMouseDown = () => {
+  const handleHoldStart = () => {
+    setIsHoldTriggered(true);
     if (onHold) {
       holdTimeout.current = setTimeout(() => {
         onHold();
@@ -48,11 +50,12 @@ const Tag = (props: TagProps) => {
     }
   };
 
-  const handleMouseUp = () => {
-    if (holdTimeout.current) {
+  const handleHoldEnd = () => {
+    if (isHoldTriggered && holdTimeout.current) {
       clearTimeout(holdTimeout.current);
+      setIsHoldTriggered(false);
     }
-    if (onClick) {
+    if (!isHoldTriggered && onClick) {
       onClick();
     }
   };
@@ -73,9 +76,11 @@ const Tag = (props: TagProps) => {
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
-      onClick={onClick}
-      onMouseDown={handleMouseDown} // 마우스를 누를 때
-      onMouseUp={handleMouseUp} // 마우스를 뗄 때
+      onClick={handleHoldEnd}
+      onMouseDown={handleHoldStart} // 마우스를 누를 때
+      onMouseUp={handleHoldEnd} // 마우스를 뗄 때
+      onTouchStart={handleHoldStart} // 터치 시작
+      onTouchEnd={handleHoldEnd} // 터치 종료
     >
       {isEditing ? (
         <NameInput
