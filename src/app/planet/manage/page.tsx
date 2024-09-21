@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
-import { PLANETS } from "@/constants/planet";
+import { Planet, PLANETS } from "@/constants/planet";
 import PlanetList from "@/components/planet/PlanetList";
 import Image from "next/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -22,7 +22,7 @@ const PlanetManagePage = () => {
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [deletePlanet, setDeletePlanet] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [changedOrder, setChangedOrder] = useState([]);
+  const [changedOrder, setChangedOrder] = useState<string[]>([]);
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
@@ -68,22 +68,7 @@ const PlanetManagePage = () => {
     }, 3000);
   };
 
-  const [planets, setPlanets] = useState(PLANETS);
-
-  // 드래그 앤 드롭 완료 시 실행되는 함수
-  // const handleDragEnd = (result: any) => {
-  //   alert("드래그");
-  //   const { destination, source } = result;
-
-  //   // 목적지가 없거나 위치가 변하지 않았을 때
-  //   if (!destination || destination.index === source.index) return;
-
-  //   const reorderedPlanets = Array.from(planets);
-  //   const [removed] = reorderedPlanets.splice(source.index, 1);
-  //   reorderedPlanets.splice(destination.index, 0, removed);
-
-  //   setPlanets(reorderedPlanets);
-  // };
+  const [planets, setPlanets] = useState<Planet[]>(PLANETS);
 
   const onDragEnd = ({
     source,
@@ -94,13 +79,18 @@ const PlanetManagePage = () => {
   }) => {
     console.log("dragEnd");
     if (!destination) return; // destination이 없다면 return
-    const items = JSON.parse(JSON.stringify(planets));
-    const [targetItem] = items.splice(source.index, 1);
-    items.splice(destination.index, 0, targetItem);
+    console.log(source, destination);
+
+    if (source.index === destination.index) return;
+    const items = Array.from(planets);
+    const [removed] = items.splice(source.index, 1);
+    items.splice(destination.index, 0, removed);
     setPlanets(items);
-    // 변경된 순서 업데이트
-    const newOrder = items.map((item: any) => item.id);
+    console.log(items);
+
+    const newOrder: string[] = items.map((item: Planet) => item.id);
     setChangedOrder(newOrder);
+    console.log(newOrder);
   };
 
   return (

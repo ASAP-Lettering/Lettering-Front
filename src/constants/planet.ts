@@ -1,3 +1,11 @@
+export interface Planet {
+        id: string;
+        name: string;
+        count: number;
+        checked: boolean;
+        current: boolean;
+    };
+
 export const PLANETS = [
     {
         id: "0",
