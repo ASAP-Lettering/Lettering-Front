@@ -5,12 +5,42 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 
 export default function Error() {
+  const name = "백승효";
+  const email = "shyo0000@naver.com";
+  const planetCount = 8;
+  const letterCount = 42;
   return (
     <Container>
-      <NavigatorBar title="페이지" cancel={false} />
       <MainWrapper>
-        <Header></Header>
+        <NavigatorBar title="마이페이지" cancel={false} />
+        <ProfileHeader>
+          <ProfileInfo>
+            <ProfileName>{name}님의 프로필</ProfileName>
+            <ProfileEmail>
+              <img src="/assets/icons/ic_kakao_profile.svg" />
+              {email}
+            </ProfileEmail>
+          </ProfileInfo>
+          <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+        </ProfileHeader>
+        <CountContainer>
+          <CountRaw>
+            <CountTitle>내 편지</CountTitle>
+            <CountValue>총 {letterCount}개</CountValue>
+          </CountRaw>
+          <CountRaw>
+            <CountTitle>내 행성</CountTitle>
+            <CountValue>총 {planetCount}개</CountValue>
+          </CountRaw>
+        </CountContainer>
+        <Button
+          buttonType="secondary"
+          size="large"
+          icon={true}
+          text="보낸 편지함 보기"
+        />
       </MainWrapper>
+      <Line />
     </Container>
   );
 }
@@ -18,46 +48,81 @@ export default function Error() {
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     min-height: 100%;
     color: white;
     background:${(props) => props.theme.colors.bg};
-    padding: 25px;
     padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
     display: flex;
+    padding: 25px;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
 `;
 
-const Header = styled.div`
+const ProfileHeader = styled.div`
     display: flex;
-    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 34px;
+`;
+
+const ProfileInfo = styled.div`
+    display: flex;
     flex-direction: column;
-    padding: 10px;
-    margin-bottom: 5rem;
+    gap: 4px;
+`;
+
+const ProfileName = styled.div`
+    ${(props: any) => props.theme.fonts.title01};
+    color: ${(props: any) => props.theme.colors.white};
+`;
+
+const ProfileEmail = styled.div`
+    ${(props: any) => props.theme.fonts.body09};
+    color: ${(props: any) => props.theme.colors.gray400};
+    display: flex;
+    text-align: center;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    gap: 7px;
 `;
 
-const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 5rem;
+const ProfileBtn = styled.img`
+    cursor: pointer;
 `;
 
-const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.body09};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+const CountContainer = styled.div`
+    border-radius: 8px;
+    background-color: ${(props: any) => props.theme.colors.gray900};
+    display: flex;
+    flex-direction: column;
+    padding: 14px 20px;
+    gap: 10px;
+    margin-top: 24px;
+    margin-bottom: 12px;
 `;
 
-const ErrorImage = styled.img`
-    width: 204px;
-    height: auto;
+const CountRaw = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+`;
+
+const CountTitle = styled.div`
+    ${(props: any) => props.theme.fonts.body09};
+    color: ${(props: any) => props.theme.colors.gray300};
+`;
+
+const CountValue = styled.div`
+    ${(props: any) => props.theme.fonts.body08};
+    color: ${(props: any) => props.theme.colors.white};
+`;
+
+const Line = styled.hr`
+    height: 2px;
+    background-color: ${(props) => props.theme.colors.gray800};
+    border: none;
+    margin: 0;
+    margin-top : 11px;
 `;
