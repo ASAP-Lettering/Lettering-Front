@@ -26,7 +26,10 @@ export default function Home() {
         .catch((error) => {
           console.log(error.response);
           console.log("액세스 토큰 재발급 중");
-          getNewTokens();
+          getNewTokens().catch((error) => {
+            console.log(error.response);
+            router.push("/login");
+          });
           router.push("/");
         });
     }

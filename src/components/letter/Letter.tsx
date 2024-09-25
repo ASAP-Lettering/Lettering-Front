@@ -42,10 +42,15 @@ const Letter = (props: LetterProps) => {
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
 
+  function replaceDashWithDot(dateString: string) {
+    return dateString.replace(/-/g, ".");
+  }
+
   return (
     <Container $templateType={templateType}>
       {!readOnly && isPopup && (
         <PopupContainer>
+          <Date>{replaceDashWithDot(date)}</Date>
           <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
             수정
           </EditBtn>
@@ -60,7 +65,6 @@ const Letter = (props: LetterProps) => {
           </button>
         )}
       </TopContainer>
-      <Date>{date}</Date>
       <Content>
         <SwipeableContent
           content={isImage ? images! : contentPages!}
@@ -121,9 +125,14 @@ const Name = styled.div`
 `;
 
 const Date = styled.div`
-  width: 100%;
-  ${(props: any) => props.theme.fonts.body09};
+  display: flex;
+  box-sizing: border-box;
+  white-space: nowrap;
+  ${(props) => props.theme.fonts.caption03};
   color: ${theme.colors.gray400};
+  width: 100%;
+  justify-content: center;
+  //padding-top: 5px;
 `;
 
 const Content = styled.div`
@@ -161,12 +170,12 @@ const PopupContainer = styled.div`
 const EditBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
-  padding: 12px;
+  padding: 10px;
   border-bottom: 1px solid #5b5f70;
 `;
 
 const DeleteBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
-  padding: 12px;
+  padding: 10px;
 `;

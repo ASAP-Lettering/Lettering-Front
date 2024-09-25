@@ -1,11 +1,13 @@
 "use client";
 
+import { getLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
 import { LETTER_DETAIL_DATA } from "@/constants/letter";
 import { LetterDetailType } from "@/types/letter";
+import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -17,6 +19,7 @@ const LetterPage = () => {
   //const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
+  const accessToken = getAccessToken();
 
   const handleButtonClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -29,11 +32,20 @@ const LetterPage = () => {
 
   useEffect(() => {
     //LetterData 받아오는 로직
-    if (id) {
+    if (id && accessToken) {
       const letterId = Array.isArray(id) ? id[0] : id;
       console.log(letterId);
       const letterIndex = parseInt(letterId);
       setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
+
+      //api 요청
+      //   getLetter(letterId, accessToken)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error.response);
+      //   });
     }
   }, []);
 
