@@ -16,7 +16,7 @@ const VerifyLetter = () => {
   const [letterData, setLetterData] = useState<LetterType>();
 
   const handleButtonClick = () => {
-    router.push("/");
+    router.push("/planet");
   };
 
   useEffect(() => {

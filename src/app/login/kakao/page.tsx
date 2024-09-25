@@ -60,7 +60,7 @@ const Auth = () => {
                 router.push(`/verify?url=${storeUrl}`);
                 clearLetterUrl();
               } else {
-                router.push("/");
+                router.push("/planet");
               }
             })
             .catch((error) => {

@@ -16,7 +16,7 @@ const Signup = () => {
     if (url) {
       router.push(`/verify/letter?url=${url}`);
     } else {
-      router.push("/");
+      router.push("/planet");
     }
   };
   return (
