@@ -41,6 +41,35 @@ export default function Error() {
         />
       </MainWrapper>
       <Line />
+      <SettingWrapper>
+        <SettingContainer>
+          <SettingTitle>설정</SettingTitle>
+          <MenuWrapper>
+            <div>
+              <MenuTitle>편지 날짜 보기</MenuTitle>
+              <MenuSubTitle>
+                편지 이름과 날짜를 함께 확인할 수 있어요
+              </MenuSubTitle>
+            </div>
+            <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+          </MenuWrapper>
+        </SettingContainer>
+        <SettingContainer>
+          <SettingTitle>내 계정</SettingTitle>
+          <MenuWrapper>
+            <div>
+              <MenuTitle>로그아웃</MenuTitle>
+            </div>
+            <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+          </MenuWrapper>
+          <MenuWrapper>
+            <div>
+              <MenuTitle>탈퇴</MenuTitle>
+            </div>
+            <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+          </MenuWrapper>
+        </SettingContainer>
+      </SettingWrapper>
     </Container>
   );
 }
@@ -125,4 +154,37 @@ const Line = styled.hr`
     border: none;
     margin: 0;
     margin-top : 11px;
+`;
+
+const SettingWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+`;
+
+const SettingTitle = styled.div`
+    ${(props: any) => props.theme.fonts.body07};
+    color: ${(props: any) => props.theme.colors.gray100};
+    margin-bottom: 10px;
+`;
+
+const MenuTitle = styled.div`
+    ${(props: any) => props.theme.fonts.body06};
+    color: ${(props: any) => props.theme.colors.white};
+`;
+
+const MenuSubTitle = styled.div`
+    ${(props: any) => props.theme.fonts.caption04};
+    color: ${(props: any) => props.theme.colors.gray500};
+`;
+
+const MenuWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 0;
+`;
+
+const SettingContainer = styled.div`
+    padding: 10px 0;
 `;
