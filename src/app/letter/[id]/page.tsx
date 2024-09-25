@@ -195,6 +195,7 @@ const HeaderTitle = styled.div`
   flex:2;
   span {
     ${(props) => props.theme.fonts.heading02};
+    white-space: nowrap;
   }
 `;
 
