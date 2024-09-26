@@ -1,20 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NewItemPicker from "../signup/NewItemPicker";
 import Button from "../common/Button";
+import Calendar from "./Calendar";
 
 interface ModalProps {
   confirmText?: string;
   onConfirm: () => void;
+  onDateChange: (date: string) => void;
+  initialYear: string;
+  initialMonth: string;
+  initialDate: string;
 }
 
 const Modal = (props: ModalProps) => {
-  const { confirmText = "선택 완료", onConfirm } = props;
+  const {
+    confirmText = "선택 완료",
+    onConfirm,
+    onDateChange,
+    initialDate,
+    initialMonth,
+    initialYear,
+  } = props;
 
-  const [selectedYear, setSelectedYear] = useState("2001");
-  const [selectedMonth, setSelectedMonth] = useState("1");
-  const [selecetedDate, setSelecetedDate] = useState("1");
+  const [selectedYear, setSelectedYear] = useState(initialYear);
+  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+  const [selecetedDate, setSelecetedDate] = useState(initialDate);
+  const [type, setType] = useState(true);
 
   const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
   const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
@@ -40,6 +53,24 @@ const Modal = (props: ModalProps) => {
   const handleSelectDayChange = (day: string) => {
     setSelecetedDate(day);
   };
+
+  const handleSumbitNewBirthday = () => {
+    let month = selectedMonth;
+    let date = selecetedDate;
+    if (parseInt(selectedMonth) < 10) {
+      month = "0" + selectedMonth;
+    }
+    if (parseInt(selecetedDate) < 10) {
+      date = "0" + selecetedDate;
+    }
+    const fullDate = `${selectedYear}.${month}.${date}`;
+    onDateChange(fullDate);
+    onConfirm();
+  };
+
+  useEffect(() => {
+    console.log(selectedYear + "." + selectedMonth + "." + selecetedDate);
+  }, [selecetedDate, selectedYear, selectedMonth]);
 
   const handleLeftClick = () => {
     let intMonth = parseInt(selectedMonth);
@@ -86,7 +117,10 @@ const Modal = (props: ModalProps) => {
             />
             <HeaderTitle>
               {selectedYear + ". " + selectedMonth}
-              <img src="/assets/profile/ic_arrow_up.svg" />
+              <IconButton
+                src="/assets/profile/ic_arrow_up.svg"
+                onClick={() => setType(!type)}
+              />
             </HeaderTitle>
             <IconButton
               src="/assets/profile/ic_arrow_right.svg"
@@ -95,37 +129,47 @@ const Modal = (props: ModalProps) => {
           </DateSwapWrapper>
         </Header>
         <ContentWrapper>
-          <ItemPickerWrapper>
-            <NewItemPicker
-              items={years}
-              defaultItem={"2004"}
-              unit="년"
-              onChange={handleSelectYearChange}
-              scrollToItem={selectedYear}
+          {type ? (
+            <ItemPickerWrapper>
+              <NewItemPicker
+                items={years}
+                defaultItem={initialYear}
+                unit="년"
+                onChange={handleSelectYearChange}
+                scrollToItem={selectedYear}
+              />
+              <NewItemPicker
+                items={months}
+                defaultItem={initialMonth}
+                unit="월"
+                onChange={handleSelectMonthChange}
+                scrollToItem={selectedMonth}
+              />
+              <NewItemPicker
+                items={days}
+                defaultItem={initialDate}
+                unit="일"
+                onChange={handleSelectDayChange}
+              ></NewItemPicker>
+              <PickedItemContainer />
+            </ItemPickerWrapper>
+          ) : (
+            <Calendar
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+              onDateChange={handleSelectDayChange}
             />
-            <NewItemPicker
-              items={months}
-              defaultItem={"1"}
-              unit="월"
-              onChange={handleSelectMonthChange}
-              scrollToItem={selectedMonth}
-            />
-            <NewItemPicker
-              items={days}
-              defaultItem={"1"}
-              unit="일"
-              onChange={handleSelectDayChange}
-            ></NewItemPicker>
-            <PickedItemContainer />
-          </ItemPickerWrapper>
+          )}
         </ContentWrapper>
-        <Button
-          buttonType="primary"
-          size="small"
-          text={confirmText}
-          onClick={onConfirm}
-          width="100%"
-        />
+        <ButtonWrapper>
+          <Button
+            buttonType="primary"
+            size="medium"
+            text={confirmText}
+            onClick={handleSumbitNewBirthday}
+            width="80%"
+          />
+        </ButtonWrapper>
       </ModalContainer>
     </ModalOverlay>
   );
@@ -146,12 +190,12 @@ const ModalOverlay = styled.div`
 const ModalContainer = styled.div`
   width: 100%;
   max-width: 360px;
-  padding: 27px 16px 16px 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   border-radius: 12px;
-  background: rgba(62, 65, 81, 0.7);
+  background: ${(props) => props.theme.colors.gray900};
   backdrop-filter: blur(4px);
   position: fixed;
   top: 50%;
@@ -163,6 +207,8 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 2px solid ${(props) => props.theme.colors.gray800};
 `;
 
 const DateSwapWrapper = styled.div`
@@ -190,6 +236,7 @@ const ContentWrapper = styled.div`
   text-align: center;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.caption03};
+  margin-bottom: 10px;
 `;
 
 const ModalTitle = styled.div`
@@ -218,4 +265,12 @@ const PickedItemContainer = styled.div`
 
 const IconButton = styled.img`
     cursor: pointer;
+`;
+
+const ButtonWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
 `;

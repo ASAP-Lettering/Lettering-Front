@@ -4,20 +4,55 @@ import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Modal from "@/components/profile/DateModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 export default function Profile() {
   const [email, setEmail] = useState("shyo0000@gmail.com");
-  const [birthday, setBirthday] = useState("2001.02.18");
+  const [birthday, setBirthday] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [picker, setPicker] = useState(false);
 
+  useEffect(() => {
+    if (birthday) {
+      const [year, month, day] = birthday.split(".");
+      setSelectedYear(year);
+      setSelectedMonth(parseInt(month).toString());
+      setSelectedDate(parseInt(day).toString());
+    }
+  }, [birthday]);
+
+  useEffect(() => {
+    setBirthday("2001.02.18");
+    const [year, month, day] = birthday.split(".");
+    setSelectedYear(year);
+    setSelectedMonth(parseInt(month).toString());
+    setSelectedDate(parseInt(day).toString());
+  }, []);
+
   const popupPicker = () => {
-    setPicker(!picker);
+    if (birthday && selectedDate && selectedMonth && selectedYear) {
+      setPicker(!picker);
+      updateNewBirthday();
+    }
+  };
+
+  const updateNewBirthday = () => {
+    console.log("새 생일 날짜는 ", birthday);
   };
   return (
     <Container>
-      {picker && <Modal onConfirm={popupPicker} />}
+      {picker && (
+        <Modal
+          onConfirm={popupPicker}
+          onDateChange={setBirthday}
+          initialYear={selectedYear}
+          initialMonth={selectedMonth}
+          initialDate={selectedDate}
+        />
+      )}
       <MainWrapper>
         <NavigatorBar title="내 프로필" cancel={false} />
         <ProfileImage src="/assets/profile/img_profile_letter.png" />
