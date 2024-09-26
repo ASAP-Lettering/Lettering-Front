@@ -1,5 +1,5 @@
 import { theme } from "@/styles/theme";
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import styled, { css } from "styled-components";
 
 type inputType = "underline" | "boxText" | "boxTextArea";
@@ -16,6 +16,8 @@ interface InputProps {
   isValid?: boolean;
   isValidChange?: (vaild: boolean) => void;
   errorMessage?: string;
+  icon?: ReactNode;
+  onIconClick?: () => void;
 }
 
 function isValidKoreanInput(input: string): boolean {
@@ -52,6 +54,8 @@ const Input = (props: InputProps) => {
     isValid = true,
     isValidChange = (isVaild: boolean) => {},
     errorMessage,
+    icon,
+    onIconClick,
   } = props;
 
   const regex = /[^a-zA-Z0-9\u1100-\u11FF\u3131-\u318E\uAC00-\uD7AF\s]/g; // 특수문자
@@ -78,16 +82,23 @@ const Input = (props: InputProps) => {
           $height={height || "auto"}
         />
       ) : (
-        <StyledInput
-          $inputType={inputType}
-          $isVaild={isValid}
-          type={"text"}
-          value={value}
-          onChange={handleChange}
-          placeholder={placeholder}
-          readOnly={readonly}
-          disabled={disabled}
-        />
+        <InputWrapper>
+          <StyledInput
+            $inputType={inputType}
+            $isVaild={isValid}
+            type={"text"}
+            value={value}
+            onChange={handleChange}
+            placeholder={placeholder}
+            readOnly={readonly}
+            disabled={disabled}
+          />
+          {icon && (
+            <IconWrapper onClick={onIconClick} clickable={!!onIconClick}>
+              {icon}
+            </IconWrapper>
+          )}
+        </InputWrapper>
       )}
       {!isValid && <ValidationMessage>{errorMessage}</ValidationMessage>}
     </Container>
@@ -124,8 +135,7 @@ const sharedStyles = `
 
   &:disabled {
     border: none;
-    color: ${theme.colors.b400};
-    background: ${theme.colors.gray100};
+    color: ${theme.colors.gray400};
   }
 `;
 
@@ -173,4 +183,24 @@ const ValidationMessage = styled.div`
   color: ${theme.colors.red}; 
   ${(props) => props.theme.fonts.body08};
   margin-top: -8px; 
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+`;
+
+const IconWrapper = styled.div<{ clickable: boolean }>`
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  cursor: ${({ clickable }) =>
+    clickable
+      ? "pointer"
+      : "default"}; /* Only show pointer cursor if clickable */
 `;

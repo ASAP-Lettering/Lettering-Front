@@ -2,13 +2,18 @@
 
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 export default function MyPage() {
+  const router = useRouter();
   const name = "백승효";
   const email = "shyo0000@naver.com";
   const planetCount = 8;
   const letterCount = 42;
+  const goToProfile = () => {
+    router.push("/profile");
+  };
   return (
     <Container>
       <MainWrapper>
@@ -21,7 +26,10 @@ export default function MyPage() {
               {email}
             </ProfileEmail>
           </ProfileInfo>
-          <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+          <ProfileBtn
+            src="/assets/icons/ic_arrow_profile.svg"
+            onClick={goToProfile}
+          />
         </ProfileHeader>
         <CountContainer>
           <CountRaw>
