@@ -2,6 +2,7 @@
 
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -13,6 +14,11 @@ export default function MyPage() {
   const letterCount = 42;
   const goToProfile = () => {
     router.push("/profile");
+  };
+
+  const handleLogout = () => {
+    clearTokens();
+    router.push("/login");
   };
   return (
     <Container>
@@ -68,7 +74,10 @@ export default function MyPage() {
             <div>
               <MenuTitle>로그아웃</MenuTitle>
             </div>
-            <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+            <ProfileBtn
+              src="/assets/icons/ic_arrow_profile.svg"
+              onClick={handleLogout}
+            />
           </MenuWrapper>
           <MenuWrapper>
             <div>
