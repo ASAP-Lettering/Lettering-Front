@@ -44,7 +44,7 @@ const Tag = (props: TagProps) => {
     if (onHold) {
       holdTimeout.current = setTimeout(() => {
         onHold();
-      }, 3000);
+      }, 1000);
     }
   };
 

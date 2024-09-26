@@ -57,8 +57,8 @@ const SwipeableContainer = styled.div`
 `;
 
 const ContentSlider = styled.div`
-    display: flex;
-    transition: transform 0.5s ease-out; 
+  display: flex;
+  transition: transform 0.5s ease-out;
 `;
 
 const ContentItem = styled.div`
@@ -68,8 +68,8 @@ const ContentItem = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 200px;
-    
-    /* position: relative; */
+
+  /* position: relative; */
 `;
 
 // const ContentImage = styled.img`
@@ -95,21 +95,21 @@ const ContentItem = styled.div`
 // `;
 
 const ImageContainer = styled.div<{ src: string }>`
-    width: 100%;
-    min-height: 230px;
-    max-height: 100%;
-    background-image: url(${(props) => props.src});
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
+  width: 100%;
+  min-height: 230px;
+  max-height: 100%;
+  background-image: url(${(props) => props.src});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
