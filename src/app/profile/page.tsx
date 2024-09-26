@@ -3,13 +3,13 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import Modal from "@/components/profile/DateModal";
 import { useState } from "react";
 import styled from "styled-components";
 
 export default function Profile() {
   const [email, setEmail] = useState("shyo0000@gmail.com");
   const [birthday, setBirthday] = useState("2001.02.18");
-
   const [picker, setPicker] = useState(false);
 
   const popupPicker = () => {
@@ -17,6 +17,7 @@ export default function Profile() {
   };
   return (
     <Container>
+      {picker && <Modal onConfirm={popupPicker} />}
       <MainWrapper>
         <NavigatorBar title="내 프로필" cancel={false} />
         <ProfileImage src="/assets/profile/img_profile_letter.png" />
