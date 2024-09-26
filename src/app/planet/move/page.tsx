@@ -19,12 +19,12 @@ const PlanetMovePage = () => {
   const setToast = useSetRecoilState(toastState);
 
   const name = "규리";
-  const [checkePlanet, setCheckedPlanet] = useState<string>(PLANETS[0].id);
+  const [checkePlanet, setCheckedPlanet] = useState<string>(PLANETS[0].spaceId);
   const [checkePlanetName, setCheckedPlanetName] = useState<string>("");
 
   const handleChangeChecked = (item: Planet) => {
-    setCheckedPlanet(item.id);
-    setCheckedPlanetName(item.name);
+    setCheckedPlanet(item.spaceId);
+    setCheckedPlanetName(item.spaceName);
   };
 
   const handleMovePlanet = () => {
@@ -53,10 +53,10 @@ const PlanetMovePage = () => {
         <PlanetBoxList>
           {PLANETS.map((item) => (
             <PlanetBox
-              key={item.id}
-              id={item.id}
-              planetName={item.name}
-              count={item.count}
+              key={item.spaceId}
+              id={item.spaceId}
+              planetName={item.spaceName}
+              count={item.letterCount}
               checked={checkePlanet}
               current={item.current}
               onClick={() => {
@@ -78,7 +78,7 @@ const PlanetMovePage = () => {
             buttonType="primary"
             size="large"
             text="이동하기"
-            disabled={checkePlanet === PLANETS[0].id}
+            disabled={checkePlanet === PLANETS[0].spaceId}
             onClick={handleMovePlanet}
           />
         </ButtonWrapper>

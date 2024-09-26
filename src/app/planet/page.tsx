@@ -16,6 +16,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSwipeable } from "react-swipeable";
+import { getMainId, putSpace } from "@/api/planet/space/space";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -36,13 +37,33 @@ const PlanetPage = () => {
 
   /* 행성 이름 변경 */
   const [planetName, setPlanetName] = useState<string>("민지님의 첫 행성");
+  const spaceId = "1";
 
   const { show, message, close } = useRecoilValue(toastState);
   const setToast = useSetRecoilState(toastState);
 
-  const handleEditPlanetName = (newName: string) => {
+  useEffect(() => {
+    const fetchMainId = async () => {
+      try {
+        const response = await getMainId();
+        console.log("메인 ID 조회 성공:", response.data);
+      } catch (error) {
+        console.error("메인 ID 조회 실패:", error);
+      }
+    };
+
+    fetchMainId();
+  }, []);
+
+  const handleEditPlanetName = async (newName: string) => {
     // 행성 이름 수정 API
-    setPlanetName(newName);
+    try {
+      const response = await putSpace({ spaceId, spaceName: newName });
+      console.log("행성 이름 수정 성공:", response.data);
+      setPlanetName(newName);
+    } catch (error) {
+      console.error("행성 이름 수정 실패:", error);
+    }
   };
 
   /* 페이지네이션 */

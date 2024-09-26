@@ -5,17 +5,19 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
 import { Planet, PLANETS } from "@/constants/planet";
 import PlanetList from "@/components/planet/PlanetList";
 import Image from "next/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Toast from "@/components/common/Toast";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  deleteSpaces,
+  getSpaceList,
+  putSpacesOrder,
+} from "@/api/planet/space/space";
 
 const PlanetManagePage = () => {
-  const router = useRouter();
-
   const count = 7;
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [checkedPlanets, setCheckedPlanets] = useState<string[]>([]);
@@ -23,6 +25,22 @@ const PlanetManagePage = () => {
   const [deletePlanet, setDeletePlanet] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
   const [changedOrder, setChangedOrder] = useState<string[]>([]);
+
+  const [planets, setPlanets] = useState<Planet[]>(PLANETS);
+
+  useEffect(() => {
+    const fetchSpaceList = async () => {
+      try {
+        const response = await getSpaceList();
+        console.log("전체 스페이스 목록 조회 성공:", response.data);
+        setPlanets(response.data);
+      } catch (error) {
+        console.error("전체 스페이스 목록 조회 실패:", error);
+      }
+    };
+
+    fetchSpaceList();
+  }, []);
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
@@ -32,7 +50,7 @@ const PlanetManagePage = () => {
     if (checkedPlanets.length === PLANETS.length) {
       setCheckedPlanets([]);
     } else {
-      setCheckedPlanets(PLANETS.map((planet) => planet.id));
+      setCheckedPlanets(PLANETS.map((planet) => planet.spaceId));
     }
   };
 
@@ -48,8 +66,15 @@ const PlanetManagePage = () => {
     setConfirmDeleteModal(true);
   };
 
-  const handleConfirmDeletePlanet = () => {
+  const handleConfirmDeletePlanet = async () => {
     /* 행성 삭제하기 */
+    try {
+      const response = await deleteSpaces({ spaceIds: checkedPlanets });
+      console.log("행성 삭제 성공:", response.data);
+    } catch (error) {
+      console.error("행성 삭제 실패:", error);
+    }
+
     // 추후 작성
     setConfirmDeleteModal(false);
     setDeleteMode(false);
@@ -68,9 +93,7 @@ const PlanetManagePage = () => {
     }, 3000);
   };
 
-  const [planets, setPlanets] = useState<Planet[]>(PLANETS);
-
-  const onDragEnd = ({
+  const onDragEnd = async ({
     source,
     destination,
   }: {
@@ -88,9 +111,27 @@ const PlanetManagePage = () => {
     setPlanets(items);
     console.log(items);
 
-    const newOrder: string[] = items.map((item: Planet) => item.id);
-    setChangedOrder(newOrder);
+    // const newOrder: string[] = items.map((item: Planet) => item.spaceId);
+    // setChangedOrder(newOrder);
+
+    // 서버 전달용 새로운 순서 배열
+    const newOrder: { spaceId: string; index: number }[] = items.map(
+      (item: Planet, index: number) => ({
+        spaceId: item.spaceId,
+        index: index,
+      })
+    );
+    setChangedOrder(newOrder.map((item) => item.spaceId));
+
     console.log(newOrder);
+
+    // 스페이스 순서 변경 API 호출
+    try {
+      const response = await putSpacesOrder({ orders: newOrder });
+      console.log("스페이스 순서 변경 성공:", response.data);
+    } catch (error) {
+      console.error("스페이스 순서 변경 실패:", error);
+    }
   };
 
   return (
@@ -125,20 +166,20 @@ const PlanetManagePage = () => {
               >
                 {planets.map((planet, index) => (
                   <Draggable
-                    key={planet.id + "-button"}
-                    draggableId={planet.id}
+                    key={planet.spaceId + "-button"}
+                    draggableId={planet.spaceId}
                     index={index}
                     disableInteractiveElementBlocking
                   >
                     {(provided) => (
                       <PlanetList
-                        id={planet.id}
-                        planetName={planet.name}
-                        count={planet.count}
+                        id={planet.spaceId}
+                        planetName={planet.spaceName}
+                        count={planet.letterCount}
                         checked={checkedPlanets}
                         deleteMode={deleteMode}
                         onClick={() => {
-                          handleChangeChecked(planet.id);
+                          handleChangeChecked(planet.spaceId);
                         }}
                         isMain={index === 0}
                         innerRef={provided.innerRef}
