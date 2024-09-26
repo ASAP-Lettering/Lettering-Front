@@ -8,28 +8,45 @@ import { Suspense, useState } from "react";
 import styled from "styled-components";
 
 const LetterType = () => {
-  const [isCheckedBox, setIsCheckedBox] = useState(false);
+  const [isCheckedBox, setIsCheckedBox] = useState(false); // false라면 이름만, true라면 이름과 날짜
 
-  const handleBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCheckedBox(e.target.checked);
+  const handleBoxChange = (newCheckedState: boolean) => {
+    if (!isCheckedBox || !newCheckedState) {
+      setIsCheckedBox(newCheckedState);
+    }
   };
 
   return (
     <Container>
-      <MainWrapper>
+      <Wrapper>
         <NavigatorBar title="편지 날짜 보기" cancel={false} />
+      </Wrapper>
+      <MainWrapper>
         <MainText>해당 날짜는 스페이스에 등록된 날짜예요</MainText>
         <SelectWrapper>
-          <SampleImg src="/assets/mypage/img_date_sample.png" />
-          <SampleImg src="/assets/mypage/img_date_sample2.png" />
+          <Select>
+            <SelectTitle>이름만 (기본)</SelectTitle>
+            <SampleImg src="/assets/mypage/img_date_sample.png" />
+            <Check
+              checkType="large"
+              checked={!isCheckedBox}
+              onChange={() => handleBoxChange(false)}
+            />
+          </Select>
+          <Select>
+            <SelectTitle>이름과 날짜</SelectTitle>
+            <SampleImg src="/assets/mypage/img_date_sample.png" />
+            <Check
+              checkType="large"
+              checked={isCheckedBox}
+              onChange={() => handleBoxChange(true)}
+            />
+          </Select>
         </SelectWrapper>
-        <Check
-          checkType="box"
-          checked={isCheckedBox}
-          onChange={handleBoxChange}
-        />
       </MainWrapper>
-      <Button buttonType="primary" size="large" text="저장하기" />
+      <Wrapper>
+        <Button buttonType="primary" size="large" text="저장하기" />
+      </Wrapper>
     </Container>
   );
 };
@@ -51,18 +68,36 @@ export default function LetterTypePaging() {
 const Container = styled.div`
     display: flex;
     flex-direction: column;
+    height: 100%;
     min-height: 100%;
+    max-height: 100%;
     justify-content: space-between;
-    padding: 24px;
     color: white;
     background:${(props) => props.theme.colors.bg};
-    padding-bottom: 40px;
+    
+
 `;
 
 const MainWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 24px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: ${(props: any) => props.theme.colors.gray800};
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: ${(props: any) => props.theme.colors.gray600};
+        border-radius: 10px; /* Rounded corners */
+    }
 `;
 
 const MainText = styled.div`
@@ -72,13 +107,35 @@ const MainText = styled.div`
 
 const SelectWrapper = styled.div`
     display: flex;
-    justify-content: space-between;
     flex-direction: row;
-    width: calc(100% - 20px);
+    width: 100%;
+    gap: 20px;
+    margin: 42px 0;
+`;
+
+const Select = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
     gap: 20px;
 `;
 
+const SelectTitle = styled.div`
+    width: 100%;
+    text-align: center;
+    ${(props: any) => props.theme.fonts.body08};
+    color: ${(props: any) => props.theme.colors.white};
+`;
+
 const SampleImg = styled.img`
-    width: calc(50% - 10px);
+    width: 100%;
     height: auto;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 24px;
 `;

@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 
-type checkType = "box" | "default" | "round";
+type checkType = "box" | "default" | "round" | "large";
 
 interface CheckProps {
   checkType: checkType;
@@ -19,7 +19,7 @@ const Check = (props: CheckProps) => {
 
   const renderSvg = () => {
     let filename = "";
-    if (checkType === "box") {
+    if (checkType === "box" || "large") {
       filename = "ic_checkbox";
     } else if (checkType === "default") {
       filename = checked ? "ic_check" : "ic_check_not";
@@ -62,7 +62,7 @@ const Check = (props: CheckProps) => {
 export default Check;
 
 const CheckContainer = styled.label<{ $checkType: checkType }>`
-  width: 100%;
+  width:  ${(props) => (props.$checkType === "large" ? "32px" : "100%")};
   display: flex;
   align-items: center;
   position: relative;
@@ -76,7 +76,7 @@ const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
   margin-right: ${({ $label }) => ($label ? "17px" : "0px")};
   border-radius: 4px;
   background-color: ${(props) =>
-    props.$checkType === "box"
+    props.$checkType === "box" || "large"
       ? props.checked
         ? theme.colors.main01
         : theme.colors.gray500
