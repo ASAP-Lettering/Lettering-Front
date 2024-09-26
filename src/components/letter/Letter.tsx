@@ -231,14 +231,14 @@ const PopupContainer = styled.div`
 const EditBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
-  padding: 12px;
+  padding: 10px;
   border-bottom: 1px solid #5b5f70;
 `;
 
 const DeleteBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
-  padding: 12px;
+  padding: 10px;
 `;
 
 const ModalDate = styled.div`
@@ -249,5 +249,5 @@ const ModalDate = styled.div`
   color: ${theme.colors.gray400};
   width: 100%;
   justify-content: center;
-  //padding-top: 5px;
+  padding-top: 8px;
 `;
