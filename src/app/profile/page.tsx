@@ -2,12 +2,13 @@
 
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Modal from "@/components/profile/DateModal";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
-export default function Profile() {
+const Profile = () => {
   const [email, setEmail] = useState("shyo0000@gmail.com");
   const [birthday, setBirthday] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
@@ -84,6 +85,20 @@ export default function Profile() {
       </MainWrapper>
       <Button buttonType="primary" size="large" text="수정하기" />
     </Container>
+  );
+};
+
+export default function ProfilePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <Profile />
+    </Suspense>
   );
 }
 

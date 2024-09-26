@@ -1,12 +1,14 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 import styled from "styled-components";
 
-export default function MyPage() {
+const MyPage = () => {
   const router = useRouter();
   const name = "백승효";
   const email = "shyo0000@naver.com";
@@ -14,6 +16,10 @@ export default function MyPage() {
   const letterCount = 42;
   const goToProfile = () => {
     router.push("/profile");
+  };
+
+  const goToLetterType = () => {
+    router.push("/mypage/lettertype");
   };
 
   const handleLogout = () => {
@@ -65,7 +71,10 @@ export default function MyPage() {
                 편지 이름과 날짜를 함께 확인할 수 있어요
               </MenuSubTitle>
             </div>
-            <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+            <ProfileBtn
+              src="/assets/icons/ic_arrow_profile.svg"
+              onClick={goToLetterType}
+            />
           </MenuWrapper>
         </SettingContainer>
         <SettingContainer>
@@ -88,6 +97,20 @@ export default function MyPage() {
         </SettingContainer>
       </SettingWrapper>
     </Container>
+  );
+};
+
+export default function MyPagePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <MyPage />
+    </Suspense>
   );
 }
 

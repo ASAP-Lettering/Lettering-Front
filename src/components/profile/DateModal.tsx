@@ -4,6 +4,7 @@ import { theme } from "@/styles/theme";
 import NewItemPicker from "../signup/NewItemPicker";
 import Button from "../common/Button";
 import Calendar from "./Calendar";
+import { motion } from "framer-motion";
 
 interface ModalProps {
   confirmText?: string;
@@ -107,8 +108,24 @@ const Modal = (props: ModalProps) => {
   };
 
   return (
-    <ModalOverlay>
-      <ModalContainer>
+    <ModalOverlay
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <ModalContainer
+        initial={{ opacity: 0, y: "100vh" }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: "100vh" }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+          bounce: 0.2,
+          duration: 0.5,
+        }}
+      >
         <Header>
           <DateSwapWrapper>
             <IconButton
@@ -177,7 +194,7 @@ const Modal = (props: ModalProps) => {
 
 export default Modal;
 
-const ModalOverlay = styled.div`
+const ModalOverlay = styled(motion.div)`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
@@ -185,9 +202,12 @@ const ModalOverlay = styled.div`
   top: 0;
   left: 0;
   z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const ModalContainer = styled.div`
+const ModalContainer = styled(motion.div)`
   width: 100%;
   max-width: 360px;
   padding: 16px;
@@ -198,9 +218,6 @@ const ModalContainer = styled.div`
   background: ${(props) => props.theme.colors.gray900};
   backdrop-filter: blur(4px);
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;
 
 const Header = styled.div`
