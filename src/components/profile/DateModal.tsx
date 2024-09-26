@@ -120,10 +120,10 @@ const Modal = (props: ModalProps) => {
         exit={{ opacity: 0, y: "100vh" }}
         transition={{
           type: "spring",
-          stiffness: 300,
+          stiffness: 170,
           damping: 20,
-          bounce: 0.2,
-          duration: 0.5,
+          bounce: 0.25,
+          duration: 0.6,
         }}
       >
         <Header>
