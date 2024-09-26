@@ -66,9 +66,8 @@ const Container = styled.div`
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   padding: 25px;
-  max-height: 852px;
   background: ${(props) => props.theme.colors.bg};
 `;
 

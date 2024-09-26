@@ -62,6 +62,7 @@ const LetterPage = () => {
         </Header>
         {isImage ? (
           <Letter
+            showType="receive"
             key={key}
             id={letterData.id}
             templateType={letterData.templateType}
@@ -72,6 +73,7 @@ const LetterPage = () => {
           />
         ) : (
           <Letter
+            showType="receive"
             key={key}
             id={letterData.id}
             templateType={letterData.templateType}

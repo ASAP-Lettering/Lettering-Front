@@ -61,6 +61,7 @@ const Palette = styled.div<{ $color: string; $selected: boolean }>`
   ${({ $selected }) =>
     $selected &&
     css`
+      border: 2px rgba(255, 255, 255, 0.3) solid;
       filter: drop-shadow(0px 0px 3px rgba(224, 222, 222, 0.377));
     `}
 
