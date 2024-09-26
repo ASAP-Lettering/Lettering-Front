@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllSpaceName } from "@/api/login/user";
+import { getAllSpaceName, getNewTokens } from "@/api/login/user";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import { clearTokens, getAccessToken } from "@/utils/storage";
@@ -25,6 +25,12 @@ export default function Home() {
         })
         .catch((error) => {
           console.log(error.response);
+          console.log("액세스 토큰 재발급 중");
+          getNewTokens().catch((error) => {
+            console.log(error.response);
+            router.push("/login");
+          });
+          router.push("/");
         });
     }
   }, []);

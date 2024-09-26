@@ -47,12 +47,13 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
 export default SwipeableContent;
 
 const SwipeableContainer = styled.div`
-  overflow: hidden;
-  width: 100%;
-  max-width: 272px;
-  height: auto;
-  box-sizing: border-box;
-  border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 272px; 
+    min-height: 200px;
+    height: auto;
+    box-sizing: border-box;
+    border-radius: 10px;
 `;
 
 const ContentSlider = styled.div`
@@ -61,12 +62,13 @@ const ContentSlider = styled.div`
 `;
 
 const ContentItem = styled.div`
-  width: 100%;
-  height: 100%;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    flex-shrink: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+
   /* position: relative; */
 `;
 
