@@ -45,7 +45,7 @@ export const getNewTokens = async () => {
 export const getAllSpaceName = async (accessToken: string) => {
   return await client.get(`/api/v1/spaces`, {
     headers: {
-      Authorization: `${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };

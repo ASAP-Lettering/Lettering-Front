@@ -19,6 +19,7 @@ interface LetterProps {
   width?: string;
   height?: string;
   padding?: string;
+  readOnly?: boolean;
 }
 
 const Letter = (props: LetterProps) => {
@@ -34,6 +35,7 @@ const Letter = (props: LetterProps) => {
     width,
     height,
     padding,
+    readOnly = false,
   } = props;
   const [currentPage, setCurrentPage] = useState(0);
   // const paginateContent = (content: string, maxCharsPerPage: number) => {
@@ -64,6 +66,10 @@ const Letter = (props: LetterProps) => {
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
 
+  function replaceDashWithDot(dateString: string) {
+    return dateString.replace(/-/g, ".");
+  }
+
   return (
     <Container
       $templateType={templateType}
@@ -71,8 +77,9 @@ const Letter = (props: LetterProps) => {
       $height={height}
       $padding={padding}
     >
-      {isPopup && (
+      {!readOnly && isPopup && (
         <PopupContainer>
+          <ModalDate>{replaceDashWithDot(date)}</ModalDate>
           <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
             수정
           </EditBtn>
@@ -87,7 +94,6 @@ const Letter = (props: LetterProps) => {
               <img src="/assets/icons/ic_more.svg" />
             </button>
           </TopContainer>
-          <Date $showType={showType}>{date}</Date>
         </>
       )}
       <Content $showType={showType}>
@@ -225,12 +231,23 @@ const PopupContainer = styled.div`
 const EditBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
-  padding: 12px;
+  padding: 10px;
   border-bottom: 1px solid #5b5f70;
 `;
 
 const DeleteBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
-  padding: 12px;
+  padding: 10px;
+`;
+
+const ModalDate = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  white-space: nowrap;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${theme.colors.gray400};
+  width: 100%;
+  justify-content: center;
+  padding-top: 8px;
 `;
