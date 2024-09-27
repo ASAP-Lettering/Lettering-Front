@@ -74,8 +74,6 @@ const Container = styled.div`
     justify-content: space-between;
     color: white;
     background:${(props) => props.theme.colors.bg};
-    
-
 `;
 
 const MainWrapper = styled.div`

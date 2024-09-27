@@ -26,6 +26,10 @@ const MyPage = () => {
     clearTokens();
     router.push("/login");
   };
+
+  const goToSendedLetter = () => {
+    router.push("/mypage/send");
+  };
   return (
     <Container>
       <MainWrapper>
@@ -58,6 +62,7 @@ const MyPage = () => {
           size="large"
           icon={true}
           text="보낸 편지함 보기"
+          onClick={goToSendedLetter}
         />
       </MainWrapper>
       <Line />
