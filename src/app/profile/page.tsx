@@ -5,6 +5,7 @@ import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Modal from "@/components/profile/DateModal";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -15,6 +16,7 @@ const Profile = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [picker, setPicker] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (birthday) {
@@ -43,6 +45,11 @@ const Profile = () => {
   const updateNewBirthday = () => {
     console.log("새 생일 날짜는 ", birthday);
   };
+
+  const handleSubmit = () => {
+    router.push("/mypage");
+  };
+
   return (
     <Container>
       {picker && (
@@ -86,7 +93,12 @@ const Profile = () => {
         </InfoWrapper>
       </MainWrapper>
       <Wrapper>
-        <Button buttonType="primary" size="large" text="수정하기" />
+        <Button
+          buttonType="primary"
+          size="large"
+          text="수정하기"
+          onClick={handleSubmit}
+        />
       </Wrapper>
     </Container>
   );

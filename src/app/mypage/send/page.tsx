@@ -4,34 +4,61 @@ import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import LetterTag from "@/components/mypage/LetterTag";
 import { Suspense, useState } from "react";
 import styled from "styled-components";
 
 const SendedLetter = () => {
   const [isSelecting, setIsSelecting] = useState(false); // 항목을 선택중인지
-  const senderArray = [
-    "진주",
-    "예현",
-    "동우",
-    "민지",
-    "규리",
-    "규민",
-    "진주",
-    "예현",
-    "동우",
-    "민지",
-    "규리",
-    "규민",
-    "진주",
-    "예현",
-    "동우",
-    "민지",
-    "규리",
-    "규민",
-  ];
+  const [selectedId, setSelectedId] = useState<number[]>([]);
+  const [senderArray, setSenderArray] = useState([
+    { id: 1, name: "진주" },
+    { id: 2, name: "예현" },
+    { id: 3, name: "동우" },
+    { id: 4, name: "민지" },
+    { id: 5, name: "규리" },
+    { id: 6, name: "규민" },
+    { id: 7, name: "진주" },
+    { id: 8, name: "예현" },
+    { id: 9, name: "동우" },
+    { id: 10, name: "민지" },
+    { id: 11, name: "규리" },
+    { id: 12, name: "규민" },
+    { id: 13, name: "진주" },
+    { id: 14, name: "예현" },
+    { id: 15, name: "동우" },
+    { id: 16, name: "민지" },
+    { id: 17, name: "규리" },
+    { id: 18, name: "규민" },
+  ]);
 
   const selectAllItem = () => {
     setIsSelecting(!isSelecting);
+    setSelectedId([]);
+  };
+
+  const cancelItems = () => {
+    setSelectedId([]);
+    setIsSelecting(false);
+  };
+
+  const discardItems = () => {
+    const newSenderArray = senderArray.filter(
+      (sender) => !selectedId.includes(sender.id)
+    );
+
+    setSenderArray(newSenderArray);
+    setIsSelecting(false);
+    setSelectedId([]);
+    console.log("Deleted IDs:", selectedId);
+  };
+
+  const handleSelectItem = (id: number) => {
+    if (selectedId.includes(id)) {
+      setSelectedId(selectedId.filter((selected) => selected !== id));
+    } else {
+      setSelectedId([...selectedId, id]);
+    }
   };
 
   return (
@@ -52,12 +79,34 @@ const SendedLetter = () => {
             )}
           </SelectText>
         </Header>
+        <LetterGrid>
+          {senderArray.map(({ id, name }) => (
+            <LetterTag
+              key={id}
+              id={id}
+              name={name}
+              isSelecting={isSelecting}
+              isSelected={selectedId.includes(id)}
+              onSelect={handleSelectItem}
+            />
+          ))}
+        </LetterGrid>
       </MainWrapper>
       <ButtonWrapper>
         {isSelecting && (
           <>
-            <Button buttonType="secondary" size="default" text="취소" />
-            <Button buttonType="primary" size="large" text="삭제하기" />
+            <Button
+              buttonType="secondary"
+              size="default"
+              text="취소"
+              onClick={cancelItems}
+            />
+            <Button
+              buttonType="primary"
+              size="large"
+              text="삭제하기"
+              onClick={discardItems}
+            />
           </>
         )}
       </ButtonWrapper>
@@ -132,6 +181,15 @@ const SelectText = styled.button`
     cursor: pointer;
     gap: 6px;
     align-items: center;
+`;
+
+const LetterGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px 28px; 
+    padding: 32px 0;
+    width: 100%;
+    place-items: center;
 `;
 
 const Wrapper = styled.div`
