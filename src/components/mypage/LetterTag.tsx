@@ -54,13 +54,13 @@ const CheckCircle = styled.div<{ isSelected: boolean }>`
   width: 20px;
   height: 20px;
   border: 1px solid ${(props) =>
-    props.isSelected ? props.theme.colors.white : props.theme.colors.gray300};
+    props.isSelected ? props.theme.colors.white : props.theme.colors.gray700};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: ${(props) =>
-    props.isSelected ? props.theme.colors.white : "transparent"};
+    props.isSelected ? props.theme.colors.white : props.theme.colors.gray800};
   cursor: pointer;
 `;
 
