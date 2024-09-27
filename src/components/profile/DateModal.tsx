@@ -135,7 +135,11 @@ const Modal = (props: ModalProps) => {
             <HeaderTitle>
               {selectedYear + ". " + selectedMonth}
               <IconButton
-                src="/assets/profile/ic_arrow_up.svg"
+                src={
+                  type
+                    ? "/assets/profile/ic_arrow_up.svg"
+                    : "/assets/profile/ic_arrow_down.svg"
+                }
                 onClick={() => setType(!type)}
               />
             </HeaderTitle>
