@@ -32,9 +32,9 @@ const SendedLetter = () => {
     { id: 18, name: "규민" },
   ]);
 
-  const selectAllItem = () => {
-    setIsSelecting(!isSelecting);
-    setSelectedId([]);
+  const selectAllItem = async () => {
+    const allIds = await senderArray.map((sender) => sender.id);
+    setSelectedId(allIds);
   };
 
   const cancelItems = () => {
@@ -68,16 +68,19 @@ const SendedLetter = () => {
       </Wrapper>
       <MainWrapper>
         <Header>
-          <SelectText onClick={selectAllItem}>
-            {isSelecting ? (
-              <>삭제</>
-            ) : (
-              <>
-                <img src="/assets/mypage/ic_check.svg" />
-                전체 선택
-              </>
-            )}
-          </SelectText>
+          {!isSelecting ? (
+            <>
+              {" "}
+              <SelectText onClick={() => setIsSelecting(!isSelecting)}>
+                삭제
+              </SelectText>
+            </>
+          ) : (
+            <SelectText onClick={selectAllItem}>
+              <img src="/assets/mypage/ic_check.svg" />
+              전체 선택
+            </SelectText>
+          )}
         </Header>
         <LetterGrid>
           {senderArray.map(({ id, name }) => (
@@ -205,3 +208,5 @@ const ButtonWrapper = styled.div`
     gap: 10px;
     padding: 24px;
 `;
+
+const SelectLabel = styled.div``;
