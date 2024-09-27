@@ -32,75 +32,79 @@ const MyPage = () => {
   };
   return (
     <Container>
-      <MainWrapper>
+      <Wrapper>
         <NavigatorBar title="마이페이지" cancel={false} />
-        <ProfileHeader>
-          <ProfileInfo>
-            <ProfileName>{name}님의 프로필</ProfileName>
-            <ProfileEmail>
-              <img src="/assets/icons/ic_kakao_profile.svg" />
-              {email}
-            </ProfileEmail>
-          </ProfileInfo>
-          <ProfileBtn
-            src="/assets/icons/ic_arrow_profile.svg"
-            onClick={goToProfile}
+      </Wrapper>
+      <MainContainer>
+        <MainWrapper>
+          <ProfileHeader>
+            <ProfileInfo>
+              <ProfileName>{name}님의 프로필</ProfileName>
+              <ProfileEmail>
+                <img src="/assets/icons/ic_kakao_profile.svg" />
+                {email}
+              </ProfileEmail>
+            </ProfileInfo>
+            <ProfileBtn
+              src="/assets/icons/ic_arrow_profile.svg"
+              onClick={goToProfile}
+            />
+          </ProfileHeader>
+          <CountContainer>
+            <CountRaw>
+              <CountTitle>내 편지</CountTitle>
+              <CountValue>총 {letterCount}개</CountValue>
+            </CountRaw>
+            <CountRaw>
+              <CountTitle>내 행성</CountTitle>
+              <CountValue>총 {planetCount}개</CountValue>
+            </CountRaw>
+          </CountContainer>
+          <Button
+            buttonType="secondary"
+            size="large"
+            icon={true}
+            text="보낸 편지함 보기"
+            onClick={goToSendedLetter}
           />
-        </ProfileHeader>
-        <CountContainer>
-          <CountRaw>
-            <CountTitle>내 편지</CountTitle>
-            <CountValue>총 {letterCount}개</CountValue>
-          </CountRaw>
-          <CountRaw>
-            <CountTitle>내 행성</CountTitle>
-            <CountValue>총 {planetCount}개</CountValue>
-          </CountRaw>
-        </CountContainer>
-        <Button
-          buttonType="secondary"
-          size="large"
-          icon={true}
-          text="보낸 편지함 보기"
-          onClick={goToSendedLetter}
-        />
-      </MainWrapper>
-      <Line />
-      <SettingWrapper>
-        <SettingContainer>
-          <SettingTitle>설정</SettingTitle>
-          <MenuWrapper>
-            <div>
-              <MenuTitle>편지 날짜 보기</MenuTitle>
-              <MenuSubTitle>
-                편지 이름과 날짜를 함께 확인할 수 있어요
-              </MenuSubTitle>
-            </div>
-            <ProfileBtn
-              src="/assets/icons/ic_arrow_profile.svg"
-              onClick={goToLetterType}
-            />
-          </MenuWrapper>
-        </SettingContainer>
-        <SettingContainer>
-          <SettingTitle>내 계정</SettingTitle>
-          <MenuWrapper>
-            <div>
-              <MenuTitle>로그아웃</MenuTitle>
-            </div>
-            <ProfileBtn
-              src="/assets/icons/ic_arrow_profile.svg"
-              onClick={handleLogout}
-            />
-          </MenuWrapper>
-          <MenuWrapper>
-            <div>
-              <MenuTitle>탈퇴</MenuTitle>
-            </div>
-            <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
-          </MenuWrapper>
-        </SettingContainer>
-      </SettingWrapper>
+        </MainWrapper>
+        <Line />
+        <SettingWrapper>
+          <SettingContainer>
+            <SettingTitle>설정</SettingTitle>
+            <MenuWrapper>
+              <div>
+                <MenuTitle>편지 날짜 보기</MenuTitle>
+                <MenuSubTitle>
+                  편지 이름과 날짜를 함께 확인할 수 있어요
+                </MenuSubTitle>
+              </div>
+              <ProfileBtn
+                src="/assets/icons/ic_arrow_profile.svg"
+                onClick={goToLetterType}
+              />
+            </MenuWrapper>
+          </SettingContainer>
+          <SettingContainer>
+            <SettingTitle>내 계정</SettingTitle>
+            <MenuWrapper>
+              <div>
+                <MenuTitle>로그아웃</MenuTitle>
+              </div>
+              <ProfileBtn
+                src="/assets/icons/ic_arrow_profile.svg"
+                onClick={handleLogout}
+              />
+            </MenuWrapper>
+            <MenuWrapper>
+              <div>
+                <MenuTitle>탈퇴</MenuTitle>
+              </div>
+              <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+            </MenuWrapper>
+          </SettingContainer>
+        </SettingWrapper>
+      </MainContainer>
     </Container>
   );
 };
@@ -122,15 +126,40 @@ export default function MyPagePaging() {
 const Container = styled.div`
     display: flex;
     flex-direction: column;
+    height: 100%;
     min-height: 100%;
+    max-height: 100%;
+    //justify-content: space-between;
     color: white;
     background:${(props) => props.theme.colors.bg};
-    padding-bottom: 40px;
+`;
+
+const MainContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    width: 100%;
+    &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: ${(props: any) => props.theme.colors.gray800};
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: ${(props: any) => props.theme.colors.gray600};
+        border-radius: 10px; /* Rounded corners */
+    }
 `;
 
 const MainWrapper = styled.div`
     display: flex;
-    padding: 25px;
+    width: 100%;
     flex-direction: column;
 `;
 
@@ -138,7 +167,6 @@ const ProfileHeader = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 34px;
 `;
 
 const ProfileInfo = styled.div`
@@ -163,6 +191,8 @@ const ProfileEmail = styled.div`
 `;
 
 const ProfileBtn = styled.img`
+    width: 24px;
+    height: auto;
     cursor: pointer;
 `;
 
@@ -204,7 +234,7 @@ const Line = styled.hr`
 const SettingWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 24px;
+    width: 100%;
 `;
 
 const SettingTitle = styled.div`
@@ -233,4 +263,10 @@ const MenuWrapper = styled.div`
 
 const SettingContainer = styled.div`
     padding: 10px 0;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 24px;
 `;
