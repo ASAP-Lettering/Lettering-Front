@@ -70,5 +70,10 @@ const CheckImg = styled.img`
 `;
 
 const SenderName = styled.span`
-  color: ${(props) => props.theme.colors.text};
+  color: ${(props) => props.theme.colors.white};
+  max-width: 100%; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 `;
