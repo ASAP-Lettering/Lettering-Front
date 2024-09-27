@@ -224,5 +224,3 @@ const ButtonWrapper = styled.div`
     gap: 10px;
     padding: 24px;
 `;
-
-const SelectLabel = styled.div``;

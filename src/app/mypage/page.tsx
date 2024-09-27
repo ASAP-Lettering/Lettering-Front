@@ -30,6 +30,10 @@ const MyPage = () => {
   const goToSendedLetter = () => {
     router.push("/mypage/send");
   };
+
+  const goToAcountDelete = () => {
+    router.push("/mypage/delete");
+  };
   return (
     <Container>
       <Wrapper>
@@ -100,7 +104,10 @@ const MyPage = () => {
               <div>
                 <MenuTitle>탈퇴</MenuTitle>
               </div>
-              <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+              <ProfileBtn
+                src="/assets/icons/ic_arrow_profile.svg"
+                onClick={goToAcountDelete}
+              />
             </MenuWrapper>
           </SettingContainer>
         </SettingWrapper>
