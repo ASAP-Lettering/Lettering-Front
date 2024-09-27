@@ -4,16 +4,27 @@ import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import styled from "styled-components";
 
 const LetterType = () => {
   const [isCheckedBox, setIsCheckedBox] = useState(false); // false라면 이름만, true라면 이름과 날짜
+  const router = useRouter();
 
   const handleBoxChange = (newCheckedState: boolean) => {
     if (!isCheckedBox || !newCheckedState) {
       setIsCheckedBox(newCheckedState);
     }
+  };
+
+  const handleSumbit = () => {
+    if (isCheckedBox) {
+      console.log("이름과날짜");
+    } else {
+      console.log("이름만");
+    }
+    router.push("/mypage");
   };
 
   return (
@@ -45,7 +56,12 @@ const LetterType = () => {
         </SelectWrapper>
       </MainWrapper>
       <Wrapper>
-        <Button buttonType="primary" size="large" text="저장하기" />
+        <Button
+          buttonType="primary"
+          size="large"
+          text="저장하기"
+          onClick={handleSumbit}
+        />
       </Wrapper>
     </Container>
   );

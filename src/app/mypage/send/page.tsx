@@ -2,6 +2,7 @@
 
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import LetterTag from "@/components/mypage/LetterTag";
@@ -31,6 +32,7 @@ const SendedLetter = () => {
     { id: 17, name: "규리" },
     { id: 18, name: "규민" },
   ]);
+  const [isPopup, setIsPopup] = useState(false);
 
   const selectAllItem = async () => {
     const allIds = await senderArray.map((sender) => sender.id);
@@ -40,9 +42,11 @@ const SendedLetter = () => {
   const cancelItems = () => {
     setSelectedId([]);
     setIsSelecting(false);
+    setIsPopup(false);
   };
 
   const discardItems = () => {
+    setIsPopup(false);
     const newSenderArray = senderArray.filter(
       (sender) => !selectedId.includes(sender.id)
     );
@@ -63,6 +67,14 @@ const SendedLetter = () => {
 
   return (
     <Container $isSelecting={isSelecting}>
+      {isPopup && (
+        <ConfirmModal
+          title={selectedId.length + "개의 편지를 정말 삭제할까요?"}
+          sub="삭제된 편지는 복구되지 않아요."
+          onConfirm={discardItems}
+          onCancel={cancelItems}
+        />
+      )}
       <Wrapper>
         <NavigatorBar title="보낸 편지함" cancel={false} />
       </Wrapper>
@@ -108,7 +120,11 @@ const SendedLetter = () => {
               buttonType="primary"
               size="large"
               text="삭제하기"
-              onClick={discardItems}
+              onClick={() => {
+                if (selectedId.length > 0) {
+                  setIsPopup(true);
+                }
+              }}
             />
           </>
         )}
