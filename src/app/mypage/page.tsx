@@ -76,38 +76,29 @@ const MyPage = () => {
         <SettingWrapper>
           <SettingContainer>
             <SettingTitle>설정</SettingTitle>
-            <MenuWrapper>
+            <MenuWrapper onClick={goToLetterType}>
               <div>
                 <MenuTitle>편지 날짜 보기</MenuTitle>
                 <MenuSubTitle>
                   편지 이름과 날짜를 함께 확인할 수 있어요
                 </MenuSubTitle>
               </div>
-              <ProfileBtn
-                src="/assets/icons/ic_arrow_profile.svg"
-                onClick={goToLetterType}
-              />
+              <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
             </MenuWrapper>
           </SettingContainer>
           <SettingContainer>
             <SettingTitle>내 계정</SettingTitle>
-            <MenuWrapper>
+            <MenuWrapper onClick={handleLogout}>
               <div>
                 <MenuTitle>로그아웃</MenuTitle>
               </div>
-              <ProfileBtn
-                src="/assets/icons/ic_arrow_profile.svg"
-                onClick={handleLogout}
-              />
+              <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
             </MenuWrapper>
-            <MenuWrapper>
+            <MenuWrapper onClick={goToAcountDelete}>
               <div>
                 <MenuTitle>탈퇴</MenuTitle>
               </div>
-              <ProfileBtn
-                src="/assets/icons/ic_arrow_profile.svg"
-                onClick={goToAcountDelete}
-              />
+              <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
             </MenuWrapper>
           </SettingContainer>
         </SettingWrapper>

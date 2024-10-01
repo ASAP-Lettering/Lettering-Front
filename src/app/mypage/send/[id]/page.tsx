@@ -54,7 +54,7 @@ const SendDetailPage = () => {
       </Wrapper>
       <MainWrapper>
         <Header>
-          {/* <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount> */}
+          <LetterCount>편지 정보 | {letterData.content.length}자</LetterCount>
         </Header>
         {isImage ? (
           <Letter
