@@ -100,6 +100,7 @@ const Letter = (props: LetterProps) => {
           </TopContainer>
         </>
       )}
+      {showType === "send" && <Date $showType="send">{date}</Date>}
       <Content $showType={showType}>
         <SwipeableContent
           content={isImage ? images! : contentPages!}
@@ -191,6 +192,7 @@ const Date = styled.div<{ $showType: string }>`
     props.$showType === "preview"
       ? props.theme.fonts.caption04
       : props.theme.fonts.body09};
+  ${(props) => (props.$showType === "send" ? props.theme.fonts.caption03 : "")};
 `;
 
 const Content = styled.div<{ $showType: string }>`

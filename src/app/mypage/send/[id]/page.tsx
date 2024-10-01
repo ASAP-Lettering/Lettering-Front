@@ -33,9 +33,13 @@ const SendDetailPage = () => {
         templateType: 3,
         receiver: "유진주",
         content: "안녕",
-        images: [],
-        date: "",
+        images: [
+          "https://picsum.photos/200/300",
+          "https://picsum.photos/100/200",
+        ],
+        date: "2024-10-01",
       });
+
       //api 요청
       //   getLetter(letterId, accessToken)
       //   .then((res) => {
@@ -54,7 +58,11 @@ const SendDetailPage = () => {
       </Wrapper>
       <MainWrapper>
         <Header>
-          <LetterCount>편지 정보 | {letterData.content.length}자</LetterCount>
+          <LetterCount>
+            편지 정보 | {letterData.content.length}자{" "}
+            {letterData.images.length > 0 &&
+              ` · 사진 ${letterData.images.length}장`}
+          </LetterCount>
         </Header>
         {isImage ? (
           <Letter
@@ -81,6 +89,7 @@ const SendDetailPage = () => {
             isImage={false}
           />
         )}
+        <WhiteSpace />
         {letterData.images.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
@@ -167,24 +176,6 @@ const LetterCount = styled.div`
     padding: 5px;
 `;
 
-const HeaderTitle = styled.div`
-  width: 100%;
-  ${(props) => props.theme.fonts.heading01};
-  margin-top: 1rem;
-  flex:2;
-  span {
-    ${(props) => props.theme.fonts.heading02};
-    white-space: nowrap;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 12px;
-`;
-
 const LoaderContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -224,41 +215,8 @@ const ChangeButtonWrapper = styled.div`
     }
 `;
 
-const PaginationWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 4px;
-    padding-bottom: 30px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    ${(props) => props.theme.fonts.body07};
-    color: ${(props) => props.theme.colors.gray500};
-    gap: 24px;
-`;
-
-const Page = styled.div`
-    display: flex;
-    flex-direction: row;
-    cursor: pointer;
-`;
-
-const CurrentPage = styled.div`
-    display: flex;
-    height: 33px;
-    padding: 3px 22px;
-    justify-content: center;
-    cursor: pointer;
-    align-items: center;
-    gap: 10px;
-    border-radius: 200px;
-    ${(props) => props.theme.fonts.body04};
-    color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.gray800};
-`;
-
 const WhiteSpace = styled.div`
-    height: 44px;
+    height: 24px;
 `;
 
 const Wrapper = styled.div`
