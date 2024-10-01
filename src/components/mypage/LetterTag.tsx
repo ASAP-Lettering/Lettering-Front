@@ -19,9 +19,9 @@ const LetterTag = (props: TagProps) => {
   } = props;
 
   return (
-    <Box>
+    <Box onClick={() => onSelect(id)}>
       {isSelecting && (
-        <CheckCircle isSelected={isSelected} onClick={() => onSelect(id)}>
+        <CheckCircle isSelected={isSelected}>
           {isSelected && <CheckImg src="/assets/icons/ic_check_circle.svg" />}
         </CheckCircle>
       )}
