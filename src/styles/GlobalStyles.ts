@@ -14,7 +14,6 @@ html {
   width: 100%;
   height: 100%;
   max-width: 393px;
-  max-height: 852px;
   margin: 0 auto;
   box-shadow: 0px 0px 64px 0px rgba(30, 41, 59, 0.1);
 }
@@ -23,7 +22,6 @@ body {
   width: 100%;
   height: 100%;
   max-width: 393px;
-  max-height: 852px;
   font-family: "Pretendard";
   white-space: pre-line;
 }
