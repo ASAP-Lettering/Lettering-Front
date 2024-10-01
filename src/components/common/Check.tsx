@@ -3,23 +3,33 @@ import Image from "next/image";
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 
-type checkType = "box" | "default" | "round";
+type checkType = "box" | "default" | "round" | "large";
 
 interface CheckProps {
   checkType: checkType;
   label?: string;
+  labelFont?: string;
   sublabel?: string;
   text?: string;
+  textType?: string;
   checked: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: ReactNode;
 }
 const Check = (props: CheckProps) => {
-  const { checkType, label, checked, onChange, children, sublabel } = props;
+  const {
+    checkType,
+    label,
+    checked,
+    onChange,
+    children,
+    sublabel,
+    labelFont = "body07",
+  } = props;
 
   const renderSvg = () => {
     let filename = "";
-    if (checkType === "box") {
+    if (checkType === "box" || "large") {
       filename = "ic_checkbox";
     } else if (checkType === "default") {
       filename = checked ? "ic_check" : "ic_check_not";
@@ -49,7 +59,7 @@ const Check = (props: CheckProps) => {
       />
       {renderSvg()}
       {label && (
-        <LabelText>
+        <LabelText $labelFont={labelFont}>
           {label}
           {children}
           {sublabel && <LabelSubText>{sublabel}</LabelSubText>}
@@ -62,7 +72,7 @@ const Check = (props: CheckProps) => {
 export default Check;
 
 const CheckContainer = styled.label<{ $checkType: checkType }>`
-  width: 100%;
+  width:  ${(props) => (props.$checkType === "large" ? "32px" : "100%")};
   display: flex;
   align-items: center;
   position: relative;
@@ -76,7 +86,7 @@ const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
   margin-right: ${({ $label }) => ($label ? "17px" : "0px")};
   border-radius: 4px;
   background-color: ${(props) =>
-    props.$checkType === "box"
+    props.$checkType === "box" || "large"
       ? props.checked
         ? theme.colors.main01
         : theme.colors.gray500
@@ -92,14 +102,14 @@ const StyledImage = styled(Image)<{ $checkType: checkType }>`
   z-index: 10;
 `;
 
-const LabelText = styled.span`
+const LabelText = styled.span<{ $labelFont: string }>`
   width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  ${(props) => props.theme.fonts.body07};
-  color: ${theme.colors.white};
+  ${(props) => props.theme.fonts[props.$labelFont]}; 
+  color: ${(props) => props.theme.colors.white};
   white-space: nowrap;
 `;
 

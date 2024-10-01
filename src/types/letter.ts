@@ -29,3 +29,12 @@ export type LetterDetailType = {
     sender_name: string;
   };
 };
+
+export type SendedLetterType = {
+  id: number; //편지 고유 id
+  templateType: number; // 편지 배경
+  receiver: string; // 편지를 받은 사람
+  content: string; // 편지의 내용
+  images: string[]; // 편지에 image 배열
+  date: string; // 편지 날짜
+};

@@ -134,6 +134,7 @@ const GuidePage = () => {
         checked={isCheckedBox}
         onChange={handleBoxChange}
       />
+
       <br />
       <h3>Input</h3>
       <Input
