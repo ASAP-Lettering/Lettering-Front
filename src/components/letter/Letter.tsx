@@ -5,7 +5,7 @@ import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 
-type showType = "preview" | "receive";
+type showType = "preview" | "receive" | "send";
 
 interface LetterProps {
   showType: showType;
@@ -86,13 +86,17 @@ const Letter = (props: LetterProps) => {
           <DeleteBtn>삭제</DeleteBtn>
         </PopupContainer>
       )}
-      {showType === "receive" && (
+      {(showType === "receive" || showType === "send") && (
         <>
           <TopContainer>
-            <Name $showType={showType}>From.{name}</Name>
-            <button onClick={() => setIsPopup(!isPopup)}>
-              <img src="/assets/icons/ic_more.svg" />
-            </button>
+            <Name $showType={showType}>
+              {showType === "send" ? `To. ${name}` : `From. ${name}`}
+            </Name>
+            {!readOnly && (
+              <button onClick={() => setIsPopup(!isPopup)}>
+                <img src="/assets/icons/ic_more.svg" alt="More options" />
+              </button>
+            )}
           </TopContainer>
         </>
       )}

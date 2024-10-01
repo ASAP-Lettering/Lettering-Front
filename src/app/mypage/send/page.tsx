@@ -5,6 +5,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import LetterTag from "@/components/mypage/LetterTag";
+import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import styled from "styled-components";
 
@@ -32,6 +33,7 @@ const SendedLetter = () => {
     { id: 18, name: "규민" },
   ]);
   const [isPopup, setIsPopup] = useState(false);
+  const router = useRouter();
 
   const selectAllItem = async () => {
     const allIds = await senderArray.map((sender) => sender.id);
@@ -57,10 +59,14 @@ const SendedLetter = () => {
   };
 
   const handleSelectItem = (id: number) => {
-    if (selectedId.includes(id)) {
-      setSelectedId(selectedId.filter((selected) => selected !== id));
+    if (isSelecting) {
+      if (selectedId.includes(id)) {
+        setSelectedId(selectedId.filter((selected) => selected !== id));
+      } else {
+        setSelectedId([...selectedId, id]);
+      }
     } else {
-      setSelectedId([...selectedId, id]);
+      router.push(`/mypage/send/${id}`);
     }
   };
 
