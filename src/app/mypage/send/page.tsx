@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/components/common/Button";
-import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
