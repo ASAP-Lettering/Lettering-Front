@@ -6,6 +6,7 @@ import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import GuideText from "@/components/common/GuideText";
 import Input from "@/components/common/Input";
+import KakaoShareButton from "@/components/common/KakaoShareButton";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
@@ -279,6 +280,8 @@ const GuidePage = () => {
           )}
         </Mobile>
       </Background> */}
+      <h3>카카오톡 공유하기</h3>
+      <KakaoShareButton senderName="승효" letterId="aa" />
     </Container>
   );
 };
