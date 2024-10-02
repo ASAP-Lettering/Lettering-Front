@@ -5,6 +5,7 @@ import Loader, { LoaderContainer } from "@/components/common/Loader";
 import Letter from "@/components/letter/Letter";
 import { LETTER_DATA } from "@/constants/letter";
 import { LetterType } from "@/types/letter";
+import { getAccessToken } from "@/utils/storage";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -14,6 +15,7 @@ const VerifyLetter = () => {
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
   const [letterData, setLetterData] = useState<LetterType>();
+  const accessToken = getAccessToken();
 
   const handleButtonClick = () => {
     router.push("/planet");
@@ -26,6 +28,10 @@ const VerifyLetter = () => {
         setLetterData(LETTER_DATA[i]);
       }
     }
+    if (!accessToken) {
+      router.push(`/login?url=${url}`);
+    }
+    //검증 확인 api
   }, []);
 
   return letterData ? (
