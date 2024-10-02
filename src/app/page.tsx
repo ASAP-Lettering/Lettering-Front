@@ -60,12 +60,7 @@ export default function Home() {
           text="로그아웃하기"
           onClick={handleLogout}
         ></Button>
-        <KakaoShareButton
-          title="카카오톡 공유하기"
-          description="레터링"
-          imageUrl=""
-          webUrl="https://www.naver.com/"
-        />
+        <KakaoShareButton senderName="승효" letterId="aa" />
       </ButtonContainer>
     </Container>
   );

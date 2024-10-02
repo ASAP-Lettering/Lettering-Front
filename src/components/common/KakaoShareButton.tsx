@@ -3,20 +3,17 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 
 interface KakaoShareButtonProps {
-  title: string;
-  description: string;
-  imageUrl: string;
-  webUrl: string;
+  senderName: string;
+  letterId: string;
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
-  title,
-  description,
-  imageUrl,
-  webUrl,
+  senderName,
+  letterId,
 }) => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
   const JS_KEY = process.env.NEXT_PUBLIC_JAVASCRIPT_KEY;
+
   useEffect(() => {
     if (!JS_KEY) {
       console.error("Kakao JavaScript key is missing");
@@ -42,8 +39,6 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   }, [JS_KEY]);
 
   const shareToKakao = () => {
-    console.log("버튼클릭");
-
     const { Kakao, location } = window;
 
     if (!Kakao || !Kakao.isInitialized()) {
@@ -51,16 +46,26 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
       return;
     }
 
-    Kakao.Share.sendDefault({
-      objectType: "feed",
-      content: {
-        title: "타이틀",
-        description: "설명",
-        imageUrl,
-        link: {
-          mobileWebUrl: location.href,
-          webUrl: location.href,
-        },
+    // Kakao.Share.sendDefault({
+    //   objectType: "feed",
+    //   content: {
+    //     title: "나만의 디지털 편지 아카이브, 레터링",
+    //     description: `${senderName} 님으로부터 한 통의 편지가 도착했습니다! 소중한 편지를 손쉽게 보관하고 나의 스페이스에 수놓아보세요!`,
+    //     imageUrl: imageAsset,
+    //     link: {
+    //       mobileWebUrl: location.href,
+    //       webUrl: location.href,
+    //     },
+    //   },
+    // });
+
+    Kakao.Share.sendScrap({
+      //     requestUrl: ,
+      requestUrl: location.origin + location.pathname,
+      templateId: 112798,
+      templateArgs: {
+        senderName: senderName,
+        id: letterId,
       },
     });
   };
