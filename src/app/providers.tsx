@@ -6,6 +6,12 @@ import { theme } from "@/styles/theme";
 import { RecoilRoot } from "recoil";
 import GlobalStyles from "@/styles/GlobalStyles";
 
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <StyledJsxRegistry>

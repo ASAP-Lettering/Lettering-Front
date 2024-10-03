@@ -2,6 +2,7 @@
 
 import { getAllSpaceName, getNewTokens } from "@/api/login/user";
 import Button from "@/components/common/Button";
+import KakaoShareButton from "@/components/common/KakaoShareButton";
 import Loader from "@/components/common/Loader";
 import { clearTokens, getAccessToken } from "@/utils/storage";
 import { useRouter } from "next/navigation";
@@ -53,11 +54,14 @@ export default function Home() {
 
   return (
     <Container>
-      <Button
-        buttonType="primary"
-        text="로그아웃하기"
-        onClick={handleLogout}
-      ></Button>
+      <ButtonContainer>
+        <Button
+          buttonType="primary"
+          text="로그아웃하기"
+          onClick={handleLogout}
+        ></Button>
+        <KakaoShareButton senderName="승효" letterId="aa" />
+      </ButtonContainer>
     </Container>
   );
 }
@@ -78,4 +82,11 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ButtonContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 `;

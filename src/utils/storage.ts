@@ -39,6 +39,7 @@ export const setLetterUrl = (url: string) => {
 export const getLetterUrl = () => {
   if (typeof window !== "undefined") {
     localStorage.getItem("letter_url");
+    console.log("url 있음");
   }
   return null;
 };
