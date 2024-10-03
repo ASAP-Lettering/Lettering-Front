@@ -9,7 +9,9 @@ interface ButtonProps {
   buttonType: buttonType;
   size?: sizeType;
   width?: string;
-  text: string;
+  height?: string;
+  text?: string;
+  children?: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
 }
@@ -19,7 +21,9 @@ const Button = (props: ButtonProps) => {
     buttonType = "primary",
     size = "large",
     width,
+    height,
     text,
+    children,
     onClick,
     disabled,
   } = props;
@@ -31,8 +35,9 @@ const Button = (props: ButtonProps) => {
       onClick={onClick}
       disabled={disabled}
       $width={width}
+      $height={height}
     >
-      {text}
+      {text || children}
     </StyledButton>
   );
 };
@@ -43,6 +48,7 @@ const StyledButton = styled.button<{
   $buttonType: buttonType;
   $size: sizeType;
   $width?: string;
+  $height?: string;
 }>`
   display: flex;
   justify-content: center;
@@ -56,6 +62,7 @@ const StyledButton = styled.button<{
       : $size === "default"
       ? "90px"
       : "100%")};
+  height: ${({ $height }) => $height || "auto"};
   padding: 18px;
   border-radius: 12px;
   color: ${theme.colors.white};

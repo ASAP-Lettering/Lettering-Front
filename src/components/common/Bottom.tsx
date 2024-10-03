@@ -5,6 +5,7 @@ import Button from "./Button";
 import { theme } from "@/styles/theme";
 import { Orbit } from "@/constants/orbit";
 import { Droppable, Draggable } from "react-beautiful-dnd";
+import Image from "next/image";
 
 interface BottomProps {
   orbitMessages: Orbit[] | null;
@@ -15,7 +16,17 @@ const Bottom = (props: BottomProps) => {
 
   return (
     <Container>
-      <Title>나의 궤도 메세지</Title>
+      <Top>
+        <Title>
+          나의 궤도 메세지
+          {orbitMessages && orbitMessages?.length > 0 && (
+            <Span>{orbitMessages?.length}개</Span>
+          )}
+        </Title>
+        {orbitMessages && orbitMessages?.length > 0 && (
+          <EditButton>수정</EditButton>
+        )}
+      </Top>
       {orbitMessages && orbitMessages?.length > 0 ? (
         <Droppable droppableId="droppable-bottom">
           {(provided) => (
@@ -47,7 +58,22 @@ const Bottom = (props: BottomProps) => {
         <NoOrbit>등록된 편지가 없습니다. 편지를 등록해볼까요?</NoOrbit>
       )}
       <Divider />
-      <Button buttonType="primary" size="large" text="새 편지 등록하기" />
+      <ButtonRow>
+        <Button
+          buttonType="primary"
+          size="large"
+          text="새 편지 등록하기"
+          height="60px"
+        />
+        <Button buttonType="secondary" size="large" width="96px" height="60px">
+          <Image
+            src="/assets/icons/ic_rocket.svg"
+            width={40}
+            height={40}
+            alt="rocket"
+          />
+        </Button>
+      </ButtonRow>
     </Container>
   );
 };
@@ -66,10 +92,29 @@ const Container = styled.div`
   z-index: 10;
 `;
 
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const Title = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.button01};
   margin-bottom: 8px;
+`;
+
+const Span = styled.span`
+  color: ${theme.colors.gray500};
+  ${(props) => props.theme.fonts.button03};
+`;
+
+const EditButton = styled.button`
+  color: ${theme.colors.gray500};
+  ${(props) => props.theme.fonts.button03};
 `;
 
 const Orbits = styled.div`
@@ -97,4 +142,9 @@ const Divider = styled.div`
   height: 2px;
   background: ${theme.colors.gray800};
   margin: 16px 0;
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 11px;
 `;
