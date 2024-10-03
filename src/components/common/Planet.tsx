@@ -85,12 +85,13 @@ const Planet = (props: PlanetProps) => {
   return (
     <Container>
       <PlanetImage
-        src={`/assets/images/planet/planet${planetType}.svg`}
+        src={`/assets/images/planet_orbit/planet${planetType}.svg`}
         width={400}
         height={400}
         alt="planet"
         priority
       />
+      <Shadow />
       {orbits.map((orbit, index) => {
         const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
         const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
@@ -168,6 +169,27 @@ const PlanetImage = styled(Image)`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;
+`;
+
+const Shadow = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -10;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    rgba(140, 160, 255, 0.5) 0%,
+    rgba(6, 8, 18, 0) 100%
+  );
+  /* background: #a3c6ff; */
+  border-radius: 50%;
+  filter: drop-shadow(0px 0px 7.29px #a3c6ff)
+    drop-shadow(0px 0px 14.58px #a3c6ff) drop-shadow(0px 0px 51.03px #a3c6ff)
+    drop-shadow(0px 0px 102.06px #a3c6ff) drop-shadow(0px 0px 174.96px #a3c6ff)
+    drop-shadow(0px 0px 306.18px #a3c6ff);
 `;
 
 const OrbitTag = styled.div`

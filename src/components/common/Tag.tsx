@@ -142,6 +142,7 @@ const Box = styled.button<{
   border-radius: 100px;
   color: ${theme.colors.white};
   white-space: nowrap;
+  z-index: 10;
 
   ${({ $tagType }) =>
     $tagType === "orbit" &&
