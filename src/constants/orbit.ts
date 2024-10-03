@@ -7,98 +7,98 @@ export interface Orbit {
 
 export const ORBIT_MESSAGE = [
     {
-        id: "0",
-        name: "예현",
-        read: false,
+        letterId: "0",
+        senderName: "예현",
+        isNew: false,
         date: "2024.07.17"
     },
     {
-        id: "1",
-        name: "동우",
-        read: false,
+        letterId: "1",
+        senderName: "동우",
+        isNew: false,
         date: "2024.07.17"
     },
     {
-        id: "2",
-        name: "민지",
-        read: true,
+        letterId: "2",
+        senderName: "민지",
+        isNew: true,
         date: "2024.07.17"
     },
     {
-        id: "3",
-        name: "규리",
-        read: true,
+        letterId: "3",
+        senderName: "규리",
+        isNew: true,
         date: "2024.07.17"
     },
     {
-        id: "4",
-        name: "승효",
-        read: true,
+        letterId: "4",
+        senderName: "승효",
+        isNew: true,
         date: "2024.07.17"
     },
     {
-        id: "5",
-        name: "진주",
-        read: true,
+        letterId: "5",
+        senderName: "진주",
+        isNew: true,
         date: "2024.07.17"
     },
     {
-        id: "6",
-        name: "규민",
-        read: true,
+        letterId: "6",
+        senderName: "규민",
+        isNew: true,
         date: "2024.07.17"
     },
 ];
 
 export const ORBITS = [
     {
-        id: "7",
-        name: "예진",
+        letterId: "7",
+        senderName: "예진",
         date: "2024.07.17"
     },
     {
-        id: "8",
-        name: "진주",
+        letterId: "8",
+        senderName: "진주",
         date: "2024.07.17"
     },
     {
-        id: "9",
-        name: "승효",
+        letterId: "9",
+        senderName: "승효",
         date: "2024.07.17"
     },
     {
-        id: "10",
-        name: "규민",
+        letterId: "10",
+        senderName: "규민",
         date: "2024.07.17"
     },
     {
-        id: "11",
-        name: "예현",
+        letterId: "11",
+        senderName: "예현",
         date: "2024.07.17"
     },
     {
-        id: "12",
-        name: "이름5",
+        letterId: "12",
+        senderName: "이름5",
         date: "2024.07.17"
     },
     {
-        id: "13",
-        name: "이름6",
+        letterId: "13",
+        senderName: "이름6",
         date: "2024.07.17"
     },
     {
-        id: "14",
-        name: "이름7",
+        letterId: "14",
+        senderName: "이름7",
         date: "2024.07.17"
     },
     {
-        id: "15",
-        name: "이름8",
+        letterId: "15",
+        senderName: "이름8",
         date: "2024.07.17"
     },
     {
-        id: "16",
-        name: "이름9",
+        letterId: "16",
+        senderName: "이름9",
         date: "2024.07.17"
     },
 ]

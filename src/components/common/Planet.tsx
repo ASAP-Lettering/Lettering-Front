@@ -10,9 +10,9 @@ import { toastState } from "@/recoil/toastStore";
 import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 
 interface Orbit {
-  id: string;
-  name: string;
-  date: string;
+  letterId: string;
+  senderName: string;
+  date?: string;
 }
 
 interface PlanetProps {
@@ -70,10 +70,10 @@ const Planet = (props: PlanetProps) => {
     }
 
     // 토스트 메세지
-    const orbit = orbits.find((item) => item.id === orbitId);
+    const orbit = orbits.find((item) => item.letterId === orbitId);
     setToast({
       show: true,
-      message: `${orbit?.name} 님의 편지가 삭제되었어요`,
+      message: `${orbit?.senderName} 님의 편지가 삭제되었어요`,
       close: false,
     });
   };
@@ -99,7 +99,7 @@ const Planet = (props: PlanetProps) => {
 
         return (
           <OrbitTag
-            key={orbit.id}
+            key={orbit.letterId}
             style={{
               transform: `translate(${x}px, ${y}px)`,
               transition: "transform 0.8s ease",
@@ -107,12 +107,12 @@ const Planet = (props: PlanetProps) => {
           >
             <Tag
               tagType="letter"
-              name={orbit.name}
+              name={orbit.senderName}
               onClick={() => {
-                handleTagClick(orbit.id);
+                handleTagClick(orbit.letterId);
               }}
               onHold={() => {
-                handleShowHold(orbit.id);
+                handleShowHold(orbit.letterId);
               }}
             />
           </OrbitTag>
