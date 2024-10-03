@@ -1,6 +1,10 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
+import {
+  DraggableProvidedDraggableProps,
+  DraggableProvidedDragHandleProps,
+} from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -14,13 +18,28 @@ interface TagProps {
   onClick?: () => void;
   onEdit?: (editedName: string) => void;
   onHold?: () => void;
+  innerRef?: (element: HTMLElement | null) => void;
+  dragHandleProps?: DraggableProvidedDragHandleProps | null;
+  draggableProps?: DraggableProvidedDraggableProps | null;
 }
 
 const Tag = (props: TagProps) => {
-  const { tagType, name, read, icon, onClick, onEdit, onHold } = props;
+  const {
+    tagType,
+    name,
+    read,
+    icon,
+    onClick,
+    onEdit,
+    onHold,
+    innerRef,
+    dragHandleProps,
+    draggableProps,
+  } = props;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
+  const [isHoldTriggered, setIsHoldTriggered] = useState<boolean>(false);
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleEditClick = () => {
@@ -34,13 +53,14 @@ const Tag = (props: TagProps) => {
   };
 
   const handleBlur = () => {
+    setIsEditing(false);
     if (onEdit && editedName) {
       onEdit(editedName);
     }
-    setIsEditing(false);
   };
 
-  const handleMouseDown = () => {
+  const handleHoldStart = () => {
+    setIsHoldTriggered(true);
     if (onHold) {
       holdTimeout.current = setTimeout(() => {
         onHold();
@@ -48,11 +68,12 @@ const Tag = (props: TagProps) => {
     }
   };
 
-  const handleMouseUp = () => {
-    if (holdTimeout.current) {
+  const handleHoldEnd = () => {
+    if (isHoldTriggered && holdTimeout.current) {
       clearTimeout(holdTimeout.current);
+      setIsHoldTriggered(false);
     }
-    if (onClick) {
+    if (!isHoldTriggered && onClick) {
       onClick();
     }
   };
@@ -73,9 +94,14 @@ const Tag = (props: TagProps) => {
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
-      onClick={onClick}
-      onMouseDown={handleMouseDown} // 마우스를 누를 때
-      onMouseUp={handleMouseUp} // 마우스를 뗄 때
+      onClick={onHold ? handleHoldEnd : onClick}
+      onMouseDown={handleHoldStart} // 마우스를 누를 때
+      onMouseUp={handleHoldEnd} // 마우스를 뗄 때
+      onTouchStart={handleHoldStart} // 터치 시작
+      onTouchEnd={handleHoldEnd} // 터치 종료
+      ref={innerRef}
+      {...draggableProps}
+      {...dragHandleProps}
     >
       {isEditing ? (
         <NameInput
@@ -83,6 +109,7 @@ const Tag = (props: TagProps) => {
           value={editedName}
           onChange={handleNameChange}
           onBlur={handleBlur}
+          textLength={editedName?.length || 0} // 텍스트 길이 전달
           autoFocus
         />
       ) : (
@@ -109,13 +136,14 @@ const Box = styled.button<{
   $hasName?: boolean;
   $hasEditIcon?: boolean;
 }>`
-  width: fit-content;
+  width: auto;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border-radius: 100px;
   color: ${theme.colors.white};
   white-space: nowrap;
+  z-index: 10;
 
   ${({ $tagType }) =>
     $tagType === "orbit" &&
@@ -168,8 +196,8 @@ const Box = styled.button<{
     `}
 `;
 
-const NameInput = styled.input`
-  width: calc(100% + 128px);
+const NameInput = styled.input<{ textLength: number }>`
+  width: ${({ textLength }) => Math.max(20, textLength * 14 + 10)}px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
   background-color: transparent;

@@ -60,19 +60,19 @@ export default function SignupPaging() {
 }
 
 const Container = styled.div`
-    color: white;
-    display: flex;
-    box-sizing: border-box;
-    padding: 50px 20px;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    //overflow: scroll;
-    justify-content: space-between;
-    background-image: url('/assets/signup/signup_bg.png'); 
-    background-size: cover; 
-    background-position: center;
-    background-repeat: no-repeat;
+  color: white;
+  display: flex;
+  box-sizing: border-box;
+  padding: 50px 20px;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  //overflow: scroll;
+  justify-content: space-between;
+  background-image: url("/assets/signup/signup_bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const MainWrapper = styled.div`

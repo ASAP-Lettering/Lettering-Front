@@ -9,20 +9,30 @@ import Button from "@/components/common/Button";
 import PlanetPalette from "@/components/planet/PlanetPalette";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { postNewSpace } from "@/api/planet/space/space";
 
 const PlanetAddPage = () => {
   const router = useRouter();
   const [planet, setPlanet] = useState<string>("");
-  const [planetType, setPlanetType] = useState<number>(0);
+  const [templateType, setTemplateType] = useState<number>(0);
 
   const handleChangeType = (id: number) => {
-    setPlanetType(id);
+    setTemplateType(id);
   };
 
-  const handleAddPlanet = () => {
+  const handleAddPlanet = async () => {
     /* 새 행성 추가하기 */
-    // 추후 작성
-    router.push("/planet");
+    try {
+      const response = await postNewSpace({
+        spaceName: planet,
+        templateType: templateType,
+      });
+      console.log("새 행성 추가 성공:", response.data);
+      // 추가 완료 후 페이지 이동
+      router.push("/planet");
+    } catch (error) {
+      console.error("새 행성 추가 실패:", error);
+    }
   };
 
   return (
@@ -43,19 +53,19 @@ const PlanetAddPage = () => {
         <Label>원하는 행성의 종류를 선택해주세요 *</Label>
         <PlanetWrapper>
           <Image
-            src={`/assets/images/planet/planet${planetType}.svg`}
+            src={`/assets/images/planet/planet${templateType}.svg`}
             width={200}
             height={200}
             alt="planet"
           />
         </PlanetWrapper>
-        <PlanetPalette id={planetType} onClick={handleChangeType} />
+        <PlanetPalette id={templateType} onClick={handleChangeType} />
         <ButtonWrapper>
           <Button
             buttonType="primary"
             size="large"
             text="완료"
-            disabled={!planet || planetType === undefined}
+            disabled={!planet || templateType === undefined}
             onClick={handleAddPlanet}
           />
         </ButtonWrapper>
@@ -68,7 +78,7 @@ export default PlanetAddPage;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;

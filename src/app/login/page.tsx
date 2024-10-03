@@ -23,18 +23,15 @@ const Container = styled.div`
   display: flex;
   box-sizing: border-box;
   height: 100vh;
-  min-height: 754px;
   flex-direction: column;
   justify-content: space-between;
   background-image: url("/assets/login/login_bg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-//overflow-y: scroll;
   -webkit-scrollbar {
-        display: none; 
-    }
-
+    display: none;
+  }
 `;
 
 const LogoTitle = styled.img`
@@ -44,16 +41,16 @@ const LogoTitle = styled.img`
   height: auto;
   max-width: 257px;
   max-height: 150px;
-    //드래그방지
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+  //드래그방지
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
 
 const LogoText = styled.div`
@@ -65,16 +62,16 @@ const LogoText = styled.div`
   letter-spacing: -0.6px;
   ${theme.fonts.body07}
   justify-content: center;
-    //드래그방지
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+  //드래그방지
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
 
 const LogoImage = styled.img`
@@ -84,16 +81,16 @@ const LogoImage = styled.img`
   object-fit: cover;
   max-width: 520px;
   max-height: 520px;
-    //드래그방지
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+  //드래그방지
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
 
 const ImageWrapper = styled.div`

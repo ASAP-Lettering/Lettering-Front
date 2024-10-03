@@ -60,3 +60,17 @@ export const getSession = async () => {
       router.push("/login");
     });
 };
+
+/* spaceId */
+export const setSpaceId = (spaceId: string) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("spaceId", spaceId);
+  }
+};
+
+export const getSpaceId= () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("spaceId");
+  }
+  return null;
+};

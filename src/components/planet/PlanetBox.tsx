@@ -4,10 +4,10 @@ import styled from "styled-components";
 import Check from "../common/Check";
 
 interface PlanetBoxProps {
-  id: number;
+  id: string;
   planetName: string;
   count: number;
-  checked: number;
+  checked: string;
   current?: boolean;
   onClick?: () => void;
 }
