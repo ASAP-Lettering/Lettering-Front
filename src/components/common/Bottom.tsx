@@ -16,7 +16,7 @@ const Bottom = (props: BottomProps) => {
   return (
     <Container>
       <Title>나의 궤도 메세지</Title>
-      {orbitMessages ? (
+      {orbitMessages && orbitMessages?.length > 0 ? (
         <Droppable droppableId="droppable-bottom">
           {(provided) => (
             <Orbits ref={provided.innerRef} {...provided.droppableProps}>
