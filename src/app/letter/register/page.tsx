@@ -9,6 +9,8 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Toast from "@/components/common/Toast";
+import { useRecoilState } from "recoil";
+import { registerLetterState } from "@/recoil/letterStore";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -17,6 +19,8 @@ const LetterRegisterPage = () => {
   const [images, setImages] = useState<File[]>([]);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+
+  const [letterState, setLetterState] = useRecoilState(registerLetterState);
 
   const handleSenderChange = (newValue: string) => {
     setSender(newValue);
@@ -55,6 +59,14 @@ const LetterRegisterPage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
+    setLetterState({
+      senderName: sender,
+      content: content,
+      images: images.map((img) =>
+        img instanceof File ? URL.createObjectURL(img) : img
+      ), // 이미지 URL로 저장
+      templateType: 0,
+    });
     router.push("/letter/template");
   };
 
@@ -171,7 +183,7 @@ const Layout = styled.div`
   flex-direction: column;
   overflow-x: hidden;
   gap: 7px;
-  padding: 74px 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
   background-color: ${theme.colors.bg};
   position: relative;
 `;
