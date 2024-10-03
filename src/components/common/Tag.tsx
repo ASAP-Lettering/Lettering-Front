@@ -115,7 +115,7 @@ const Tag = (props: TagProps) => {
       ) : (
         name
       )}
-      {tagType === "orbit" && !isNew && <Circle />}
+      {tagType === "orbit" && isNew && <Circle />}
       {tagType === "planet" && (
         <Image
           src={renderIcon()}
