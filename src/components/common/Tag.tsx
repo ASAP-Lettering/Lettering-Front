@@ -13,7 +13,7 @@ type iconType = "chevron" | "edit" | "plus";
 interface TagProps {
   tagType: tagType;
   name?: string;
-  read?: boolean;
+  isNew?: boolean;
   icon?: iconType;
   onClick?: () => void;
   onEdit?: (editedName: string) => void;
@@ -27,7 +27,7 @@ const Tag = (props: TagProps) => {
   const {
     tagType,
     name,
-    read,
+    isNew,
     icon,
     onClick,
     onEdit,
@@ -115,7 +115,7 @@ const Tag = (props: TagProps) => {
       ) : (
         name
       )}
-      {tagType === "orbit" && !read && <Circle />}
+      {tagType === "orbit" && !isNew && <Circle />}
       {tagType === "planet" && (
         <Image
           src={renderIcon()}

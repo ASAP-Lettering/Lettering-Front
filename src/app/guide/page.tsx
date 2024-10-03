@@ -182,8 +182,8 @@ const GuidePage = () => {
       <GuideText text="클릭하면 편지 내용을 확인할 수 있어요!" />
       <br />
       <h3>Tag</h3>
-      <Tag tagType="orbit" read={false} name="Orbit" />
-      <Tag tagType="orbit" read={true} name="Orbit" />
+      <Tag tagType="orbit" isNew={false} name="Orbit" />
+      <Tag tagType="orbit" isNew={true} name="Orbit" />
       <Tag tagType="planet" name="Planet" icon="chevron" />
       <Tag tagType="planet" name="Planet" icon="edit" />
       <Tag tagType="planet" name="" icon="plus" />
@@ -235,6 +235,7 @@ const GuidePage = () => {
       />
       <Letter
         showType="preview"
+        contentType="all"
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
@@ -244,6 +245,27 @@ const GuidePage = () => {
       />
       <Letter
         showType="preview"
+        contentType="one"
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        content={letterData.content}
+        date={letterData.date}
+        isImage={false}
+      />
+      <Letter
+        showType="preview"
+        contentType="all"
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        images={imageData}
+        date={letterData.date}
+        isImage={true}
+      />
+      <Letter
+        showType="preview"
+        contentType="one"
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}

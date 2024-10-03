@@ -36,16 +36,16 @@ const Bottom = (props: BottomProps) => {
             <Orbits ref={provided.innerRef} {...provided.droppableProps}>
               {orbitMessages.map((item, index) => (
                 <Draggable
-                  key={`${item.id}-orbits`}
-                  draggableId={item.id.toString()}
+                  key={`${item.letterId}-orbits`}
+                  draggableId={item.letterId}
                   index={index}
                   disableInteractiveElementBlocking
                 >
                   {(provided) => (
                     <Tag
                       tagType="orbit"
-                      read={item.read}
-                      name={item.name}
+                      isNew={item.isNew}
+                      name={item.senderName}
                       innerRef={provided.innerRef}
                       dragHandleProps={provided.dragHandleProps}
                       draggableProps={provided.draggableProps}

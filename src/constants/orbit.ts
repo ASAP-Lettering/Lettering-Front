@@ -1,8 +1,8 @@
 export interface Orbit {
-    id: string;
-    name: string;
-    read?: boolean;
-    date: string;
+    letterId: string;
+    senderName: string;
+    isNew?: boolean;
+    date?: string;
 }
 
 export const ORBIT_MESSAGE = [
