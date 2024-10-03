@@ -53,10 +53,10 @@ const Tag = (props: TagProps) => {
   };
 
   const handleBlur = () => {
+    setIsEditing(false);
     if (onEdit && editedName) {
       onEdit(editedName);
     }
-    setIsEditing(false);
   };
 
   const handleHoldStart = () => {
@@ -109,6 +109,7 @@ const Tag = (props: TagProps) => {
           value={editedName}
           onChange={handleNameChange}
           onBlur={handleBlur}
+          textLength={editedName?.length || 0} // 텍스트 길이 전달
           autoFocus
         />
       ) : (
@@ -135,7 +136,7 @@ const Box = styled.button<{
   $hasName?: boolean;
   $hasEditIcon?: boolean;
 }>`
-  width: fit-content;
+  width: auto;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -195,8 +196,8 @@ const Box = styled.button<{
     `}
 `;
 
-const NameInput = styled.input`
-  width: calc(100% + 128px);
+const NameInput = styled.input<{ textLength: number }>`
+  width: ${({ textLength }) => Math.max(20, textLength * 14 + 10)}px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
   background-color: transparent;

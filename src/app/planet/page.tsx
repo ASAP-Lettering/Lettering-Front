@@ -118,8 +118,8 @@ const PlanetPage = () => {
     if (spaceId) {
       try {
         const response = await putSpace({ spaceId, spaceName: newName });
-        console.log("행성 이름 수정 성공:", response.data);
         setPlanetName(newName);
+        console.log("행성 이름 수정 성공:", response.data);
       } catch (error) {
         console.error("행성 이름 수정 실패:", error);
         setPlanetName(planetName);
