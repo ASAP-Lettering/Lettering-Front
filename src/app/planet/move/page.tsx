@@ -62,6 +62,13 @@ const PlanetMovePage = () => {
         });
         console.log("편지 다른 행성 이동 성공");
         router.push("/planet");
+
+        // 토스트 메세지
+        setToast({
+          show: true,
+          message: `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
+          close: false,
+        });
       } catch {
         console.log("편지 다른 행성 이동 실패");
       }
@@ -70,17 +77,18 @@ const PlanetMovePage = () => {
       try {
         await putLetterToIndep(letterId || "");
         console.log("편지 궤도 보내기 성공");
+        router.push("/planet");
+
+        // 토스트 메세지
+        setToast({
+          show: true,
+          message: `${name} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
+          close: false,
+        });
       } catch {
         console.log("편지 궤도 보내기 실패");
       }
     }
-
-    // 토스트 메세지
-    setToast({
-      show: true,
-      message: `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
-      close: false,
-    });
   };
 
   const handleMoveOrbit = () => {
