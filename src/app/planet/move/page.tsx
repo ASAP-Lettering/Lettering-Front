@@ -1,36 +1,79 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PlanetBox from "@/components/planet/PlanetBox";
-import { Planet, PLANETS } from "@/constants/planet";
+import { Planet } from "@/constants/planet";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import { useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
+import {
+  putLetterToIndep,
+  putLetterToPlanet,
+} from "@/api/planet/letter/spaceLetter";
+import Image from "next/image";
+import { getSpaceList } from "@/api/planet/space/space";
 
 const PlanetMovePage = () => {
   const router = useRouter();
-  // const searchParams = useSearchParams();
-  // const { letterId } = searchParams.get("letter");
+  const searchParams = useSearchParams();
+  const orbitId = searchParams.get("orbitId");
+  const letterId: string | null = orbitId ? orbitId : null;
   const setToast = useSetRecoilState(toastState);
 
   const name = "규리";
-  const [checkePlanet, setCheckedPlanet] = useState<string>(PLANETS[0].spaceId);
+  const [planets, setPlanets] = useState<Planet[]>();
+  const [checkedPlanet, setCheckedPlanet] = useState<string>("");
+  const [checkedIndep, setCheckedIndep] = useState<boolean>(false);
   const [checkePlanetName, setCheckedPlanetName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchSpaceList = async () => {
+      try {
+        const response = await getSpaceList();
+        console.log("전체 스페이스 목록 조회 성공:", response.data);
+        setPlanets(response.data.spaces);
+        setCheckedPlanet(response.data.spaces[0].spaceId);
+      } catch (error) {
+        console.error("전체 스페이스 목록 조회 실패:", error);
+      }
+    };
+
+    fetchSpaceList();
+  }, []);
 
   const handleChangeChecked = (item: Planet) => {
     setCheckedPlanet(item.spaceId);
     setCheckedPlanetName(item.spaceName);
+    setCheckedIndep(false);
   };
 
-  const handleMovePlanet = () => {
-    /* 편지 이동하기 */
-    // 추후 작성
-    router.push("/planet");
+  const handleMovePlanet = async () => {
+    /* 편지 다른 행성으로 이동하기 */
+    if (checkedPlanet) {
+      try {
+        await putLetterToPlanet({
+          letterId: letterId || "",
+          spaceId: checkedPlanet,
+        });
+        console.log("편지 다른 행성 이동 성공");
+        router.push("/planet");
+      } catch {
+        console.log("편지 다른 행성 이동 실패");
+      }
+    } else {
+      /* 편지 궤도(독립 편지)로 보내기 */
+      try {
+        await putLetterToIndep(letterId || "");
+        console.log("편지 궤도 보내기 성공");
+      } catch {
+        console.log("편지 궤도 보내기 실패");
+      }
+    }
 
     // 토스트 메세지
     setToast({
@@ -41,7 +84,12 @@ const PlanetMovePage = () => {
   };
 
   const handleMoveOrbit = () => {
-    /* 편지 궤도로 보내기 */
+    if (checkedIndep) {
+      setCheckedIndep(false);
+    } else {
+      setCheckedIndep(true);
+      setCheckedPlanet("");
+    }
   };
 
   return (
@@ -51,14 +99,14 @@ const PlanetMovePage = () => {
         <Label>{name}의 편지를 어디로 이동할까요?</Label>
         <Divider />
         <PlanetBoxList>
-          {PLANETS.map((item) => (
+          {planets?.map((item, index) => (
             <PlanetBox
               key={item.spaceId}
               id={item.spaceId}
               planetName={item.spaceName}
               count={item.letterCount}
-              checked={checkePlanet}
-              current={item.current}
+              checked={checkedPlanet}
+              current={index === 0}
               onClick={() => {
                 handleChangeChecked(item);
               }}
@@ -67,7 +115,17 @@ const PlanetMovePage = () => {
         </PlanetBoxList>
         <SendOrbitAreaWrapper>
           <SendOrbitArea onClick={handleMoveOrbit}>
-            행성 궤도로 보내기
+            <Top>
+              {checkedIndep && (
+                <Image
+                  src={`/assets/icons/ic_check.svg`}
+                  width={20}
+                  height={20}
+                  alt="check"
+                />
+              )}
+              행성 궤도로 보내기
+            </Top>
             <Small>
               궤도로 옮겨질 시, 홈에서 끌어당겨 언제든 추가할 수 있어요
             </Small>
@@ -78,7 +136,10 @@ const PlanetMovePage = () => {
             buttonType="primary"
             size="large"
             text="이동하기"
-            disabled={checkePlanet === PLANETS[0].spaceId}
+            disabled={
+              (checkedPlanet === "" && checkedIndep === false) ||
+              checkedPlanet === planets?.[0]?.spaceId
+            }
             onClick={handleMovePlanet}
           />
         </ButtonWrapper>
@@ -160,6 +221,12 @@ const SendOrbitArea = styled.div`
   background: ${theme.colors.gray900};
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.body08};
+`;
+
+const Top = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const Small = styled.div`

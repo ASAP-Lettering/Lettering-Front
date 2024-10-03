@@ -16,11 +16,19 @@ export const getPlanetLetterList = async ({
 };
 
 // 궤도 편지 행성으로 이동
-export const putLetterToPlanet = async (letterId: string) => {
-  return await authClient.put(`/api/v1/spaces/letters/${letterId}`);
+export const putLetterToPlanet = async ({
+  letterId,
+  spaceId,
+}: {
+  letterId: string;
+  spaceId: string;
+}) => {
+  return await authClient.put(`/api/v1/spaces/letters/${letterId}`, {
+    spaceId: spaceId,
+  });
 };
 
-// 행성 평지 독립 편지로 이동
+// 행성 편지 독립 편지로 이동
 export const putLetterToIndep = async (letterId: string) => {
   return await authClient.put(`/api/v1/spaces/letters/${letterId}/independent`);
 };
@@ -32,7 +40,7 @@ export const getPlanetLetter = async (letterId: string) => {
 
 // 행성 편지 삭제
 export const deletePlanetLetter = async (letterId: string) => {
-  return await authClient.get(`/api/v1/spaces/letters/${letterId}`);
+  return await authClient.delete(`/api/v1/spaces/letters/${letterId}`);
 };
 
 // 궤도 편지 목록 조회

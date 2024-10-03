@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
 import { useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
+import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 
 interface Orbit {
   id: string;
@@ -27,7 +28,7 @@ const Planet = (props: PlanetProps) => {
   const router = useRouter();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
-  const [orbitId, setOrbitId] = useState<string>();
+  const [orbitId, setOrbitId] = useState<string>("");
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -58,9 +59,15 @@ const Planet = (props: PlanetProps) => {
     setConfirmDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     // 편지 삭제 API
-    setConfirmDeleteModal(false);
+    try {
+      await deletePlanetLetter(orbitId);
+      setConfirmDeleteModal(false);
+      console.log("편지 삭제 성공");
+    } catch {
+      console.log("편지 삭제 실패");
+    }
 
     // 토스트 메세지
     const orbit = orbits.find((item) => item.id === orbitId);
