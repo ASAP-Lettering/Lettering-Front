@@ -12,6 +12,7 @@ interface ButtonProps {
   height?: string;
   text?: string;
   children?: React.ReactNode;
+  icon?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
 }
@@ -25,6 +26,7 @@ const Button = (props: ButtonProps) => {
     text,
     children,
     onClick,
+    icon = false,
     disabled,
   } = props;
 
@@ -37,6 +39,7 @@ const Button = (props: ButtonProps) => {
       $width={width}
       $height={height}
     >
+      {icon && <img src="/assets/icons/ic_letter.svg" />}
       {text || children}
     </StyledButton>
   );
@@ -86,5 +89,9 @@ const StyledButton = styled.button<{
   &:active {
     opacity: 0.8;
     transition: opacity 500ms;
+  }
+
+  img {
+    margin-right: 12px;
   }
 `;

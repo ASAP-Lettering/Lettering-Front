@@ -5,7 +5,7 @@ import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 
-type showType = "preview" | "receive";
+type showType = "preview" | "receive" | "send";
 
 interface LetterProps {
   showType: showType;
@@ -86,16 +86,21 @@ const Letter = (props: LetterProps) => {
           <DeleteBtn>삭제</DeleteBtn>
         </PopupContainer>
       )}
-      {showType === "receive" && (
+      {(showType === "receive" || showType === "send") && (
         <>
           <TopContainer>
-            <Name $showType={showType}>From.{name}</Name>
-            <button onClick={() => setIsPopup(!isPopup)}>
-              <img src="/assets/icons/ic_more.svg" />
-            </button>
+            <Name $showType={showType}>
+              {showType === "send" ? `To. ${name}` : `From. ${name}`}
+            </Name>
+            {!readOnly && (
+              <button onClick={() => setIsPopup(!isPopup)}>
+                <img src="/assets/icons/ic_more.svg" alt="More options" />
+              </button>
+            )}
           </TopContainer>
         </>
       )}
+      {showType === "send" && <Date $showType="send">{date}</Date>}
       <Content $showType={showType}>
         <SwipeableContent
           content={isImage ? images! : contentPages!}
@@ -187,6 +192,7 @@ const Date = styled.div<{ $showType: string }>`
     props.$showType === "preview"
       ? props.theme.fonts.caption04
       : props.theme.fonts.body09};
+  ${(props) => (props.$showType === "send" ? props.theme.fonts.caption03 : "")};
 `;
 
 const Content = styled.div<{ $showType: string }>`
