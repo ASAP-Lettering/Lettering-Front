@@ -8,11 +8,16 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
-import PageBar from "@/components/letter/PageBar";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { registerLetterState } from "@/recoil/letterStore";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
+  const { senderName, content, images } = useRecoilValue(registerLetterState);
+  const setRegisterLetterState = useSetRecoilState(registerLetterState);
+
   const [templateType, setTemplateType] = useState<number>(1);
+  const totalPage = 10;
 
   const hanleChangeTemplate = (id: number) => {
     setTemplateType(id);
@@ -20,6 +25,10 @@ const LetterTemplatePage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
+    setRegisterLetterState((prevState) => ({
+      ...prevState,
+      templateType: templateType,
+    }));
     router.push("/letter/preview");
   };
 
@@ -34,12 +43,13 @@ const LetterTemplatePage = () => {
           <LetterWrapper>
             <Letter
               showType="preview"
+              contentType="one"
               id={0}
               templateType={templateType}
-              name={"김동우"}
-              content={"안녕 방가"}
-              date={"2026.08.11"}
-              isImage={false}
+              name={senderName}
+              content={content}
+              images={images}
+              isImage={!(content.length > 0)}
               width="276px"
               height="283px"
             />
@@ -57,7 +67,9 @@ const LetterTemplatePage = () => {
               />
             ))}
           </TemplatesList>
-          <PageBar currentPage={templateType} totalPage={10} />
+          <Page>
+            <Current>{templateType}</Current>/{totalPage}
+          </Page>
         </Column>
         <ButtonWrapper>
           <Button
@@ -82,7 +94,7 @@ const Layout = styled.div`
   flex-direction: column;
   overflow-x: hidden;
   gap: 7px;
-  padding: 74px 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
   background-color: ${theme.colors.bg};
   position: relative;
 `;
@@ -133,7 +145,7 @@ const TemplatesList = styled.div`
   height: 78px;
   padding-left: 4px;
   margin-top: 69px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   overflow-x: scroll;
 
   ::-webkit-scrollbar {
@@ -154,6 +166,18 @@ const TemplateImage = styled(Image)<{ $selected: boolean }>`
     css`
       box-shadow: 0 0 0 4px ${theme.colors.sub03};
     `}
+`;
+
+const Page = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  color: ${theme.colors.gray500};
+  ${theme.fonts.caption03};
+`;
+
+const Current = styled.span`
+  color: ${theme.colors.white};
 `;
 
 const ButtonWrapper = styled.div`

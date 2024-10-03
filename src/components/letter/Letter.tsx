@@ -6,14 +6,16 @@ import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 
 type showType = "preview" | "receive" | "send";
+export type contentType = "one" | "all";
 
 interface LetterProps {
   showType: showType;
+  contentType?: contentType;
   id: number;
   templateType: number;
   name: string;
   content?: string;
-  date: string;
+  date?: string;
   isImage: boolean;
   images?: string[];
   width?: string;
@@ -25,6 +27,7 @@ interface LetterProps {
 const Letter = (props: LetterProps) => {
   const {
     showType,
+    contentType = "all",
     id,
     templateType,
     name,
@@ -79,7 +82,7 @@ const Letter = (props: LetterProps) => {
     >
       {!readOnly && isPopup && (
         <PopupContainer>
-          <ModalDate>{replaceDashWithDot(date)}</ModalDate>
+          {date && <ModalDate>{replaceDashWithDot(date)}</ModalDate>}
           <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
             수정
           </EditBtn>
@@ -89,7 +92,7 @@ const Letter = (props: LetterProps) => {
       {(showType === "receive" || showType === "send") && (
         <>
           <TopContainer>
-            <Name $showType={showType}>
+            <Name $showType={showType} $contentType={contentType}>
               {showType === "send" ? `To. ${name}` : `From. ${name}`}
             </Name>
             {!readOnly && (
@@ -101,8 +104,18 @@ const Letter = (props: LetterProps) => {
         </>
       )}
       {showType === "send" && <Date $showType="send">{date}</Date>}
-      <Content $showType={showType}>
+      {showType === "preview" && (
+        <>
+          <TopPreviewContainer>
+            <Name $showType={showType} $contentType={contentType}>
+              From. {name}
+            </Name>
+          </TopPreviewContainer>
+        </>
+      )}
+      <Content $showType={showType} $contentType={contentType}>
         <SwipeableContent
+          contentType={contentType}
           content={isImage ? images! : contentPages!}
           setPage={setCurrentPage}
           totalPage={totalPage ? totalPage : 0}
@@ -110,15 +123,7 @@ const Letter = (props: LetterProps) => {
           page={currentPage}
         />
       </Content>
-      {showType === "preview" && (
-        <>
-          <BottomContainer>
-            <Name $showType={showType}>From.{name}</Name>
-            <Date $showType={showType}>{date}</Date>
-          </BottomContainer>
-        </>
-      )}
-      {totalPage > 1 && (
+      {contentType === "all" && totalPage > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPage={totalPage ? totalPage : 0}
@@ -141,6 +146,7 @@ const Container = styled.div<{
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
+  gap: 10px;
   height: auto;
   padding: ${({ $padding }) => ($padding ? $padding : "34px")};
   max-width: ${({ $width }) => ($width ? $width : "345px")};
@@ -149,7 +155,7 @@ const Container = styled.div<{
   min-height: ${({ $height }) => ($height ? $height : "349px")};
   background-image: ${({ $templateType }) =>
     `url('/assets/letter/background_${$templateType}.png')`};
-  background-size: 100% auto;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: white;
@@ -168,45 +174,42 @@ const TopContainer = styled.div`
   }
 `;
 
-const BottomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  justify-content: flex-end;
-  align-items: center;
+const TopPreviewContainer = styled(TopContainer)`
+  margin-top: 20px;
+  ${theme.fonts.subtitle}
 `;
 
-const Name = styled.div<{ $showType: string }>`
+const Name = styled.div<{ $showType: string; $contentType: string }>`
   display: flex;
   align-items: center;
   text-align: center;
   ${(props) =>
-    props.$showType === "preview"
+    props.$showType === "preview" && props.$contentType === "one"
       ? props.theme.fonts.caption01
       : props.theme.fonts.title01};
 `;
 
 const Date = styled.div<{ $showType: string }>`
   color: ${theme.colors.gray400};
-  ${(props) =>
-    props.$showType === "preview"
-      ? props.theme.fonts.caption04
-      : props.theme.fonts.body09};
+  ${(props) => props.theme.fonts.body09};
   ${(props) => (props.$showType === "send" ? props.theme.fonts.caption03 : "")};
 `;
 
-const Content = styled.div<{ $showType: string }>`
+const Content = styled.div<{ $showType: string; $contentType: string }>`
   width: 100%;
   ${(props) =>
     props.$showType === "preview"
       ? `flex: 1; height: calc(100% - 80px);`
       : `height: 90%;`}
   display: flex;
+  justify-content: flex-start;
   align-items: center;
+  text-align: left;
   box-sizing: border-box;
+  border-radius: 10px;
   padding: 10px 0;
   ${(props) =>
-    props.$showType === "preview"
+    props.$showType === "preview" && props.$contentType === "one"
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
   overflow: hidden;

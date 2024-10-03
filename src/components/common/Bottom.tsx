@@ -6,6 +6,7 @@ import { theme } from "@/styles/theme";
 import { Orbit } from "@/constants/orbit";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface BottomProps {
   orbitMessages: Orbit[] | null;
@@ -13,6 +14,8 @@ interface BottomProps {
 
 const Bottom = (props: BottomProps) => {
   const { orbitMessages } = props;
+
+  const router = useRouter();
 
   return (
     <Container>
@@ -33,16 +36,16 @@ const Bottom = (props: BottomProps) => {
             <Orbits ref={provided.innerRef} {...provided.droppableProps}>
               {orbitMessages.map((item, index) => (
                 <Draggable
-                  key={`${item.id}-orbits`}
-                  draggableId={item.id.toString()}
+                  key={`${item.letterId}-orbits`}
+                  draggableId={item.letterId}
                   index={index}
                   disableInteractiveElementBlocking
                 >
                   {(provided) => (
                     <Tag
                       tagType="orbit"
-                      read={item.read}
-                      name={item.name}
+                      isNew={item.isNew}
+                      name={item.senderName}
                       innerRef={provided.innerRef}
                       dragHandleProps={provided.dragHandleProps}
                       draggableProps={provided.draggableProps}
@@ -64,6 +67,9 @@ const Bottom = (props: BottomProps) => {
           size="large"
           text="새 편지 등록하기"
           height="60px"
+          onClick={() => {
+            router.push("/letter/register");
+          }}
         />
         <Button buttonType="secondary" size="large" width="96px" height="60px">
           <Image

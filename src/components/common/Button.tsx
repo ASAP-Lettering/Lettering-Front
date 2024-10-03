@@ -39,7 +39,12 @@ const Button = (props: ButtonProps) => {
       $width={width}
       $height={height}
     >
-      {icon && <img src="/assets/icons/ic_letter.svg" />}
+      {icon && (
+        <img
+          src="/assets/icons/ic_letter.svg"
+          style={{ marginRight: "10px" }}
+        />
+      )}
       {text || children}
     </StyledButton>
   );
@@ -89,9 +94,5 @@ const StyledButton = styled.button<{
   &:active {
     opacity: 0.8;
     transition: opacity 500ms;
-  }
-
-  img {
-    margin-right: 12px;
   }
 `;
