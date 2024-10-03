@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { postPhysicalLetter } from "@/api/letter/letter";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 
 const LetterPreviewPage = () => {
@@ -17,7 +17,6 @@ const LetterPreviewPage = () => {
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
 
-  // const templateType = 5;
   const [isImage, setIsImage] = useState<boolean>(false);
   const resetLetterState = useResetRecoilState(registerLetterState);
 
@@ -30,6 +29,9 @@ const LetterPreviewPage = () => {
   //   "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
   // ];
 
+  useEffect(() => {
+    setIsImage(!!!(content.length > 0));
+  }, []);
   const handleFlipLetter = () => {
     setIsImage(!isImage);
   };
@@ -114,6 +116,9 @@ const Container = styled.div`
 `;
 
 const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 40px;
 `;
 

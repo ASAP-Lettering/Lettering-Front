@@ -13,7 +13,7 @@ import { registerLetterState } from "@/recoil/letterStore";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
-  const { senderName, content } = useRecoilValue(registerLetterState);
+  const { senderName, content, images } = useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
 
   const [templateType, setTemplateType] = useState<number>(1);
@@ -48,7 +48,8 @@ const LetterTemplatePage = () => {
               templateType={templateType}
               name={senderName}
               content={content}
-              isImage={false}
+              images={images}
+              isImage={!(content.length > 0)}
               width="276px"
               height="283px"
             />

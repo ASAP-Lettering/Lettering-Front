@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useSwipeable } from "react-swipeable";
+import { contentType } from "./Letter";
 
 interface SwipeableContentProps {
+  contentType: contentType;
   content: string[];
   setPage: (page: number) => void;
   totalPage: number;
@@ -11,6 +13,7 @@ interface SwipeableContentProps {
 }
 
 const SwipeableContent: React.FC<SwipeableContentProps> = ({
+  contentType = "all",
   content,
   setPage,
   totalPage,
@@ -29,14 +32,25 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
   return (
     <SwipeableContainer {...handlers}>
       <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
-        {content.map((item, index) =>
-          isImage ? (
-            <ContentItem key={index}>
-              {/* <ContentImage src={content[index]}></ContentImage> */}
-              <ImageContainer src={content[index]} />
-            </ContentItem>
-          ) : (
-            <ContentItem key={index}>{item}</ContentItem>
+        {contentType === "one" ? (
+          <ContentItem>
+            {isImage ? (
+              <ImageContainer src={content[0]} />
+            ) : (
+              <ClampedText>{content}</ClampedText>
+            )}
+          </ContentItem>
+        ) : (
+          content.map((item, index) =>
+            isImage ? (
+              <ContentItem key={index}>
+                <ImageContainer src={content[index]} />
+              </ContentItem>
+            ) : (
+              <ContentItem key={index}>
+                <ClampedText>{item}</ClampedText>
+              </ContentItem>
+            )
           )
         )}
       </ContentSlider>
@@ -47,13 +61,12 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
 export default SwipeableContent;
 
 const SwipeableContainer = styled.div`
-    overflow: hidden;
-    width: 100%;
-    max-width: 272px; 
-    min-height: 200px;
-    height: auto;
-    box-sizing: border-box;
-    border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  min-height: 200px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 10px;
 `;
 
 const ContentSlider = styled.div`
@@ -62,14 +75,11 @@ const ContentSlider = styled.div`
 `;
 
 const ContentItem = styled.div`
-    width: 100%;
-    flex-shrink: 0; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
-
-  /* position: relative; */
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-height: 200px;
 `;
 
 // const ContentImage = styled.img`
@@ -98,6 +108,7 @@ const ImageContainer = styled.div<{ src: string }>`
   width: 100%;
   min-height: 230px;
   max-height: 100%;
+  border-radius: 10px;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-position: center;
@@ -112,4 +123,12 @@ const ImageContainer = styled.div<{ src: string }>`
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
+`;
+
+const ClampedText = styled.div`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7; /* 7줄까지만 표시 */
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
