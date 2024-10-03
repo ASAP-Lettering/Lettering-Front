@@ -72,6 +72,9 @@ const PlanetManagePage = () => {
     try {
       const response = await deleteSpaces({ spaceIds: checkedPlanets });
       console.log("행성 삭제 성공:", response.data);
+      setPlanets(
+        planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
+      );
     } catch (error) {
       console.error("행성 삭제 실패:", error);
     }
