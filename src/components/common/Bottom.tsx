@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Tag from "./Tag";
 import Button from "./Button";
@@ -16,6 +16,7 @@ const Bottom = (props: BottomProps) => {
   const { orbitMessages } = props;
 
   const router = useRouter();
+  const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
 
   return (
     <Container>
@@ -27,7 +28,9 @@ const Bottom = (props: BottomProps) => {
           )}
         </Title>
         {orbitMessages && orbitMessages?.length > 0 && (
-          <EditButton>수정</EditButton>
+          <EditButton onClick={() => setIsDeleteMode(!isDeleteMode)}>
+            {isDeleteMode ? "완료" : "수정"}
+          </EditButton>
         )}
       </Top>
       {orbitMessages && orbitMessages?.length > 0 ? (
@@ -44,8 +47,10 @@ const Bottom = (props: BottomProps) => {
                   {(provided) => (
                     <Tag
                       tagType="orbit"
-                      isNew={item.isNew}
+                      tagId={item.letterId}
                       name={item.senderName}
+                      isNew={item.isNew}
+                      isDeleteMode={isDeleteMode}
                       innerRef={provided.innerRef}
                       dragHandleProps={provided.dragHandleProps}
                       draggableProps={provided.draggableProps}
