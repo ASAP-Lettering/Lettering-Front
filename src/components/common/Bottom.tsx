@@ -71,7 +71,13 @@ const Bottom = (props: BottomProps) => {
             router.push("/letter/register");
           }}
         />
-        <Button buttonType="secondary" size="large" width="96px" height="60px">
+        <Button
+          buttonType="secondary"
+          size="large"
+          width="96px"
+          height="60px"
+          onClick={() => router.push("/send/write")}
+        >
           <Image
             src="/assets/icons/ic_rocket.svg"
             width={40}
