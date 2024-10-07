@@ -1,7 +1,6 @@
 import { getAccessToken, getRefreshToken } from "@/utils/storage";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getNewTokens } from "./login/user";
-import { useRouter } from "next/router";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -28,7 +27,7 @@ export const authClient = axios.create({
 });
 
 authClient.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig) => {
     const accessToken = getAccessToken();
     if (accessToken && config.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -40,38 +39,16 @@ authClient.interceptors.request.use(
   }
 );
 
-interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  _retry?: boolean;
-}
-
-// 응답 인터셉터
 authClient.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as CustomAxiosRequestConfig;
-    const router = useRouter();
-
-    if (
-      originalRequest &&
-      error.response?.status === 401 &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-
-      try {
-        const newAccessToken = await getNewTokens();
-        // 원래 요청에 새로운 액세스 토큰을 헤더에 설정
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        // 새로운 토큰으로 원래 요청 재시도
-        return authClient(originalRequest);
-      } catch (refreshError) {
-        router.push("/login");
-        return Promise.reject(refreshError);
-      }
-    } else {
-      router.push("/login");
+  async (response) => {
+    if (response.status >= 400) {
+      console.log("인터셉터 status:", response.status);
     }
-
+    console.log("인터셉터 응답:", response);
+    return response;
+  },
+  async (error) => {
+    console.log(error.response);
     return Promise.reject(error);
   }
 );

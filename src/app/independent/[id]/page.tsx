@@ -6,7 +6,7 @@ import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
 import { LETTER_DETAIL_DATA } from "@/constants/letter";
-import { LetterDetailType } from "@/types/letter";
+import { IndependentLetterType, LetterDetailType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -15,14 +15,17 @@ import styled from "styled-components";
 const IndependentLetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
+  const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
   //const searchParams = useSearchParams();
-  const [letterData, setLetterData] = useState<LetterDetailType>();
+  const [letterData, setLetterData] = useState<IndependentLetterType | null>(
+    null
+  );
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
 
   const handleButtonClick = (id: string) => {
-    router.push(`/letter/${id}`);
+    router.push(`/independent/${id}`);
   };
 
   const changeImageorContent = () => {
@@ -34,13 +37,10 @@ const IndependentLetterPage = () => {
     //LetterData 받아오는 로직
     if (id && accessToken) {
       const letterId = Array.isArray(id) ? id[0] : id;
-      console.log(letterId);
-      const letterIndex = parseInt(letterId);
-      setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
-
       getIndependentLetter(letterId)
         .then((res) => {
           console.log(res.data);
+          setLetterData(res.data);
         })
         .catch((error) => {
           console.log(error.response);
@@ -57,28 +57,29 @@ const IndependentLetterPage = () => {
             {letterData.space_name} <br />
             <span>행성에 있는 편지예요!</span>
           </HeaderTitle> */}
-          <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
+          <LetterCount>행성 속 편지 | {letterData.letterCount}개</LetterCount>
         </Header>
         {isImage ? (
           <Letter
             showType="receive"
             key={key}
-            id={letterData.id}
+            id={parseInt(letterId)}
             templateType={letterData.templateType}
-            name={letterData.sender}
+            name={letterData.senderName}
             images={letterData.images}
-            date={letterData.date}
+            date={letterData.sendDate}
             isImage={true}
           />
         ) : (
           <Letter
             showType="receive"
             key={key}
-            id={letterData.id}
+            id={parseInt(letterId)}
             templateType={letterData.templateType}
-            name={letterData.sender}
             content={letterData.content}
-            date={letterData.date}
+            name={letterData.senderName}
+            images={letterData.images}
+            date={letterData.sendDate}
             isImage={false}
           />
         )}
@@ -93,26 +94,22 @@ const IndependentLetterPage = () => {
           <WhiteSpace />
         )}
         <PaginationWrapper>
-          {letterData.prev_letter ? (
+          {letterData.prevLetter ? (
             <Page
-              onClick={() =>
-                handleButtonClick(letterData.prev_letter!.letter_id)
-              }
+              onClick={() => handleButtonClick(letterData.prevLetter!.letterId)}
             >
               <img src="/assets/icons/ic_arrow_left.svg" />
-              {letterData.prev_letter.sender_name}
+              {letterData.prevLetter.senderName}
             </Page>
           ) : (
             <></>
           )}
-          <CurrentPage>{letterData.sender}</CurrentPage>
-          {letterData.next_letter ? (
+          <CurrentPage>{letterData.senderName}</CurrentPage>
+          {letterData.nextLetter ? (
             <Page
-              onClick={() =>
-                handleButtonClick(letterData.next_letter!.letter_id)
-              }
+              onClick={() => handleButtonClick(letterData.nextLetter!.letterId)}
             >
-              {letterData.next_letter.sender_name}
+              {letterData.nextLetter.senderName}
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
           ) : (

@@ -1,5 +1,5 @@
 import { RegisterDataType } from "@/types/user";
-import client from "../client";
+import client, { authClient } from "../client";
 import { getRefreshToken, setTokens } from "@/utils/storage";
 
 // 로그인
@@ -42,10 +42,6 @@ export const getNewTokens = async () => {
 };
 
 //테스트용 api
-export const getAllSpaceName = async (accessToken: string) => {
-  return await client.get(`/api/v1/spaces`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+export const getAllSpaceName = async () => {
+  return await authClient.get(`/api/v1/spaces`);
 };

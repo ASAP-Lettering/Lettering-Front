@@ -38,3 +38,20 @@ export type SendedLetterType = {
   images: string[]; // 편지에 image 배열
   date: string; // 편지 날짜
 };
+
+export type IndependentLetterType = {
+  senderName: string;
+  letterCount: number;
+  content: string;
+  sendDate: string;
+  images: string[];
+  templateType: number;
+  prevLetter?: {
+    letterId: string;
+    senderName: string;
+  } | null;
+  nextLetter?: {
+    letterId: string;
+    senderName: string;
+  } | null;
+};

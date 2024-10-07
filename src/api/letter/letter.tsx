@@ -2,7 +2,11 @@ import client, { authClient } from "../client";
 
 // 편지 조회
 export const getLetter = async (letterId: string) => {
-  return await authClient.get(`/api/v1/letters/${letterId}`);
+  return await authClient
+    .get(`/api/v1/letters/${letterId}`)
+    .then((response) => {
+      return response;
+    });
 };
 
 // 무소속편지 조회
