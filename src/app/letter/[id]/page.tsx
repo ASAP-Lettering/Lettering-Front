@@ -16,7 +16,7 @@ const LetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
   const [key, setKey] = useState(1);
-  //const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
@@ -39,13 +39,13 @@ const LetterPage = () => {
       setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
 
       //api 요청
-      //   getLetter(letterId, accessToken)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error.response);
-      //   });
+      getLetter(letterId)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     }
   }, []);
 

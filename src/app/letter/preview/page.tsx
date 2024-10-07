@@ -59,7 +59,7 @@ const LetterPreviewPage = () => {
               showType="preview"
               id={0}
               templateType={templateType}
-              name={"김동우"}
+              name={senderName}
               content={content}
               images={images}
               isImage={isImage}
