@@ -5,7 +5,6 @@ import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
-import { LETTER_DETAIL_DATA } from "@/constants/letter";
 import { IndependentLetterType, LetterDetailType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
@@ -57,7 +56,7 @@ const IndependentLetterPage = () => {
             {letterData.space_name} <br />
             <span>행성에 있는 편지예요!</span>
           </HeaderTitle> */}
-          <LetterCount>행성 속 편지 | {letterData.letterCount}개</LetterCount>
+          <LetterCount>궤도 속 편지 | {letterData.letterCount}개</LetterCount>
         </Header>
         {isImage ? (
           <Letter
