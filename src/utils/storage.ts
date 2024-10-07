@@ -74,3 +74,21 @@ export const getSpaceId= () => {
   }
   return null;
 };
+
+/* 메인 홈 초기 유저 Toast 상태 */
+export const setInitUserToast = () => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("initUserToast", "true");
+  }
+};
+
+export const getInitUserToast= (): string | null  => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("initUserToast");
+  }
+  return null;
+};
+
+export const clearInitUserToast= ()  => {
+  localStorage.removeItem("initUserToast");
+};

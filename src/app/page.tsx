@@ -4,7 +4,11 @@ import { getAllSpaceName, getNewTokens } from "@/api/login/user";
 import Button from "@/components/common/Button";
 import KakaoShareButton from "@/components/common/KakaoShareButton";
 import Loader from "@/components/common/Loader";
-import { clearTokens, getAccessToken } from "@/utils/storage";
+import {
+  clearInitUserToast,
+  clearTokens,
+  getAccessToken,
+} from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -38,6 +42,7 @@ export default function Home() {
 
   const handleLogout = () => {
     clearTokens();
+    clearInitUserToast();
     router.push("/login");
   };
 
@@ -85,8 +90,8 @@ const LoaderContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
