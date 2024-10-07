@@ -38,7 +38,6 @@ const IndependentLetterPage = () => {
       const letterId = Array.isArray(id) ? id[0] : id;
       getIndependentLetter(letterId)
         .then((res) => {
-          console.log(res.data);
           setLetterData(res.data);
         })
         .catch((error) => {
@@ -50,7 +49,7 @@ const IndependentLetterPage = () => {
   return letterData ? (
     <Container>
       <MainWrapper>
-        <NavigatorBar cancel={false} />
+        <NavigatorBar cancel={false} url="/planet" />
         <Header>
           {/* <HeaderTitle>
             {letterData.space_name} <br />
