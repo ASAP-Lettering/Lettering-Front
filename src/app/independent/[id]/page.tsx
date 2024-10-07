@@ -1,6 +1,6 @@
 "use client";
 
-import { getLetter } from "@/api/letter/letter";
+import { getIndependentLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -12,7 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const LetterPage = () => {
+const IndependentLetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
   const [key, setKey] = useState(1);
@@ -38,7 +38,7 @@ const LetterPage = () => {
       const letterIndex = parseInt(letterId);
       setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
 
-      getLetter(letterId)
+      getIndependentLetter(letterId)
         .then((res) => {
           console.log(res.data);
         })
@@ -53,10 +53,10 @@ const LetterPage = () => {
       <MainWrapper>
         <NavigatorBar cancel={false} />
         <Header>
-          <HeaderTitle>
+          {/* <HeaderTitle>
             {letterData.space_name} <br />
             <span>행성에 있는 편지예요!</span>
-          </HeaderTitle>
+          </HeaderTitle> */}
           <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
         </Header>
         {isImage ? (
@@ -132,7 +132,7 @@ const LetterPage = () => {
   );
 };
 
-export default function LetterPaging() {
+export default function IndependentLetterPaging() {
   return (
     <Suspense
       fallback={
@@ -141,7 +141,7 @@ export default function LetterPaging() {
         </LoaderContainer>
       }
     >
-      <LetterPage />
+      <IndependentLetterPage />
     </Suspense>
   );
 }

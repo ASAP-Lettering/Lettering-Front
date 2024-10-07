@@ -1,12 +1,13 @@
 import client, { authClient } from "../client";
 
 // 편지 조회
-export const getLetter = async (letterId: string, accessToken: string) => {
-  return await client.get(`/api/v1/letters/${letterId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+export const getLetter = async (letterId: string) => {
+  return await authClient.get(`/api/v1/letters/${letterId}`);
+};
+
+// 무소속편지 조회
+export const getIndependentLetter = async (letterId: string) => {
+  return await authClient.get(`/api/v1/letters/independent/${letterId}`);
 };
 
 // 편지 삭제
