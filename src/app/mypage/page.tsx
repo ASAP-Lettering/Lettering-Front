@@ -37,7 +37,7 @@ const MyPage = () => {
   return (
     <Container>
       <Wrapper>
-        <NavigatorBar title="마이페이지" cancel={false} />
+        <NavigatorBar title="마이페이지" cancel={false} url="/planet" />
       </Wrapper>
       <MainContainer>
         <MainWrapper>

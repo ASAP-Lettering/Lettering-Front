@@ -51,10 +51,14 @@ const IndependentLetterPage = () => {
       <MainWrapper>
         <NavigatorBar cancel={false} url="/planet" />
         <Header>
-          {/* <HeaderTitle>
-            {letterData.space_name} <br />
-            <span>행성에 있는 편지예요!</span>
-          </HeaderTitle> */}
+          <HeaderTitle>
+            나의 궤도
+            <span>
+              에 있는
+              <br />
+              편지예요!
+            </span>
+          </HeaderTitle>
           <LetterCount>궤도 속 편지 | {letterData.letterCount}개</LetterCount>
         </Header>
         {isImage ? (
