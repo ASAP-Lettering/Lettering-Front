@@ -1,7 +1,8 @@
 import { getAccessToken } from "@/utils/storage";
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 export const client = axios.create({
   baseURL: BASE_URL,
   headers: {

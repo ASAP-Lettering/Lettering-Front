@@ -7,11 +7,12 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
 import { useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
+import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 
 interface Orbit {
-  id: string;
-  name: string;
-  date: string;
+  letterId: string;
+  senderName: string;
+  date?: string;
 }
 
 interface PlanetProps {
@@ -27,7 +28,7 @@ const Planet = (props: PlanetProps) => {
   const router = useRouter();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
-  const [orbitId, setOrbitId] = useState<string>();
+  const [orbitId, setOrbitId] = useState<string>("");
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -58,15 +59,21 @@ const Planet = (props: PlanetProps) => {
     setConfirmDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     // 편지 삭제 API
-    setConfirmDeleteModal(false);
+    try {
+      await deletePlanetLetter(orbitId);
+      setConfirmDeleteModal(false);
+      console.log("편지 삭제 성공");
+    } catch {
+      console.log("편지 삭제 실패");
+    }
 
     // 토스트 메세지
-    const orbit = orbits.find((item) => item.id === orbitId);
+    const orbit = orbits.find((item) => item.letterId === orbitId);
     setToast({
       show: true,
-      message: `${orbit?.name} 님의 편지가 삭제되었어요`,
+      message: `${orbit?.senderName} 님의 편지가 삭제되었어요`,
       close: false,
     });
   };
@@ -78,12 +85,13 @@ const Planet = (props: PlanetProps) => {
   return (
     <Container>
       <PlanetImage
-        src={`/assets/images/planet/planet${planetType}.svg`}
+        src={`/assets/images/planet_orbit/planet${planetType}.svg`}
         width={400}
         height={400}
         alt="planet"
         priority
       />
+      <Shadow />
       {orbits.map((orbit, index) => {
         const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
         const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
@@ -91,7 +99,7 @@ const Planet = (props: PlanetProps) => {
 
         return (
           <OrbitTag
-            key={orbit.id}
+            key={orbit.letterId}
             style={{
               transform: `translate(${x}px, ${y}px)`,
               transition: "transform 0.8s ease",
@@ -99,12 +107,12 @@ const Planet = (props: PlanetProps) => {
           >
             <Tag
               tagType="letter"
-              name={orbit.name}
+              name={orbit.senderName}
               onClick={() => {
-                handleTagClick(orbit.id);
+                handleTagClick(orbit.letterId);
               }}
               onHold={() => {
-                handleShowHold(orbit.id);
+                handleShowHold(orbit.letterId);
               }}
             />
           </OrbitTag>
@@ -161,6 +169,27 @@ const PlanetImage = styled(Image)`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;
+`;
+
+const Shadow = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -10;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    rgba(140, 160, 255, 0.5) 0%,
+    rgba(6, 8, 18, 0) 100%
+  );
+  /* background: #a3c6ff; */
+  border-radius: 50%;
+  filter: drop-shadow(0px 0px 7.29px #a3c6ff)
+    drop-shadow(0px 0px 14.58px #a3c6ff) drop-shadow(0px 0px 51.03px #a3c6ff)
+    drop-shadow(0px 0px 102.06px #a3c6ff) drop-shadow(0px 0px 174.96px #a3c6ff)
+    drop-shadow(0px 0px 306.18px #a3c6ff);
 `;
 
 const OrbitTag = styled.div`

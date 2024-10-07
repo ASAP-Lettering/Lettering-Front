@@ -16,7 +16,13 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSwipeable } from "react-swipeable";
-import { getMainId, putSpace } from "@/api/planet/space/space";
+import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
+// import { setSpaceId } from "@/utils/storage";
+import {
+  getOrbitLetter,
+  getPlanetLetterList,
+} from "@/api/planet/letter/spaceLetter";
+import Loader from "@/components/common/Loader";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -27,42 +33,97 @@ const PlanetPage = () => {
   const [currentOrbits, setCurrentOrbits] = useState(
     orbits.slice(0, itemsPerPage)
   );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const totalCount = 2;
 
   const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
-  const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>(
-    ORBIT_MESSAGE
-  );
+  const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
 
   /* 행성 이름 변경 */
-  const [planetName, setPlanetName] = useState<string>("민지님의 첫 행성");
-  const spaceId = "1";
+  const [planetName, setPlanetName] = useState<string>("");
+  const [countLetter, setCountLetter] = useState<number>(0);
+  const [spaceId, setSpaceId] = useState<string | null>(null);
 
   const { show, message, close } = useRecoilValue(toastState);
   const setToast = useSetRecoilState(toastState);
 
   useEffect(() => {
+    const fetchPlanetLetterList = async (spaceId: string) => {
+      try {
+        const response = await getPlanetLetterList({
+          spaceId,
+          page: currentPage,
+          size: itemsPerPage,
+        });
+        console.log("행성 편지 목록 조회 성공:", response.data);
+        setPlanetName(response.data.spaceName);
+        console.log("planetName", planetName);
+        setCountLetter(response.data.size);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("행성 편지 목록 조회 실패:", error);
+        setIsLoading(false);
+      }
+    };
+
     const fetchMainId = async () => {
       try {
         const response = await getMainId();
         console.log("메인 ID 조회 성공:", response.data);
+        setSpaceId(response.data.spaceId);
+        fetchPlanetLetterList(response.data.spaceId);
       } catch (error) {
         console.error("메인 ID 조회 실패:", error);
+        setSpaceId("");
+        setIsLoading(false);
+      }
+    };
+
+    const fetchOrbitLetter = async () => {
+      try {
+        const response = await getOrbitLetter();
+        console.log("궤도 편지 목록 조회 성공:", response.data);
+        setOrbitMessages(response.data.content);
+      } catch (error) {
+        console.error("궤도 편지 목록 조회 실패:", error);
+        setOrbitMessages(null);
       }
     };
 
     fetchMainId();
+    fetchOrbitLetter();
+  }, []);
+
+  useEffect(() => {
+    console.log(planetName);
+  }, [planetName]);
+
+  useEffect(() => {
+    const fetchSpaceList = async () => {
+      try {
+        const response = await getSpaceList();
+        console.log("전체 스페이스 목록 조회 성공:", response.data);
+        setPlanetName(response.data.spaces[0].spaceName);
+      } catch (error) {
+        console.error("전체 스페이스 목록 조회 실패:", error);
+      }
+    };
+
+    fetchSpaceList();
   }, []);
 
   const handleEditPlanetName = async (newName: string) => {
     // 행성 이름 수정 API
-    try {
-      const response = await putSpace({ spaceId, spaceName: newName });
-      console.log("행성 이름 수정 성공:", response.data);
-      setPlanetName(newName);
-    } catch (error) {
-      console.error("행성 이름 수정 실패:", error);
+    if (spaceId) {
+      try {
+        const response = await putSpace({ spaceId, spaceName: newName });
+        setPlanetName(newName);
+        console.log("행성 이름 수정 성공:", response.data);
+      } catch (error) {
+        console.error("행성 이름 수정 실패:", error);
+        setPlanetName(planetName);
+      }
     }
   };
 
@@ -153,80 +214,88 @@ const PlanetPage = () => {
   return (
     <DragDropContext onDragEnd={handleDrop}>
       <Layout>
-        <Background
-          src="/assets/images/background/home.svg"
-          width={480}
-          height={800}
-          alt="background"
-          over-fit="cover"
-          priority
-        />
-        <Container>
-          <Top>
-            <Title>
-              민지님의 스페이스에
-              <br />
-              <Em>10개의 편지</Em>가 수놓여 있어요!
-            </Title>
-            <Image
-              src="/assets/icons/ic_mypage.svg"
-              width={24}
-              height={24}
-              alt="mypage"
+        {isLoading ? (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        ) : (
+          <>
+            <Background
+              src="/assets/images/background/home.svg"
+              width={480}
+              height={800}
+              alt="background"
+              over-fit="cover"
+              priority
             />
-          </Top>
-          <TagList>
-            <Tag
-              tagType="planet"
-              name={planetName}
-              icon="chevron"
-              onClick={() => {
-                router.push("/planet/manage");
-              }}
-            />
-            <Tag
-              tagType="planet"
-              name=""
-              icon="plus"
-              onClick={() => router.push("/planet/add")}
-            />
-          </TagList>
-          {/* <PlanetWrapper currentPage={currentPage} {...swipeHandlers}> */}
-          <PlanetWrapper>
-            <Droppable droppableId="droppable-planet">
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <Planet
-                    planetType={0}
-                    planet={planetName}
-                    orbits={currentOrbits}
-                    onEditPlanetName={handleEditPlanetName}
+            <Container>
+              <Top>
+                <Title>
+                  민지님의 스페이스에
+                  <br />
+                  <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                </Title>
+                <Image
+                  src="/assets/icons/ic_mypage.svg"
+                  width={24}
+                  height={24}
+                  alt="mypage"
+                />
+              </Top>
+              <TagList>
+                <Tag
+                  tagType="planet"
+                  name={planetName}
+                  icon="chevron"
+                  onClick={() => {
+                    router.push("/planet/manage");
+                  }}
+                />
+                <Tag
+                  tagType="planet"
+                  name=""
+                  icon="plus"
+                  onClick={() => router.push("/planet/add")}
+                />
+              </TagList>
+              {/* <PlanetWrapper currentPage={currentPage} {...swipeHandlers}> */}
+              <PlanetWrapper>
+                <Droppable droppableId="droppable-planet">
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                      <Planet
+                        planetType={0}
+                        planet={planetName}
+                        orbits={currentOrbits}
+                        onEditPlanetName={handleEditPlanetName}
+                      />
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </PlanetWrapper>
+              <PageWrapper>
+                {show && (
+                  <Toast
+                    text={message}
+                    icon={false}
+                    top="0px"
+                    left="50%"
+                    padding="11px 0px"
+                    close={close}
                   />
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </PlanetWrapper>
-          <PageWrapper>
-            {show && (
-              <Toast
-                text={message}
-                icon={false}
-                top="0px"
-                left="50%"
-                padding="11px 0px"
-                close={close}
-              />
-            )}
-            <Pagination
-              currentPage={currentPage}
-              totalPage={totalPage}
-              onPrevPage={handlePrevPage}
-              onNextPage={handleNextPage}
-            />
-          </PageWrapper>
-        </Container>
-        <Bottom orbitMessages={orbitMessages} />
+                )}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPage={totalPage}
+                  onPrevPage={handlePrevPage}
+                  onNextPage={handleNextPage}
+                />
+              </PageWrapper>
+            </Container>
+            <Bottom orbitMessages={orbitMessages || null} />
+          </>
+        )}
       </Layout>
     </DragDropContext>
   );
@@ -319,4 +388,14 @@ const PageWrapper = styled.div`
   top: 600px;
   left: 50%;
   transform: translateX(-50%);
+`;
+
+/* 로딩 */
+const LoaderContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

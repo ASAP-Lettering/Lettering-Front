@@ -40,7 +40,7 @@ const NavigatorBar = (props: NavigatorBarProps) => {
         />
       </LeftIcon>
       {title && <Title>{title}</Title>}
-      {cancel && (
+      {cancel ? (
         <RightIcon>
           <Image
             src="/assets/icons/ic_cancel.svg"
@@ -50,6 +50,8 @@ const NavigatorBar = (props: NavigatorBarProps) => {
             onClick={handleCancelPage}
           />
         </RightIcon>
+      ) : (
+        <WhiteSpace />
       )}
       {nextlabel && <NextLabel onClick={handleNextClick}>건너뛰기</NextLabel>}
     </Container>
@@ -74,6 +76,10 @@ const LeftIcon = styled.div`
 
 const RightIcon = styled.div`
   flex-shrink: 0;
+`;
+
+const WhiteSpace = styled.div`
+    width: 24px;
 `;
 
 const Title = styled.div`

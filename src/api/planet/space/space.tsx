@@ -44,8 +44,8 @@ export const putSpace = async ({
   spaceId: string;
   spaceName: string;
 }) => {
-  return await authClient.delete(`/api/v1/spaces/${spaceId}/name`, {
-    data: { spaceName },
+  return await authClient.put(`/api/v1/spaces/${spaceId}/name`, {
+    spaceName,
   });
 };
 
@@ -55,7 +55,7 @@ export const putSpacesOrder = async ({
 }: {
   orders: { spaceId: string; index: number }[];
 }) => {
-  return await authClient.delete(`/api/v1/spaces/order`, {
-    data: { orders },
+  return await authClient.put(`/api/v1/spaces/order`, {
+    orders,
   });
 };

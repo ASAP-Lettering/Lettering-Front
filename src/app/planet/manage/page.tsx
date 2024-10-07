@@ -18,7 +18,7 @@ import {
 } from "@/api/planet/space/space";
 
 const PlanetManagePage = () => {
-  const count = 7;
+  const [count, setCount] = useState<number>(0);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [checkedPlanets, setCheckedPlanets] = useState<string[]>([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
@@ -26,14 +26,15 @@ const PlanetManagePage = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [changedOrder, setChangedOrder] = useState<string[]>([]);
 
-  const [planets, setPlanets] = useState<Planet[]>(PLANETS);
+  const [planets, setPlanets] = useState<Planet[]>();
 
   useEffect(() => {
     const fetchSpaceList = async () => {
       try {
         const response = await getSpaceList();
         console.log("전체 스페이스 목록 조회 성공:", response.data);
-        setPlanets(response.data);
+        setPlanets(response.data.spaces);
+        setCount(response.data.spaces.length);
       } catch (error) {
         console.error("전체 스페이스 목록 조회 실패:", error);
       }
@@ -71,6 +72,9 @@ const PlanetManagePage = () => {
     try {
       const response = await deleteSpaces({ spaceIds: checkedPlanets });
       console.log("행성 삭제 성공:", response.data);
+      setPlanets(
+        planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
+      );
     } catch (error) {
       console.error("행성 삭제 실패:", error);
     }
@@ -105,7 +109,7 @@ const PlanetManagePage = () => {
     console.log(source, destination);
 
     if (source.index === destination.index) return;
-    const items = Array.from(planets);
+    const items = Array.from(planets || []);
     const [removed] = items.splice(source.index, 1);
     items.splice(destination.index, 0, removed);
     setPlanets(items);
@@ -128,7 +132,8 @@ const PlanetManagePage = () => {
     // 스페이스 순서 변경 API 호출
     try {
       const response = await putSpacesOrder({ orders: newOrder });
-      console.log("스페이스 순서 변경 성공:", response.data);
+      console.log("결과", newOrder);
+      console.log("스페이스 순서 변경 성공:", response);
     } catch (error) {
       console.error("스페이스 순서 변경 실패:", error);
     }
@@ -164,7 +169,7 @@ const PlanetManagePage = () => {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
-                {planets.map((planet, index) => (
+                {planets?.map((planet, index) => (
                   <Draggable
                     key={planet.spaceId + "-button"}
                     draggableId={planet.spaceId}

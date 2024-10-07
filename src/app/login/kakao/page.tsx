@@ -15,12 +15,14 @@ const Auth = () => {
   const router = useRouter();
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const [absoluteUrl, setAbsoluteUrl] = useState("");
-  const storeUrl = getLetterUrl();
+  const [storeUrl, setstoreUrl] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const url = `${window.location.protocol}//${window.location.host}/login/kakao`;
+      const letterId = localStorage.getItem("letter_url");
       setAbsoluteUrl(url);
+      if (letterId) setstoreUrl(letterId);
     }
   }, []);
 
@@ -35,9 +37,6 @@ const Auth = () => {
 
       if (!AUTHORIZATION_CODE) {
         console.error("Authorization Code is missing");
-        if (storeUrl) {
-          clearLetterUrl();
-        }
         return;
       }
 
@@ -57,10 +56,10 @@ const Auth = () => {
               console.log("accessToken", res.data.accessToken);
               setTokens(res.data.accessToken, res.data.refreshToken);
               if (storeUrl) {
-                router.push(`/verify?url=${storeUrl}`);
+                router.push(`/verify/letter?url=${storeUrl}`);
                 clearLetterUrl();
               } else {
-                router.push("/");
+                router.push("/planet");
               }
             })
             .catch((error) => {
@@ -78,6 +77,7 @@ const Auth = () => {
         }
       } catch (error) {
         console.error(error);
+        clearLetterUrl();
         return;
       }
     };
@@ -106,7 +106,6 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
   padding: 25px;
-  max-height: 852px;
   background: ${(props) => props.theme.colors.bg};
 `;
 

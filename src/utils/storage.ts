@@ -39,6 +39,7 @@ export const setLetterUrl = (url: string) => {
 export const getLetterUrl = () => {
   if (typeof window !== "undefined") {
     localStorage.getItem("letter_url");
+    console.log("url 있음");
   }
   return null;
 };
@@ -58,4 +59,18 @@ export const getSession = async () => {
       console.log(`Cannot Refresh: ${error.response.message}`);
       router.push("/login");
     });
+};
+
+/* spaceId */
+export const setSpaceId = (spaceId: string) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("spaceId", spaceId);
+  }
+};
+
+export const getSpaceId= () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("spaceId");
+  }
+  return null;
 };

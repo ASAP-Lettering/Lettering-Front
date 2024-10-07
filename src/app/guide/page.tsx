@@ -6,6 +6,7 @@ import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import GuideText from "@/components/common/GuideText";
 import Input from "@/components/common/Input";
+import KakaoShareButton from "@/components/common/KakaoShareButton";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
@@ -134,6 +135,7 @@ const GuidePage = () => {
         checked={isCheckedBox}
         onChange={handleBoxChange}
       />
+
       <br />
       <h3>Input</h3>
       <Input
@@ -180,8 +182,8 @@ const GuidePage = () => {
       <GuideText text="클릭하면 편지 내용을 확인할 수 있어요!" />
       <br />
       <h3>Tag</h3>
-      <Tag tagType="orbit" read={false} name="Orbit" />
-      <Tag tagType="orbit" read={true} name="Orbit" />
+      <Tag tagType="orbit" isNew={false} name="Orbit" />
+      <Tag tagType="orbit" isNew={true} name="Orbit" />
       <Tag tagType="planet" name="Planet" icon="chevron" />
       <Tag tagType="planet" name="Planet" icon="edit" />
       <Tag tagType="planet" name="" icon="plus" />
@@ -233,6 +235,7 @@ const GuidePage = () => {
       />
       <Letter
         showType="preview"
+        contentType="all"
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
@@ -242,6 +245,27 @@ const GuidePage = () => {
       />
       <Letter
         showType="preview"
+        contentType="one"
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        content={letterData.content}
+        date={letterData.date}
+        isImage={false}
+      />
+      <Letter
+        showType="preview"
+        contentType="all"
+        id={letterData.id}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        images={imageData}
+        date={letterData.date}
+        isImage={true}
+      />
+      <Letter
+        showType="preview"
+        contentType="one"
         id={letterData.id}
         templateType={letterData.templateType}
         name={letterData.sender}
@@ -279,6 +303,8 @@ const GuidePage = () => {
           )}
         </Mobile>
       </Background> */}
+      <h3>카카오톡 공유하기</h3>
+      <KakaoShareButton senderName="승효" letterId="aa" />
     </Container>
   );
 };

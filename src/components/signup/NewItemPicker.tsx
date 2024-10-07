@@ -1,14 +1,18 @@
 // styles/DatePickerStyles.ts
 import styled from "styled-components";
-import { animate, motion } from "framer-motion";
+import { animate, motion, px } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { theme } from "@/styles/theme";
+
+type PickerType = "small" | "default";
 
 interface ItemPickerProps {
   items: string[];
   defaultItem?: string;
   unit: string;
   onChange: (item: string) => void;
+  type?: PickerType;
+  scrollToItem?: string;
 }
 
 interface ItemProps {
@@ -20,6 +24,8 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   defaultItem,
   unit,
   onChange,
+  type = "default",
+  scrollToItem,
 }) => {
   const initialItem = defaultItem || items[0];
   const [selectedItem, setSelectedItem] = useState<string>(initialItem);
@@ -27,17 +33,23 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   const observer = useRef<IntersectionObserver | null>(null);
   const itemElementsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    const index = items.indexOf(selectedItem);
+  const scrollToSelectedItem = (item: string) => {
+    const index = items.indexOf(item);
     const currentElement = itemElementsRef.current[index];
     if (currentElement && refContainer.current) {
       const offsetTop = currentElement.offsetTop;
+
       const scrollPosition =
         offsetTop -
         refContainer.current.offsetHeight / 2 +
         currentElement.offsetHeight / 2;
+
       refContainer.current.scrollTop = scrollPosition;
     }
+  };
+
+  useEffect(() => {
+    scrollToSelectedItem(initialItem);
   }, []);
 
   useEffect(() => {
@@ -69,6 +81,12 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
     };
   }, [items]);
 
+  useEffect(() => {
+    if (scrollToItem && items.includes(scrollToItem)) {
+      scrollToSelectedItem(scrollToItem);
+    }
+  }, [scrollToItem]);
+
   return (
     <ItemPickerContainer ref={refContainer}>
       {items.map((item, index) => (
@@ -79,6 +97,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
           }}
           data-item={item}
           $isSelected={item === selectedItem}
+          $type={type}
           whileTap={{ scale: 0.95 }}
         >
           {item}
@@ -108,10 +127,10 @@ const ItemPickerContainer = styled.div`
   }
 `;
 
-const Item = styled(motion.div)<{ $isSelected: boolean }>`
+const Item = styled(motion.div)<{ $isSelected: boolean; $type: PickerType }>`
   flex: 0 0 auto;
   height: 60px;
-  width: 85px;
+  width: ${({ $type }) => ($type === "small" ? "65px" : "85px")}; 
   box-sizing: border-box;
   padding: 10px 0;
   line-height: 60px;
@@ -119,7 +138,14 @@ const Item = styled(motion.div)<{ $isSelected: boolean }>`
   justify-content: center;
   scroll-snap-align: center;
   font-weight: ${({ $isSelected }) => ($isSelected ? "500" : "400")};
-  font-size: ${({ $isSelected }) => ($isSelected ? "24px" : "20px")};
+  font-size: ${({ $isSelected, $type }) =>
+    $isSelected
+      ? $type === "small"
+        ? "20px"
+        : "24px"
+      : $type === "small"
+      ? "16px"
+      : "20px"}; 
   color: ${({ $isSelected }) => ($isSelected ? "white" : theme.colors.gray600)};
   transition: color 0.7s;
   -webkit-user-select: none;

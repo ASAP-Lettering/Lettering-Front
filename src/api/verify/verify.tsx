@@ -27,7 +27,7 @@ export const receiveVerifyLetter = async (
     },
     {
       headers: {
-        Authorization: `${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }
   );
@@ -40,7 +40,7 @@ export const getverifyLetter = async (
 ) => {
   return await client.get(`/api/v1/letters/${letterId}/verify`, {
     headers: {
-      Authorization: `${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
