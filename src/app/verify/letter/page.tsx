@@ -57,6 +57,7 @@ const VerifyLetter = () => {
       console.log(response.data.message);
     } catch (error) {
       console.log("편지 저장 실패: ", error);
+      router.push("/error/network");
     }
     router.push("/planet");
   };
@@ -75,6 +76,7 @@ const VerifyLetter = () => {
         })
         .catch((error) => {
           console.log(error);
+          router.push("/error/letter");
         });
     }
 

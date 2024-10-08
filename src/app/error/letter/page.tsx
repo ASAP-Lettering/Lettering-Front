@@ -8,6 +8,10 @@ import { Suspense } from "react";
 import styled from "styled-components";
 
 const ErrorLetterPage = () => {
+  const router = useRouter();
+  const goToHome = () => {
+    router.push("/planet");
+  };
   return (
     <Container>
       <MainWrapper>
@@ -24,7 +28,11 @@ const ErrorLetterPage = () => {
         <ImageWrapper>
           <Image src="/assets/signup/verify_image.png" />
         </ImageWrapper>
-        <Button buttonType="primary" text="내 스페이스 바로가기"></Button>
+        <Button
+          buttonType="primary"
+          text="내 스페이스 바로가기"
+          onClick={goToHome}
+        ></Button>
       </div>
     </Container>
   );
