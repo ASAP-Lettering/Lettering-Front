@@ -1,3 +1,4 @@
+import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
@@ -12,8 +13,10 @@ type iconType = "chevron" | "edit" | "plus";
 
 interface TagProps {
   tagType: tagType;
+  tagId?: string;
   name?: string;
   isNew?: boolean;
+  isDeleteMode?: boolean;
   icon?: iconType;
   onClick?: () => void;
   onEdit?: (editedName: string) => void;
@@ -26,8 +29,10 @@ interface TagProps {
 const Tag = (props: TagProps) => {
   const {
     tagType,
+    tagId,
     name,
     isNew,
+    isDeleteMode = false,
     icon,
     onClick,
     onEdit,
@@ -50,6 +55,17 @@ const Tag = (props: TagProps) => {
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedName(e.target.value);
+  };
+
+  const handleDeleteOrbit = async () => {
+    if (tagId) {
+      try {
+        const response = await deletePlanetLetter(tagId);
+        console.log("편지 삭제 성공", response);
+      } catch {
+        console.log("편지 삭제 실패");
+      }
+    }
   };
 
   const handleBlur = () => {
@@ -115,7 +131,16 @@ const Tag = (props: TagProps) => {
       ) : (
         name
       )}
-      {tagType === "orbit" && isNew && <Circle />}
+      {tagType === "orbit" && isNew && !isDeleteMode && <Circle />}
+      {tagType === "orbit" && isDeleteMode && (
+        <DeleteIcon
+          src="/assets/icons/ic_delete_mode.svg"
+          width={20}
+          height={20}
+          alt="삭제"
+          onClick={handleDeleteOrbit}
+        />
+      )}
       {tagType === "planet" && (
         <Image
           src={renderIcon()}
@@ -211,4 +236,10 @@ const Circle = styled.div`
   position: absolute;
   top: -4px;
   right: 2px;
+`;
+
+const DeleteIcon = styled(Image)`
+  position: absolute;
+  top: -4px;
+  right: -2px;
 `;

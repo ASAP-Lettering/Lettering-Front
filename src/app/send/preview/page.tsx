@@ -12,7 +12,7 @@ import { postPhysicalLetter } from "@/api/letter/letter";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 
-const LetterPreviewPage = () => {
+const SendPreviewPage = () => {
   const router = useRouter();
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
@@ -59,7 +59,7 @@ const LetterPreviewPage = () => {
               showType="preview"
               id={0}
               templateType={templateType}
-              name={senderName}
+              name={"김동우"}
               content={content}
               images={images}
               isImage={isImage}
@@ -93,7 +93,7 @@ const LetterPreviewPage = () => {
   );
 };
 
-export default LetterPreviewPage;
+export default SendPreviewPage;
 
 const Layout = styled.div`
   width: 100%;

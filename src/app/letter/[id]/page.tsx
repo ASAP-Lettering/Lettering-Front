@@ -16,7 +16,7 @@ const LetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
   const [key, setKey] = useState(1);
-  //const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
@@ -38,6 +38,7 @@ const LetterPage = () => {
       const letterIndex = parseInt(letterId);
       setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
 
+      //api 요청
       getLetter(letterId)
         .then((res) => {
           console.log(res.data);
@@ -197,21 +198,21 @@ const Header = styled.div`
 `;
 
 const LetterCount = styled.div`
-    display: flex;
-    ${(props) => props.theme.fonts.caption03};
-    color: ${(props) => props.theme.colors.gray400};
-    flex:1;
-    flex-direction: column;
-    text-align: end;
-    justify-content: end;
-    padding: 5px;
+  display: flex;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${(props) => props.theme.colors.gray400};
+  flex: 1;
+  flex-direction: column;
+  text-align: end;
+  justify-content: end;
+  padding: 5px;
 `;
 
 const HeaderTitle = styled.div`
   width: 100%;
   ${(props) => props.theme.fonts.heading01};
   margin-top: 1rem;
-  flex:2;
+  flex: 2;
   span {
     ${(props) => props.theme.fonts.heading02};
     white-space: nowrap;
@@ -254,58 +255,58 @@ const Guidetext = styled.div`
 `;
 
 const ChangeButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 70%;
-    justify-content: center;
-    cursor: pointer;
-    ${(props) => props.theme.fonts.caption03};
-    color: ${(props) => props.theme.colors.gray400};
-    gap: 4px;
-    padding: 16px;
-    img{
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  justify-content: center;
+  cursor: pointer;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${(props) => props.theme.colors.gray400};
+  gap: 4px;
+  padding: 16px;
+  img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
 `;
 
 const PaginationWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 4px;
-    padding-bottom: 30px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    ${(props) => props.theme.fonts.body07};
-    color: ${(props) => props.theme.colors.gray500};
-    gap: 24px;
+  display: flex;
+  width: 100%;
+  padding: 4px;
+  padding-bottom: 30px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  ${(props) => props.theme.fonts.body07};
+  color: ${(props) => props.theme.colors.gray500};
+  gap: 24px;
 `;
 
 const Page = styled.div`
-    display: flex;
-    flex-direction: row;
-    cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
 `;
 
 const CurrentPage = styled.div`
-    display: flex;
-    height: 33px;
-    padding: 3px 22px;
-    justify-content: center;
-    cursor: pointer;
-    align-items: center;
-    gap: 10px;
-    border-radius: 200px;
-    ${(props) => props.theme.fonts.body04};
-    color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.gray800};
+  display: flex;
+  height: 33px;
+  padding: 3px 22px;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+  gap: 10px;
+  border-radius: 200px;
+  ${(props) => props.theme.fonts.body04};
+  color: ${(props) => props.theme.colors.white};
+  background-color: ${(props) => props.theme.colors.gray800};
 `;
 
 const WhiteSpace = styled.div`
-    height: 44px;
+  height: 44px;
 `;
 
 const Wrapper = styled.div`
