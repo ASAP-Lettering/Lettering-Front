@@ -24,7 +24,9 @@ export default function Home() {
     } else {
       setIsLoading(false);
       //token이 유효한지 테스트용
-      const response = getAllSpaceName();
+      if (typeof window !== "undefined") {
+        const response = getAllSpaceName();
+      }
     }
   }, []);
 

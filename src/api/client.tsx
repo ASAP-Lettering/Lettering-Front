@@ -1,6 +1,7 @@
-import { getAccessToken, getRefreshToken } from "@/utils/storage";
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
+import axios from "axios";
 import { getNewTokens } from "./login/user";
+import Router from "next/router";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -27,7 +28,7 @@ export const authClient = axios.create({
 });
 
 authClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config) => {
     const accessToken = getAccessToken();
     if (accessToken && config.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -41,17 +42,28 @@ authClient.interceptors.request.use(
 
 authClient.interceptors.response.use(
   async (response) => {
-    if (response.status >= 400) {
-      console.log("인터셉터 status:", response.status);
-    }
-    console.log("인터셉터 응답:", response);
     return response;
   },
   async (error) => {
-    console.log("인터셉터 에러 status:", error.response);
+    const originalRequest = error.config;
+    console.log("인터셉터 에러:", error.response);
+    try {
+      const newAccessToken = await getNewTokens().catch((tokenError) => {
+        console.error("토큰 갱신 실패:", tokenError);
+        throw tokenError;
+      });
+
+      if (newAccessToken) {
+        console.log("새 액세스 토큰 받아 처리중입니다.");
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return authClient(originalRequest);
+      }
+    } catch (refreshError) {
+      console.error("토큰 갱신 중 에러 발생:", refreshError);
+      return Promise.reject(refreshError);
+    }
+
     return Promise.reject(error);
-    //401 error일 때는 재로그인
-    //500 error나 다른 것일때는 에러 페이지로 route 이동
   }
 );
 
