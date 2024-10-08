@@ -4,6 +4,7 @@ import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
+import ConfirmModal from "../common/ConfirmModal";
 
 type showType = "preview" | "receive" | "send";
 export type contentType = "one" | "all";
@@ -68,10 +69,23 @@ const Letter = (props: LetterProps) => {
   const totalPage = isImage ? images!.length : contentPages!.length;
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
+  const [isDelete, setIsDelete] = useState(false);
 
   function replaceDashWithDot(dateString: string) {
     return dateString.replace(/-/g, ".");
   }
+
+  //삭제 모달 관리
+  const handleConfirm = () => {
+    alert("삭제 완료");
+    setIsDelete(false);
+    setIsPopup(false);
+  };
+
+  const handleCancel = () => {
+    setIsDelete(false);
+    setIsPopup(false);
+  };
 
   return (
     <Container
@@ -80,13 +94,21 @@ const Letter = (props: LetterProps) => {
       $height={height}
       $padding={padding}
     >
+      {isDelete && (
+        <ConfirmModal
+          title="해당 편지를 정말 삭제할까요?"
+          sub="삭제된 편지는 복구되지 않아요."
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
       {!readOnly && isPopup && (
         <PopupContainer>
           {date && <ModalDate>{replaceDashWithDot(date)}</ModalDate>}
           <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
             수정
           </EditBtn>
-          <DeleteBtn>삭제</DeleteBtn>
+          <DeleteBtn onClick={() => setIsDelete(true)}>삭제</DeleteBtn>
         </PopupContainer>
       )}
       {(showType === "receive" || showType === "send") && (

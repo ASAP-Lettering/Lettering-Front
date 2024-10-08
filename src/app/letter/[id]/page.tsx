@@ -288,7 +288,7 @@ const ChangeButtonWrapper = styled.div`
   ${(props) => props.theme.fonts.caption03};
   color: ${(props) => props.theme.colors.gray400};
   gap: 4px;
-  padding: 16px;
+  padding-top: 25px;
   img {
     width: 20px;
     height: 20px;
@@ -300,6 +300,7 @@ const PaginationWrapper = styled.div`
   display: flex;
   width: 100%;
   padding: 30px 4px;
+  padding-bottom: 20px;
   align-items: center;
   justify-content: center;
   flex-direction: row;
