@@ -170,7 +170,7 @@ const MainWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 25px;
+  padding: 0 19px 0 24px;
   overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {
@@ -193,7 +193,7 @@ const Header = styled.div`
   flex-direction: row;
   padding: 15px 0px;
   width: 100%;
-  padding-top: 30px;
+  padding-top: 40px;
 `;
 
 const LetterCount = styled.div`

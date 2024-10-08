@@ -193,7 +193,7 @@ const MainWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 0 24px;
+  padding: 0 19px 0 24px;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;

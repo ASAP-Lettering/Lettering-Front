@@ -184,9 +184,8 @@ const Container = styled.div`
   height: 100%;
   max-height: 852px;
   color: white;
-  padding: 25px;
   overflow-x: hidden;
-  padding-bottom: 40px;
+  padding: 40px 0;
   background: ${(props) => props.theme.colors.bg};
   /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
@@ -197,6 +196,22 @@ const Container = styled.div`
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 19px 0 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+  &::-webkit-scrollbar-track {
+        background: ${(props: any) => props.theme.colors.gray800};
+        border-radius: 10px; /* Rounded corners */
+    }
+
+  &::-webkit-scrollbar-thumb {
+        background: ${(props: any) => props.theme.colors.gray600};
+        border-radius: 10px; /* Rounded corners */
+    }
 `;
 
 const Header = styled.div`
@@ -215,7 +230,7 @@ const HeaderSubTitle = styled.div`
   width: 100%;
   ${(props) => props.theme.fonts.regular16};
   color: ${(props) => props.theme.colors.gray300};
-  padding-top: 10px;
+  padding: 10px 0;
 `;
 
 const ButtonContainer = styled.div`
@@ -223,19 +238,20 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   width: 100%;
   gap: 12px;
+  justify-content: center;
 `;
 
 const ChangeButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  width: 100%;
   justify-content: center;
   cursor: pointer;
   ${(props) => props.theme.fonts.caption03};
   color: ${(props) => props.theme.colors.gray400};
   gap: 4px;
-  padding: 16px 0;
+  padding: 30px 0;
   img {
     width: 20px;
     height: 20px;

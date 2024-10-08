@@ -1,9 +1,14 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 export default function Error() {
+  const router = useRouter();
+  const goToHome = () => {
+    router.push("/planet");
+  };
   return (
     <Container>
       <MainWrapper>
@@ -19,7 +24,12 @@ export default function Error() {
         </Header>
         <ErrorImage src="/assets/error/img_error_page.png" />
       </MainWrapper>
-      <Button buttonType="primary" size="large" text="다시 시도" />
+      <Button
+        buttonType="primary"
+        size="large"
+        text="내 스페이스로 가기"
+        onClick={goToHome}
+      />
     </Container>
   );
 }
