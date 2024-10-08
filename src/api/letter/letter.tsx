@@ -5,6 +5,15 @@ export const getLetter = async (letterId: string) => {
   return await authClient.get(`/api/v1/letters/${letterId}`, {});
 };
 
+export const getSpaceLetter = async (letterId: string) => {
+  return await authClient.get(`/api/v1/spaces/letters/${letterId}`, {});
+};
+
+// 무소속편지 조회
+export const getIndependentLetter = async (letterId: string) => {
+  return await authClient.get(`/api/v1/letters/independent/${letterId}`);
+};
+
 // 편지 삭제
 export const deleteLetter = async (letterId: string) => {
   return await authClient.delete(`/api/v1/letters/${letterId}`, {});

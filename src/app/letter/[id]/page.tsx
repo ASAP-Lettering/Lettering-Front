@@ -1,6 +1,6 @@
 "use client";
 
-import { getLetter } from "@/api/letter/letter";
+import { getLetter, getSpaceLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -32,16 +32,37 @@ const LetterPage = () => {
 
   useEffect(() => {
     //LetterData 받아오는 로직
-    if (id && accessToken) {
+    if (id) {
       const letterId = Array.isArray(id) ? id[0] : id;
-      console.log(letterId);
-      const letterIndex = parseInt(letterId);
-      setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
 
       //api 요청
-      getLetter(letterId)
+      getSpaceLetter(letterId)
         .then((res) => {
           console.log(res.data);
+          if (res.data) {
+            setLetterData({
+              id: parseInt(letterId),
+              space_name: res.data.spaceName,
+              sender: res.data.senderName,
+              letter_count: res.data.letterCount,
+              content: res.data.content,
+              images: res.data.images,
+              date: res.data.sendDate,
+              templateType: res.data.templateType,
+              prev_letter: res.data.prevLetter
+                ? {
+                    letter_id: res.data.prevLetter.letterId,
+                    sender_name: res.data.prevLetter.senderName,
+                  }
+                : undefined,
+              next_letter: res.data.nextLetter
+                ? {
+                    letter_id: res.data.nextLetter.letterId,
+                    sender_name: res.data.nextLetter.senderName,
+                  }
+                : undefined,
+            });
+          }
         })
         .catch((error) => {
           console.log(error.response);
@@ -171,7 +192,7 @@ const MainWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 24px;
+  padding: 0 24px;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -231,6 +252,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   width: 100%;
   gap: 12px;
+  padding: 24px;
 `;
 
 const LoaderContainer = styled.div`
