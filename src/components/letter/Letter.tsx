@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "../common/ConfirmModal";
 
-type showType = "preview" | "receive" | "send";
+type showType = "preview" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
 
 interface LetterProps {
@@ -145,6 +145,12 @@ const Letter = (props: LetterProps) => {
           page={currentPage}
         />
       </Content>
+      {showType === "url" && (
+        <UrlWrapper>
+          <UrlName>From. {name}</UrlName>
+          <UrlDate>{date}</UrlDate>
+        </UrlWrapper>
+      )}
       {contentType === "all" && totalPage > 1 && (
         <Pagination
           currentPage={currentPage}
@@ -281,4 +287,26 @@ const ModalDate = styled.div`
   width: 100%;
   justify-content: center;
   padding-top: 8px;
+`;
+
+const UrlWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+`;
+
+const UrlName = styled.div`
+    display: flex;
+    text-align: center;
+    ${(props: any) => props.theme.fonts.body06};
+    color: ${(props: any) => props.theme.colors.white};
+`;
+
+const UrlDate = styled.div`
+    display: flex;
+    text-align: center;
+    ${(props: any) => props.theme.fonts.caption02};
+    color: ${(props: any) => props.theme.colors.gray500};
 `;

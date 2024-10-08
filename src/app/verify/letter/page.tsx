@@ -47,7 +47,9 @@ const VerifyLetter = () => {
         images: response.data.images,
       });
     } catch (error) {
+      //검증 완료된 사용자이지만 모종의 이유로 데이터 받아오는 것이 실패한 경우
       console.error("편지 조회 실패:", error);
+      router.push("/error/network");
     }
   };
 
@@ -63,18 +65,22 @@ const VerifyLetter = () => {
   };
 
   useEffect(() => {
+    //accessToken이 없는 상황이라면 로그인으로
     if (!accessToken) {
       router.push(`/login?url=${url}`);
     }
+    //letterCode가 있다면 검증 진행
     if (url) {
       verifyLetter(url)
         .then((res) => {
           if (res.data.letterId) {
+            //검증 성공하면 letterData를 받아온다
             setletterId(res.data.letterId);
             fetchLetterData(res.data.letterId);
           }
         })
         .catch((error) => {
+          //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
           console.log(error);
           router.push("/error/letter");
         });
@@ -89,7 +95,6 @@ const VerifyLetter = () => {
       }
     }
     setIsLoading(false);
-    //검증 확인 api
   }, []);
 
   return letterData && !isLoading ? (
@@ -106,7 +111,7 @@ const VerifyLetter = () => {
         </Header>
         {isImage ? (
           <Letter
-            showType="receive"
+            showType="url"
             key={key}
             id={letterData.id}
             templateType={letterData.templateType}
@@ -118,7 +123,7 @@ const VerifyLetter = () => {
           />
         ) : (
           <Letter
-            showType="receive"
+            showType="url"
             key={key}
             id={letterData.id}
             templateType={letterData.templateType}
@@ -228,7 +233,7 @@ const HeaderTitle = styled.div`
 
 const HeaderSubTitle = styled.div`
   width: 100%;
-  ${(props) => props.theme.fonts.regular16};
+  ${(props) => props.theme.fonts.body09};
   color: ${(props) => props.theme.colors.gray300};
   padding: 10px 0;
 `;
