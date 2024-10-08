@@ -50,8 +50,10 @@ const LetterPage = () => {
 
   return letterData ? (
     <Container>
+      <Wrapper>
+        <NavigatorBar cancel={false} url="/planet" />
+      </Wrapper>
       <MainWrapper>
-        <NavigatorBar cancel={false} />
         <Header>
           <HeaderTitle>
             {letterData.space_name} <br />
@@ -149,13 +151,12 @@ export default function LetterPaging() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   box-sizing: border-box;
   height: 100%;
+  min-height: 100%;
+  max-height: 100%;
   color: white;
-  padding: 25px;
   overflow-x: hidden;
-  padding-bottom: 40px;
   background: ${(props) => props.theme.colors.bg};
   /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
@@ -167,7 +168,25 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
+  padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+  &::-webkit-scrollbar-track {
+        background: ${(props: any) => props.theme.colors.gray800};
+        border-radius: 10px; /* Rounded corners */
+    }
+
+  &::-webkit-scrollbar-thumb {
+        background: ${(props: any) => props.theme.colors.gray600};
+        border-radius: 10px; /* Rounded corners */
+    }
 `;
 
 const Header = styled.div`
@@ -287,4 +306,10 @@ const CurrentPage = styled.div`
 
 const WhiteSpace = styled.div`
     height: 44px;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 24px;
 `;

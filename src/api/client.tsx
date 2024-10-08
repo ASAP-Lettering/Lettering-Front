@@ -48,7 +48,7 @@ authClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(error.status);
+    console.log("인터셉터 에러 status:", error.response);
     return Promise.reject(error);
     //401 error일 때는 재로그인
     //500 error나 다른 것일때는 에러 페이지로 route 이동
