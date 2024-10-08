@@ -193,6 +193,7 @@ const Header = styled.div`
   flex-direction: row;
   padding: 15px 0px;
   width: 100%;
+  padding-top: 30px;
 `;
 
 const LetterCount = styled.div`
