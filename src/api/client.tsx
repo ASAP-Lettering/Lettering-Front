@@ -47,6 +47,7 @@ authClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     console.log("인터셉터 에러:", error.response);
+
     try {
       const newAccessToken = await getNewTokens().catch((tokenError) => {
         console.error("토큰 갱신 실패:", tokenError);
@@ -60,9 +61,10 @@ authClient.interceptors.response.use(
       }
     } catch (refreshError) {
       console.error("토큰 갱신 중 에러 발생:", refreshError);
+      window.location.href = "/error";
       return Promise.reject(refreshError);
     }
-
+    window.location.href = "/error";
     return Promise.reject(error);
   }
 );
