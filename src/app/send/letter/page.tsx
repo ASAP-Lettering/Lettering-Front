@@ -10,13 +10,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Toast from "@/components/common/Toast";
 
-const LetterSendPage = () => {
+const SendLetterPage = () => {
   const router = useRouter();
   const [receiver, setReceiver] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+
+  const [tempCount, setTempCount] = useState<number>(3);
 
   const handleReceiverChange = (newValue: string) => {
     setReceiver(newValue);
@@ -60,7 +62,13 @@ const LetterSendPage = () => {
 
   return (
     <Layout>
-      <NavigatorBar title="편지 보내기" cancel={false} />
+      <NavigatorBarWrapper>
+        <NavigatorBar title="편지 보내기" cancel={false} />
+        <StorageButton>
+          임시저장{` `}I{` `}
+          {tempCount}
+        </StorageButton>
+      </NavigatorBarWrapper>
       <Container>
         <Essential>* 필수</Essential>
         <Column>
@@ -165,7 +173,7 @@ const LetterSendPage = () => {
   );
 };
 
-export default LetterSendPage;
+export default SendLetterPage;
 
 const Layout = styled.div`
   width: 100%;
@@ -174,9 +182,33 @@ const Layout = styled.div`
   flex-direction: column;
   overflow-x: hidden;
   gap: 7px;
-  padding: 74px 20px 20px 20px;
+  padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+`;
+
+const NavigatorBarWrapper = styled.div`
+  width: 100%;
+  height: 44px;
+  display: flex;
+  position: relative;
+  margin-bottom: 25px;
+`;
+
+const StorageButton = styled.button`
+  display: inline-flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 200px;
+  background: ${theme.colors.sub01};
+  color: ${theme.colors.gray200};
+  ${theme.fonts.caption03};
+
+  position: absolute;
+  top: 6.5px;
+  right: 0px;
 `;
 
 const Container = styled.div`

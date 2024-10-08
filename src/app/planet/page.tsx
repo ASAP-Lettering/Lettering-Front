@@ -21,61 +21,66 @@ import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
 import {
   getOrbitLetter,
   getPlanetLetterList,
+  putLetterToPlanet,
 } from "@/api/planet/letter/spaceLetter";
 import Loader from "@/components/common/Loader";
+import { SpaceInfo } from "@/types/space";
+import { getInitUserToast, setInitUserToast } from "@/utils/storage";
 
 const PlanetPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
-  const totalPage = 3;
-  const [orbits, setOrbits] = useState<Orbit[]>(ORBITS);
-  const [currentOrbits, setCurrentOrbits] = useState(
-    orbits.slice(0, itemsPerPage)
-  );
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const totalCount = 2;
 
   const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
 
-  /* 행성 이름 변경 */
-  const [planetName, setPlanetName] = useState<string>("");
+  const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
+  const [userName, setUserName] = useState("");
   const [countLetter, setCountLetter] = useState<number>(0);
-  const [spaceId, setSpaceId] = useState<string | null>(null);
 
   const { show, message, close } = useRecoilValue(toastState);
   const setToast = useSetRecoilState(toastState);
 
-  useEffect(() => {
-    const fetchPlanetLetterList = async (spaceId: string) => {
-      try {
-        const response = await getPlanetLetterList({
-          spaceId,
-          page: currentPage,
-          size: itemsPerPage,
-        });
-        console.log("행성 편지 목록 조회 성공:", response.data);
-        setPlanetName(response.data.spaceName);
-        console.log("planetName", planetName);
-        setCountLetter(response.data.size);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("행성 편지 목록 조회 실패:", error);
-        setIsLoading(false);
-      }
-    };
+  const fetchPlanetLetterList = async (spaceId: string) => {
+    try {
+      const response = await getPlanetLetterList({
+        spaceId: spaceId,
+        page: currentPage - 1,
+        size: itemsPerPage,
+      });
+      console.log("행성 편지 목록 조회 성공:", response.data);
+      setCurrentOrbits(response.data.content);
+      setCountLetter(response.data.totalElements);
+      setTotalPages(
+        response.data.totalElements === 0 ? 1 : response.data.totalPages
+      );
+      setIsLoading(false);
+    } catch (error) {
+      console.error("행성 편지 목록 조회 실패:", error);
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     const fetchMainId = async () => {
       try {
         const response = await getMainId();
         console.log("메인 ID 조회 성공:", response.data);
-        setSpaceId(response.data.spaceId);
+        setSpaceInfo({
+          spaceId: response.data.spaceId,
+          spaceName: response.data.spaceName,
+          templateType: response.data.templateType,
+        });
+        setUserName(response.data.username);
+
         fetchPlanetLetterList(response.data.spaceId);
       } catch (error) {
         console.error("메인 ID 조회 실패:", error);
-        setSpaceId("");
+        setSpaceInfo(null);
         setIsLoading(false);
       }
     };
@@ -95,34 +100,42 @@ const PlanetPage = () => {
     fetchOrbitLetter();
   }, []);
 
-  useEffect(() => {
-    console.log(planetName);
-  }, [planetName]);
+  useEffect(() => {}, [spaceInfo]);
 
   useEffect(() => {
-    const fetchSpaceList = async () => {
-      try {
-        const response = await getSpaceList();
-        console.log("전체 스페이스 목록 조회 성공:", response.data);
-        setPlanetName(response.data.spaces[0].spaceName);
-      } catch (error) {
-        console.error("전체 스페이스 목록 조회 실패:", error);
-      }
-    };
-
-    fetchSpaceList();
-  }, []);
+    if (spaceInfo?.spaceId) {
+      fetchPlanetLetterList(spaceInfo?.spaceId);
+    }
+  }, [currentPage]);
 
   const handleEditPlanetName = async (newName: string) => {
     // 행성 이름 수정 API
-    if (spaceId) {
+    if (spaceInfo?.spaceId) {
       try {
-        const response = await putSpace({ spaceId, spaceName: newName });
-        setPlanetName(newName);
+        const response = await putSpace({
+          spaceId: spaceInfo.spaceId,
+          spaceName: newName,
+        });
+        setSpaceInfo((prevInfo) => {
+          if (prevInfo) {
+            return {
+              ...prevInfo,
+              spaceName: newName,
+            };
+          }
+          return prevInfo;
+        });
         console.log("행성 이름 수정 성공:", response.data);
       } catch (error) {
         console.error("행성 이름 수정 실패:", error);
-        setPlanetName(planetName);
+        setSpaceInfo((prevInfo) => {
+          if (prevInfo) {
+            return {
+              ...prevInfo,
+            };
+          }
+          return prevInfo;
+        });
       }
     }
   };
@@ -135,7 +148,7 @@ const PlanetPage = () => {
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPage) {
+    if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -143,12 +156,13 @@ const PlanetPage = () => {
   /* 토스트 메세지 */
   /* 편지 등록 개수 3개 미만일 경우*/
   useEffect(() => {
-    if (totalCount < 3) {
+    if (countLetter < 3 && !!!getInitUserToast()) {
       setToast({
         show: true,
         message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
         close: true,
       });
+      setInitUserToast();
     }
   }, []);
 
@@ -163,7 +177,7 @@ const PlanetPage = () => {
   }, [show, setToast]);
 
   /* 드래그 앤 드롭 */
-  const handleDrop = (result: any) => {
+  const handleDrop = async (result: any) => {
     if (!result.destination) return;
 
     const { source, destination } = result;
@@ -173,36 +187,36 @@ const PlanetPage = () => {
       destination.droppableId === "droppable-planet"
     ) {
       const draggedOrbit = orbitMessages?.[source.index];
-      console.log("draggedOrbit", draggedOrbit);
-      const updatedOrbitMessages = orbitMessages?.filter(
-        (_, index) => index !== source.index
-      );
+      if (draggedOrbit && draggedOrbit.letterId && spaceInfo?.spaceId) {
+        try {
+          const response = await putLetterToPlanet({
+            letterId: draggedOrbit.letterId,
+            spaceId: spaceInfo?.spaceId,
+          });
+          console.log("궤도 편지 행성으로 이동 성공", response);
 
-      if (draggedOrbit) {
-        setOrbits((prevOrbits) => [draggedOrbit, ...prevOrbits]);
+          console.log("draggedOrbit", draggedOrbit);
+          const updatedOrbitMessages = orbitMessages?.filter(
+            (_, index) => index !== source.index
+          );
+          setCurrentOrbits((prevOrbits = []) => [draggedOrbit, ...prevOrbits]);
 
-        // 궤도 이동 애니메이션을 위해 잠시 대기
-        setTimeout(() => {
+          // 궤도 이동 애니메이션을 위해 잠시 대기
+          setTimeout(() => {
+            setOrbitMessages(updatedOrbitMessages || null);
+          }, 500);
+
+          setTimeout(() => {
+            setCurrentPage(1);
+          }, 500);
+
           setOrbitMessages(updatedOrbitMessages || null);
-        }, 500);
+        } catch {
+          console.log("궤도 편지 행성으로 이동 실패");
+        }
       }
-
-      setTimeout(() => {
-        setCurrentPage(1);
-      }, 500);
-
-      setOrbitMessages(updatedOrbitMessages || null);
-
-      console.log("updatedOrbits", orbits);
-      console.log("updatedOrbitMessages", updatedOrbitMessages);
     }
   };
-
-  useEffect(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    setCurrentOrbits(orbits.slice(startIndex, startIndex + itemsPerPage));
-    console.log("updatedOrbits after setOrbits", orbits); // 업데이트 로그
-  }, [orbits, currentPage]);
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => handleNextPage(),
@@ -231,7 +245,7 @@ const PlanetPage = () => {
             <Container>
               <Top>
                 <Title>
-                  민지님의 스페이스에
+                  {userName}님의 스페이스에
                   <br />
                   <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
                 </Title>
@@ -245,7 +259,7 @@ const PlanetPage = () => {
               <TagList>
                 <Tag
                   tagType="planet"
-                  name={planetName}
+                  name={spaceInfo?.spaceName}
                   icon="chevron"
                   onClick={() => {
                     router.push("/planet/manage");
@@ -264,10 +278,11 @@ const PlanetPage = () => {
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>
                       <Planet
-                        planetType={0}
-                        planet={planetName}
-                        orbits={currentOrbits}
+                        planetType={spaceInfo?.templateType || 0}
+                        planet={spaceInfo?.spaceName || ""}
+                        orbits={currentOrbits || []}
                         onEditPlanetName={handleEditPlanetName}
+                        setCurrentOrbits={setCurrentOrbits}
                       />
                       {provided.placeholder}
                     </div>
@@ -287,7 +302,7 @@ const PlanetPage = () => {
                 )}
                 <Pagination
                   currentPage={currentPage}
-                  totalPage={totalPage}
+                  totalPage={totalPages}
                   onPrevPage={handlePrevPage}
                   onNextPage={handleNextPage}
                 />

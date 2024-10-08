@@ -12,6 +12,7 @@ import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 interface Orbit {
   letterId: string;
   senderName: string;
+  isNew?: boolean;
   date?: string;
 }
 
@@ -20,10 +21,12 @@ interface PlanetProps {
   planet: string;
   orbits: Orbit[];
   onEditPlanetName: (newName: string) => void;
+  setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
 }
 
 const Planet = (props: PlanetProps) => {
-  const { planetType, planet, orbits, onEditPlanetName } = props;
+  const { planetType, planet, orbits, onEditPlanetName, setCurrentOrbits } =
+    props;
 
   const router = useRouter();
   const [hold, setHold] = useState<boolean>(false);
@@ -65,6 +68,10 @@ const Planet = (props: PlanetProps) => {
       await deletePlanetLetter(orbitId);
       setConfirmDeleteModal(false);
       console.log("편지 삭제 성공");
+
+      setCurrentOrbits((prevOrbits) =>
+        prevOrbits?.filter((orbit) => orbit.letterId !== orbitId)
+      );
     } catch {
       console.log("편지 삭제 실패");
     }
