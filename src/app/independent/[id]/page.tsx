@@ -48,8 +48,10 @@ const IndependentLetterPage = () => {
 
   return letterData ? (
     <Container>
-      <MainWrapper>
+      <Wrapper>
         <NavigatorBar cancel={false} url="/planet" />
+      </Wrapper>
+      <MainWrapper>
         <Header>
           <HeaderTitle>
             나의 궤도
@@ -152,9 +154,8 @@ const Container = styled.div`
   box-sizing: border-box;
   height: 100%;
   color: white;
-  padding: 25px;
+  //padding: 25px;
   overflow-x: hidden;
-  padding-bottom: 40px;
   background: ${(props) => props.theme.colors.bg};
   /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
@@ -166,13 +167,31 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
+  height: 100%;
+  padding: 25px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+  &::-webkit-scrollbar-track {
+        background: ${(props: any) => props.theme.colors.gray800};
+        border-radius: 10px; /* Rounded corners */
+    }
+
+  &::-webkit-scrollbar-thumb {
+        background: ${(props: any) => props.theme.colors.gray600};
+        border-radius: 10px; /* Rounded corners */
+    }
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 15px 0px;
   width: 100%;
 `;
 
@@ -210,6 +229,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   width: 100%;
   gap: 12px;
+  padding: 25px;
 `;
 
 const LoaderContainer = styled.div`
@@ -254,8 +274,7 @@ const ChangeButtonWrapper = styled.div`
 const PaginationWrapper = styled.div`
     display: flex;
     width: 100%;
-    padding: 4px;
-    padding-bottom: 30px;
+    padding: 30px 4px;
     align-items: center;
     justify-content: center;
     flex-direction: row;
@@ -286,4 +305,10 @@ const CurrentPage = styled.div`
 
 const WhiteSpace = styled.div`
     height: 44px;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 24px;
 `;

@@ -190,8 +190,9 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
+  height: 100%;
   padding: 0 24px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -214,7 +215,7 @@ const MainWrapper = styled.div`
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 15px 0px;
   width: 100%;
 `;
 
@@ -297,8 +298,7 @@ const ChangeButtonWrapper = styled.div`
 const PaginationWrapper = styled.div`
   display: flex;
   width: 100%;
-  padding: 4px;
-  padding-bottom: 30px;
+  padding: 30px 4px;
   align-items: center;
   justify-content: center;
   flex-direction: row;
