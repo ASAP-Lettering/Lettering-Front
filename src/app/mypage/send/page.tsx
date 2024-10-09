@@ -165,7 +165,13 @@ const Container = styled.div<{
      $isSelecting ? "justify-content: space-between" : ""}; */
     color: white;
     background:${(props) => props.theme.colors.bg};
-    
+    background-image: url("/assets/mypage/img_background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-scrollbar {
+        display: none;
+    }
 
 `;
 

@@ -16,6 +16,9 @@ const Bottom = (props: BottomProps) => {
   const { orbitMessages } = props;
 
   const router = useRouter();
+  const goToOrbitDetail = (id: string) => {
+    router.push(`/independent/${id}`);
+  };
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
 
   return (
@@ -54,6 +57,7 @@ const Bottom = (props: BottomProps) => {
                       innerRef={provided.innerRef}
                       dragHandleProps={provided.dragHandleProps}
                       draggableProps={provided.draggableProps}
+                      onClick={() => goToOrbitDetail(item.letterId)}
                     />
                   )}
                 </Draggable>

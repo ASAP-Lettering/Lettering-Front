@@ -1,5 +1,7 @@
-import { getAccessToken } from "@/utils/storage";
+import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import axios from "axios";
+import { getNewTokens } from "./login/user";
+import Router from "next/router";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -34,6 +36,35 @@ authClient.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+authClient.interceptors.response.use(
+  async (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    console.log("인터셉터 에러:", error.response);
+
+    try {
+      const newAccessToken = await getNewTokens().catch((tokenError) => {
+        console.error("토큰 갱신 실패:", tokenError);
+        throw tokenError;
+      });
+
+      if (newAccessToken) {
+        console.log("새 액세스 토큰 받아 처리중입니다.");
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return authClient(originalRequest);
+      }
+    } catch (refreshError) {
+      console.error("토큰 갱신 중 에러 발생:", refreshError);
+      return Promise.reject(refreshError);
+    }
+
+    window.location.href = "/error";
     return Promise.reject(error);
   }
 );

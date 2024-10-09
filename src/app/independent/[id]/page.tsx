@@ -1,28 +1,30 @@
 "use client";
 
-import { getLetter, getSpaceLetter } from "@/api/letter/letter";
+import { getIndependentLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
-import { LETTER_DETAIL_DATA } from "@/constants/letter";
-import { LetterDetailType } from "@/types/letter";
+import { IndependentLetterType, LetterDetailType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const LetterPage = () => {
+const IndependentLetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
+  const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
-  // const searchParams = useSearchParams();
-  const [letterData, setLetterData] = useState<LetterDetailType>();
+  //const searchParams = useSearchParams();
+  const [letterData, setLetterData] = useState<IndependentLetterType | null>(
+    null
+  );
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
 
   const handleButtonClick = (id: string) => {
-    router.push(`/letter/${id}`);
+    router.push(`/independent/${id}`);
   };
 
   const changeImageorContent = () => {
@@ -32,37 +34,11 @@ const LetterPage = () => {
 
   useEffect(() => {
     //LetterData 받아오는 로직
-    if (id) {
+    if (id && accessToken) {
       const letterId = Array.isArray(id) ? id[0] : id;
-
-      //api 요청
-      getSpaceLetter(letterId)
+      getIndependentLetter(letterId)
         .then((res) => {
-          console.log(res.data);
-          if (res.data) {
-            setLetterData({
-              id: parseInt(letterId),
-              space_name: res.data.spaceName,
-              sender: res.data.senderName,
-              letter_count: res.data.letterCount,
-              content: res.data.content,
-              images: res.data.images,
-              date: res.data.sendDate,
-              templateType: res.data.templateType,
-              prev_letter: res.data.prevLetter
-                ? {
-                    letter_id: res.data.prevLetter.letterId,
-                    sender_name: res.data.prevLetter.senderName,
-                  }
-                : undefined,
-              next_letter: res.data.nextLetter
-                ? {
-                    letter_id: res.data.nextLetter.letterId,
-                    sender_name: res.data.nextLetter.senderName,
-                  }
-                : undefined,
-            });
-          }
+          setLetterData(res.data);
         })
         .catch((error) => {
           console.log(error.response);
@@ -78,31 +54,36 @@ const LetterPage = () => {
       <MainWrapper>
         <Header>
           <HeaderTitle>
-            {letterData.space_name} <br />
-            <span>행성에 있는 편지예요!</span>
+            나의 궤도
+            <span>
+              에 있는
+              <br />
+              편지예요!
+            </span>
           </HeaderTitle>
-          <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
+          <LetterCount>궤도 속 편지 | {letterData.letterCount}개</LetterCount>
         </Header>
         {isImage ? (
           <Letter
             showType="receive"
             key={key}
-            id={letterData.id}
+            id={parseInt(letterId)}
             templateType={letterData.templateType}
-            name={letterData.sender}
+            name={letterData.senderName}
             images={letterData.images}
-            date={letterData.date}
+            date={letterData.sendDate}
             isImage={true}
           />
         ) : (
           <Letter
             showType="receive"
             key={key}
-            id={letterData.id}
+            id={parseInt(letterId)}
             templateType={letterData.templateType}
-            name={letterData.sender}
             content={letterData.content}
-            date={letterData.date}
+            name={letterData.senderName}
+            images={letterData.images}
+            date={letterData.sendDate}
             isImage={false}
           />
         )}
@@ -117,26 +98,22 @@ const LetterPage = () => {
           <WhiteSpace />
         )}
         <PaginationWrapper>
-          {letterData.prev_letter ? (
+          {letterData.prevLetter ? (
             <Page
-              onClick={() =>
-                handleButtonClick(letterData.prev_letter!.letter_id)
-              }
+              onClick={() => handleButtonClick(letterData.prevLetter!.letterId)}
             >
               <img src="/assets/icons/ic_arrow_left.svg" />
-              {letterData.prev_letter.sender_name}
+              {letterData.prevLetter.senderName}
             </Page>
           ) : (
             <></>
           )}
-          <CurrentPage>{letterData.sender}</CurrentPage>
-          {letterData.next_letter ? (
+          <CurrentPage>{letterData.senderName}</CurrentPage>
+          {letterData.nextLetter ? (
             <Page
-              onClick={() =>
-                handleButtonClick(letterData.next_letter!.letter_id)
-              }
+              onClick={() => handleButtonClick(letterData.nextLetter!.letterId)}
             >
-              {letterData.next_letter.sender_name}
+              {letterData.nextLetter.senderName}
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
           ) : (
@@ -156,7 +133,7 @@ const LetterPage = () => {
   );
 };
 
-export default function LetterPaging() {
+export default function IndependentLetterPaging() {
   return (
     <Suspense
       fallback={
@@ -165,7 +142,7 @@ export default function LetterPaging() {
         </LoaderContainer>
       }
     >
-      <LetterPage />
+      <IndependentLetterPage />
     </Suspense>
   );
 }
@@ -173,11 +150,11 @@ export default function LetterPaging() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   box-sizing: border-box;
   height: 100%;
-  min-height: 100%;
-  max-height: 100%;
   color: white;
+  //padding: 25px;
   overflow-x: hidden;
   background: ${(props) => props.theme.colors.bg};
   /* background-image: url('/assets/signup/verify_image.png'); 
@@ -196,7 +173,6 @@ const MainWrapper = styled.div`
   padding: 0 19px 0 24px;
   overflow-y: auto;
   overflow-x: hidden;
-  box-sizing: border-box;
   &::-webkit-scrollbar {
         width: 5px; /* Width of the scrollbar */
     }
@@ -217,25 +193,25 @@ const Header = styled.div`
   flex-direction: row;
   padding: 15px 0px;
   width: 100%;
-  padding-top: 30px;
+  padding-top: 40px;
 `;
 
 const LetterCount = styled.div`
-  display: flex;
-  ${(props) => props.theme.fonts.caption03};
-  color: ${(props) => props.theme.colors.gray400};
-  flex: 1;
-  flex-direction: column;
-  text-align: end;
-  justify-content: end;
-  padding: 5px;
+    display: flex;
+    ${(props) => props.theme.fonts.caption03};
+    color: ${(props) => props.theme.colors.gray400};
+    flex:1;
+    flex-direction: column;
+    text-align: end;
+    justify-content: end;
+    padding: 5px;
 `;
 
 const HeaderTitle = styled.div`
   width: 100%;
   ${(props) => props.theme.fonts.heading01};
   margin-top: 1rem;
-  flex: 2;
+  flex:2;
   span {
     ${(props) => props.theme.fonts.heading02};
     white-space: nowrap;
@@ -254,7 +230,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   width: 100%;
   gap: 12px;
-  padding: 24px;
+  padding: 25px;
 `;
 
 const LoaderContainer = styled.div`
@@ -279,58 +255,58 @@ const Guidetext = styled.div`
 `;
 
 const ChangeButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 70%;
-  justify-content: center;
-  cursor: pointer;
-  ${(props) => props.theme.fonts.caption03};
-  color: ${(props) => props.theme.colors.gray400};
-  gap: 4px;
-  padding-top: 25px;
-  img {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    justify-content: center;
+    cursor: pointer;
+    ${(props) => props.theme.fonts.caption03};
+    color: ${(props) => props.theme.colors.gray400};
+    gap: 4px;
+    padding-top: 25px;
+    img{
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
 `;
 
 const PaginationWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 30px 4px;
-  padding-bottom: 20px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  ${(props) => props.theme.fonts.body07};
-  color: ${(props) => props.theme.colors.gray500};
-  gap: 24px;
+    display: flex;
+    width: 100%;
+    padding: 30px 4px;
+    padding-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    ${(props) => props.theme.fonts.body07};
+    color: ${(props) => props.theme.colors.gray500};
+    gap: 24px;
 `;
 
 const Page = styled.div`
-  display: flex;
-  flex-direction: row;
-  cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
 `;
 
 const CurrentPage = styled.div`
-  display: flex;
-  height: 33px;
-  padding: 3px 22px;
-  justify-content: center;
-  cursor: pointer;
-  align-items: center;
-  gap: 10px;
-  border-radius: 200px;
-  ${(props) => props.theme.fonts.body04};
-  color: ${(props) => props.theme.colors.white};
-  background-color: ${(props) => props.theme.colors.gray800};
+    display: flex;
+    height: 33px;
+    padding: 3px 22px;
+    justify-content: center;
+    cursor: pointer;
+    align-items: center;
+    gap: 10px;
+    border-radius: 200px;
+    ${(props) => props.theme.fonts.body04};
+    color: ${(props) => props.theme.colors.white};
+    background-color: ${(props) => props.theme.colors.gray800};
 `;
 
 const WhiteSpace = styled.div`
-  height: 44px;
+    height: 44px;
 `;
 
 const Wrapper = styled.div`
