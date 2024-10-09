@@ -1,8 +1,11 @@
 import { getNewTokens } from "@/api/login/user";
 import { useRouter } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 /* accessToken, refreshToken */
 export const setTokens = (accessToken: string, refreshToken: string) => {
+  //   setCookie("myCookie", "cookieValue", { req, res, maxAge: 60 * 60 * 24 });
+  //   res.status(200).json({ message: "Cookie has been set!" });
   if (typeof window !== "undefined") {
     localStorage.setItem("lettering_access", accessToken);
     localStorage.setItem("lettering_refresh", refreshToken);
@@ -68,7 +71,7 @@ export const setSpaceId = (spaceId: string) => {
   }
 };
 
-export const getSpaceId= () => {
+export const getSpaceId = () => {
   if (typeof window !== "undefined") {
     return localStorage.getItem("spaceId");
   }
@@ -82,13 +85,13 @@ export const setInitUserToast = () => {
   }
 };
 
-export const getInitUserToast= (): string | null  => {
+export const getInitUserToast = (): string | null => {
   if (typeof window !== "undefined") {
     return localStorage.getItem("initUserToast");
   }
   return null;
 };
 
-export const clearInitUserToast= ()  => {
+export const clearInitUserToast = () => {
   localStorage.removeItem("initUserToast");
 };
