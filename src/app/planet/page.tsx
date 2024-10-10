@@ -229,6 +229,16 @@ const PlanetPage = () => {
     trackMouse: true,
   });
 
+  /* 궤도 편지 삭제 */
+  const handleDeleteOrbit = (deletedId: string) => {
+    if (orbitMessages) {
+      const updatedOrbits = orbitMessages.filter(
+        (item) => item.letterId !== deletedId
+      );
+      setOrbitMessages(updatedOrbits);
+    }
+  };
+
   return (
     <DragDropContext onDragEnd={handleDrop}>
       <Layout>
@@ -312,7 +322,10 @@ const PlanetPage = () => {
                 />
               </PageWrapper>
             </Container>
-            <Bottom orbitMessages={orbitMessages || null} />
+            <Bottom
+              orbitMessages={orbitMessages || null}
+              onDelete={handleDeleteOrbit}
+            />
           </>
         )}
       </Layout>

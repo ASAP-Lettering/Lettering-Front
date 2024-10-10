@@ -24,6 +24,7 @@ interface TagProps {
   innerRef?: (element: HTMLElement | null) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps | null;
   draggableProps?: DraggableProvidedDraggableProps | null;
+  onDelete?: (deleteId: string) => void;
 }
 
 const Tag = (props: TagProps) => {
@@ -40,6 +41,7 @@ const Tag = (props: TagProps) => {
     innerRef,
     dragHandleProps,
     draggableProps,
+    onDelete,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -58,10 +60,11 @@ const Tag = (props: TagProps) => {
   };
 
   const handleDeleteOrbit = async () => {
-    if (tagId) {
+    if (tagId && onDelete) {
       try {
         const response = await deleteOrbitLetter(tagId);
         console.log("궤도 편지 삭제 성공", response);
+        onDelete(tagId);
       } catch {
         console.log("궤도 편지 삭제 실패");
       }
