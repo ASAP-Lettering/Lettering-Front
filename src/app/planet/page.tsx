@@ -25,7 +25,11 @@ import {
 } from "@/api/planet/letter/spaceLetter";
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
-import { getInitUserToast, setInitUserToast } from "@/utils/storage";
+import {
+  clearInitUserToast,
+  getInitUserToast,
+  setInitUserToast,
+} from "@/utils/storage";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -156,7 +160,7 @@ const PlanetPage = () => {
   /* 토스트 메세지 */
   /* 편지 등록 개수 3개 미만일 경우*/
   useEffect(() => {
-    if (countLetter < 3 && !!!getInitUserToast()) {
+    if (countLetter < 3 && getInitUserToast() !== "true") {
       setToast({
         show: true,
         message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
