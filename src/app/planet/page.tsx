@@ -239,6 +239,11 @@ const PlanetPage = () => {
     }
   };
 
+  //마이 페이지로 이동
+  const goToMyPage = () => {
+    router.push("/mypage");
+  };
+
   return (
     <DragDropContext onDragEnd={handleDrop}>
       <Layout>
@@ -263,11 +268,12 @@ const PlanetPage = () => {
                   <br />
                   <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
                 </Title>
-                <Image
+                <Icon
                   src="/assets/icons/ic_mypage.svg"
                   width={24}
                   height={24}
                   alt="mypage"
+                  onClick={goToMyPage}
                 />
               </Top>
               <TagList>
@@ -361,6 +367,10 @@ const Background = styled(Image)`
   top: 0;
   left: 0;
   z-index: -100;
+`;
+
+const Icon = styled(Image)`
+  cursor: pointer;
 `;
 
 const Container = styled.div`

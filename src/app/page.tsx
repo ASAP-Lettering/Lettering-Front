@@ -24,19 +24,9 @@ export default function Home() {
     } else {
       setIsLoading(false);
       //token이 유효한지 테스트용
-      getAllSpaceName(accessToken)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((error) => {
-          console.log(error.response);
-          console.log("액세스 토큰 재발급 중");
-          getNewTokens().catch((error) => {
-            console.log(error.response);
-            router.push("/login");
-          });
-          router.push("/");
-        });
+      if (typeof window !== "undefined") {
+        const response = getAllSpaceName();
+      }
     }
   }, []);
 
