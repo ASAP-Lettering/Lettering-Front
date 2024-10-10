@@ -5,14 +5,17 @@ import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "../common/ConfirmModal";
+import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
 
 type showType = "preview" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
+type pageType = "independent" | "space";
 
 interface LetterProps {
   showType: showType;
   contentType?: contentType;
-  id: number;
+  pageType?: pageType;
+  id: string;
   templateType: number;
   name: string;
   content?: string;
@@ -29,6 +32,7 @@ const Letter = (props: LetterProps) => {
   const {
     showType,
     contentType = "all",
+    pageType = "independent",
     id,
     templateType,
     name,
@@ -77,9 +81,14 @@ const Letter = (props: LetterProps) => {
 
   //삭제 모달 관리
   const handleConfirm = () => {
-    alert("삭제 완료");
-    setIsDelete(false);
-    setIsPopup(false);
+    if (pageType === "independent") {
+      deleteIndependentLetter(id.toString()).then((res) =>
+        console.log(res.data)
+      );
+    } else {
+      deleteLetter(id.toString()).then((res) => console.log(res.data));
+    }
+    router.push("/planet");
   };
 
   const handleCancel = () => {

@@ -8,6 +8,8 @@ import {
   clearInitUserToast,
   clearTokens,
   getAccessToken,
+  getCookie,
+  setCookie,
 } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,6 +30,8 @@ export default function Home() {
         const response = getAllSpaceName();
       }
     }
+    setCookie("test", "test11111", 300);
+    console.log("쿠키에 있는 토큰: ", getCookie("test"));
   }, []);
 
   const handleLogout = () => {

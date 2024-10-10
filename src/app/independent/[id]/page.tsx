@@ -67,7 +67,7 @@ const IndependentLetterPage = () => {
           <Letter
             showType="receive"
             key={key}
-            id={parseInt(letterId)}
+            id={letterId}
             templateType={letterData.templateType}
             name={letterData.senderName}
             images={letterData.images}
@@ -78,7 +78,7 @@ const IndependentLetterPage = () => {
           <Letter
             showType="receive"
             key={key}
-            id={parseInt(letterId)}
+            id={letterId}
             templateType={letterData.templateType}
             content={letterData.content}
             name={letterData.senderName}
