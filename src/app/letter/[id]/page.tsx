@@ -1,6 +1,6 @@
 "use client";
 
-import { getLetter } from "@/api/letter/letter";
+import { getLetter, getSpaceLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -32,16 +32,37 @@ const LetterPage = () => {
 
   useEffect(() => {
     //LetterData 받아오는 로직
-    if (id && accessToken) {
+    if (id) {
       const letterId = Array.isArray(id) ? id[0] : id;
-      console.log(letterId);
-      const letterIndex = parseInt(letterId);
-      setLetterData(LETTER_DETAIL_DATA[letterIndex - 1]);
 
       //api 요청
-      getLetter(letterId)
+      getSpaceLetter(letterId)
         .then((res) => {
           console.log(res.data);
+          if (res.data) {
+            setLetterData({
+              id: parseInt(letterId),
+              space_name: res.data.spaceName,
+              sender: res.data.senderName,
+              letter_count: res.data.letterCount,
+              content: res.data.content,
+              images: res.data.images,
+              date: res.data.sendDate,
+              templateType: res.data.templateType,
+              prev_letter: res.data.prevLetter
+                ? {
+                    letter_id: res.data.prevLetter.letterId,
+                    sender_name: res.data.prevLetter.senderName,
+                  }
+                : undefined,
+              next_letter: res.data.nextLetter
+                ? {
+                    letter_id: res.data.nextLetter.letterId,
+                    sender_name: res.data.nextLetter.senderName,
+                  }
+                : undefined,
+            });
+          }
         })
         .catch((error) => {
           console.log(error.response);
@@ -51,8 +72,10 @@ const LetterPage = () => {
 
   return letterData ? (
     <Container>
+      <Wrapper>
+        <NavigatorBar cancel={false} url="/planet" />
+      </Wrapper>
       <MainWrapper>
-        <NavigatorBar cancel={false} />
         <Header>
           <HeaderTitle>
             {letterData.space_name} <br />
@@ -101,10 +124,10 @@ const LetterPage = () => {
               }
             >
               <img src="/assets/icons/ic_arrow_left.svg" />
-              {letterData.prev_letter.sender_name}
+              <Text>{letterData.prev_letter.sender_name}</Text>
             </Page>
           ) : (
-            <></>
+            <Page />
           )}
           <CurrentPage>{letterData.sender}</CurrentPage>
           {letterData.next_letter ? (
@@ -113,11 +136,11 @@ const LetterPage = () => {
                 handleButtonClick(letterData.next_letter!.letter_id)
               }
             >
-              {letterData.next_letter.sender_name}
+              <Text>{letterData.next_letter.sender_name}</Text>
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
           ) : (
-            <></>
+            <Page />
           )}
         </PaginationWrapper>
       </MainWrapper>
@@ -150,14 +173,12 @@ export default function LetterPaging() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   box-sizing: border-box;
   height: 100%;
-  max-height: 852px;
+  min-height: 100%;
+  max-height: 100%;
   color: white;
-  padding: 25px;
   overflow-x: hidden;
-  padding-bottom: 40px;
   background: ${(props) => props.theme.colors.bg};
   /* background-image: url('/assets/signup/verify_image.png'); 
     background-size: 550px auto; 
@@ -169,14 +190,34 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
+  height: 100%;
+  padding: 0 19px 0 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 15px 0px;
   width: 100%;
+  padding-top: 30px;
 `;
 
 const LetterCount = styled.div`
@@ -213,6 +254,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   width: 100%;
   gap: 12px;
+  padding: 24px;
 `;
 
 const LoaderContainer = styled.div`
@@ -246,7 +288,7 @@ const ChangeButtonWrapper = styled.div`
   ${(props) => props.theme.fonts.caption03};
   color: ${(props) => props.theme.colors.gray400};
   gap: 4px;
-  padding: 16px;
+  padding-top: 25px;
   img {
     width: 20px;
     height: 20px;
@@ -257,10 +299,10 @@ const ChangeButtonWrapper = styled.div`
 const PaginationWrapper = styled.div`
   display: flex;
   width: 100%;
-  padding: 4px;
-  padding-bottom: 30px;
+  padding: 30px 4px;
+  padding-bottom: 20px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: row;
   ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray500};
@@ -268,9 +310,17 @@ const PaginationWrapper = styled.div`
 `;
 
 const Page = styled.div`
+  width: 75px;
   display: flex;
   flex-direction: row;
   cursor: pointer;
+`;
+
+const Text = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50px;
 `;
 
 const CurrentPage = styled.div`
@@ -285,8 +335,15 @@ const CurrentPage = styled.div`
   ${(props) => props.theme.fonts.body04};
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.gray800};
+  white-space: nowrap;
 `;
 
 const WhiteSpace = styled.div`
   height: 44px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;
