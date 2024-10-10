@@ -63,7 +63,8 @@ const Input = (props: InputProps) => {
     const newValue = event.target.value;
     isValidChange(isValidKoreanInput(newValue));
 
-    onChange(newValue.replace(regex, "")); // 특수문자입력불가
+    // onChange(newValue.replace(regex, "")); // 특수문자입력불가
+    onChange(newValue);
   };
 
   const isTextarea = inputType === "boxTextArea";
@@ -157,9 +158,9 @@ const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
         ${(props: any) => props.theme.fonts.body01};
       }
     `}
-    ${({ $isVaild }) =>
-      !$isVaild &&
-      css`
+  ${({ $isVaild }) =>
+    !$isVaild &&
+    css`
       border-bottom: 1px solid ${theme.colors.red};
     `}
 `;
@@ -198,9 +199,9 @@ const StyledTextarea = styled.textarea<{
 `;
 
 const ValidationMessage = styled.div`
-  color: ${theme.colors.red}; 
+  color: ${theme.colors.red};
   ${(props) => props.theme.fonts.body08};
-  margin-top: -8px; 
+  margin-top: -8px;
 `;
 
 const InputWrapper = styled.div`
