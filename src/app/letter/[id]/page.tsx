@@ -302,7 +302,7 @@ const PaginationWrapper = styled.div`
   padding: 30px 4px;
   padding-bottom: 20px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: row;
   ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray500};
@@ -320,7 +320,7 @@ const Text = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 50px;
+  width: 50px;
 `;
 
 const CurrentPage = styled.div`

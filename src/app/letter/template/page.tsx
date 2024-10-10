@@ -42,7 +42,7 @@ const LetterTemplatePage = () => {
           <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
           <LetterWrapper>
             <Letter
-              showType="preview"
+              showType="previewReceive"
               contentType="one"
               id={0}
               templateType={templateType}
@@ -55,7 +55,7 @@ const LetterTemplatePage = () => {
             />
           </LetterWrapper>
           <TemplatesList>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
               <TemplateImage
                 src={`/assets/letter/background_${item}.png`}
                 width={70}
