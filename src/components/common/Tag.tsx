@@ -1,4 +1,4 @@
-import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
+import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
@@ -60,10 +60,10 @@ const Tag = (props: TagProps) => {
   const handleDeleteOrbit = async () => {
     if (tagId) {
       try {
-        const response = await deletePlanetLetter(tagId);
-        console.log("편지 삭제 성공", response);
+        const response = await deleteOrbitLetter(tagId);
+        console.log("궤도 편지 삭제 성공", response);
       } catch {
-        console.log("편지 삭제 실패");
+        console.log("궤도 편지 삭제 실패");
       }
     }
   };

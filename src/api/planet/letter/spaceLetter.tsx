@@ -47,3 +47,8 @@ export const deletePlanetLetter = async (letterId: string) => {
 export const getOrbitLetter = async () => {
   return await authClient.get(`/api/v1/letters/independent`);
 };
+
+// 궤도 편지 삭제
+export const deleteOrbitLetter = async (letterId: string) => {
+  return await authClient.delete(`/api/v1/letters/independent/${letterId}`);
+};
