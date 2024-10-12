@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "../common/ConfirmModal";
 import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
 
-type showType = "preview" | "receive" | "send" | "url";
+type showType = "previewSend" | "previewReceive" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
 type pageType = "independent" | "space";
 
@@ -124,7 +124,7 @@ const Letter = (props: LetterProps) => {
         <>
           <TopContainer>
             <Name $showType={showType} $contentType={contentType}>
-              {showType === "send" ? `To. ${name}` : `From. ${name}`}
+              {`${showType === "send" ? `To. ` : `From. `} ${name}`}
             </Name>
             {!readOnly && (
               <button onClick={() => setIsPopup(!isPopup)}>
@@ -134,12 +134,14 @@ const Letter = (props: LetterProps) => {
           </TopContainer>
         </>
       )}
-      {showType === "send" && <Date $showType="send">{date}</Date>}
-      {showType === "preview" && (
+      {(showType === "send" || (showType === "previewSend" && isImage)) && (
+        <Date $showType="send">{date}</Date>
+      )}
+      {(showType === "previewReceive" || showType === "previewSend") && (
         <>
           <TopPreviewContainer>
             <Name $showType={showType} $contentType={contentType}>
-              From. {name}
+              {`${showType === "previewSend" ? `To. ` : `From. `} ${name}`}
             </Name>
           </TopPreviewContainer>
         </>
@@ -299,23 +301,23 @@ const ModalDate = styled.div`
 `;
 
 const UrlWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 `;
 
 const UrlName = styled.div`
-    display: flex;
-    text-align: center;
-    ${(props: any) => props.theme.fonts.body06};
-    color: ${(props: any) => props.theme.colors.white};
+  display: flex;
+  text-align: center;
+  ${(props: any) => props.theme.fonts.body06};
+  color: ${(props: any) => props.theme.colors.white};
 `;
 
 const UrlDate = styled.div`
-    display: flex;
-    text-align: center;
-    ${(props: any) => props.theme.fonts.caption02};
-    color: ${(props: any) => props.theme.colors.gray500};
+  display: flex;
+  text-align: center;
+  ${(props: any) => props.theme.fonts.caption02};
+  color: ${(props: any) => props.theme.colors.gray500};
 `;

@@ -8,26 +8,17 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
-import { postPhysicalLetter } from "@/api/letter/letter";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
+import { postSendLtter } from "@/api/send/send";
+import { sendLetterState } from "@/recoil/letterStore";
 
 const SendPreviewPage = () => {
   const router = useRouter();
-  const { senderName, content, images, templateType } =
-    useRecoilValue(registerLetterState);
+  const { draftId, receiverName, content, images, templateType } =
+    useRecoilValue(sendLetterState);
 
   const [isImage, setIsImage] = useState<boolean>(false);
-  const resetLetterState = useResetRecoilState(registerLetterState);
-
-  // const content =
-  //   "오래전에 함께 듣던 노래가 발걸음을 다시 멈춰서게 해\n이 거리에서 너를 느낄 수 있어\n널 이곳에서 꼭 다시 만날 것 같아\n너일까봐 한 번 더 바라보고\n너일까봐 자꾸 돌아보게 돼\n어디선가 같은 노래를 듣고\n날 생각하며 너 역시 멈춰있을까\n오래전에 함께 듣던 노래가\n거리에서 내게 우연히 들려온 것처럼\n살아가다 한 번 쯤 우연히 만날 것 같아\n사랑했던 그 모습 그대로\n오래전에 함께 듣던 노래가 발걸음을 다시 멈춰서게 해\n이 거리에서 너를 느낄 수 있어\n널 이곳에서 꼭 다시 만날 것 같아\n너일까봐 한 번 더 바라보고\n너일까봐 자꾸 돌아보게 돼\n어디선가 같은 노래를 듣고\n날 생각하며 너 역시 멈춰있을까\n오래전에 함께 듣던 노래가\n거리에서 내게 우연히 들려온 것처럼\n살아가다 한 번 쯤 우연히 만날 것 같아\n사랑했던 그 모습 그대로\n";
-
-  // const imageData = [
-  //   "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
-  //   "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
-  //   "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
-  // ];
+  const resetLetterState = useResetRecoilState(sendLetterState);
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -36,27 +27,33 @@ const SendPreviewPage = () => {
     setIsImage(!isImage);
   };
 
-  const handleRegisterLetter = async () => {
+  const handleSendLetter = async () => {
     /* 편지 등록 */
     try {
-      await postPhysicalLetter({ senderName, content, images, templateType });
-      console.log("실물 편지 등록 성공");
+      await postSendLtter({
+        draftId,
+        receiverName,
+        content,
+        images,
+        templateType,
+      });
+      console.log("편지 쓰기 성공");
       resetLetterState();
-      router.push("/planet");
+      router.push("/send/complete");
     } catch {
-      console.log("실물 편지 등록 실패");
+      console.log("편지 쓰기 실패");
     }
   };
 
   return (
     <Layout>
-      <NavigatorBar title="새 편지 등록하기" cancel={false} />
+      <NavigatorBar title="편지 보내기" cancel={false} />
       <Container>
         <Column>
-          <Label>이렇게 편지를 등록할까요?</Label>
+          <Label>이렇게 편지를 보낼까요?</Label>
           <LetterWrapper>
             <Letter
-              showType="preview"
+              showType="previewSend"
               id={0}
               templateType={templateType}
               name={"김동우"}
@@ -84,8 +81,8 @@ const SendPreviewPage = () => {
           <Button
             buttonType="primary"
             size="large"
-            text="등록 완료"
-            onClick={handleRegisterLetter}
+            text="카카오로 편지 보내기"
+            onClick={handleSendLetter}
           />
         </ButtonWrapper>
       </Container>

@@ -25,7 +25,11 @@ import {
 } from "@/api/planet/letter/spaceLetter";
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
-import { getInitUserToast, setInitUserToast } from "@/utils/storage";
+import {
+  clearInitUserToast,
+  getInitUserToast,
+  setInitUserToast,
+} from "@/utils/storage";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -156,7 +160,7 @@ const PlanetPage = () => {
   /* 토스트 메세지 */
   /* 편지 등록 개수 3개 미만일 경우*/
   useEffect(() => {
-    if (countLetter < 3 && !!!getInitUserToast()) {
+    if (countLetter < 3 && getInitUserToast() !== "true") {
       setToast({
         show: true,
         message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
@@ -224,6 +228,16 @@ const PlanetPage = () => {
     preventScrollOnSwipe: true,
     trackMouse: true,
   });
+
+  /* 궤도 편지 삭제 */
+  const handleDeleteOrbit = (deletedId: string) => {
+    if (orbitMessages) {
+      const updatedOrbits = orbitMessages.filter(
+        (item) => item.letterId !== deletedId
+      );
+      setOrbitMessages(updatedOrbits);
+    }
+  };
 
   //마이 페이지로 이동
   const goToMyPage = () => {
@@ -314,7 +328,10 @@ const PlanetPage = () => {
                 />
               </PageWrapper>
             </Container>
-            <Bottom orbitMessages={orbitMessages || null} />
+            <Bottom
+              orbitMessages={orbitMessages || null}
+              onDelete={handleDeleteOrbit}
+            />
           </>
         )}
       </Layout>
@@ -353,7 +370,7 @@ const Background = styled(Image)`
 `;
 
 const Icon = styled(Image)`
-    cursor: pointer;
+  cursor: pointer;
 `;
 
 const Container = styled.div`
@@ -393,6 +410,9 @@ const TagList = styled.div`
 const PlanetWrapper = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 `;
 

@@ -79,19 +79,15 @@ export const getSpaceId = () => {
 /* 메인 홈 초기 유저 Toast 상태 */
 export const setInitUserToast = () => {
   if (typeof window !== "undefined") {
-    localStorage.setItem("initUserToast", "true");
+    sessionStorage.setItem("initUserToast", "true");
   }
 };
 
 export const getInitUserToast = (): string | null => {
   if (typeof window !== "undefined") {
-    return localStorage.getItem("initUserToast");
+    return sessionStorage.getItem("initUserToast");
   }
   return null;
-};
-
-export const clearInitUserToast = () => {
-  localStorage.removeItem("initUserToast");
 };
 
 //쿠키
@@ -111,4 +107,7 @@ export const getCookie = (name: string): string | null => {
 
 export const removeCookie = (name: string) => {
   Cookies.remove(name, { path: "/" });
+};
+export const clearInitUserToast = () => {
+  sessionStorage.removeItem("initUserToast");
 };

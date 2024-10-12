@@ -56,7 +56,7 @@ const LetterPreviewPage = () => {
           <Label>이렇게 편지를 등록할까요?</Label>
           <LetterWrapper>
             <Letter
-              showType="preview"
+              showType="previewReceive"
               id={0}
               templateType={templateType}
               name={senderName}
