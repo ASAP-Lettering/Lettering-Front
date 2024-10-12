@@ -5,8 +5,8 @@ import Cookies from "js-cookie";
 /* accessToken, refreshToken */
 export const setTokens = (accessToken: string, refreshToken: string) => {
   if (typeof window !== "undefined") {
-    setCookie("lettering-access", accessToken, 300);
-    setCookie("lettering-refresh", refreshToken, 300);
+    setCookie("lettering-access", accessToken, 1);
+    setCookie("lettering-refresh", refreshToken, 1);
   }
 };
 

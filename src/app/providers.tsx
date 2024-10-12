@@ -5,6 +5,7 @@ import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import { RecoilRoot } from "recoil";
 import GlobalStyles from "@/styles/GlobalStyles";
+import GlobalSVGProvider from "./GlobalSvgProvider";
 
 declare global {
   interface Window {
