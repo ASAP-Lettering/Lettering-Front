@@ -124,10 +124,10 @@ const LetterPage = () => {
               }
             >
               <img src="/assets/icons/ic_arrow_left.svg" />
-              {letterData.prev_letter.sender_name}
+              <Text>{letterData.prev_letter.sender_name}</Text>
             </Page>
           ) : (
-            <></>
+            <Page />
           )}
           <CurrentPage>{letterData.sender}</CurrentPage>
           {letterData.next_letter ? (
@@ -136,11 +136,11 @@ const LetterPage = () => {
                 handleButtonClick(letterData.next_letter!.letter_id)
               }
             >
-              {letterData.next_letter.sender_name}
+              <Text>{letterData.next_letter.sender_name}</Text>
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
           ) : (
-            <></>
+            <Page />
           )}
         </PaginationWrapper>
       </MainWrapper>
@@ -198,18 +198,18 @@ const MainWrapper = styled.div`
   overflow-x: hidden;
   box-sizing: border-box;
   &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+    width: 5px; /* Width of the scrollbar */
+  }
 
   &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
 
   &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const Header = styled.div`
@@ -310,9 +310,17 @@ const PaginationWrapper = styled.div`
 `;
 
 const Page = styled.div`
+  width: 75px;
   display: flex;
   flex-direction: row;
   cursor: pointer;
+`;
+
+const Text = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 50px;
 `;
 
 const CurrentPage = styled.div`
@@ -327,6 +335,7 @@ const CurrentPage = styled.div`
   ${(props) => props.theme.fonts.body04};
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.gray800};
+  white-space: nowrap;
 `;
 
 const WhiteSpace = styled.div`
@@ -334,7 +343,7 @@ const WhiteSpace = styled.div`
 `;
 
 const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;

@@ -58,7 +58,6 @@ const Container = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   height: 100%;
-  max-height: 852px;
   color: white;
   padding: 25px;
   overflow-x: hidden;
@@ -83,16 +82,16 @@ const Header = styled.div`
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  margin-top: 5rem;
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.body09};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.body09};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ImageWrapper = styled.div`

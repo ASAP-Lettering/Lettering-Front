@@ -1,4 +1,4 @@
-import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
+import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
@@ -24,6 +24,7 @@ interface TagProps {
   innerRef?: (element: HTMLElement | null) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps | null;
   draggableProps?: DraggableProvidedDraggableProps | null;
+  onDelete?: (deleteId: string) => void;
 }
 
 const Tag = (props: TagProps) => {
@@ -40,6 +41,7 @@ const Tag = (props: TagProps) => {
     innerRef,
     dragHandleProps,
     draggableProps,
+    onDelete,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -58,12 +60,13 @@ const Tag = (props: TagProps) => {
   };
 
   const handleDeleteOrbit = async () => {
-    if (tagId) {
+    if (tagId && onDelete) {
       try {
-        const response = await deletePlanetLetter(tagId);
-        console.log("편지 삭제 성공", response);
+        const response = await deleteOrbitLetter(tagId);
+        console.log("궤도 편지 삭제 성공", response);
+        onDelete(tagId);
       } catch {
-        console.log("편지 삭제 실패");
+        console.log("궤도 편지 삭제 실패");
       }
     }
   };

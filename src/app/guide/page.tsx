@@ -234,7 +234,7 @@ const GuidePage = () => {
         isImage={true}
       />
       <Letter
-        showType="preview"
+        showType="previewReceive"
         contentType="all"
         id={letterData.id}
         templateType={letterData.templateType}
@@ -244,7 +244,7 @@ const GuidePage = () => {
         isImage={false}
       />
       <Letter
-        showType="preview"
+        showType="previewReceive"
         contentType="one"
         id={letterData.id}
         templateType={letterData.templateType}
@@ -254,7 +254,7 @@ const GuidePage = () => {
         isImage={false}
       />
       <Letter
-        showType="preview"
+        showType="previewSend"
         contentType="all"
         id={letterData.id}
         templateType={letterData.templateType}
@@ -264,7 +264,7 @@ const GuidePage = () => {
         isImage={true}
       />
       <Letter
-        showType="preview"
+        showType="previewSend"
         contentType="one"
         id={letterData.id}
         templateType={letterData.templateType}

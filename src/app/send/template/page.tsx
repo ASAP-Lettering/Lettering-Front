@@ -9,12 +9,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
+import { sendLetterState } from "@/recoil/letterStore";
 
 const SendTemplatePage = () => {
   const router = useRouter();
-  const { senderName, content, images } = useRecoilValue(registerLetterState);
-  const setRegisterLetterState = useSetRecoilState(registerLetterState);
+  const { receiverName, content, images } = useRecoilValue(sendLetterState);
+  const setSendLetterState = useSetRecoilState(sendLetterState);
 
   const [templateType, setTemplateType] = useState<number>(1);
   const totalPage = 10;
@@ -25,16 +25,16 @@ const SendTemplatePage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
-    setRegisterLetterState((prevState) => ({
+    setSendLetterState((prevState) => ({
       ...prevState,
       templateType: templateType,
     }));
-    router.push("/letter/preview");
+    router.push("/send/preview");
   };
 
   return (
     <Layout>
-      <NavigatorBar title="새 편지 등록하기" cancel={false} />
+      <NavigatorBar title="편지 보내기" cancel={false} />
       <Container>
         <Essential>* 필수</Essential>
         <Column>
@@ -42,11 +42,11 @@ const SendTemplatePage = () => {
           <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
           <LetterWrapper>
             <Letter
-              showType="preview"
+              showType="previewSend"
               contentType="one"
               id={0}
               templateType={templateType}
-              name={senderName}
+              name={receiverName}
               content={content}
               images={images}
               isImage={!(content.length > 0)}
@@ -55,7 +55,7 @@ const SendTemplatePage = () => {
             />
           </LetterWrapper>
           <TemplatesList>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
               <TemplateImage
                 src={`/assets/letter/background_${item}.png`}
                 width={70}
