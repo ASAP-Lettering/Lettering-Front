@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/common/Button";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -76,6 +77,7 @@ const Onboarding = () => {
     "편지 등록을 완료하면\n나의 궤도에 편지가 저장돼요",
     "궤도 메시지를\n행성으로 끌어당겨보세요.",
     "편지를 꾹 누르면\n이동시키거나 삭제할 수 있어요",
+    "편지를 쓰고 마음을\n전달해보세요!",
   ];
 
   return (
@@ -87,7 +89,7 @@ const Onboarding = () => {
           <TotalStep> / 4</TotalStep>
         </OverlayClose>
         {step > 1 && (
-          <OverlayTag
+          <CustomOverlayImg
             src={`/assets/onboarding/img_tag${step - 1}.png`}
             bottom={tagPosition.bottom}
             left={tagPosition.left}
@@ -108,6 +110,37 @@ const Onboarding = () => {
         >
           {overlayTexts[step - 1]}
         </OverlayText>
+        {step === 3 && (
+          <TagContainer>궤도 메시지가 행성에 소속돼요</TagContainer>
+        )}
+        {step === 4 && (
+          <>
+            <OverlayLine
+              src="/assets/onboarding/onboardingline5.svg"
+              alt="Overlay Line 5"
+              bottom="103px"
+              left="313px"
+            />
+            <OverlayText bottom="149px" left="263px" textAlign="center">
+              {overlayTexts[4]}
+            </OverlayText>
+            <CustomOverlay bottom="33px" left="273px">
+              <Button
+                buttonType="secondary"
+                size="large"
+                width="96px"
+                height="60px"
+              >
+                <img
+                  src="/assets/icons/ic_rocket.svg"
+                  width={40}
+                  height={40}
+                  alt="rocket"
+                />
+              </Button>
+            </CustomOverlay>
+          </>
+        )}
       </Overlay>
     </Container>
   );
@@ -226,11 +259,38 @@ const CurrentStep = styled.div`
     text-align: center;
 `;
 
-const OverlayTag = styled.img<{ bottom: string; left: string; width: string }>`
+const CustomOverlayImg = styled.img<{
+  bottom: string;
+  left: string;
+  width: string;
+}>`
     position: absolute;
     bottom: ${(props) => props.bottom}; 
     width: ${(props) => props.width}; 
     height: auto;
     left: ${(props) => props.left}; 
     z-index: 2;
+`;
+
+const CustomOverlay = styled.div<{
+  bottom: string;
+  left: string;
+}>`
+      position: absolute;
+      bottom: ${(props) => props.bottom}; 
+      height: auto;
+      left: ${(props) => props.left}; 
+      z-index: 2;
+  `;
+
+const TagContainer = styled.div`
+    position: absolute;
+    bottom: 76px;
+    left: 147px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: rgba(62, 65, 81, 0.60);
+    backdrop-filter: blur(4px);
+    ${(props) => props.theme.fonts.button03};
+    color:${(props) => props.theme.colors.gray100}; 
 `;
