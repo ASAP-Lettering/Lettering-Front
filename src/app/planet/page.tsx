@@ -216,7 +216,11 @@ const PlanetPage = () => {
           const updatedOrbitMessages = orbitMessages?.filter(
             (_, index) => index !== source.index
           );
-          setCurrentOrbits((prevOrbits = []) => [draggedOrbit, ...prevOrbits]);
+
+          setCurrentOrbits((prevOrbits = []) => {
+            const newOrbits = [draggedOrbit, ...prevOrbits];
+            return newOrbits.slice(0, 5); // 최대 5개까지만 보이도록 설정
+          });
 
           // 궤도 이동 애니메이션을 위해 잠시 대기
           setTimeout(() => {
