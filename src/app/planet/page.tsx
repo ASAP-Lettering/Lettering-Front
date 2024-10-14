@@ -30,6 +30,7 @@ import {
   getInitUserToast,
   setInitUserToast,
 } from "@/utils/storage";
+import { getLetterCount } from "@/api/letter/letter";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -49,6 +50,18 @@ const PlanetPage = () => {
   const { show, message, close } = useRecoilValue(toastState);
   const setToast = useSetRecoilState(toastState);
 
+  const fetchGetLetterCount = async () => {
+    try {
+      const response = await getLetterCount();
+      console.log("모든 편지 수 조회 성공:", response.data);
+      setCountLetter(response.data.count);
+      setCurrentOrbits(response.data.content);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("행성 편지 목록 조회 실패:", error);
+    }
+  };
+
   const fetchPlanetLetterList = async (spaceId: string) => {
     try {
       const response = await getPlanetLetterList({
@@ -58,7 +71,6 @@ const PlanetPage = () => {
       });
       console.log("행성 편지 목록 조회 성공:", response.data);
       setCurrentOrbits(response.data.content);
-      setCountLetter(response.data.totalElements);
       setTotalPages(
         response.data.totalElements === 0 ? 1 : response.data.totalPages
       );
@@ -100,6 +112,7 @@ const PlanetPage = () => {
       }
     };
 
+    fetchGetLetterCount();
     fetchMainId();
     fetchOrbitLetter();
   }, []);
@@ -145,15 +158,39 @@ const PlanetPage = () => {
   };
 
   /* 페이지네이션 */
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  // const handlePrevPage = () => {
+  //   if (currentPage > 1) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
+
+  // const handleNextPage = () => {
+  //   if (currentPage < totalPages) {
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [isNext, setIsNext] = useState(false);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      setIsNext(true);
+      setIsLeaving(true); // 페이지 전환 애니메이션 시작
+      setTimeout(() => {
+        setCurrentPage(currentPage + 1);
+        setIsLeaving(false); // 애니메이션 끝
+      }, 400);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setIsNext(false);
+      setIsLeaving(true); // 페이지 전환 애니메이션 시작
+      setTimeout(() => {
+        setCurrentPage(currentPage - 1);
+        setIsLeaving(false); // 애니메이션 끝
+      }, 400);
     }
   };
 
@@ -203,7 +240,11 @@ const PlanetPage = () => {
           const updatedOrbitMessages = orbitMessages?.filter(
             (_, index) => index !== source.index
           );
-          setCurrentOrbits((prevOrbits = []) => [draggedOrbit, ...prevOrbits]);
+
+          setCurrentOrbits((prevOrbits = []) => {
+            const newOrbits = [draggedOrbit, ...prevOrbits];
+            return newOrbits.slice(0, 5); // 최대 5개까지만 보이도록 설정
+          });
 
           // 궤도 이동 애니메이션을 위해 잠시 대기
           setTimeout(() => {
@@ -264,9 +305,19 @@ const PlanetPage = () => {
             <Container>
               <Top>
                 <Title>
-                  {userName}님의 스페이스에
-                  <br />
-                  <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                  {countLetter < 3 ? (
+                    <>
+                      {userName}님의 스페이스를
+                      <br />
+                      편지로 수놓아 보세요
+                    </>
+                  ) : (
+                    <>
+                      {userName}님의 스페이스에
+                      <br />
+                      <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                    </>
+                  )}
                 </Title>
                 <Icon
                   src="/assets/icons/ic_mypage.svg"
@@ -293,7 +344,7 @@ const PlanetPage = () => {
                 />
               </TagList>
               {/* <PlanetWrapper currentPage={currentPage} {...swipeHandlers}> */}
-              <PlanetWrapper>
+              <PlanetWrapper isLeaving={isLeaving} isNext={isNext}>
                 <Droppable droppableId="droppable-planet">
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>
@@ -407,16 +458,22 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const PlanetWrapper = styled.div`
+const PlanetWrapper = styled.div<{ isLeaving: boolean; isNext: boolean }>`
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  opacity: ${({ isLeaving }) => (isLeaving ? 0 : 1)};
+  transform: ${({ isLeaving, isNext }) => {
+    if (isNext) {
+      return isLeaving ? "translateX(50%)" : "translateX(0)";
+    } else {
+      return isLeaving ? "translateX(-50%)" : "translateX(0)";
+    }
+  }};
 `;
 
-// const PlanetWrapper = styled.div<{ currentPage: number }>`
+// const PlanetWrapper = styled.div<{ currentPage: number }>`;
 //   width: 100%;
 //   height: 100%;
 //   position: relative;

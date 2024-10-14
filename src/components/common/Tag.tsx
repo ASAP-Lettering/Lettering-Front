@@ -212,11 +212,19 @@ const Box = styled.button<{
   ${({ $tagType }) =>
     $tagType === "letter" &&
     css`
+      display: block;
+      max-width: 90px;
       height: 39px;
-      padding: 11px 26px;
+      padding: 11px 15px;
       border-radius: 100px;
       background: ${theme.colors.sub01};
       ${(props) => props.theme.fonts.body07};
+      line-height: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      vertical-align: middle;
 
       &:active {
         background: #565c81;

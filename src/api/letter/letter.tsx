@@ -41,14 +41,14 @@ export const uploadImage = async ({ imageUrl }: { imageUrl: string }) => {
   });
 };
 
-//편지 열람 가능 검증
+// 편지 열람 가능 검증
 export const verifyLetter = async (letterCode: string) => {
   return await authClient.put(`/api/v1/letters/verify`, {
     letterCode: letterCode,
   });
 };
 
-//검증된 편지 열람
+// 검증된 편지 열람
 export const getVerifyedLetter = async (letterId: string) => {
   return await authClient.get(`/api/v1/letters/${letterId}/verify`);
 };
@@ -68,4 +68,8 @@ export const deleteIndependentLetter = async (letterId: string) => {
 //행성 편지 삭제
 export const deleteLetter = async (letterId: string) => {
   return await authClient.delete(`/api/v1/spaces/letters/${letterId}`);
+};
+// 모든 편지 수 조회
+export const getLetterCount = async () => {
+  return await authClient.get(`/api/v1/letters/count`);
 };
