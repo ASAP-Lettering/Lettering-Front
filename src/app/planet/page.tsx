@@ -30,6 +30,7 @@ import {
   getInitUserToast,
   setInitUserToast,
 } from "@/utils/storage";
+import { getLetterCount } from "@/api/letter/letter";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -49,6 +50,18 @@ const PlanetPage = () => {
   const { show, message, close } = useRecoilValue(toastState);
   const setToast = useSetRecoilState(toastState);
 
+  const fetchGetLetterCount = async () => {
+    try {
+      const response = await getLetterCount();
+      console.log("모든 편지 수 조회 성공:", response.data);
+      setCountLetter(response.data.count);
+      setCurrentOrbits(response.data.content);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("행성 편지 목록 조회 실패:", error);
+    }
+  };
+
   const fetchPlanetLetterList = async (spaceId: string) => {
     try {
       const response = await getPlanetLetterList({
@@ -58,7 +71,6 @@ const PlanetPage = () => {
       });
       console.log("행성 편지 목록 조회 성공:", response.data);
       setCurrentOrbits(response.data.content);
-      setCountLetter(response.data.totalElements);
       setTotalPages(
         response.data.totalElements === 0 ? 1 : response.data.totalPages
       );
@@ -100,6 +112,7 @@ const PlanetPage = () => {
       }
     };
 
+    fetchGetLetterCount();
     fetchMainId();
     fetchOrbitLetter();
   }, []);
@@ -410,9 +423,6 @@ const TagList = styled.div`
 const PlanetWrapper = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
 `;
 
