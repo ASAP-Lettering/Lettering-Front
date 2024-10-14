@@ -158,15 +158,39 @@ const PlanetPage = () => {
   };
 
   /* 페이지네이션 */
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  // const handlePrevPage = () => {
+  //   if (currentPage > 1) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
+
+  // const handleNextPage = () => {
+  //   if (currentPage < totalPages) {
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [isNext, setIsNext] = useState(false);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      setIsNext(true);
+      setIsLeaving(true); // 페이지 전환 애니메이션 시작
+      setTimeout(() => {
+        setCurrentPage(currentPage + 1);
+        setIsLeaving(false); // 애니메이션 끝
+      }, 400);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setIsNext(false);
+      setIsLeaving(true); // 페이지 전환 애니메이션 시작
+      setTimeout(() => {
+        setCurrentPage(currentPage - 1);
+        setIsLeaving(false); // 애니메이션 끝
+      }, 400);
     }
   };
 
@@ -320,7 +344,7 @@ const PlanetPage = () => {
                 />
               </TagList>
               {/* <PlanetWrapper currentPage={currentPage} {...swipeHandlers}> */}
-              <PlanetWrapper>
+              <PlanetWrapper isLeaving={isLeaving} isNext={isNext}>
                 <Droppable droppableId="droppable-planet">
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>
@@ -434,13 +458,22 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const PlanetWrapper = styled.div`
+const PlanetWrapper = styled.div<{ isLeaving: boolean; isNext: boolean }>`
   width: 100%;
   height: 100%;
   position: relative;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  opacity: ${({ isLeaving }) => (isLeaving ? 0 : 1)};
+  transform: ${({ isLeaving, isNext }) => {
+    if (isNext) {
+      return isLeaving ? "translateX(50%)" : "translateX(0)";
+    } else {
+      return isLeaving ? "translateX(-50%)" : "translateX(0)";
+    }
+  }};
 `;
 
-// const PlanetWrapper = styled.div<{ currentPage: number }>`
+// const PlanetWrapper = styled.div<{ currentPage: number }>`;
 //   width: 100%;
 //   height: 100%;
 //   position: relative;
