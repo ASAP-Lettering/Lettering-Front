@@ -277,9 +277,19 @@ const PlanetPage = () => {
             <Container>
               <Top>
                 <Title>
-                  {userName}님의 스페이스에
-                  <br />
-                  <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                  {countLetter < 3 ? (
+                    <>
+                      {userName}님의 스페이스를
+                      <br />
+                      편지로 수놓아 보세요
+                    </>
+                  ) : (
+                    <>
+                      {userName}님의 스페이스에
+                      <br />
+                      <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                    </>
+                  )}
                 </Title>
                 <Icon
                   src="/assets/icons/ic_mypage.svg"
