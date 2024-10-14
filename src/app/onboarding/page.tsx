@@ -1,9 +1,6 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Check from "@/components/common/Check";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import styled from "styled-components";
@@ -12,7 +9,9 @@ const Onboarding = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 4;
 
-  const backgroundImage = `/assets/onboarding/bg${step}.png`;
+  const backgroundImage = `/assets/onboarding/bg${
+    step === 1 ? 1 : step === 4 ? 3 : 2
+  }.png`;
   const overlayLineImage = `/assets/onboarding/onboardingline${step}.svg`;
   const router = useRouter();
   const handleClose = () => {
@@ -35,7 +34,7 @@ const Onboarding = () => {
         ? "133px"
         : step === 3
         ? "133px"
-        : "30px",
+        : "432px",
     left:
       step === 1
         ? "136px"
@@ -43,7 +42,7 @@ const Onboarding = () => {
         ? "105px"
         : step === 3
         ? "105px"
-        : "190px",
+        : "50px",
   };
 
   const textPosition = {
@@ -54,7 +53,7 @@ const Onboarding = () => {
         ? "122px"
         : step === 3
         ? "122px"
-        : "30px",
+        : "364px",
     left:
       step === 1
         ? "71px"
@@ -62,8 +61,15 @@ const Onboarding = () => {
         ? "159px"
         : step === 3
         ? "159px"
-        : "190px",
+        : "32px",
   };
+
+  const tagPosition = {
+    bottom: step === 4 ? "483px" : "119px",
+    left: step === 4 ? "21px" : "23px",
+  };
+
+  const textAlign = step === 4 ? "left" : "center";
 
   const overlayTexts = [
     "버튼을 클릭해\n편지를 등록할 수 있어요",
@@ -80,6 +86,14 @@ const Onboarding = () => {
           <CurrentStep>{step}</CurrentStep>
           <TotalStep> / 4</TotalStep>
         </OverlayClose>
+        {step > 1 && (
+          <OverlayTag
+            src={`/assets/onboarding/img_tag${step - 1}.png`}
+            bottom={tagPosition.bottom}
+            left={tagPosition.left}
+            width={step === 2 || step === 4 ? "71px" : "123px"}
+          />
+        )}
         <OverlayLine
           src={overlayLineImage}
           alt={`Overlay Line ${step}`}
@@ -87,7 +101,11 @@ const Onboarding = () => {
           left={linePosition.left}
         />
         {step === 1 && <OverlayBtn>편지 등록하기</OverlayBtn>}
-        <OverlayText bottom={textPosition.bottom} left={textPosition.left}>
+        <OverlayText
+          bottom={textPosition.bottom}
+          left={textPosition.left}
+          textAlign={textAlign}
+        >
           {overlayTexts[step - 1]}
         </OverlayText>
       </Overlay>
@@ -155,7 +173,6 @@ const OverlayLine = styled.img<{ bottom: string; left: string }>`
     position: absolute;
     bottom: ${(props) => props.bottom}; 
     left: ${(props) => props.left}; 
-    transform: translateX(-50%); 
     z-index: 2; 
 `;
 
@@ -177,12 +194,16 @@ const CloseSvg = styled.img`
     right: 24px;
 `;
 
-const OverlayText = styled.div<{ bottom: string; left: string }>`
+const OverlayText = styled.div<{
+  bottom: string;
+  left: string;
+  textAlign: string;
+}>`
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    text-align: ${(props) => props.textAlign};
     bottom: ${(props) => props.bottom}; 
     left: ${(props) => props.left}; 
     color:${(props) => props.theme.colors.white};
@@ -203,4 +224,13 @@ const CurrentStep = styled.div`
     color:${(props) => props.theme.colors.white};
     ${(props) => props.theme.fonts.caption02};
     text-align: center;
+`;
+
+const OverlayTag = styled.img<{ bottom: string; left: string; width: string }>`
+    position: absolute;
+    bottom: ${(props) => props.bottom}; 
+    width: ${(props) => props.width}; 
+    height: auto;
+    left: ${(props) => props.left}; 
+    z-index: 2;
 `;
