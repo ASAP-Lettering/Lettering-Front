@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 interface BottomProps {
   orbitMessages: Orbit[] | null;
   onDelete: (deleteId: string) => void;
-  //onDragStart: (e: React.DragEvent<HTMLDivElement>, messageId: string) => void;
   onTagDrag: (id: string) => void;
 }
 
@@ -46,6 +45,7 @@ const Bottom = (props: BottomProps) => {
         <Orbits>
           {orbitMessages.map((item, index) => (
             <Tag
+              key={index}
               tagType="orbit"
               tagId={item.letterId}
               name={item.senderName}

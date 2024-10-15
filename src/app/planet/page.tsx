@@ -28,12 +28,14 @@ import {
   setInitUserToast,
 } from "@/utils/storage";
 import { getLetterCount } from "@/api/letter/letter";
+import PlanetSlide from "@/components/planet/PlanetSlide";
 
 const PlanetPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [direction, setDirection] = useState(0); //슬라이드 방향
   const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -154,27 +156,16 @@ const PlanetPage = () => {
     }
   };
 
-  /* 페이지네이션 */
-  // const handlePrevPage = () => {
-  //   if (currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //   }
-  // };
-
-  // const handleNextPage = () => {
-  //   if (currentPage < totalPages) {
-  //     setCurrentPage(currentPage + 1);
-  //   }
-  // };
-
   const handleNextPage = () => {
     if (currentPage < totalPages) {
+      setDirection(1);
       setCurrentPage(currentPage + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
+      setDirection(-1);
       setCurrentPage(currentPage - 1);
     }
   };
@@ -242,9 +233,10 @@ const PlanetPage = () => {
         clientY >= planetBounds.top &&
         clientY <= planetBounds.bottom
       ) {
-        console.log("Dropped tag id:", droppedTagId);
+        setCurrentPage(totalPages);
+        console.log("드래그 완료:", droppedTagId);
       } else {
-        console.log("Dropped outside Planet area. Ignoring drop.");
+        console.log("드래그 범위가 아님");
       }
     }
   };
@@ -306,7 +298,7 @@ const PlanetPage = () => {
                 onClick={() => router.push("/planet/add")}
               />
             </TagList>
-            <PlanetWrapper
+            {/* <PlanetWrapper
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               ref={planetRef}
@@ -318,7 +310,23 @@ const PlanetPage = () => {
                 onEditPlanetName={handleEditPlanetName}
                 setCurrentOrbits={setCurrentOrbits}
               />
-            </PlanetWrapper>
+            </PlanetWrapper> */}
+            <SliderWrapper
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              ref={planetRef}
+            >
+              <PlanetSlide
+                idx={currentPage}
+                currentPage={currentPage}
+                totalPage={totalPages}
+                direction={direction}
+                spaceInfo={spaceInfo}
+                currentOrbits={currentOrbits || []}
+                setCurrentOrbits={setCurrentOrbits}
+                onEditPlanetName={handleEditPlanetName}
+              />
+            </SliderWrapper>
             <PageWrapper>
               {show && (
                 <Toast
@@ -422,6 +430,12 @@ const PlanetWrapper = styled.div`
   height: 100%;
   position: relative;
   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+`;
+
+const SliderWrapper = styled.div`
+   width: 100%;
+   color: white;
+   position: relative;   
 `;
 
 const PageWrapper = styled.div`

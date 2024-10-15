@@ -19,7 +19,7 @@ interface Orbit {
 interface PlanetProps {
   planetType: number;
   planet: string;
-  orbits: Orbit[];
+  orbits?: Orbit[];
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
 }
@@ -77,12 +77,16 @@ const Planet = (props: PlanetProps) => {
     }
 
     // 토스트 메세지
-    const orbit = orbits.find((item) => item.letterId === orbitId);
-    setToast({
-      show: true,
-      message: `${orbit?.senderName} 님의 편지가 삭제되었어요`,
-      close: false,
-    });
+    const orbit = orbits
+      ? orbits?.find((item) => item.letterId === orbitId)
+      : null;
+    if (orbits) {
+      setToast({
+        show: true,
+        message: `${orbit!.senderName!} 님의 편지가 삭제되었어요`,
+        close: false,
+      });
+    }
   };
 
   const handleCancelDelete = () => {
@@ -92,39 +96,40 @@ const Planet = (props: PlanetProps) => {
   return (
     <Container>
       <PlanetImage
-        src={`/assets/images/planet_orbit/planet${planetType}.svg`}
+        src={`/assets/images/planet_png/planet${planetType}.png`}
         width={400}
         height={400}
         alt="planet"
         priority
       />
       <Shadow />
-      {orbits.map((orbit, index) => {
-        const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
-        const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
-        const y = center + radius * Math.sin(angle) - 5; // Y좌표 계산
+      {orbits &&
+        orbits.map((orbit, index) => {
+          const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
+          const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
+          const y = center + radius * Math.sin(angle) - 5; // Y좌표 계산
 
-        return (
-          <OrbitTag
-            key={orbit.letterId}
-            style={{
-              transform: `translate(${x}px, ${y}px)`,
-              transition: "transform 0.8s ease",
-            }}
-          >
-            <Tag
-              tagType="letter"
-              name={orbit.senderName}
-              onClick={() => {
-                handleTagClick(orbit.letterId);
+          return (
+            <OrbitTag
+              key={orbit.letterId}
+              style={{
+                transform: `translate(${x}px, ${y}px)`,
+                transition: "transform 0.8s ease",
               }}
-              onHold={() => {
-                handleShowHold(orbit.letterId);
-              }}
-            />
-          </OrbitTag>
-        );
-      })}
+            >
+              <Tag
+                tagType="letter"
+                name={orbit.senderName}
+                onClick={() => {
+                  handleTagClick(orbit.letterId);
+                }}
+                onHold={() => {
+                  handleShowHold(orbit.letterId);
+                }}
+              />
+            </OrbitTag>
+          );
+        })}
       <PlanetTag>
         <Tag
           tagType="planet"

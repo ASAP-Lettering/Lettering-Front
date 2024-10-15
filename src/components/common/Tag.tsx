@@ -196,6 +196,18 @@ const Box = styled.button<{
   white-space: nowrap;
   z-index: 10;
 
+  .grabbable {
+        cursor: move; 
+        cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+    }
+  .grabbable:active {
+        cursor: grabbing;
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+    }
+
   ${({ $tagType }) =>
     $tagType === "orbit" &&
     css`
