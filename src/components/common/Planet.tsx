@@ -92,7 +92,7 @@ const Planet = (props: PlanetProps) => {
   return (
     <Container>
       <PlanetImage
-        src={`/assets/images/planet_orbit/planet${planetType}.svg`}
+        src={`/assets/images/planet_orbit/planet${planetType}.png`}
         width={400}
         height={400}
         alt="planet"

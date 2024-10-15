@@ -53,7 +53,7 @@ const PlanetAddPage = () => {
         <Label>원하는 행성의 종류를 선택해주세요 *</Label>
         <PlanetWrapper>
           <Image
-            src={`/assets/images/planet/planet${templateType}.svg`}
+            src={`/assets/images/planet/planet${templateType}.png`}
             width={200}
             height={200}
             alt="planet"
