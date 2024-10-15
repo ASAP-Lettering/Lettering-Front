@@ -21,7 +21,7 @@ import { getSpaceList } from "@/api/planet/space/space";
 const PlanetMovePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const orbitId = searchParams.get("orbitId");
+  const orbitId = searchParams.get("letter");
   const letterId: string | null = orbitId ? orbitId : null;
   const setToast = useSetRecoilState(toastState);
 

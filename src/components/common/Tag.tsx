@@ -2,10 +2,6 @@ import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
-import {
-  DraggableProvidedDraggableProps,
-  DraggableProvidedDragHandleProps,
-} from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -22,9 +18,8 @@ interface TagProps {
   onEdit?: (editedName: string) => void;
   onHold?: () => void;
   innerRef?: (element: HTMLElement | null) => void;
-  dragHandleProps?: DraggableProvidedDragHandleProps | null;
-  draggableProps?: DraggableProvidedDraggableProps | null;
   onDelete?: (deleteId: string) => void;
+  onDragStart?: (id: string) => void;
 }
 
 const Tag = (props: TagProps) => {
@@ -39,9 +34,8 @@ const Tag = (props: TagProps) => {
     onEdit,
     onHold,
     innerRef,
-    dragHandleProps,
-    draggableProps,
     onDelete,
+    onDragStart,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -53,6 +47,17 @@ const Tag = (props: TagProps) => {
     if (icon === "edit") {
       setIsEditing(true);
     }
+  };
+
+  const handleDragStart = () => {
+    if (onDragStart && tagId) {
+      handleHoldStart();
+      onDragStart(tagId);
+    }
+  };
+
+  const handleTouchStart = () => {
+    handleDragStart();
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,13 +119,13 @@ const Tag = (props: TagProps) => {
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
       onClick={onHold ? handleHoldEnd : onClick}
-      onMouseDown={handleHoldStart} // 마우스를 누를 때
+      onMouseDown={handleTouchStart} // 마우스를 누를 때
       onMouseUp={handleHoldEnd} // 마우스를 뗄 때
-      onTouchStart={handleHoldStart} // 터치 시작
+      onTouchStart={handleTouchStart} // Mobile
       onTouchEnd={handleHoldEnd} // 터치 종료
       ref={innerRef}
-      {...draggableProps}
-      {...dragHandleProps}
+      draggable
+      onDragStart={handleDragStart} // Desktop
     >
       {isEditing ? (
         <NameInput
@@ -193,8 +198,9 @@ const Box = styled.button<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${$hasEditIcon &&
-      css`
+      ${
+        $hasEditIcon &&
+        css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -202,11 +208,14 @@ const Box = styled.button<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `}
-      ${$hasName === false &&
-      css`
+      `
+      }
+      ${
+        $hasName === false &&
+        css`
         padding: 7.5px 13px 7.5px 13px;
-      `}
+      `
+      }
     `}
   
   ${({ $tagType }) =>

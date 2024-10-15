@@ -4,23 +4,28 @@ import Tag from "./Tag";
 import Button from "./Button";
 import { theme } from "@/styles/theme";
 import { Orbit } from "@/constants/orbit";
-import { Droppable, Draggable } from "react-beautiful-dnd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface BottomProps {
   orbitMessages: Orbit[] | null;
   onDelete: (deleteId: string) => void;
+  //onDragStart: (e: React.DragEvent<HTMLDivElement>, messageId: string) => void;
+  onTagDrag: (id: string) => void;
 }
 
 const Bottom = (props: BottomProps) => {
-  const { orbitMessages, onDelete } = props;
+  const { orbitMessages, onDelete, onTagDrag } = props;
 
   const router = useRouter();
   const goToOrbitDetail = (id: string) => {
     router.push(`/independent/${id}`);
   };
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
+
+  const handleDragStart = (id: string) => {
+    onTagDrag(id);
+  };
 
   return (
     <Container>
@@ -38,36 +43,20 @@ const Bottom = (props: BottomProps) => {
         )}
       </Top>
       {orbitMessages && orbitMessages?.length > 0 ? (
-        <Droppable droppableId="droppable-bottom">
-          {(provided) => (
-            <Orbits ref={provided.innerRef} {...provided.droppableProps}>
-              {orbitMessages.map((item, index) => (
-                <Draggable
-                  key={`${item.letterId}-orbits`}
-                  draggableId={item.letterId}
-                  index={index}
-                  disableInteractiveElementBlocking
-                >
-                  {(provided) => (
-                    <Tag
-                      tagType="orbit"
-                      tagId={item.letterId}
-                      name={item.senderName}
-                      isNew={item.isNew}
-                      isDeleteMode={isDeleteMode}
-                      innerRef={provided.innerRef}
-                      dragHandleProps={provided.dragHandleProps}
-                      draggableProps={provided.draggableProps}
-                      onDelete={onDelete}
-                      onClick={() => goToOrbitDetail(item.letterId)}
-                    />
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Orbits>
-          )}
-        </Droppable>
+        <Orbits>
+          {orbitMessages.map((item, index) => (
+            <Tag
+              tagType="orbit"
+              tagId={item.letterId}
+              name={item.senderName}
+              isNew={item.isNew}
+              isDeleteMode={isDeleteMode}
+              onDelete={onDelete}
+              onClick={() => goToOrbitDetail(item.letterId)}
+              onDragStart={handleDragStart}
+            />
+          ))}
+        </Orbits>
       ) : (
         <NoOrbit>등록된 편지가 없습니다. 편지를 등록해볼까요?</NoOrbit>
       )}

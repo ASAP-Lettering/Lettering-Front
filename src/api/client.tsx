@@ -64,7 +64,7 @@ authClient.interceptors.response.use(
       return Promise.reject(refreshError);
     }
 
-    window.location.href = "/error";
+    //window.location.href = "/error";
     return Promise.reject(error);
   }
 );
