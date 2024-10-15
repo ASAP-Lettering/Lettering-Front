@@ -217,7 +217,7 @@ const GuidePage = () => {
       <h3>Letter</h3>
       <Letter
         showType="receive"
-        id={letterData.id}
+        id={letterData.id.toString()}
         templateType={letterData.templateType}
         name={letterData.sender}
         content={letterData.content}
@@ -226,7 +226,7 @@ const GuidePage = () => {
       />
       <Letter
         showType="receive"
-        id={letterData.id}
+        id={letterData.id.toString()}
         templateType={letterData.templateType}
         name={letterData.sender}
         images={imageData}
@@ -236,7 +236,7 @@ const GuidePage = () => {
       <Letter
         showType="previewReceive"
         contentType="all"
-        id={letterData.id}
+        id={letterData.id.toString()}
         templateType={letterData.templateType}
         name={letterData.sender}
         content={letterData.content}
@@ -246,7 +246,7 @@ const GuidePage = () => {
       <Letter
         showType="previewReceive"
         contentType="one"
-        id={letterData.id}
+        id={letterData.id.toString()}
         templateType={letterData.templateType}
         name={letterData.sender}
         content={letterData.content}
@@ -256,7 +256,7 @@ const GuidePage = () => {
       <Letter
         showType="previewSend"
         contentType="all"
-        id={letterData.id}
+        id={letterData.id.toString()}
         templateType={letterData.templateType}
         name={letterData.sender}
         images={imageData}
@@ -266,7 +266,7 @@ const GuidePage = () => {
       <Letter
         showType="previewSend"
         contentType="one"
-        id={letterData.id}
+        id={letterData.id.toString()}
         templateType={letterData.templateType}
         name={letterData.sender}
         images={imageData}
