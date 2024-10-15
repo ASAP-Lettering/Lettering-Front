@@ -44,7 +44,7 @@ const LetterTemplatePage = () => {
             <Letter
               showType="previewReceive"
               contentType="one"
-              id={0}
+              id={"0"}
               templateType={templateType}
               name={senderName}
               content={content}
