@@ -4,11 +4,10 @@ import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { SpaceInfo } from "@/types/space";
 import { Orbit } from "@/constants/orbit";
+import Planet from "../common/Planet";
 
 interface PlanetSlideProps {
   idx: number;
-  currentPage: number;
-  totalPage: number;
   currentOrbits: Orbit[] | null;
   spaceInfo: SpaceInfo | null;
   direction: number;
@@ -17,29 +16,32 @@ interface PlanetSlideProps {
 }
 
 const slideVariants = {
-  entry: (direction: number) => ({
-    x: direction ? -1000 : 1000,
+  hidden: (direction: number) => ({
+    x: direction > 0 ? "100%" : "-100%",
     opacity: 0,
-    scale: 0,
   }),
-  center: {
-    opacity: 1,
+  visible: {
     x: 0,
-    scale: 1,
-    transition: { duration: 0.5 },
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+    },
   },
   exit: (direction: number) => ({
-    x: direction ? 1000 : -1000,
-    y: -200,
+    x: direction > 0 ? "-100%" : "100%",
     opacity: 0,
-    scale: 0,
-    transition: { duration: 0.5 },
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+    },
   }),
 };
+
 const PlanetSlide = ({
   idx,
-  currentPage,
-  totalPage,
   direction,
   spaceInfo,
   currentOrbits,
@@ -49,21 +51,20 @@ const PlanetSlide = ({
   return (
     <AnimatePresence custom={direction}>
       <Container
-        key={currentPage}
+        key={idx}
         custom={direction}
         variants={slideVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        {/* <Planet
-            planetType={spaceInfo?.templateType || 0}
-            planet={spaceInfo?.spaceName || ""}
-            orbits={currentOrbits || []}
-            onEditPlanetName={onEditPlanetName}
-            setCurrentOrbits={setCurrentOrbits}
-          /> */}
-        <TestDiv />
+        <Planet
+          planetType={spaceInfo?.templateType || 0}
+          planet={spaceInfo?.spaceName || ""}
+          orbits={currentOrbits || []}
+          onEditPlanetName={onEditPlanetName}
+          setCurrentOrbits={setCurrentOrbits}
+        />
       </Container>
     </AnimatePresence>
   );

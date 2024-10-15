@@ -318,8 +318,6 @@ const PlanetPage = () => {
             >
               <PlanetSlide
                 idx={currentPage}
-                currentPage={currentPage}
-                totalPage={totalPages}
                 direction={direction}
                 spaceInfo={spaceInfo}
                 currentOrbits={currentOrbits || []}
