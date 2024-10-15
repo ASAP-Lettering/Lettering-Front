@@ -53,6 +53,7 @@ const Bottom = (props: BottomProps) => {
               isDeleteMode={isDeleteMode}
               onDelete={onDelete}
               onClick={() => goToOrbitDetail(item.letterId)}
+              isDragable={true}
               onDragStart={handleDragStart}
             />
           ))}

@@ -19,6 +19,7 @@ interface TagProps {
   onHold?: () => void;
   innerRef?: (element: HTMLElement | null) => void;
   onDelete?: (deleteId: string) => void;
+  isDragable?: boolean;
   onDragStart?: (id: string) => void;
 }
 
@@ -35,12 +36,14 @@ const Tag = (props: TagProps) => {
     onHold,
     innerRef,
     onDelete,
+    isDragable = false,
     onDragStart,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
   const [isHoldTriggered, setIsHoldTriggered] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleEditClick = () => {
@@ -51,9 +54,14 @@ const Tag = (props: TagProps) => {
 
   const handleDragStart = () => {
     if (onDragStart && tagId) {
-      handleHoldStart();
+      clearHoldTimeout();
+      setIsDragging(true);
       onDragStart(tagId);
     }
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
   };
 
   const handleTouchStart = () => {
@@ -84,21 +92,30 @@ const Tag = (props: TagProps) => {
   };
 
   const handleHoldStart = () => {
-    setIsHoldTriggered(true);
-    if (onHold) {
+    if (onHold && !isDragging) {
+      setIsHoldTriggered(true);
       holdTimeout.current = setTimeout(() => {
         onHold();
+        setIsHoldTriggered(false);
       }, 1000);
     }
   };
 
   const handleHoldEnd = () => {
-    if (isHoldTriggered && holdTimeout.current) {
+    if (holdTimeout.current) {
       clearTimeout(holdTimeout.current);
       setIsHoldTriggered(false);
     }
-    if (!isHoldTriggered && onClick) {
+
+    if (!isHoldTriggered && onClick && !isDragging) {
       onClick();
+    }
+  };
+
+  const clearHoldTimeout = () => {
+    if (holdTimeout.current) {
+      clearTimeout(holdTimeout.current);
+      setIsHoldTriggered(false);
     }
   };
 
@@ -119,13 +136,14 @@ const Tag = (props: TagProps) => {
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
       onClick={onHold ? handleHoldEnd : onClick}
-      onMouseDown={handleTouchStart} // 마우스를 누를 때
-      onMouseUp={handleHoldEnd} // 마우스를 뗄 때
-      onTouchStart={handleTouchStart} // Mobile
-      onTouchEnd={handleHoldEnd} // 터치 종료
       ref={innerRef}
-      draggable
-      onDragStart={handleDragStart} // Desktop
+      draggable={isDragable}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onMouseDown={handleHoldStart}
+      onMouseUp={handleHoldEnd}
+      onTouchStart={handleHoldStart}
+      onTouchEnd={handleHoldEnd}
     >
       {isEditing ? (
         <NameInput
