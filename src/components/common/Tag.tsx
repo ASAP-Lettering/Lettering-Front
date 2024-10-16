@@ -2,7 +2,7 @@ import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
 import { Orbit } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -45,7 +45,13 @@ const Tag = (props: TagProps) => {
   const [editedName, setEditedName] = useState(name);
   const [isHoldTriggered, setIsHoldTriggered] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startPosition, setStartPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
+  const tagRef = useRef<HTMLDivElement | null>(null);
 
   const handleEditClick = () => {
     if (icon === "edit") {
@@ -54,18 +60,19 @@ const Tag = (props: TagProps) => {
   };
 
   const handleDragStart = () => {
-    if (onDragStart && tagId && name) {
-      clearHoldTimeout();
+    if (onDragStart && tagId && name && tagType === "orbit") {
+      console.log("터치 시작");
       setIsDragging(true);
+      clearHoldTimeout();
       onDragStart({ letterId: tagId!, senderName: name! });
     }
   };
+
   const handleDragEnd = () => {
     setIsDragging(false);
-  };
-
-  const handleTouchStart = () => {
-    handleDragStart();
+    setStartPosition(null);
+    document.removeEventListener("touchmove", handleTouchMove);
+    document.removeEventListener("touchend", handleTouchEnd);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,20 +137,75 @@ const Tag = (props: TagProps) => {
     return "";
   };
 
+  //모바일 터치 드래그
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (isDragable) {
+      e.stopPropagation();
+      const touch = e.touches[0];
+      handleDragStart();
+      setStartPosition({ x: touch.clientX, y: touch.clientY });
+      e.currentTarget.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      e.currentTarget.addEventListener("touchend", handleTouchEnd, {
+        once: true,
+      });
+    }
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    console.log("터치 움직임");
+    //if (e.cancelable) e.preventDefault();
+    //e.preventDefault();
+    if (startPosition) {
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startPosition.x;
+      const deltaY = touch.clientY - startPosition.y;
+      setTranslate({ x: deltaX, y: deltaY });
+
+      if (tagRef.current) {
+        tagRef.current.style.zIndex = "999999";
+        tagRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        tagRef.current.style.position = "absolute";
+      }
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    console.log("터치 끝");
+    if (tagRef.current) {
+      tagRef.current.style.transform = "";
+      tagRef.current.style.zIndex = "";
+      tagRef.current.style.position = "absolute";
+    }
+    handleDragEnd();
+  };
+
+  useEffect(() => {
+    console.log(translate);
+  }, [translate]);
+
   return (
     <Box
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
       onClick={onHold ? handleHoldEnd : onClick}
-      ref={innerRef}
+      ref={(el) => {
+        tagRef.current = el;
+        if (innerRef) innerRef(el);
+      }}
       draggable={isDragable}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onMouseDown={handleHoldStart}
       onMouseUp={handleHoldEnd}
-      onTouchStart={handleHoldStart}
-      onTouchEnd={handleHoldEnd}
+      onTouchStart={handleTouchStart}
+      //   onTouchEnd={handleTouchEnd}
     >
       {isEditing ? (
         <NameInput
@@ -182,7 +244,7 @@ const Tag = (props: TagProps) => {
 
 export default Tag;
 
-const Box = styled.button<{
+const Box = styled.div<{
   $tagType: tagType;
   $hasName?: boolean;
   $hasEditIcon?: boolean;
@@ -194,6 +256,7 @@ const Box = styled.button<{
   border-radius: 100px;
   color: ${theme.colors.white};
   white-space: nowrap;
+  cursor: pointer;
   z-index: 10;
 
   .grabbable {

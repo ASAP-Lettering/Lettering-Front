@@ -470,7 +470,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 `;
 
 const Top = styled.div`
