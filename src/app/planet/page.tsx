@@ -12,7 +12,7 @@ import Pagination from "@/components/common/Pagination";
 import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { OrbitMessage } from "@/types/orbit";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
 import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
 // import { setSpaceId } from "@/utils/storage";
@@ -32,6 +32,7 @@ import {
 } from "@/utils/storage";
 import { getLetterCount } from "@/api/letter/letter";
 import PlanetSlide from "@/components/planet/PlanetSlide";
+import { planetRefState } from "@/recoil/RefStore";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -245,12 +246,31 @@ const PlanetPage = () => {
 
   //승효 - 수정사항 코드(드래그앤드롭 & 슬라이드)
   const [droppedItem, setDroppedItem] = useState<Orbit | null>(null);
+  const [planetRef, setPlanetRef] = useRecoilState(planetRefState);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const planetRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      setPlanetRef(ref.current);
+      console.log("ref 저장");
+    }
+  }, [ref.current]);
 
   const handleTagDrag = (item: Orbit) => {
-    console.log("현재 드래그 중인 태그:", item.letterId);
     setDroppedItem(item);
+  };
+
+  const handleTagTouch = (draggedItem: Orbit) => {
+    handleMovePlanet(draggedItem.letterId!, draggedItem.senderName);
+    setOrbitMessages((prevMessages) =>
+      prevMessages?.filter((item) => item.letterId !== draggedItem.letterId)
+    );
+    if (spaceTotalLetter === totalPages * 5) {
+      setCurrentPage(totalPages + 1);
+    } else {
+      setCurrentPage(totalPages);
+    }
+    console.log(totalPages, currentPage);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -259,54 +279,43 @@ const PlanetPage = () => {
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const planetBounds = planetRef.current?.getBoundingClientRect();
+    if (ref) {
+      const planetBounds = ref.current?.getBoundingClientRect();
 
-    if (planetBounds) {
-      const { clientX, clientY } = e;
-      if (
-        clientX >= planetBounds.left &&
-        clientX <= planetBounds.right &&
-        clientY >= planetBounds.top &&
-        clientY <= planetBounds.bottom
-      ) {
-        console.log(
-          "드래그 대상",
-          droppedItem?.letterId,
-          droppedItem?.senderName
-        );
-        if (droppedItem) {
-          handleMovePlanet(droppedItem?.letterId!);
-          setOrbitMessages((prevMessages) =>
-            prevMessages?.filter(
-              (item) => item.letterId !== droppedItem!.letterId
-            )
+      if (planetBounds) {
+        const { clientX, clientY } = e;
+        if (
+          clientX >= planetBounds.left &&
+          clientX <= planetBounds.right &&
+          clientY >= planetBounds.top &&
+          clientY <= planetBounds.bottom
+        ) {
+          console.log(
+            "드래그 대상",
+            droppedItem?.letterId,
+            droppedItem?.senderName
           );
-          if (spaceTotalLetter === totalPages * 5) {
-            setCurrentPage(totalPages + 1);
-          } else {
-            setCurrentPage(totalPages);
+          if (droppedItem) {
+            handleTagTouch(droppedItem);
           }
-          console.log(totalPages, currentPage);
+        } else {
+          console.log("드래그 범위가 아님");
         }
-      } else {
-        console.log("드래그 범위가 아님");
       }
     }
   };
 
-  const handleMovePlanet = async (letterId: string) => {
+  const handleMovePlanet = async (letterId: string, senderName: string) => {
     try {
       await putLetterToPlanet({
         letterId: letterId || "",
         spaceId: spaceInfo?.spaceId!,
       });
-      console.log(
-        `${droppedItem?.senderName}님의 편지가 행성으로 이동했습니다.`
-      );
+      console.log(`${senderName}님의 편지가 행성으로 이동했습니다.`);
       if (!show) {
         setToast({
           show: true,
-          message: `${droppedItem?.senderName}님의 편지가 행성으로 이동했습니다.`,
+          message: `${senderName}님의 편지가 행성으로 이동했습니다.`,
           close: false,
         });
       }
@@ -390,7 +399,7 @@ const PlanetPage = () => {
               <SliderWrapper
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                ref={planetRef}
+                ref={ref}
               >
                 <PlanetSlide
                   idx={currentPage}
@@ -425,6 +434,7 @@ const PlanetPage = () => {
             orbitMessages={orbitMessages || null}
             onDelete={handleDeleteOrbit}
             onOrbitDrag={handleTagDrag}
+            onOrbitTouch={handleTagTouch}
           />
         </>
       )}

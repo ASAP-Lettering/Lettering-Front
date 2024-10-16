@@ -1,8 +1,10 @@
 import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
 import { Orbit } from "@/constants/orbit";
+import { planetRefState } from "@/recoil/RefStore";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
 type tagType = "orbit" | "planet" | "letter";
@@ -21,7 +23,8 @@ interface TagProps {
   innerRef?: (element: HTMLElement | null) => void;
   onDelete?: (deleteId: string) => void;
   isDragable?: boolean;
-  onDragStart?: (item: Orbit) => void;
+  onDragEnd?: (item: Orbit) => void;
+  onTouchEnd?: (item: Orbit) => void;
 }
 
 const Tag = (props: TagProps) => {
@@ -38,7 +41,8 @@ const Tag = (props: TagProps) => {
     innerRef,
     onDelete,
     isDragable = false,
-    onDragStart,
+    onDragEnd,
+    onTouchEnd,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -52,6 +56,7 @@ const Tag = (props: TagProps) => {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
   const tagRef = useRef<HTMLDivElement | null>(null);
+  const [planetRef, setPlanetRef] = useRecoilState(planetRefState);
 
   const handleEditClick = () => {
     if (icon === "edit") {
@@ -60,19 +65,17 @@ const Tag = (props: TagProps) => {
   };
 
   const handleDragStart = () => {
-    if (onDragStart && tagId && name && tagType === "orbit") {
-      console.log("터치 시작");
+    if (onDragEnd && tagId && name && tagType === "orbit") {
+      console.log("드래그 시작");
       setIsDragging(true);
       clearHoldTimeout();
-      onDragStart({ letterId: tagId!, senderName: name! });
+      onDragEnd({ letterId: tagId!, senderName: name! });
     }
   };
 
   const handleDragEnd = () => {
     setIsDragging(false);
     setStartPosition(null);
-    document.removeEventListener("touchmove", handleTouchMove);
-    document.removeEventListener("touchend", handleTouchEnd);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,9 +144,10 @@ const Tag = (props: TagProps) => {
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (isDragable) {
       e.stopPropagation();
+      console.log("터치 시작");
       const touch = e.touches[0];
-      handleDragStart();
       setStartPosition({ x: touch.clientX, y: touch.clientY });
+
       e.currentTarget.addEventListener("touchmove", handleTouchMove, {
         passive: false,
       });
@@ -155,8 +159,6 @@ const Tag = (props: TagProps) => {
 
   const handleTouchMove = (e: TouchEvent) => {
     console.log("터치 움직임");
-    //if (e.cancelable) e.preventDefault();
-    //e.preventDefault();
     if (startPosition) {
       const touch = e.touches[0];
       const deltaX = touch.clientX - startPosition.x;
@@ -167,6 +169,7 @@ const Tag = (props: TagProps) => {
         tagRef.current.style.zIndex = "999999";
         tagRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
         tagRef.current.style.position = "absolute";
+        tagRef.current.style.touchAction = "none";
       }
 
       if (e.cancelable) {
@@ -177,12 +180,34 @@ const Tag = (props: TagProps) => {
 
   const handleTouchEnd = () => {
     console.log("터치 끝");
+
+    if (planetRef && tagRef.current) {
+      const parentRect = planetRef.getBoundingClientRect();
+      const tagRect = tagRef.current.getBoundingClientRect();
+
+      const isWithinBounds =
+        tagRect.left >= parentRect.left &&
+        tagRect.right <= parentRect.right &&
+        tagRect.top >= parentRect.top &&
+        tagRect.bottom <= parentRect.bottom;
+
+      if (isWithinBounds && onTouchEnd && onDragEnd && tagId && name) {
+        console.log("드래그한 태그가 영역 내에 있습니다.");
+        onDragEnd({ letterId: tagId!, senderName: name! });
+        onTouchEnd({ letterId: tagId!, senderName: name! });
+      } else {
+        console.log("드래그한 태그가 영역 내에 없습니다.");
+      }
+    }
+
     if (tagRef.current) {
       tagRef.current.style.transform = "";
       tagRef.current.style.zIndex = "";
-      tagRef.current.style.position = "absolute";
+      tagRef.current.style.position = "relative";
     }
-    handleDragEnd();
+
+    document.removeEventListener("touchmove", handleTouchMove);
+    document.removeEventListener("touchend", handleTouchEnd);
   };
 
   useEffect(() => {
@@ -205,7 +230,6 @@ const Tag = (props: TagProps) => {
       onMouseDown={handleHoldStart}
       onMouseUp={handleHoldEnd}
       onTouchStart={handleTouchStart}
-      //   onTouchEnd={handleTouchEnd}
     >
       {isEditing ? (
         <NameInput
@@ -258,18 +282,6 @@ const Box = styled.div<{
   white-space: nowrap;
   cursor: pointer;
   z-index: 10;
-
-  .grabbable {
-        cursor: move; 
-        cursor: grab;
-        cursor: -moz-grab;
-        cursor: -webkit-grab;
-    }
-  .grabbable:active {
-        cursor: grabbing;
-        cursor: -moz-grabbing;
-        cursor: -webkit-grabbing;
-    }
 
   ${({ $tagType }) =>
     $tagType === "orbit" &&

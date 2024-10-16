@@ -11,10 +11,11 @@ interface BottomProps {
   orbitMessages: Orbit[] | null;
   onDelete: (deleteId: string) => void;
   onOrbitDrag: (item: Orbit) => void;
+  onOrbitTouch: (item: Orbit) => void;
 }
 
 const Bottom = (props: BottomProps) => {
-  const { orbitMessages, onDelete, onOrbitDrag } = props;
+  const { orbitMessages, onDelete, onOrbitDrag, onOrbitTouch } = props;
 
   const router = useRouter();
   const goToOrbitDetail = (id: string) => {
@@ -22,8 +23,12 @@ const Bottom = (props: BottomProps) => {
   };
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
 
-  const handleDragStart = (item: Orbit) => {
+  const handleDrag = (item: Orbit) => {
     onOrbitDrag(item);
+  };
+
+  const handleTouch = (item: Orbit) => {
+    onOrbitTouch(item);
   };
 
   return (
@@ -54,7 +59,8 @@ const Bottom = (props: BottomProps) => {
               onDelete={onDelete}
               onClick={() => goToOrbitDetail(item.letterId)}
               isDragable={true}
-              onDragStart={handleDragStart}
+              onDragEnd={handleDrag}
+              onTouchEnd={handleTouch}
             />
           ))}
         </Orbits>
