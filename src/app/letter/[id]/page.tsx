@@ -15,6 +15,7 @@ import styled from "styled-components";
 const LetterPage = () => {
   const router = useRouter();
   const { id } = useParams();
+  const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
   // const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<LetterDetailType>();
@@ -87,7 +88,8 @@ const LetterPage = () => {
           <Letter
             showType="receive"
             key={key}
-            id={letterData.id}
+            pageType="space"
+            id={letterId}
             templateType={letterData.templateType}
             name={letterData.sender}
             images={letterData.images}
@@ -97,8 +99,9 @@ const LetterPage = () => {
         ) : (
           <Letter
             showType="receive"
+            pageType="space"
             key={key}
-            id={letterData.id}
+            id={letterId}
             templateType={letterData.templateType}
             name={letterData.sender}
             content={letterData.content}

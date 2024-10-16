@@ -68,7 +68,7 @@ const SendDetailPage = () => {
           <Letter
             showType="send"
             key={key}
-            id={letterData.id}
+            id={letterData.id.toString()}
             templateType={letterData.templateType}
             name={letterData.receiver}
             images={letterData.images}
@@ -80,7 +80,7 @@ const SendDetailPage = () => {
           <Letter
             showType="send"
             key={key}
-            id={letterData.id}
+            id={letterData.id.toString()}
             templateType={letterData.templateType}
             name={letterData.receiver}
             content={letterData.content}

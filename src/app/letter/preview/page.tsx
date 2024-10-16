@@ -57,7 +57,7 @@ const LetterPreviewPage = () => {
           <LetterWrapper>
             <Letter
               showType="previewReceive"
-              id={0}
+              id={"0"}
               templateType={templateType}
               name={senderName}
               content={content}

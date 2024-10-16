@@ -21,7 +21,12 @@ import {
 } from "@/api/planet/letter/spaceLetter";
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
-import { getInitUserToast, setInitUserToast } from "@/utils/storage";
+import {
+  getCookie,
+  getInitUserToast,
+  setCookie,
+  setInitUserToast,
+} from "@/utils/storage";
 import { getLetterCount } from "@/api/letter/letter";
 import { useToast } from "@/hooks/useToast";
 
@@ -164,6 +169,12 @@ const PlanetPage = () => {
   /* 토스트 메세지 */
   /* 편지 등록 개수 3개 미만일 경우*/
   useEffect(() => {
+    if (countLetter < 1) {
+      if (getCookie("letter-onboard") === null) {
+        setCookie("letter-onboard", "exist", 30);
+        router.push("/onboarding");
+      }
+    }
     if (countLetter < 3 && getInitUserToast() !== "true") {
       showToast("궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요", {
         icon: false,

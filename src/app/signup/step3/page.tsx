@@ -127,7 +127,7 @@ const SignupStep3 = () => {
         </Header>
         <InputWrapper>
           <Input
-            inputType="underline"
+            inputType="signup"
             value={name}
             onChange={setName}
             placeholder="ex)홍길동"

@@ -2,7 +2,7 @@ import { theme } from "@/styles/theme";
 import React, { ReactNode, useEffect } from "react";
 import styled, { css } from "styled-components";
 
-type inputType = "underline" | "boxText" | "boxTextArea";
+type inputType = "underline" | "boxText" | "boxTextArea" | "signup";
 
 interface InputProps {
   inputType?: inputType;
@@ -63,7 +63,9 @@ const Input = (props: InputProps) => {
     const newValue = event.target.value;
     isValidChange(isValidKoreanInput(newValue));
 
-    // onChange(newValue.replace(regex, "")); // 특수문자입력불가
+    if (inputType === "signup") {
+      onChange(newValue.replace(regex, "")); // 특수문자입력불가
+    }
     onChange(newValue);
   };
 
@@ -145,7 +147,7 @@ const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
   height: 52px;
   padding: 12px 20px;
   ${({ $inputType }) =>
-    $inputType === "underline" &&
+    ($inputType === "underline" || $inputType === "signup") &&
     css`
       padding: 16px 0px;
       border-radius: 0px;

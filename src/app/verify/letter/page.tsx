@@ -37,6 +37,7 @@ const VerifyLetter = () => {
 
   const fetchLetterData = async (letterId: string) => {
     try {
+      console.log(letterId);
       const response = await getVerifyedLetter(letterId);
       setLetterData({
         id: parseInt(letterId),
@@ -113,7 +114,7 @@ const VerifyLetter = () => {
           <Letter
             showType="url"
             key={key}
-            id={letterData.id}
+            id={letterId}
             templateType={letterData.templateType}
             name={letterData.sender}
             images={letterData.images}
@@ -125,7 +126,7 @@ const VerifyLetter = () => {
           <Letter
             showType="url"
             key={key}
-            id={letterData.id}
+            id={letterId}
             templateType={letterData.templateType}
             name={letterData.sender}
             content={letterData.content}

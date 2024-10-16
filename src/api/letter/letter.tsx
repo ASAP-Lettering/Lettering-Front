@@ -14,11 +14,6 @@ export const getIndependentLetter = async (letterId: string) => {
   return await authClient.get(`/api/v1/letters/independent/${letterId}`);
 };
 
-// 편지 삭제
-export const deleteLetter = async (letterId: string) => {
-  return await authClient.delete(`/api/v1/letters/${letterId}`, {});
-};
-
 // 실물 편지 내용 추가
 export const postPhysicalLetter = async ({
   senderName,
@@ -65,6 +60,15 @@ export const saveVerifyedLetter = async (letterId: string) => {
   });
 };
 
+//궤도 편지 삭제
+export const deleteIndependentLetter = async (letterId: string) => {
+  return await authClient.delete(`/api/v1/letters/independent/${letterId}`);
+};
+
+//행성 편지 삭제
+export const deleteLetter = async (letterId: string) => {
+  return await authClient.delete(`/api/v1/spaces/letters/${letterId}`);
+};
 // 모든 편지 수 조회
 export const getLetterCount = async () => {
   return await authClient.get(`/api/v1/letters/count`);
