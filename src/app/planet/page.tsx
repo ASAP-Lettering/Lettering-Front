@@ -434,7 +434,7 @@ const PlanetWrapper = styled.div<{ isLeaving: boolean; isNext: boolean }>`
   width: 100%;
   height: 100%;
   position: relative;
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  /* transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   opacity: ${({ isLeaving }) => (isLeaving ? 0 : 1)};
   transform: ${({ isLeaving, isNext }) => {
     if (isNext) {
@@ -442,7 +442,7 @@ const PlanetWrapper = styled.div<{ isLeaving: boolean; isNext: boolean }>`
     } else {
       return isLeaving ? "translateX(-50%)" : "translateX(0)";
     }
-  }};
+  }}; */
 `;
 
 // const PlanetWrapper = styled.div<{ currentPage: number }>`;
