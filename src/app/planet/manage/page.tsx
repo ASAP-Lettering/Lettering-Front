@@ -9,21 +9,20 @@ import { Planet, PLANETS } from "@/constants/planet";
 import PlanetList from "@/components/planet/PlanetList";
 import Image from "next/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import Toast from "@/components/common/Toast";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   deleteSpaces,
   getSpaceList,
   putSpacesOrder,
 } from "@/api/planet/space/space";
+import { useToast } from "@/hooks/useToast";
 
 const PlanetManagePage = () => {
+  const { showToast } = useToast();
   const [count, setCount] = useState<number>(0);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [checkedPlanets, setCheckedPlanets] = useState<string[]>([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
-  const [deletePlanet, setDeletePlanet] = useState<string>("");
-  const [showToast, setShowToast] = useState<boolean>(false);
   const [changedOrder, setChangedOrder] = useState<string[]>([]);
 
   const [planets, setPlanets] = useState<Planet[]>();
@@ -48,10 +47,12 @@ const PlanetManagePage = () => {
   };
 
   const handleClickCheckAll = () => {
-    if (checkedPlanets.length === PLANETS.length) {
-      setCheckedPlanets([]);
-    } else {
-      setCheckedPlanets(PLANETS.map((planet) => planet.spaceId));
+    if (planets && planets.length > 0) {
+      if (checkedPlanets.length === planets.length) {
+        setCheckedPlanets([]);
+      } else {
+        setCheckedPlanets(planets.map((planet) => planet.spaceId));
+      }
     }
   };
 
@@ -68,33 +69,40 @@ const PlanetManagePage = () => {
   };
 
   const handleConfirmDeletePlanet = async () => {
-    /* 행성 삭제하기 */
-    try {
-      const response = await deleteSpaces({ spaceIds: checkedPlanets });
-      console.log("행성 삭제 성공:", response.data);
-      setPlanets(
-        planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
+    if (checkedPlanets.length > 0) {
+      const firstCheckedPlanetId = checkedPlanets[0]; // 첫 번째 체크된 행성의 ID
+      const firstCheckedPlanet = planets?.find(
+        (planet) => planet.spaceId === firstCheckedPlanetId
       );
-    } catch (error) {
-      console.error("행성 삭제 실패:", error);
-    }
 
-    // 추후 작성
-    setConfirmDeleteModal(false);
-    setDeleteMode(false);
-    setDeletePlanet("ASAP"); // 삭제한 행성명으로
-    handleShowToast();
+      /* 행성 삭제하기 */
+      try {
+        const response = await deleteSpaces({ spaceIds: checkedPlanets });
+        console.log("행성 삭제 성공:", response.data);
+        setPlanets(
+          planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
+        );
+      } catch (error) {
+        console.error("행성 삭제 실패:", error);
+      }
+
+      setConfirmDeleteModal(false);
+      setDeleteMode(false);
+      showToast(
+        `${firstCheckedPlanet?.spaceName} ${
+          checkedPlanets.length > 0 && "외 N개"
+        } 행성과 등록된 편지들이 함께 삭제 되었어요`,
+        {
+          icon: false,
+          close: false,
+          bottom: "65px",
+        }
+      );
+    }
   };
 
   const handleCancelDeletePlanet = () => {
     setConfirmDeleteModal(false);
-  };
-
-  const handleShowToast = () => {
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
   };
 
   const onDragEnd = async ({
@@ -115,10 +123,7 @@ const PlanetManagePage = () => {
     setPlanets(items);
     console.log(items);
 
-    // const newOrder: string[] = items.map((item: Planet) => item.spaceId);
-    // setChangedOrder(newOrder);
-
-    // 서버 전달용 새로운 순서 배열
+    /* 서버 전달용 새로운 순서 배열 */
     const newOrder: { spaceId: string; index: number }[] = items.map(
       (item: Planet, index: number) => ({
         spaceId: item.spaceId,
@@ -129,7 +134,7 @@ const PlanetManagePage = () => {
 
     console.log(newOrder);
 
-    // 스페이스 순서 변경 API 호출
+    /* 스페이스 순서 변경 API 호출 */
     try {
       const response = await putSpacesOrder({ orders: newOrder });
       console.log("결과", newOrder);
@@ -224,14 +229,6 @@ const PlanetManagePage = () => {
           sub="행성에 등록된 편지들도 함께 삭제됩니다."
           onConfirm={handleConfirmDeletePlanet}
           onCancel={handleCancelDeletePlanet}
-        />
-      )}
-      {showToast && (
-        <Toast
-          text={`${deletePlanet} 행성과 등록된 편지들이 함께 삭제 되었어요`}
-          icon={false}
-          bottom="65px"
-          left="50%"
         />
       )}
     </Layout>
