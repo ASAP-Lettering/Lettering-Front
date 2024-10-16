@@ -11,13 +11,14 @@ import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
+import { postImage } from "@/api/image/image";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const [sender, setSender] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
@@ -33,7 +34,9 @@ const LetterRegisterPage = () => {
     }
   };
 
-  const handleAddImages = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImages = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files) {
       const selectedImages: File[] = Array.from(files).slice(0, 4);
@@ -43,9 +46,6 @@ const LetterRegisterPage = () => {
       if (isToastShown) {
         if (totalImages >= 4) {
           setIsButtonDisabled(true);
-          setImages((prevImages) =>
-            [...prevImages, ...selectedImages].slice(0, 4)
-          );
           return;
         }
 
@@ -53,7 +53,9 @@ const LetterRegisterPage = () => {
           const additionalImagesNeeded = 4 - images.length;
           const newImages = [
             ...images,
-            ...selectedImages.slice(0, additionalImagesNeeded),
+            ...selectedImages
+              .slice(0, additionalImagesNeeded)
+              .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
           return;
@@ -70,7 +72,9 @@ const LetterRegisterPage = () => {
           setIsButtonDisabled(true);
           const newImages = [
             ...images,
-            ...selectedImages.slice(0, 4 - images.length),
+            ...selectedImages
+              .slice(0, 4 - images.length)
+              .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
           return;
@@ -78,11 +82,25 @@ const LetterRegisterPage = () => {
       }
 
       setIsButtonDisabled(false);
-      setImages((prevImages) => [...prevImages, ...selectedImages]);
+
+      const imageUrls: string[] = [];
+      for (const file of selectedImages) {
+        try {
+          const response = await postImage(file);
+          console.log("이미지 업로드 성공", response.data);
+          imageUrls.push(response.data.imageUrl);
+        } catch (error) {
+          console.error("이미지 업로드 실패", error);
+        }
+      }
+      setImages((prevImages) => [...prevImages, ...imageUrls]);
     }
   };
 
   const handleDeleteImages = (id: number) => {
+    if (images.length - 1 < 4) {
+      setIsButtonDisabled(false);
+    }
     setImages((prevImages) => prevImages.filter((_, index) => index !== id));
   };
 
@@ -91,9 +109,7 @@ const LetterRegisterPage = () => {
     setLetterState({
       senderName: sender,
       content: content,
-      images: images.map((img) =>
-        img instanceof File ? URL.createObjectURL(img) : img
-      ), // 이미지 URL로 저장
+      images: images,
       templateType: 0,
     });
     router.push("/letter/template");
@@ -157,11 +173,7 @@ const LetterRegisterPage = () => {
                 {images.map((image, index) => (
                   <ImageDiv>
                     <Image
-                      src={
-                        image instanceof File
-                          ? URL.createObjectURL(image)
-                          : image
-                      }
+                      src={image}
                       width={52}
                       height={52}
                       alt="images"

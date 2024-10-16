@@ -20,6 +20,7 @@ import DraftBottom from "@/components/send/DraftBottom";
 import { draftState, sendLetterState } from "@/recoil/letterStore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useToast } from "@/hooks/useToast";
+import { postImage } from "@/api/image/image";
 
 const SendLetterPage = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const SendLetterPage = () => {
   const [draftId, setDraftId] = useState<string>("");
   const [receiver, setReceiver] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isToastShown, setIsToastShown] = useState(false);
 
@@ -38,8 +39,7 @@ const SendLetterPage = () => {
   const draftKey = useRecoilValue(draftState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const isDraftDisabled =
-    isLoading || (!receiver && !content && images.length === 0);
+  const isDraftDisabled = isLoading || (!receiver && !content);
 
   const fetchGetDraft = async () => {
     if (draftKey) {
@@ -68,7 +68,14 @@ const SendLetterPage = () => {
     if (draftKey) {
       fetchGetDraft();
     }
-  }, []);
+
+    if (letterState) {
+      setDraftId(letterState.draftId);
+      setReceiver(letterState.receiverName);
+      setContent(letterState.content);
+      setImages(letterState.images);
+    }
+  }, [draftKey, letterState]);
 
   const handleReceiverChange = (newValue: string) => {
     setReceiver(newValue);
@@ -80,7 +87,9 @@ const SendLetterPage = () => {
     }
   };
 
-  const handleAddImages = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImages = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files) {
       const selectedImages: File[] = Array.from(files).slice(0, 4);
@@ -90,9 +99,6 @@ const SendLetterPage = () => {
       if (isToastShown) {
         if (totalImages >= 4) {
           setIsButtonDisabled(true);
-          setImages((prevImages) =>
-            [...prevImages, ...selectedImages].slice(0, 4)
-          );
           return;
         }
 
@@ -100,7 +106,9 @@ const SendLetterPage = () => {
           const additionalImagesNeeded = 4 - images.length;
           const newImages = [
             ...images,
-            ...selectedImages.slice(0, additionalImagesNeeded),
+            ...selectedImages
+              .slice(0, additionalImagesNeeded)
+              .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
           return;
@@ -117,7 +125,9 @@ const SendLetterPage = () => {
           setIsButtonDisabled(true);
           const newImages = [
             ...images,
-            ...selectedImages.slice(0, 4 - images.length),
+            ...selectedImages
+              .slice(0, 4 - images.length)
+              .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
           return;
@@ -125,7 +135,18 @@ const SendLetterPage = () => {
       }
 
       setIsButtonDisabled(false);
-      setImages((prevImages) => [...prevImages, ...selectedImages]);
+
+      const imageUrls: string[] = [];
+      for (const file of selectedImages) {
+        try {
+          const response = await postImage(file);
+          console.log("이미지 업로드 성공", response.data);
+          imageUrls.push(response.data.imageUrl);
+        } catch (error) {
+          console.error("이미지 업로드 실패", error);
+        }
+      }
+      setImages((prevImages) => [...prevImages, ...imageUrls]);
     }
   };
 
@@ -151,9 +172,7 @@ const SendLetterPage = () => {
         draftId: newDraftId,
         content: content,
         receiverName: receiver,
-        images: images.map((image) =>
-          image instanceof File ? URL.createObjectURL(image) : image
-        ),
+        images: images,
       });
       console.log("임시 저장 성공");
       setTempCount(tempCount + 1);
@@ -182,9 +201,7 @@ const SendLetterPage = () => {
       draftId: draftId,
       receiverName: receiver,
       content: content,
-      images: images.map((img) =>
-        img instanceof File ? URL.createObjectURL(img) : img
-      ), // 이미지 URL로 저장
+      images: images,
       templateType: 0,
     });
     router.push("/send/template");
@@ -273,11 +290,7 @@ const SendLetterPage = () => {
                 {images.map((image, index) => (
                   <ImageDiv>
                     <Image
-                      src={
-                        image instanceof File
-                          ? URL.createObjectURL(image)
-                          : image
-                      }
+                      src={image}
                       width={52}
                       height={52}
                       alt="images"
