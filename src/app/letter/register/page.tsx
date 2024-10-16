@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -23,6 +23,14 @@ const LetterRegisterPage = () => {
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isToastShown, setIsToastShown] = useState(false);
+
+  useEffect(() => {
+    if (letterState) {
+      setSender(letterState.senderName);
+      setContent(letterState.content);
+      setImages(letterState.images);
+    }
+  }, [letterState]);
 
   const handleSenderChange = (newValue: string) => {
     setSender(newValue);

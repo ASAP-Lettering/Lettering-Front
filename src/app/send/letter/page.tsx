@@ -41,15 +41,15 @@ const SendLetterPage = () => {
 
   const isDraftDisabled = isLoading || (!receiver && !content);
 
-  useEffect(() => {
-    setLetterState({
-      draftId: "",
-      receiverName: "",
-      content: "",
-      images: [],
-      templateType: 0,
-    });
-  }, [setLetterState]);
+  // useEffect(() => {
+  //   setLetterState({
+  //     draftId: "",
+  //     receiverName: "",
+  //     content: "",
+  //     images: [],
+  //     templateType: 0,
+  //   });
+  // }, [setLetterState]);
 
   const fetchGetDraft = async () => {
     if (draftKey) {
