@@ -14,10 +14,11 @@ interface Draft {
 
 interface DraftBottomProps {
   onClose: () => void;
+  handleDeleteDraft: (draftId: string) => void;
 }
 
 const DraftBottom = (props: DraftBottomProps) => {
-  const { onClose } = props;
+  const { onClose, handleDeleteDraft } = props;
   const [draftLists, setDraftLists] = useState<Draft[] | null>(null);
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
 
@@ -35,8 +36,9 @@ const DraftBottom = (props: DraftBottomProps) => {
     fetchGetDraftList();
   }, []);
 
-  const handleDeleteDraft = (draftKey: string) => {
+  const handleDelete = (draftKey: string) => {
     if (draftLists) {
+      handleDeleteDraft(draftKey);
       const updatedDrafts = draftLists.filter(
         (item) => item.draftKey !== draftKey
       );
@@ -70,16 +72,17 @@ const DraftBottom = (props: DraftBottomProps) => {
         {draftLists && draftLists?.length > 0 ? (
           <DraftListContainer>
             {draftLists.map((item) => (
-              <DraftList
-                key={item.draftKey}
-                id={item.draftKey}
-                name={item.receiverName}
-                content={item.content}
-                timestamp={item.lastUpdated}
-                isDeleteMode={isDeleteMode}
-                onDelete={handleDeleteDraft}
-                onClose={onClose}
-              />
+              <DraftListWrapper key={item.draftKey}>
+                <DraftList
+                  id={item.draftKey}
+                  name={item.receiverName}
+                  content={item.content}
+                  timestamp={item.lastUpdated}
+                  isDeleteMode={isDeleteMode}
+                  onDelete={handleDelete}
+                  onClose={onClose}
+                />
+              </DraftListWrapper>
             ))}
           </DraftListContainer>
         ) : (
@@ -93,6 +96,8 @@ const DraftBottom = (props: DraftBottomProps) => {
 export default DraftBottom;
 
 const Overlay = styled.div`
+  width: 100%;
+  height: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -100,12 +105,12 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 393px;
-  min-width: 258px;
-  padding: 18px 24px;
+  width: 100%;
+  min-height: 258px;
+  padding: 18px 20px;
   border-radius: 20px 20px 0px 0px;
   background: ${theme.colors.gray900};
-  position: sticky;
+  position: absolute;
   bottom: 0;
   left: 0;
   z-index: 10;
@@ -129,6 +134,7 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0px 4px;
 `;
 
 const Title = styled.div`
@@ -153,16 +159,30 @@ const EditButton = styled.button`
 const DraftListContainer = styled.div`
   width: 100%;
   max-height: 342px;
+  height: 100%;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
-  overflow-x: scroll;
+  overflow: auto;
 
   ::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
+`;
+
+const DraftListWrapper = styled.div`
+  width: 100%;
+  height: 80px;
+  padding: 0 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  /* background-color: white; */
+  flex-shrink: 0;
 `;
 
 const NoData = styled.div`

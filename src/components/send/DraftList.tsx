@@ -29,15 +29,13 @@ const DraftList = (props: DraftListProps) => {
     onClose();
   };
 
-  const handleDeleteDraft = async () => {
-    if (id && onDelete) {
-      try {
-        const response = await deleteDraftLetter(id);
-        console.log("임시 저장 삭제 성공", response);
-        onDelete(id);
-      } catch {
-        console.log("임시 저장 삭제 실패");
-      }
+  const handleDeleteDraft = async (
+    event: React.MouseEvent<HTMLImageElement>
+  ) => {
+    event.stopPropagation();
+
+    if (onDelete) {
+      onDelete(id);
     }
   };
 
@@ -79,6 +77,7 @@ const Container = styled.div`
   border-radius: 8px;
   background: ${theme.colors.gray800};
   position: relative;
+  overflow: visible;
 `;
 
 const Top = styled.div`
@@ -109,4 +108,5 @@ const DeleteIcon = styled(Image)`
   position: absolute;
   top: -4px;
   right: -2px;
+  overflow: visible;
 `;

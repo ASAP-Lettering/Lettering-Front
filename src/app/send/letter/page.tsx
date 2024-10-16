@@ -9,18 +9,27 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Toast from "@/components/common/Toast";
-import { getDraftCount, getDraftLetter, postDraftKey } from "@/api/send/send";
+import {
+  deleteDraftLetter,
+  getDraftCount,
+  getDraftLetter,
+  postDraftKey,
+  postDraftLetter,
+} from "@/api/send/send";
 import DraftBottom from "@/components/send/DraftBottom";
 import { draftState, sendLetterState } from "@/recoil/letterStore";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { toastState } from "@/recoil/toastStore";
+import useToast from "@/hooks/useToast";
 
 const SendLetterPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [draftId, setDraftId] = useState<string>("");
   const [receiver, setReceiver] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
-  const [showToast, setShowToast] = useState<boolean>(false);
+  // const [showToast, setShowToast] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
@@ -28,18 +37,9 @@ const SendLetterPage = () => {
   const [isDraftBottom, setIsDraftBottom] = useState<boolean>(false);
 
   const draftKey = useRecoilValue(draftState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchPostDraftKey = async () => {
-    if (draftKey) {
-      try {
-        const response = await postDraftKey();
-        setDraftId(response.data.draftId);
-        console.log("임시 저장 키 발급 성공", response);
-      } catch {
-        console.log("임시 저장 키 발급 실패");
-      }
-    }
-  };
+  const setToast = useSetRecoilState(toastState);
 
   const fetchGetDraft = async () => {
     if (draftKey) {
@@ -68,8 +68,6 @@ const SendLetterPage = () => {
     if (draftKey) {
       fetchGetDraft();
     }
-
-    fetchPostDraftKey();
   }, []);
 
   const handleReceiverChange = (newValue: string) => {
@@ -87,29 +85,73 @@ const SendLetterPage = () => {
     if (files) {
       const selectedImages: File[] = Array.from(files).slice(0, 4);
       if (images.length + selectedImages.length > 4) {
-        handleShowToast();
+        if (!isButtonDisabled) {
+          showToast("사진 첨부는 최대 4장까지 가능해요.");
+        }
+        setIsButtonDisabled(true);
+        // handleShowToast();
         return;
       }
+      setIsButtonDisabled(false);
       setImages((prevImages) => [...prevImages, ...selectedImages]);
     }
   };
 
   const handleDeleteImages = (id: number) => {
+    if (images.length - 1 < 4) {
+      setIsButtonDisabled(false);
+    }
     setImages((prevImages) => prevImages.filter((_, index) => index !== id));
   };
 
   /* 임시 저장 */
+  const handleSaveLetter = async () => {
+    try {
+      setIsLoading(true);
+      // 1. 임시 저장 키 발급
+      const draftKeyResponse = await postDraftKey();
+      const newDraftId = draftKeyResponse.data.draftId;
+      setDraftId(newDraftId);
+      console.log("임시 저장 키 발급 성공", newDraftId);
+
+      // 2. 발급된 임시 저장 키로 임시 저장 API 호출
+      await postDraftLetter({
+        draftId: newDraftId,
+        content: content,
+        receiverName: receiver,
+        images: images.map((image) =>
+          image instanceof File ? URL.createObjectURL(image) : image
+        ),
+      });
+      console.log("임시 저장 성공");
+      setTempCount(tempCount + 1);
+
+      // 토스트 메세지
+      // setToast({
+      //   show: true,
+      //   message: `임시 저장을 완료했어요`,
+      //   close: false,
+      // });
+      showToast("임시 저장을 완료했어요");
+    } catch (error) {
+      console.error("임시 저장 실패", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /* 임시 저장 목록 */
   const handleDraftBottom = () => {
     setIsDraftBottom(!isDraftBottom);
   };
 
   /* 토스트 메세지 */
   const handleShowToast = () => {
-    setIsButtonDisabled(true);
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
+    setToast({
+      show: true,
+      message: `사진 첨부는 최대 4장까지 가능해요.`,
+      close: false,
+    });
   };
 
   const handleAddNext = () => {
@@ -126,14 +168,27 @@ const SendLetterPage = () => {
     router.push("/send/template");
   };
 
+  /* 임시 저장 삭제 핸들러 */
+  const handleDeleteDraft = async (draftId: string) => {
+    try {
+      await deleteDraftLetter(draftId);
+      setTempCount((prevCount) => prevCount - 1);
+      console.log("임시 저장 편지가 삭제 성공");
+    } catch (error) {
+      console.error("임시 저장 편지 삭제 실패", error);
+    }
+  };
+
   return (
     <Layout>
       <NavigatorBarWrapper>
         <NavigatorBar title="편지 보내기" cancel={false} />
-        <StorageButton onClick={handleDraftBottom}>
-          임시저장{` `}I{` `}
-          {tempCount}
-        </StorageButton>
+        <ButtonDiv>
+          <StorageButton onClick={handleSaveLetter} disabled={isLoading}>
+            임시저장
+          </StorageButton>
+          I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
+        </ButtonDiv>
       </NavigatorBarWrapper>
       <Container>
         <Essential>* 필수</Essential>
@@ -220,14 +275,14 @@ const SendLetterPage = () => {
             </ImagesList>
           )}
         </Column>
-        {showToast && (
+        {/* {showToast && (
           <Toast
             text="사진 첨부는 최대 4장까지 가능해요."
             icon={true}
             bottom="113px"
             left="50%"
           />
-        )}
+        )} */}
         <ButtonWrapper>
           <Button
             buttonType="primary"
@@ -238,7 +293,12 @@ const SendLetterPage = () => {
           />
         </ButtonWrapper>
       </Container>
-      {isDraftBottom && <DraftBottom onClose={handleDraftBottom} />}
+      {isDraftBottom && (
+        <DraftBottom
+          onClose={handleDraftBottom}
+          handleDeleteDraft={handleDeleteDraft}
+        />
+      )}
     </Layout>
   );
 };
@@ -265,7 +325,7 @@ const NavigatorBarWrapper = styled.div`
   margin-bottom: 25px;
 `;
 
-const StorageButton = styled.button`
+const ButtonDiv = styled.div`
   display: inline-flex;
   padding: 6px 12px;
   justify-content: center;
@@ -279,6 +339,20 @@ const StorageButton = styled.button`
   position: absolute;
   top: 6.5px;
   right: 0px;
+`;
+
+const StorageButton = styled.button`
+  color: ${theme.colors.gray200};
+  ${theme.fonts.caption03};
+
+  &:disabled {
+    color: ${theme.colors.gray400};
+  }
+`;
+
+const ListButton = styled.button`
+  color: ${theme.colors.gray200};
+  ${theme.fonts.caption03};
 `;
 
 const Container = styled.div`
@@ -305,7 +379,7 @@ const Label = styled.div`
   align-items: center;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.subtitle};
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `;
 
 const Count = styled.div`
@@ -339,12 +413,12 @@ const AddImageLabel = styled.label`
   font-style: normal;
   font-weight: 500;
   ${theme.fonts.body08}
-  margin-top: 16px;
 `;
 
 const SmallText = styled.div`
   color: ${theme.colors.gray500};
   ${theme.fonts.caption04};
+  text-align: center;
 `;
 
 const AddImagesLabel = styled.label`
