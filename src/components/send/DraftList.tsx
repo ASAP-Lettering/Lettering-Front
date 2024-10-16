@@ -97,6 +97,9 @@ const Top = styled.div`
   width: 100%;
   color: ${theme.colors.white};
   ${theme.fonts.caption01};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const Name = styled.span`
