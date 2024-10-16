@@ -49,7 +49,7 @@ export const deleteDraftLetter = async (draftId: string) => {
 
 // 임시 저장 키 발급
 export const postDraftKey = async () => {
-  return await authClient.put(`/api/v1/letters/drafts/key`);
+  return await authClient.post(`/api/v1/letters/drafts/key`);
 };
 
 // 임시 저장 목록 조회
