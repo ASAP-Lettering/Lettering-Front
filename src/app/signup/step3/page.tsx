@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Input from "@/components/common/Input";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import Toast from "@/components/common/Toast";
 import useMeasure from "react-use-measure";
 import BottomSheet from "@/components/common/BottomSheet";
 import { Suspense, useState } from "react";
@@ -15,11 +14,12 @@ import Loader, { LoaderContainer } from "@/components/common/Loader";
 import { signupState, userInfo } from "@/recoil/signupStore";
 import { signup } from "@/api/login/user";
 import { setTokens } from "@/utils/storage";
+import { useToast } from "@/hooks/useToast";
 
 const SignupStep3 = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [name, setName] = useState("");
-  const [isPopupToast, setisPopupToast] = useState(false);
   const [viewportRef, { height: viewportHeight }] = useMeasure();
   const [isBottomUp, setIsBottomUp] = useState(false);
   const [isDisplayed, setIsDisplayed] = useState(false);
@@ -33,7 +33,11 @@ const SignupStep3 = () => {
     if (canSignin()) {
       setIsBottomUp(true);
     } else {
-      handleShowToast();
+      showToast("형식에 맞지 않는 이름입니다!", {
+        icon: true,
+        close: false,
+        bottom: "120px",
+      });
       setIsDisplayed(false);
     }
   };
@@ -92,13 +96,6 @@ const SignupStep3 = () => {
     }
   };
 
-  const handleShowToast = () => {
-    setisPopupToast(true);
-    setTimeout(() => {
-      setisPopupToast(false);
-    }, 3000);
-  };
-
   const handleBottomUpChange = (state: boolean) => {
     setIsBottomUp(state);
   };
@@ -139,14 +136,6 @@ const SignupStep3 = () => {
             errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
           />
         </InputWrapper>
-        {isPopupToast && (
-          <Toast
-            text={`형식에 맞지 않는 이름입니다!`}
-            icon={true}
-            bottom="120px"
-            left="50%"
-          />
-        )}
       </MainWrapper>
       <ButtonWrapper>
         <DescriptionText onClick={() => router.push("/signup/step3/check")}>
@@ -177,23 +166,23 @@ export default function SignupStep3Paging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-between;
+  min-height: 100%;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  padding: 25px;
+  padding-bottom: 40px;
+  position: relative;
+  overflow: hidden;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: column;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
 `;
 
 const Header = styled.div`

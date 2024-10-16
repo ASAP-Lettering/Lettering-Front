@@ -8,7 +8,7 @@ import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Toast from "@/components/common/Toast";
+
 import {
   deleteDraftLetter,
   getDraftCount,
@@ -18,9 +18,8 @@ import {
 } from "@/api/send/send";
 import DraftBottom from "@/components/send/DraftBottom";
 import { draftState, sendLetterState } from "@/recoil/letterStore";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
-import useToast from "@/hooks/useToast";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useToast } from "@/hooks/useToast";
 
 const SendLetterPage = () => {
   const router = useRouter();
@@ -29,8 +28,8 @@ const SendLetterPage = () => {
   const [receiver, setReceiver] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
-  // const [showToast, setShowToast] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  const [isToastShown, setIsToastShown] = useState(false);
 
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
   const [tempCount, setTempCount] = useState<number>(3);
@@ -39,7 +38,8 @@ const SendLetterPage = () => {
   const draftKey = useRecoilValue(draftState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const setToast = useSetRecoilState(toastState);
+  const isDraftDisabled =
+    isLoading || (!receiver && !content && images.length === 0);
 
   const fetchGetDraft = async () => {
     if (draftKey) {
@@ -84,14 +84,46 @@ const SendLetterPage = () => {
     const files = event.target.files;
     if (files) {
       const selectedImages: File[] = Array.from(files).slice(0, 4);
-      if (images.length + selectedImages.length > 4) {
-        if (!isButtonDisabled) {
-          showToast("사진 첨부는 최대 4장까지 가능해요.");
+      const totalImages = images.length + selectedImages.length;
+
+      /* 토스트 메세지 이미 보여짐 */
+      if (isToastShown) {
+        if (totalImages >= 4) {
+          setIsButtonDisabled(true);
+          setImages((prevImages) =>
+            [...prevImages, ...selectedImages].slice(0, 4)
+          );
+          return;
         }
-        setIsButtonDisabled(true);
-        // handleShowToast();
-        return;
+
+        if (totalImages > 4) {
+          const additionalImagesNeeded = 4 - images.length;
+          const newImages = [
+            ...images,
+            ...selectedImages.slice(0, additionalImagesNeeded),
+          ];
+          setImages(newImages);
+          return;
+        }
+      } else {
+        /* 토스트 메세지 보여지기 전*/
+        if (totalImages > 4) {
+          showToast("사진 첨부는 최대 4장까지 가능해요.", {
+            icon: true,
+            close: false,
+            bottom: "113px",
+          });
+          setIsToastShown(true);
+          setIsButtonDisabled(true);
+          const newImages = [
+            ...images,
+            ...selectedImages.slice(0, 4 - images.length),
+          ];
+          setImages(newImages);
+          return;
+        }
       }
+
       setIsButtonDisabled(false);
       setImages((prevImages) => [...prevImages, ...selectedImages]);
     }
@@ -126,13 +158,12 @@ const SendLetterPage = () => {
       console.log("임시 저장 성공");
       setTempCount(tempCount + 1);
 
-      // 토스트 메세지
-      // setToast({
-      //   show: true,
-      //   message: `임시 저장을 완료했어요`,
-      //   close: false,
-      // });
-      showToast("임시 저장을 완료했어요");
+      // 3. 토스트 메세지
+      showToast("임시 저장을 완료했어요", {
+        icon: true,
+        close: true,
+        bottom: "113px",
+      });
     } catch (error) {
       console.error("임시 저장 실패", error);
     } finally {
@@ -143,15 +174,6 @@ const SendLetterPage = () => {
   /* 임시 저장 목록 */
   const handleDraftBottom = () => {
     setIsDraftBottom(!isDraftBottom);
-  };
-
-  /* 토스트 메세지 */
-  const handleShowToast = () => {
-    setToast({
-      show: true,
-      message: `사진 첨부는 최대 4장까지 가능해요.`,
-      close: false,
-    });
   };
 
   const handleAddNext = () => {
@@ -184,9 +206,9 @@ const SendLetterPage = () => {
       <NavigatorBarWrapper>
         <NavigatorBar title="편지 보내기" cancel={false} />
         <ButtonDiv>
-          <StorageButton onClick={handleSaveLetter} disabled={isLoading}>
+          <DraftButton onClick={handleSaveLetter} disabled={isDraftDisabled}>
             임시저장
-          </StorageButton>
+          </DraftButton>
           I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
         </ButtonDiv>
       </NavigatorBarWrapper>
@@ -275,14 +297,6 @@ const SendLetterPage = () => {
             </ImagesList>
           )}
         </Column>
-        {/* {showToast && (
-          <Toast
-            text="사진 첨부는 최대 4장까지 가능해요."
-            icon={true}
-            bottom="113px"
-            left="50%"
-          />
-        )} */}
         <ButtonWrapper>
           <Button
             buttonType="primary"
@@ -341,12 +355,13 @@ const ButtonDiv = styled.div`
   right: 0px;
 `;
 
-const StorageButton = styled.button`
+const DraftButton = styled.button`
   color: ${theme.colors.gray200};
   ${theme.fonts.caption03};
 
   &:disabled {
-    color: ${theme.colors.gray400};
+    /* color: ${theme.colors.gray400}; */
+    /* transition: color 0.5s; */
   }
 `;
 

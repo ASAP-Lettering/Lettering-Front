@@ -169,8 +169,8 @@ const GuidePage = () => {
       <NavigatorBar title="NavigatorBar" cancel={true} />
       <br />
       <h3>Toast</h3>
-      {showToast && <Toast text="Toast Msg" icon={false} />}
-      {showToast && <Toast text="Toast Msg" icon={true} />}
+      {showToast && <Toast message="Toast Msg" icon={false} />}
+      {showToast && <Toast message="Toast Msg" icon={true} />}
       <Button
         buttonType="secondary"
         size="small"

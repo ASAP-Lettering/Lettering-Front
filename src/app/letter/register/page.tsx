@@ -8,19 +8,20 @@ import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Toast from "@/components/common/Toast";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
+import { useToast } from "@/hooks/useToast";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [sender, setSender] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
-  const [showToast, setShowToast] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
+  const [isToastShown, setIsToastShown] = useState(false);
 
   const handleSenderChange = (newValue: string) => {
     setSender(newValue);
@@ -36,25 +37,53 @@ const LetterRegisterPage = () => {
     const files = event.target.files;
     if (files) {
       const selectedImages: File[] = Array.from(files).slice(0, 4);
-      if (images.length + selectedImages.length > 4) {
-        handleShowToast();
-        return;
+      const totalImages = images.length + selectedImages.length;
+
+      /* 토스트 메세지 이미 보여짐 */
+      if (isToastShown) {
+        if (totalImages >= 4) {
+          setIsButtonDisabled(true);
+          setImages((prevImages) =>
+            [...prevImages, ...selectedImages].slice(0, 4)
+          );
+          return;
+        }
+
+        if (totalImages > 4) {
+          const additionalImagesNeeded = 4 - images.length;
+          const newImages = [
+            ...images,
+            ...selectedImages.slice(0, additionalImagesNeeded),
+          ];
+          setImages(newImages);
+          return;
+        }
+      } else {
+        /* 토스트 메세지 보여지기 전*/
+        if (totalImages > 4) {
+          showToast("사진 첨부는 최대 4장까지 가능해요.", {
+            icon: true,
+            close: false,
+            bottom: "113px",
+          });
+          setIsToastShown(true);
+          setIsButtonDisabled(true);
+          const newImages = [
+            ...images,
+            ...selectedImages.slice(0, 4 - images.length),
+          ];
+          setImages(newImages);
+          return;
+        }
       }
+
+      setIsButtonDisabled(false);
       setImages((prevImages) => [...prevImages, ...selectedImages]);
     }
   };
 
   const handleDeleteImages = (id: number) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== id));
-  };
-
-  /* 토스트 메세지 */
-  const handleShowToast = () => {
-    setIsButtonDisabled(true);
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
   };
 
   const handleAddNext = () => {
@@ -152,14 +181,6 @@ const LetterRegisterPage = () => {
             </ImagesList>
           )}
         </Column>
-        {showToast && (
-          <Toast
-            text="사진 첨부는 최대 4장까지 가능해요."
-            icon={true}
-            bottom="113px"
-            left="50%"
-          />
-        )}
         <ButtonWrapper>
           <Button
             buttonType="primary"

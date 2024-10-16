@@ -9,15 +9,11 @@ import Tag from "@/components/common/Tag";
 import { Orbit, ORBIT_MESSAGE, ORBITS } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
-import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { OrbitMessage } from "@/types/orbit";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSwipeable } from "react-swipeable";
-import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
-// import { setSpaceId } from "@/utils/storage";
+import { getMainId, putSpace } from "@/api/planet/space/space";
 import {
   getOrbitLetter,
   getPlanetLetterList,
@@ -25,15 +21,13 @@ import {
 } from "@/api/planet/letter/spaceLetter";
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
-import {
-  clearInitUserToast,
-  getInitUserToast,
-  setInitUserToast,
-} from "@/utils/storage";
+import { getInitUserToast, setInitUserToast } from "@/utils/storage";
 import { getLetterCount } from "@/api/letter/letter";
+import { useToast } from "@/hooks/useToast";
 
 const PlanetPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -46,9 +40,6 @@ const PlanetPage = () => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
   const [userName, setUserName] = useState("");
   const [countLetter, setCountLetter] = useState<number>(0);
-
-  const { show, message, close } = useRecoilValue(toastState);
-  const setToast = useSetRecoilState(toastState);
 
   const fetchGetLetterCount = async () => {
     try {
@@ -198,24 +189,15 @@ const PlanetPage = () => {
   /* 편지 등록 개수 3개 미만일 경우*/
   useEffect(() => {
     if (countLetter < 3 && getInitUserToast() !== "true") {
-      setToast({
-        show: true,
-        message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
+      showToast("궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요", {
+        icon: false,
         close: true,
+        bottom: "230px",
+        padding: "11px 13px",
       });
       setInitUserToast();
     }
   }, []);
-
-  useEffect(() => {
-    if (show) {
-      const timer = setTimeout(() => {
-        setToast({ show: false, message: "", close: false });
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [show, setToast]);
 
   /* 드래그 앤 드롭 */
   const handleDrop = async (result: any) => {
@@ -361,16 +343,6 @@ const PlanetPage = () => {
                 </Droppable>
               </PlanetWrapper>
               <PageWrapper>
-                {show && (
-                  <Toast
-                    text={message}
-                    icon={false}
-                    top="0px"
-                    left="50%"
-                    padding="11px 0px"
-                    close={close}
-                  />
-                )}
                 <Pagination
                   currentPage={currentPage}
                   totalPage={totalPages}
