@@ -400,13 +400,13 @@ const Icon = styled(Image)`
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  padding: 20px;
 `;
 
 const Top = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  padding: 20px;
 `;
 
 const Title = styled.div`
@@ -423,7 +423,7 @@ const TagList = styled.div`
   display: flex;
   gap: 8px;
   overflow-x: scroll;
-
+  padding: 0 20px;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -440,8 +440,9 @@ const PlanetWrapper = styled.div`
 
 const SliderWrapper = styled.div`
    width: 100%;
-   color: white;
-   position: relative;   
+   height: 400px;
+   overflow: scroll;
+   background-color: ${theme.colors.bg};
 `;
 
 const PageWrapper = styled.div`

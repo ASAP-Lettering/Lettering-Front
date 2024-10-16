@@ -26,7 +26,8 @@ const slideVariants = {
     transition: {
       type: "spring",
       stiffness: 300,
-      damping: 30,
+      damping: 25, // Adjusted for a smoother feel
+      mass: 0.5, // Added mass for more natural movement
     },
   },
   exit: (direction: number) => ({
@@ -35,7 +36,9 @@ const slideVariants = {
     transition: {
       type: "spring",
       stiffness: 300,
-      damping: 30,
+      damping: 25, // Consistent with the enter transition
+      mass: 0.5,
+      ease: [0.4, 0.0, 0.2, 1], // Ease-in-out effect
     },
   }),
 };
@@ -50,22 +53,25 @@ const PlanetSlide = ({
 }: PlanetSlideProps) => {
   return (
     <AnimatePresence custom={direction}>
-      <Container
-        key={idx}
-        custom={direction}
-        variants={slideVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
-        <Planet
-          planetType={spaceInfo?.templateType || 0}
-          planet={spaceInfo?.spaceName || ""}
-          orbits={currentOrbits || []}
-          onEditPlanetName={onEditPlanetName}
-          setCurrentOrbits={setCurrentOrbits}
-        />
-      </Container>
+      <ContainerWrapper>
+        <Container
+          key={idx}
+          custom={direction}
+          variants={slideVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
+          <Planet
+            planetType={spaceInfo?.templateType || 0}
+            planet={spaceInfo?.spaceName || ""}
+            orbits={currentOrbits || []}
+            onEditPlanetName={onEditPlanetName}
+            setCurrentOrbits={setCurrentOrbits}
+          />
+          {/* <TestDiv /> */}
+        </Container>
+      </ContainerWrapper>
     </AnimatePresence>
   );
 };
@@ -78,7 +84,17 @@ const TestDiv = styled.div`
     height: 400px;
 `;
 
+const ContainerWrapper = styled.div`
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: ${theme.colors.bg};
+`;
+
 const Container = styled(motion.div)`
-    display: flex;
-    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: ${theme.colors.bg};
 `;
