@@ -59,7 +59,11 @@ const Tag = (props: TagProps) => {
     setEditedName(e.target.value);
   };
 
-  const handleDeleteOrbit = async () => {
+  const handleDeleteOrbit = async (
+    event: React.MouseEvent<HTMLImageElement>
+  ) => {
+    event.stopPropagation();
+
     if (tagId && onDelete) {
       try {
         const response = await deleteOrbitLetter(tagId);
