@@ -19,11 +19,12 @@ import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
 import {
   getOrbitLetter,
   getPlanetLetterList,
+  putLetterToIndep,
+  putLetterToPlanet,
 } from "@/api/planet/letter/spaceLetter";
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
 import {
-  clearInitUserToast,
   getCookie,
   getInitUserToast,
   setCookie,
@@ -41,7 +42,7 @@ const PlanetPage = () => {
   const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
+  //const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
 
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
@@ -216,13 +217,15 @@ const PlanetPage = () => {
     router.push("/mypage");
   };
 
-  //drag 시 함수 & 영역
-  const [droppedTagId, setDroppedTagId] = useState<string | null>(null);
+  //승효 - 수정사항 코드(드래그앤드롭 & 슬라이드)
+  const [droppedItem, setDroppedItem] = useState<Orbit | null>(null);
+  const [dragLoading, setDragLoading] = useState(false);
+
   const planetRef = useRef<HTMLDivElement>(null);
 
-  const handleTagDrag = (id: string) => {
-    console.log("현재 드래그 중인 태그:", id);
-    setDroppedTagId(id);
+  const handleTagDrag = (item: Orbit) => {
+    console.log("현재 드래그 중인 태그:", item.letterId);
+    setDroppedItem(item);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -241,11 +244,52 @@ const PlanetPage = () => {
         clientY >= planetBounds.top &&
         clientY <= planetBounds.bottom
       ) {
-        setCurrentPage(totalPages);
-        console.log("드래그 완료:", droppedTagId);
+        setDragLoading(true);
+        console.log(
+          "드래그 대상",
+          droppedItem?.letterId,
+          droppedItem?.senderName
+        );
+        if (droppedItem) {
+          handleMovePlanet(droppedItem?.letterId!);
+          console.log("드래그 끝~~");
+          setDragLoading(false);
+        }
+        if (!dragLoading) {
+          if (countLetter === totalPages * 5) {
+            setCurrentPage(totalPages + 1);
+            setTotalPages(totalPages + 1);
+            console.log(currentPage, totalPages);
+          } else {
+            setCurrentPage(totalPages);
+            console.log(currentPage, totalPages);
+          }
+        }
       } else {
         console.log("드래그 범위가 아님");
       }
+    }
+  };
+
+  const handleMovePlanet = async (letterId: string) => {
+    try {
+      await putLetterToPlanet({
+        letterId: letterId || "",
+        spaceId: spaceInfo?.spaceId!,
+      });
+      console.log(
+        `${droppedItem?.senderName}님의 편지가 행성으로 이동했습니다.`
+      );
+      if (!show) {
+        setToast({
+          show: true,
+          message: `${droppedItem?.senderName}님의 편지가 행성으로 이동했습니다.`,
+          close: false,
+        });
+      }
+      setDroppedItem(null);
+    } catch {
+      console.log("편지 다른 행성 이동 실패");
     }
   };
 
@@ -319,43 +363,45 @@ const PlanetPage = () => {
                 setCurrentOrbits={setCurrentOrbits}
               />
             </PlanetWrapper> */}
-            <SliderWrapper
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              ref={planetRef}
-            >
-              <PlanetSlide
-                idx={currentPage}
-                direction={direction}
-                spaceInfo={spaceInfo}
-                currentOrbits={currentOrbits || []}
-                setCurrentOrbits={setCurrentOrbits}
-                onEditPlanetName={handleEditPlanetName}
-              />
-            </SliderWrapper>
-            <PageWrapper>
-              {show && (
-                <Toast
-                  text={message}
-                  icon={false}
-                  top="0px"
-                  left="50%"
-                  padding="11px 0px"
-                  close={close}
+            <MainWrapper>
+              <SliderWrapper
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                ref={planetRef}
+              >
+                <PlanetSlide
+                  idx={currentPage}
+                  direction={direction}
+                  spaceInfo={spaceInfo}
+                  currentOrbits={currentOrbits || []}
+                  setCurrentOrbits={setCurrentOrbits}
+                  onEditPlanetName={handleEditPlanetName}
                 />
-              )}
-              <Pagination
-                currentPage={currentPage}
-                totalPage={totalPages}
-                onPrevPage={handlePrevPage}
-                onNextPage={handleNextPage}
-              />
-            </PageWrapper>
+              </SliderWrapper>
+              <PageWrapper>
+                {show && (
+                  <Toast
+                    text={message}
+                    icon={false}
+                    top="0px"
+                    left="50%"
+                    padding="11px 0px"
+                    close={close}
+                  />
+                )}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPage={totalPages}
+                  onPrevPage={handlePrevPage}
+                  onNextPage={handleNextPage}
+                />
+              </PageWrapper>
+            </MainWrapper>
           </Container>
           <Bottom
             orbitMessages={orbitMessages || null}
             onDelete={handleDeleteOrbit}
-            onTagDrag={handleTagDrag}
+            onOrbitDrag={handleTagDrag}
           />
         </>
       )}
@@ -400,6 +446,8 @@ const Icon = styled(Image)`
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  margin-bottom: 30px;
 `;
 
 const Top = styled.div`
@@ -407,12 +455,12 @@ const Top = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Title = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.heading02};
-  margin-bottom: 20px;
 `;
 
 const Em = styled.span`
@@ -421,6 +469,7 @@ const Em = styled.span`
 
 const TagList = styled.div`
   display: flex;
+  box-sizing: border-box;
   gap: 8px;
   overflow-x: scroll;
   padding: 0 20px;
@@ -431,30 +480,34 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const PlanetWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-`;
+// const PlanetWrapper = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   position: relative;
+//   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+// `;
 
 const SliderWrapper = styled.div`
-   width: 100%;
+   width: 400px;
    height: 400px;
    overflow: scroll;
    background-color: ${theme.colors.bg};
 `;
 
 const PageWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 600px;
-  left: 50%;
-  padding-top: 20px;
-  transform: translateX(-50%);
+    width: 100%;
+    height: 0px;
+    z-index: 1;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    top: 600px;
+    left: 50%;
+    padding: 20px;
+    transform: translateX(-50%);
 `;
 
 /* 로딩 */
@@ -465,4 +518,11 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const MainWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
 `;

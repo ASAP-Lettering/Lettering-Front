@@ -10,11 +10,11 @@ import { useRouter } from "next/navigation";
 interface BottomProps {
   orbitMessages: Orbit[] | null;
   onDelete: (deleteId: string) => void;
-  onTagDrag: (id: string) => void;
+  onOrbitDrag: (item: Orbit) => void;
 }
 
 const Bottom = (props: BottomProps) => {
-  const { orbitMessages, onDelete, onTagDrag } = props;
+  const { orbitMessages, onDelete, onOrbitDrag } = props;
 
   const router = useRouter();
   const goToOrbitDetail = (id: string) => {
@@ -22,8 +22,8 @@ const Bottom = (props: BottomProps) => {
   };
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
 
-  const handleDragStart = (id: string) => {
-    onTagDrag(id);
+  const handleDragStart = (item: Orbit) => {
+    onOrbitDrag(item);
   };
 
   return (

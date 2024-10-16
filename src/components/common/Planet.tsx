@@ -219,7 +219,7 @@ const OrbitTag = styled.div`
   width: 100px;
   height: 100px;
   display: flex;
-  margin-left: 20px;
+  margin-left: 30px;
   justify-content: center;
   align-items: center;
   z-index: 1;

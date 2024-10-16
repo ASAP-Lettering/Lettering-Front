@@ -1,4 +1,5 @@
 import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
+import { Orbit } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
@@ -20,7 +21,7 @@ interface TagProps {
   innerRef?: (element: HTMLElement | null) => void;
   onDelete?: (deleteId: string) => void;
   isDragable?: boolean;
-  onDragStart?: (id: string) => void;
+  onDragStart?: (item: Orbit) => void;
 }
 
 const Tag = (props: TagProps) => {
@@ -53,13 +54,12 @@ const Tag = (props: TagProps) => {
   };
 
   const handleDragStart = () => {
-    if (onDragStart && tagId) {
+    if (onDragStart && tagId && name) {
       clearHoldTimeout();
       setIsDragging(true);
-      onDragStart(tagId);
+      onDragStart({ letterId: tagId!, senderName: name! });
     }
   };
-
   const handleDragEnd = () => {
     setIsDragging(false);
   };
