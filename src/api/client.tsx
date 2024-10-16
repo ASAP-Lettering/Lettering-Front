@@ -62,7 +62,8 @@ authClient.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("토큰 갱신 중 에러 발생:", refreshError);
-        window.location.href = "/error";
+        clearTokens();
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     } else {

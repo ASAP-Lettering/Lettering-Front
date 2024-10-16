@@ -44,6 +44,7 @@ const PlanetPage = () => {
 
   //const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
+  const [spaceTotalLetter, setSpaceTotalLetter] = useState<number>(0);
 
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
   const [userName, setUserName] = useState("");
@@ -64,18 +65,36 @@ const PlanetPage = () => {
     }
   };
 
-  const fetchPlanetLetterList = async (spaceId: string) => {
+  const fetchPlanetLetterList = async (
+    spaceId: string,
+    page: number,
+    size: number
+  ) => {
     try {
       const response = await getPlanetLetterList({
         spaceId: spaceId,
-        page: currentPage - 1,
-        size: itemsPerPage,
+        page: page - 1,
+        size: size,
       });
       console.log("행성 편지 목록 조회 성공:", response.data);
       setCurrentOrbits(response.data.content);
       setTotalPages(
         response.data.totalElements === 0 ? 1 : response.data.totalPages
       );
+      setSpaceTotalLetter(response.data.totalElements);
+      //드래그 된 아이템이 있을때
+      if (droppedItem) {
+        setCurrentOrbits((prevOrbits) => {
+          if (
+            prevOrbits &&
+            !prevOrbits.find((item) => item.letterId === droppedItem.letterId)
+          ) {
+            return [...prevOrbits, droppedItem];
+          }
+          return prevOrbits;
+        });
+      }
+      setDroppedItem(null);
       setIsLoading(false);
     } catch (error) {
       console.error("행성 편지 목록 조회 실패:", error);
@@ -83,37 +102,36 @@ const PlanetPage = () => {
     }
   };
 
+  const fetchMainId = async () => {
+    try {
+      const response = await getMainId();
+      console.log("메인 ID 조회 성공:", response.data);
+      setSpaceInfo({
+        spaceId: response.data.spaceId,
+        spaceName: response.data.spaceName,
+        templateType: response.data.templateType,
+      });
+      setUserName(response.data.username);
+      fetchPlanetLetterList(response.data.spaceId, currentPage, itemsPerPage);
+    } catch (error) {
+      console.error("메인 ID 조회 실패:", error);
+      setSpaceInfo(null);
+      setIsLoading(false);
+    }
+  };
+
+  const fetchOrbitLetter = async () => {
+    try {
+      const response = await getOrbitLetter();
+      console.log("궤도 편지 목록 조회 성공:", response.data);
+      setOrbitMessages(response.data.content);
+    } catch (error) {
+      console.error("궤도 편지 목록 조회 실패:", error);
+      setOrbitMessages(null);
+    }
+  };
+
   useEffect(() => {
-    const fetchMainId = async () => {
-      try {
-        const response = await getMainId();
-        console.log("메인 ID 조회 성공:", response.data);
-        setSpaceInfo({
-          spaceId: response.data.spaceId,
-          spaceName: response.data.spaceName,
-          templateType: response.data.templateType,
-        });
-        setUserName(response.data.username);
-
-        fetchPlanetLetterList(response.data.spaceId);
-      } catch (error) {
-        console.error("메인 ID 조회 실패:", error);
-        setSpaceInfo(null);
-        setIsLoading(false);
-      }
-    };
-
-    const fetchOrbitLetter = async () => {
-      try {
-        const response = await getOrbitLetter();
-        console.log("궤도 편지 목록 조회 성공:", response.data);
-        setOrbitMessages(response.data.content);
-      } catch (error) {
-        console.error("궤도 편지 목록 조회 실패:", error);
-        setOrbitMessages(null);
-      }
-    };
-
     fetchGetLetterCount();
     fetchMainId();
     fetchOrbitLetter();
@@ -122,8 +140,16 @@ const PlanetPage = () => {
   useEffect(() => {}, [spaceInfo]);
 
   useEffect(() => {
+    console.log("지금 페이지는 ", currentPage);
     if (spaceInfo?.spaceId) {
-      fetchPlanetLetterList(spaceInfo?.spaceId);
+      if (spaceTotalLetter === totalPages * 5 && droppedItem) {
+        setTotalPages(totalPages + 1);
+        setCurrentOrbits([droppedItem]);
+        setDroppedItem(null);
+        return;
+      } else {
+        fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
+      }
     }
   }, [currentPage]);
 
@@ -219,7 +245,6 @@ const PlanetPage = () => {
 
   //승효 - 수정사항 코드(드래그앤드롭 & 슬라이드)
   const [droppedItem, setDroppedItem] = useState<Orbit | null>(null);
-  const [dragLoading, setDragLoading] = useState(false);
 
   const planetRef = useRef<HTMLDivElement>(null);
 
@@ -244,7 +269,6 @@ const PlanetPage = () => {
         clientY >= planetBounds.top &&
         clientY <= planetBounds.bottom
       ) {
-        setDragLoading(true);
         console.log(
           "드래그 대상",
           droppedItem?.letterId,
@@ -252,18 +276,17 @@ const PlanetPage = () => {
         );
         if (droppedItem) {
           handleMovePlanet(droppedItem?.letterId!);
-          console.log("드래그 끝~~");
-          setDragLoading(false);
-        }
-        if (!dragLoading) {
-          if (countLetter === totalPages * 5) {
+          setOrbitMessages((prevMessages) =>
+            prevMessages?.filter(
+              (item) => item.letterId !== droppedItem!.letterId
+            )
+          );
+          if (spaceTotalLetter === totalPages * 5) {
             setCurrentPage(totalPages + 1);
-            setTotalPages(totalPages + 1);
-            console.log(currentPage, totalPages);
           } else {
             setCurrentPage(totalPages);
-            console.log(currentPage, totalPages);
           }
+          console.log(totalPages, currentPage);
         }
       } else {
         console.log("드래그 범위가 아님");
