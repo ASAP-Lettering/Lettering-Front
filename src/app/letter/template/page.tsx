@@ -104,6 +104,11 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Essential = styled.div`
@@ -178,6 +183,7 @@ const Page = styled.div`
 
 const Current = styled.span`
   color: ${theme.colors.white};
+  margin-bottom: 100px;
 `;
 
 const ButtonWrapper = styled.div`

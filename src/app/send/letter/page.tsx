@@ -359,7 +359,6 @@ const NavigatorBarWrapper = styled.div`
   height: 44px;
   display: flex;
   position: relative;
-  margin-bottom: 25px;
 `;
 
 const ButtonDiv = styled.div`
@@ -398,12 +397,18 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Essential = styled.div`
   text-align: right;
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.caption03};
+  margin-top: 25px;
   margin-bottom: 17px;
 `;
 
@@ -457,6 +462,7 @@ const SmallText = styled.div`
   color: ${theme.colors.gray500};
   ${theme.fonts.caption04};
   text-align: center;
+  margin-bottom: 100px;
 `;
 
 const AddImagesLabel = styled.label`
@@ -480,6 +486,7 @@ const ImagesList = styled.div`
   align-items: center;
   gap: 6px;
   margin-top: 16px;
+  margin-bottom: 100px;
 `;
 
 const ImagesWrapper = styled.div`
