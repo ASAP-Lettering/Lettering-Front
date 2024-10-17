@@ -300,6 +300,7 @@ const PlanetPage = () => {
         console.log("현재 행성에는 아이템이 없습니다.");
       }
     } else if (currentPage !== 1) {
+      setDirection(-1);
       setCurrentPage(1);
     } else {
       setCurrentOrbits((prevOrbits) => {
