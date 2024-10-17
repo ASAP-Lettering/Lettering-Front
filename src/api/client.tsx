@@ -45,23 +45,28 @@ authClient.interceptors.response.use(
     return response;
   },
   async (error) => {
+    const {
+      response: { status },
+    } = error;
     const originalRequest = error.config;
     console.log("인터셉터 에러:", error.response);
 
-    try {
-      const newAccessToken = await getNewTokens().catch((tokenError) => {
-        console.error("토큰 갱신 실패:", tokenError);
-        throw tokenError;
-      });
+    if (status === 401) {
+      try {
+        const newAccessToken = await getNewTokens().catch((tokenError) => {
+          console.error("토큰 갱신 실패:", tokenError);
+          throw tokenError;
+        });
 
-      if (newAccessToken) {
-        console.log("새 액세스 토큰 받아 처리중입니다.");
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return authClient(originalRequest);
+        if (newAccessToken) {
+          console.log("새 액세스 토큰 받아 처리중입니다.");
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return authClient(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error("토큰 갱신 중 에러 발생:", refreshError);
+        return Promise.reject(refreshError);
       }
-    } catch (refreshError) {
-      console.error("토큰 갱신 중 에러 발생:", refreshError);
-      return Promise.reject(refreshError);
     }
 
     window.location.href = "/error";

@@ -6,13 +6,14 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SendCompletePage = () => {
   const router = useRouter();
 
   const { receiverName } = useRecoilValue(sendLetterState);
+  const resetLetterState = useResetRecoilState(sendLetterState);
 
   return (
     <Layout>
@@ -38,6 +39,7 @@ const SendCompletePage = () => {
           text="홈으로 돌아가기"
           onClick={() => {
             router.push("/planet");
+            resetLetterState();
           }}
         />
       </ButtonWrapper>

@@ -8,9 +8,10 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { postSendLtter } from "@/api/send/send";
 import { sendLetterState } from "@/recoil/letterStore";
+import useKakaoSDK from "@/hooks/useKakaoSDK";
 import KakaoShareButton from "@/components/common/KakaoShareButton";
 
 const SendPreviewPage = () => {
@@ -19,30 +20,73 @@ const SendPreviewPage = () => {
     useRecoilValue(sendLetterState);
 
   const [isImage, setIsImage] = useState<boolean>(false);
-  const resetLetterState = useResetRecoilState(sendLetterState);
+  const [letterId, setLetterId] = useState<string | null>(null);
+
+  const isKakaoLoaded = useKakaoSDK();
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
   }, []);
+
   const handleFlipLetter = () => {
     setIsImage(!isImage);
   };
 
-  const handleSendLetter = async () => {
-    /* 편지 등록 */
+  // const handleSendLetter = async () => {
+  //   /* 편지 등록 */
+  //   try {
+  //     const response = await postSendLtter({
+  //       draftId,
+  //       receiverName,
+  //       content,
+  //       images,
+  //       templateType,
+  //     });
+  //     console.log("편지 쓰기 성공");
+
+  //     setLetterId(response.data.letterCode);
+  //   } catch {
+  //     console.log("편지 쓰기 실패");
+  //   }
+  // };
+  const handleSendLetterAndShare = async () => {
+    /* 편지 전송 및 카카오 공유 */
     try {
-      await postSendLtter({
-        draftId,
-        receiverName,
-        content,
-        images,
-        templateType,
-      });
-      console.log("편지 쓰기 성공");
-      resetLetterState();
-      router.push("/send/complete");
-    } catch {
-      console.log("편지 쓰기 실패");
+      // 1. 편지 전송 API 요청
+      if (!letterId) {
+        const response = await postSendLtter({
+          draftId,
+          receiverName,
+          content,
+          images,
+          templateType,
+        });
+        console.log("편지 쓰기 성공");
+        setLetterId(response.data.letterCode);
+      }
+
+      // 2. 카카오 공유 로직 실행
+      if (isKakaoLoaded && letterId) {
+        const { Kakao, location } = window;
+        Kakao.Share.sendScrap({
+          requestUrl: location.origin + location.pathname,
+          templateId: 112798,
+          templateArgs: {
+            senderName: receiverName,
+            id: letterId,
+          },
+          success: () => {
+            router.push("/send/complete");
+          },
+          fail: (err: any) => {
+            console.log("카카오 공유 실패:", err);
+          },
+        });
+      } else {
+        console.log("카카오가 초기화되지 않았거나 편지 ID가 없습니다.");
+      }
+    } catch (error) {
+      console.log("편지 전송 또는 카카오 공유 실패:", error);
     }
   };
 
@@ -79,13 +123,18 @@ const SendPreviewPage = () => {
           </LetterWrapper>
         </Column>
         <ButtonWrapper>
-          {/* <Button
+          <Button
             buttonType="primary"
-            size="large"
             text="카카오로 편지 보내기"
-            onClick={handleSendLetter}
-          /> */}
-          <KakaoShareButton senderName={receiverName} letterId={"aa"} />
+            onClick={handleSendLetterAndShare}
+          >
+            <Image
+              src="/assets/icons/ic_kakao_talk.svg"
+              width={24}
+              height={24}
+              alt="카카오"
+            />
+          </Button>
         </ButtonWrapper>
       </Container>
     </Layout>
