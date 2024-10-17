@@ -1,10 +1,10 @@
 import { fadeIn, fadeOut } from "@/styles/GlobalStyles";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 
-interface ToastProps {
+interface ToolTipProps {
   message: string;
   top?: string;
   bottom?: string;
@@ -15,46 +15,57 @@ interface ToastProps {
   onClose?: () => void;
 }
 
-const Tooltip = (props: ToastProps) => {
+const Tooltip = (props: ToolTipProps) => {
   const { message, top, bottom, left, right, padding, close, onClose } = props;
 
-  const [visible, setVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false); // 애니메이션용
+  const [shouldRender, setShouldRender] = useState(true);
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-      setVisible(false);
-    }
+    setIsVisible(false);
+    setTimeout(() => {
+      setShouldRender(false);
+      if (onClose) {
+        onClose();
+      }
+    }, 500);
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 1000);
+  }, []);
   return (
-    <TooltipContainer
-      $visible={visible}
-      $top={top}
-      $bottom={bottom}
-      $left={left}
-      $right={right}
-      $padding={padding}
-    >
-      <Message>{message}</Message>
-      {close && (
-        <CloseButton onClick={handleClose}>
-          <Image
-            src="/assets/icons/ic_close.svg"
-            width={16}
-            height={16}
-            alt="close"
-          />
-        </CloseButton>
-      )}
-    </TooltipContainer>
+    shouldRender && (
+      <TooltipContainer
+        $isVisible={isVisible}
+        $top={top}
+        $bottom={bottom}
+        $left={left}
+        $right={right}
+        $padding={padding}
+      >
+        <Message>{message}</Message>
+        {close && (
+          <CloseButton onClick={handleClose}>
+            <Image
+              src="/assets/icons/ic_close.svg"
+              width={16}
+              height={16}
+              alt="close"
+            />
+          </CloseButton>
+        )}
+      </TooltipContainer>
+    )
   );
 };
 
 export default Tooltip;
 
 const TooltipContainer = styled.div<{
-  $visible: boolean;
+  $isVisible: boolean;
   $top?: string;
   $bottom?: string;
   $left?: string;
@@ -80,14 +91,9 @@ const TooltipContainer = styled.div<{
   right: ${({ $right }) => $right};
   transform: translateX(-50%);
   ${theme.fonts.caption01};
-  animation: ${(props) =>
-    props.$visible
-      ? css`
-          ${fadeIn} 0.5s ease-in-out
-        `
-      : css`
-          ${fadeOut} 0.5s ease-in-out
-        `};
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  visibility: ${({ $isVisible }) => ($isVisible ? "visible" : "hidden")};
 
   &:after {
     content: "";

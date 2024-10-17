@@ -29,6 +29,7 @@ import {
 } from "@/utils/storage";
 import { getLetterCount } from "@/api/letter/letter";
 import { useToast } from "@/hooks/useToast";
+import Tooltip from "@/components/common/Tooltip";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -46,6 +47,8 @@ const PlanetPage = () => {
   const [userName, setUserName] = useState("");
   const [countLetter, setCountLetter] = useState<number>(0);
 
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+
   const fetchGetLetterCount = async () => {
     try {
       const response = await getLetterCount();
@@ -53,6 +56,10 @@ const PlanetPage = () => {
       setCountLetter(response.data.count);
       setCurrentOrbits(response.data.content);
       setIsLoading(false);
+      if (response.data.count < 3 && getInitUserToast() !== "true") {
+        setShowTooltip(true);
+        setInitUserToast();
+      }
     } catch (error) {
       console.error("행성 편지 목록 조회 실패:", error);
     }
@@ -174,15 +181,6 @@ const PlanetPage = () => {
         setCookie("letter-onboard", "exist", 30);
         router.push("/onboarding");
       }
-    }
-    if (countLetter < 3 && getInitUserToast() !== "true") {
-      showToast("궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요", {
-        icon: false,
-        close: true,
-        bottom: "230px",
-        padding: "11px 13px",
-      });
-      setInitUserToast();
     }
   }, []);
 
@@ -330,6 +328,14 @@ const PlanetPage = () => {
                   )}
                 </Droppable>
               </PlanetWrapper>
+              {showTooltip && (
+                <Tooltip
+                  message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
+                  close={true}
+                  bottom="225px"
+                  onClose={() => setShowTooltip(false)}
+                />
+              )}
               <PageWrapper>
                 <Pagination
                   currentPage={currentPage}
