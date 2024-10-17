@@ -381,107 +381,109 @@ const PlanetPage = () => {
   }, []);
 
   return (
-    <Layout>
-      {isLoading ? (
-        <LoaderContainer>
-          <Loader />
-        </LoaderContainer>
-      ) : (
-        <>
-          <Background
-            src="/assets/images/background/home.svg"
-            width={480}
-            height={800}
-            alt="background"
-            over-fit="cover"
-            priority
-          />
-          <Container>
-            <Top>
-              <Title>
-                {countLetter < 3 ? (
-                  <>
-                    {userName}님의 스페이스를
-                    <br />
-                    편지로 수놓아 보세요
-                  </>
-                ) : (
-                  <>
-                    {userName}님의 스페이스에
-                    <br />
-                    <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
-                  </>
-                )}
-              </Title>
-              <Icon
-                src="/assets/icons/ic_mypage.svg"
-                width={24}
-                height={24}
-                alt="mypage"
-                onClick={goToMyPage}
-              />
-            </Top>
-            <TagList>
-              <Tag
-                tagType="planet"
-                name={spaceInfo?.spaceName}
-                icon="chevron"
-                onClick={() => {
-                  router.push("/planet/manage");
-                }}
-              />
-              <Tag
-                tagType="planet"
-                name=""
-                icon="plus"
-                onClick={() => router.push("/planet/add")}
-              />
-            </TagList>
-            <MainWrapper>
-              <SliderWrapper
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                ref={ref}
-              >
-                <PlanetSlide
-                  idx={currentPage}
-                  direction={direction}
-                  spaceInfo={spaceInfo}
-                  currentOrbits={currentOrbits || []}
-                  setCurrentOrbits={setCurrentOrbits}
-                  onEditPlanetName={handleEditPlanetName}
-                  setCountLetter={setCountLetter}
-                />
-              </SliderWrapper>
-              {showTooltip && (
-                <Tooltip
-                  message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
-                  close={true}
-                  bottom="225px"
-                  onClose={() => setShowTooltip(false)}
-                />
-              )}
-              <PageWrapper>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPage={totalPages}
-                  onPrevPage={handlePrevPage}
-                  onNextPage={handleNextPage}
-                />
-              </PageWrapper>
-            </MainWrapper>
-          </Container>
-          <BottomWrapper>
-            <Bottom
-              orbitMessages={orbitMessages || null}
-              onDelete={handleDeleteOrbit}
-              onOrbitDrag={handleTagDrag}
-              onOrbitTouch={handleTagTouch}
+    <>
+      <Layout>
+        {isLoading ? (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        ) : (
+          <>
+            <Background
+              src="/assets/images/background/home.svg"
+              width={480}
+              height={800}
+              alt="background"
+              over-fit="cover"
+              priority
             />
-          </BottomWrapper>
-        </>
-      )}
-    </Layout>
+            <Container>
+              <Top>
+                <Title>
+                  {countLetter < 3 ? (
+                    <>
+                      {userName}님의 스페이스를
+                      <br />
+                      편지로 수놓아 보세요
+                    </>
+                  ) : (
+                    <>
+                      {userName}님의 스페이스에
+                      <br />
+                      <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                    </>
+                  )}
+                </Title>
+                <Icon
+                  src="/assets/icons/ic_mypage.svg"
+                  width={24}
+                  height={24}
+                  alt="mypage"
+                  onClick={goToMyPage}
+                />
+              </Top>
+              <TagList>
+                <Tag
+                  tagType="planet"
+                  name={spaceInfo?.spaceName}
+                  icon="chevron"
+                  onClick={() => {
+                    router.push("/planet/manage");
+                  }}
+                />
+                <Tag
+                  tagType="planet"
+                  name=""
+                  icon="plus"
+                  onClick={() => router.push("/planet/add")}
+                />
+              </TagList>
+              <MainWrapper>
+                <SliderWrapper
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  ref={ref}
+                >
+                  <PlanetSlide
+                    idx={currentPage}
+                    direction={direction}
+                    spaceInfo={spaceInfo}
+                    currentOrbits={currentOrbits || []}
+                    setCurrentOrbits={setCurrentOrbits}
+                    onEditPlanetName={handleEditPlanetName}
+                    setCountLetter={setCountLetter}
+                  />
+                </SliderWrapper>
+                {showTooltip && (
+                  <Tooltip
+                    message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
+                    close={true}
+                    bottom="225px"
+                    onClose={() => setShowTooltip(false)}
+                  />
+                )}
+                <PageWrapper>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPage={totalPages}
+                    onPrevPage={handlePrevPage}
+                    onNextPage={handleNextPage}
+                  />
+                </PageWrapper>
+              </MainWrapper>
+            </Container>
+          </>
+        )}
+      </Layout>
+      <BottomWrapper>
+        <Bottom
+          orbitMessages={orbitMessages || null}
+          onDelete={handleDeleteOrbit}
+          onOrbitDrag={handleTagDrag}
+          onOrbitTouch={handleTagTouch}
+        />
+      </BottomWrapper>
+    </>
   );
 };
 
@@ -493,7 +495,7 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   gap: 10px;
   padding: 20px 0px 0px 0px;
   position: relative;
@@ -525,6 +527,13 @@ const Container = styled.div`
   height: 100%;
   box-sizing: border-box;
   margin-bottom: 15px;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Top = styled.div`
@@ -557,18 +566,14 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const PlanetWrapper = styled.div`
+const MainWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  height: 100%;
+  height: 650px;
   position: relative;
 `;
-
-// const PlanetWrapper = styled.div<{ currentPage: number }>`;
-//   width: 100%;
-//   height: 100%;
-//   position: relative;
-//   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-// `;
 
 const SliderWrapper = styled.div`
   width: 400px;
@@ -587,7 +592,7 @@ const PageWrapper = styled.div`
   align-items: center;
   text-align: center;
   position: absolute;
-  top: 545px;
+  top: 360px;
   left: 50%;
   padding: 20px;
   transform: translateX(-50%);
@@ -611,11 +616,4 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const MainWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
 `;
