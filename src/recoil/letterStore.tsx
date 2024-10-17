@@ -5,7 +5,7 @@ export const registerLetterState = atom({
   default: {
     senderName: "",
     content: "",
-    images: [""],
+    images: [] as string[],
     templateType: 0,
   },
 });
@@ -16,7 +16,7 @@ export const sendLetterState = atom({
     draftId: "",
     receiverName: "",
     content: "",
-    images: [""],
+    images: [] as string[],
     templateType: 0,
   },
 });
