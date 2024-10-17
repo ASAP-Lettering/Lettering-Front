@@ -21,11 +21,18 @@ interface PlanetProps {
   orbits: Orbit[];
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
+  setCountLetter: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Planet = (props: PlanetProps) => {
-  const { planetType, planet, orbits, onEditPlanetName, setCurrentOrbits } =
-    props;
+  const {
+    planetType,
+    planet,
+    orbits,
+    onEditPlanetName,
+    setCurrentOrbits,
+    setCountLetter,
+  } = props;
 
   const router = useRouter();
   const { showToast } = useToast();
@@ -70,6 +77,7 @@ const Planet = (props: PlanetProps) => {
       setCurrentOrbits((prevOrbits) =>
         prevOrbits?.filter((orbit) => orbit.letterId !== orbitId)
       );
+      setCountLetter((prevCount) => (prevCount ? prevCount - 1 : prevCount));
     } catch {
       console.log("편지 삭제 실패");
     }

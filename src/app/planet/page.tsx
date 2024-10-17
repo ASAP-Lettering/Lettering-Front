@@ -322,6 +322,7 @@ const PlanetPage = () => {
                         orbits={currentOrbits || []}
                         onEditPlanetName={handleEditPlanetName}
                         setCurrentOrbits={setCurrentOrbits}
+                        setCountLetter={setCountLetter}
                       />
                       {provided.placeholder}
                     </div>
