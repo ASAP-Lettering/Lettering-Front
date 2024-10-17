@@ -283,11 +283,24 @@ const PlanetPage = () => {
     setDroppedItem(item);
   };
 
+  //터치 드래그 마무리
   const handleTagTouch = (draggedItem: Orbit) => {
     handleMovePlanet(draggedItem.letterId!, draggedItem.senderName);
     setOrbitMessages((prevMessages) =>
       prevMessages?.filter((item) => item.letterId !== draggedItem.letterId)
     );
+    if (totalPages === currentPage && droppedItem) {
+      setCurrentOrbits(
+        currentOrbits
+          ? [
+              ...currentOrbits.filter(
+                (orbit): orbit is Orbit => orbit !== null
+              ),
+              droppedItem,
+            ]
+          : [droppedItem]
+      );
+    }
     if (spaceTotalLetter === totalPages * 5) {
       setCurrentPage(totalPages + 1);
     } else {
@@ -300,6 +313,7 @@ const PlanetPage = () => {
     e.preventDefault();
   };
 
+  //드래그 마무리
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (ref) {
