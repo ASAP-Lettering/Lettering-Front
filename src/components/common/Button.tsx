@@ -39,13 +39,9 @@ const Button = (props: ButtonProps) => {
       $width={width}
       $height={height}
     >
-      {icon && (
-        <img
-          src="/assets/icons/ic_letter.svg"
-          style={{ marginRight: "10px" }}
-        />
-      )}
-      {text || children}
+      {icon && <img src="/assets/icons/ic_letter.svg" />}
+      {children}
+      {text}
     </StyledButton>
   );
 };
@@ -61,6 +57,7 @@ const StyledButton = styled.button<{
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   width: ${({ $width, $size }) =>
     $width ||
     ($size === "small"

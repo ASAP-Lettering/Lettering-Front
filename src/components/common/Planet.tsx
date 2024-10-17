@@ -5,9 +5,8 @@ import Tag from "./Tag";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
-import { useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
 import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
+import { useToast } from "@/hooks/useToast";
 
 interface Orbit {
   letterId: string;
@@ -29,14 +28,13 @@ const Planet = (props: PlanetProps) => {
     props;
 
   const router = useRouter();
+  const { showToast } = useToast();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [orbitId, setOrbitId] = useState<string>("");
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
-
-  const setToast = useSetRecoilState(toastState);
 
   const handleTagClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -78,10 +76,10 @@ const Planet = (props: PlanetProps) => {
 
     // 토스트 메세지
     const orbit = orbits.find((item) => item.letterId === orbitId);
-    setToast({
-      show: true,
-      message: `${orbit?.senderName} 님의 편지가 삭제되었어요`,
+    showToast(`${orbit?.senderName} 님의 편지가 삭제되었어요`, {
+      icon: true,
       close: false,
+      bottom: "230px",
     });
   };
 
@@ -92,7 +90,7 @@ const Planet = (props: PlanetProps) => {
   return (
     <Container>
       <PlanetImage
-        src={`/assets/images/planet_orbit/planet${planetType}.svg`}
+        src={`/assets/images/planet_orbit/planet${planetType}.png`}
         width={400}
         height={400}
         alt="planet"

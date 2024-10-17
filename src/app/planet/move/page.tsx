@@ -9,21 +9,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PlanetBox from "@/components/planet/PlanetBox";
 import { Planet } from "@/constants/planet";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
-import { useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
 import {
   putLetterToIndep,
   putLetterToPlanet,
 } from "@/api/planet/letter/spaceLetter";
 import Image from "next/image";
 import { getSpaceList } from "@/api/planet/space/space";
+import { useToast } from "@/hooks/useToast";
 
 const PlanetMovePage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
-  const orbitId = searchParams.get("orbitId");
-  const letterId: string | null = orbitId ? orbitId : null;
-  const setToast = useSetRecoilState(toastState);
+  const letterId = searchParams.get("letter");
 
   const name = "규리";
   const [planets, setPlanets] = useState<Planet[]>();
@@ -54,39 +52,47 @@ const PlanetMovePage = () => {
 
   const handleMovePlanet = async () => {
     /* 편지 다른 행성으로 이동하기 */
-    if (checkedPlanet) {
-      try {
-        await putLetterToPlanet({
-          letterId: letterId || "",
-          spaceId: checkedPlanet,
-        });
-        console.log("편지 다른 행성 이동 성공");
-        router.push("/planet");
+    if (letterId) {
+      if (checkedPlanet) {
+        try {
+          await putLetterToPlanet({
+            letterId: letterId,
+            spaceId: checkedPlanet,
+          });
+          console.log("편지 다른 행성 이동 성공");
+          router.push("/planet");
 
-        // 토스트 메세지
-        setToast({
-          show: true,
-          message: `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
-          close: false,
-        });
-      } catch {
-        console.log("편지 다른 행성 이동 실패");
-      }
-    } else {
-      /* 편지 궤도(독립 편지)로 보내기 */
-      try {
-        await putLetterToIndep(letterId || "");
-        console.log("편지 궤도 보내기 성공");
-        router.push("/planet");
+          // 토스트 메세지
+          showToast(
+            `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
+            {
+              icon: true,
+              close: false,
+              bottom: "230px",
+            }
+          );
+        } catch {
+          console.log("편지 다른 행성 이동 실패");
+        }
+      } else {
+        /* 편지 궤도(독립 편지)로 보내기 */
+        try {
+          await putLetterToIndep(letterId);
+          console.log("편지 궤도 보내기 성공");
+          router.push("/planet");
 
-        // 토스트 메세지
-        setToast({
-          show: true,
-          message: `${name} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
-          close: false,
-        });
-      } catch {
-        console.log("편지 궤도 보내기 실패");
+          // 토스트 메세지
+          showToast(
+            `${name} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
+            {
+              icon: true,
+              close: false,
+              bottom: "230px",
+            }
+          );
+        } catch {
+          console.log("편지 궤도 보내기 실패");
+        }
       }
     }
   };

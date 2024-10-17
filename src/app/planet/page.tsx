@@ -9,15 +9,11 @@ import Tag from "@/components/common/Tag";
 import { Orbit, ORBIT_MESSAGE, ORBITS } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
-import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { OrbitMessage } from "@/types/orbit";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSwipeable } from "react-swipeable";
-import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
-// import { setSpaceId } from "@/utils/storage";
+import { getMainId, putSpace } from "@/api/planet/space/space";
 import {
   getOrbitLetter,
   getPlanetLetterList,
@@ -26,16 +22,17 @@ import {
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
 import {
-  clearInitUserToast,
   getCookie,
   getInitUserToast,
   setCookie,
   setInitUserToast,
 } from "@/utils/storage";
 import { getLetterCount } from "@/api/letter/letter";
+import { useToast } from "@/hooks/useToast";
 
 const PlanetPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -48,9 +45,6 @@ const PlanetPage = () => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
   const [userName, setUserName] = useState("");
   const [countLetter, setCountLetter] = useState<number>(0);
-
-  const { show, message, close } = useRecoilValue(toastState);
-  const setToast = useSetRecoilState(toastState);
 
   const fetchGetLetterCount = async () => {
     try {
@@ -160,39 +154,15 @@ const PlanetPage = () => {
   };
 
   /* 페이지네이션 */
-  // const handlePrevPage = () => {
-  //   if (currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //   }
-  // };
-
-  // const handleNextPage = () => {
-  //   if (currentPage < totalPages) {
-  //     setCurrentPage(currentPage + 1);
-  //   }
-  // };
-  const [isLeaving, setIsLeaving] = useState(false);
-  const [isNext, setIsNext] = useState(false);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setIsNext(true);
-      setIsLeaving(true); // 페이지 전환 애니메이션 시작
-      setTimeout(() => {
-        setCurrentPage(currentPage + 1);
-        setIsLeaving(false); // 애니메이션 끝
-      }, 400);
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setIsNext(false);
-      setIsLeaving(true); // 페이지 전환 애니메이션 시작
-      setTimeout(() => {
-        setCurrentPage(currentPage - 1);
-        setIsLeaving(false); // 애니메이션 끝
-      }, 400);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
@@ -206,24 +176,15 @@ const PlanetPage = () => {
       }
     }
     if (countLetter < 3 && getInitUserToast() !== "true") {
-      setToast({
-        show: true,
-        message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
+      showToast("궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요", {
+        icon: false,
         close: true,
+        bottom: "230px",
+        padding: "11px 13px",
       });
       setInitUserToast();
     }
   }, []);
-
-  useEffect(() => {
-    if (show) {
-      const timer = setTimeout(() => {
-        setToast({ show: false, message: "", close: false });
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [show, setToast]);
 
   /* 드래그 앤 드롭 */
   const handleDrop = async (result: any) => {
@@ -352,7 +313,8 @@ const PlanetPage = () => {
                 />
               </TagList>
               {/* <PlanetWrapper currentPage={currentPage} {...swipeHandlers}> */}
-              <PlanetWrapper isLeaving={isLeaving} isNext={isNext}>
+              {/* <PlanetWrapper isLeaving={isLeaving} isNext={isNext}> */}
+              <PlanetWrapper>
                 <Droppable droppableId="droppable-planet">
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>
@@ -369,16 +331,6 @@ const PlanetPage = () => {
                 </Droppable>
               </PlanetWrapper>
               <PageWrapper>
-                {show && (
-                  <Toast
-                    text={message}
-                    icon={false}
-                    top="0px"
-                    left="50%"
-                    padding="11px 0px"
-                    close={close}
-                  />
-                )}
                 <Pagination
                   currentPage={currentPage}
                   totalPage={totalPages}
@@ -466,19 +418,10 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const PlanetWrapper = styled.div<{ isLeaving: boolean; isNext: boolean }>`
+const PlanetWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-  opacity: ${({ isLeaving }) => (isLeaving ? 0 : 1)};
-  transform: ${({ isLeaving, isNext }) => {
-    if (isNext) {
-      return isLeaving ? "translateX(50%)" : "translateX(0)";
-    } else {
-      return isLeaving ? "translateX(-50%)" : "translateX(0)";
-    }
-  }};
 `;
 
 // const PlanetWrapper = styled.div<{ currentPage: number }>`;

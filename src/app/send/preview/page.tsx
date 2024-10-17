@@ -11,6 +11,7 @@ import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { postSendLtter } from "@/api/send/send";
 import { sendLetterState } from "@/recoil/letterStore";
+import KakaoShareButton from "@/components/common/KakaoShareButton";
 
 const SendPreviewPage = () => {
   const router = useRouter();
@@ -56,7 +57,7 @@ const SendPreviewPage = () => {
               showType="previewSend"
               id={"0"}
               templateType={templateType}
-              name={"김동우"}
+              name={receiverName}
               content={content}
               images={images}
               isImage={isImage}
@@ -78,12 +79,13 @@ const SendPreviewPage = () => {
           </LetterWrapper>
         </Column>
         <ButtonWrapper>
-          <Button
+          {/* <Button
             buttonType="primary"
             size="large"
             text="카카오로 편지 보내기"
             onClick={handleSendLetter}
-          />
+          /> */}
+          <KakaoShareButton senderName={receiverName} letterId={"aa"} />
         </ButtonWrapper>
       </Container>
     </Layout>
