@@ -86,11 +86,10 @@ const PlanetPage = () => {
       //드래그 된 아이템이 있을때
       if (droppedItem) {
         setCurrentOrbits((prevOrbits) => {
-          if (
-            prevOrbits &&
-            !prevOrbits.find((item) => item.letterId === droppedItem.letterId)
-          ) {
-            return [...prevOrbits, droppedItem];
+          if (prevOrbits) {
+            const updatedOrbits = [...prevOrbits];
+            updatedOrbits.pop(); // 마지막 항목 제거
+            return [droppedItem, ...updatedOrbits];
           }
           return prevOrbits;
         });
@@ -289,20 +288,34 @@ const PlanetPage = () => {
     setOrbitMessages((prevMessages) =>
       prevMessages?.filter((item) => item.letterId !== draggedItem.letterId)
     );
-
+    //현재 페이지가 1페이지 뿐일때
     if (totalPages === currentPage) {
+      //행성에 편지가 존재할때
       if (currentOrbits && currentOrbits?.length > 0) {
         setCurrentOrbits([...currentOrbits, draggedItem]);
         console.log("현재 행성에는 아이템이 있습니다.");
       } else {
+        //행성에 편지가 존재하지 않을때(0개)
         setCurrentOrbits([draggedItem]);
         console.log("현재 행성에는 아이템이 없습니다.");
       }
-    } else if (spaceTotalLetter === totalPages * 5) {
-      setCurrentPage(totalPages + 1);
+    } else if (currentPage !== 1) {
+      setCurrentPage(1);
     } else {
-      setCurrentPage(totalPages);
+      setCurrentOrbits((prevOrbits) => {
+        if (prevOrbits) {
+          const updatedOrbits = [...prevOrbits];
+          updatedOrbits.pop();
+          return [draggedItem, ...updatedOrbits];
+        }
+        return prevOrbits;
+      });
     }
+    // else if (spaceTotalLetter === totalPages * 5) {
+    //   setCurrentPage(totalPages + 1);
+    // } else {
+    //   setCurrentPage(totalPages);
+    // }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
