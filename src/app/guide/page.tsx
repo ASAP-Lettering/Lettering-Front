@@ -1,5 +1,6 @@
 "use client";
 
+import BlinkTag from "@/components/common/BlinkingTag";
 // import BottomSheet from "@/components/common/BottomSheet";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
@@ -188,6 +189,7 @@ const GuidePage = () => {
       <Tag tagType="planet" name="Planet" icon="edit" />
       <Tag tagType="planet" name="" icon="plus" />
       <Tag tagType="letter" name="Letter" />
+      <BlinkTag tagId="123" name="반짝임" />
       <br />
       <h3>Confirm Modal</h3>
       {confirmModal && (

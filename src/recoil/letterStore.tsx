@@ -1,5 +1,11 @@
 import { atom } from "recoil";
 
+type DroppedItem = {
+  tagId: string;
+  name: string;
+  isNew?: boolean;
+};
+
 export const registerLetterState = atom({
   key: "registerLetterState",
   default: {
@@ -24,4 +30,12 @@ export const sendLetterState = atom({
 export const draftState = atom({
   key: "draftState",
   default: "",
+});
+
+export const droppedLetterState = atom<DroppedItem>({
+  key: "droppedLetterState",
+  default: {
+    tagId: "",
+    name: "",
+  },
 });
