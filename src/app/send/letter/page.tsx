@@ -331,10 +331,12 @@ const SendLetterPage = () => {
         </ButtonWrapper>
       </Container>
       {isDraftBottom && (
-        <DraftBottom
-          onClose={handleDraftBottom}
-          handleDeleteDraft={handleDeleteDraft}
-        />
+        <BottomWrapper>
+          <DraftBottom
+            onClose={handleDraftBottom}
+            handleDeleteDraft={handleDeleteDraft}
+          />
+        </BottomWrapper>
       )}
     </Layout>
   );
@@ -516,4 +518,14 @@ const ButtonWrapper = styled.div`
   padding: 0 20px;
   bottom: 40px;
   left: 0;
+`;
+
+const BottomWrapper = styled.div`
+  width: 100%;
+  max-width: 393px;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 `;

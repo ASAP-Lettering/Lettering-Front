@@ -457,7 +457,6 @@ const BottomWrapper = styled.div`
   width: 100%;
   max-width: 393px;
   position: absolute;
-  /* padding: 0 20px; */
   bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
