@@ -5,7 +5,11 @@ import Tag from "./Tag";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { toastState } from "@/recoil/toastStore";
 import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
+import { droppedLetterState } from "@/recoil/letterStore";
+import BlinkTag from "./BlinkingTag";
 import { useToast } from "@/hooks/useToast";
 
 interface Orbit {
@@ -18,7 +22,7 @@ interface Orbit {
 interface PlanetProps {
   planetType: number;
   planet: string;
-  orbits: Orbit[];
+  orbits?: Orbit[];
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
 }
@@ -35,6 +39,9 @@ const Planet = (props: PlanetProps) => {
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
+
+  //이제 막 추가된(드래그된) 아이템 깜빡거림 적용
+  const [droppedLetter, setDroppedLetter] = useRecoilState(droppedLetterState);
 
   const handleTagClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -75,7 +82,7 @@ const Planet = (props: PlanetProps) => {
     }
 
     // 토스트 메세지
-    const orbit = orbits.find((item) => item.letterId === orbitId);
+    const orbit = orbits?.find((item) => item.letterId === orbitId);
     showToast(`${orbit?.senderName} 님의 편지가 삭제되었어요`, {
       icon: true,
       close: false,
@@ -97,32 +104,40 @@ const Planet = (props: PlanetProps) => {
         priority
       />
       <Shadow />
-      {orbits.map((orbit, index) => {
-        const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
-        const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
-        const y = center + radius * Math.sin(angle) - 5; // Y좌표 계산
+      {orbits &&
+        orbits.map((orbit, index) => {
+          const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
+          const x = center + radius * Math.cos(angle) - 30; // X좌표 계산
+          const y = center + radius * Math.sin(angle) - 5; // Y좌표 계산
 
-        return (
-          <OrbitTag
-            key={orbit.letterId}
-            style={{
-              transform: `translate(${x}px, ${y}px)`,
-              transition: "transform 0.8s ease",
-            }}
-          >
-            <Tag
-              tagType="letter"
-              name={orbit.senderName}
-              onClick={() => {
-                handleTagClick(orbit.letterId);
+          return (
+            <OrbitTag
+              key={orbit.letterId}
+              style={{
+                transform: `translate(${x}px, ${y}px)`,
+                transition: "transform 0.8s ease",
               }}
-              onHold={() => {
-                handleShowHold(orbit.letterId);
-              }}
-            />
-          </OrbitTag>
-        );
-      })}
+            >
+              {orbit.letterId === droppedLetter.tagId ? (
+                <BlinkTag
+                  tagId={orbit.letterId}
+                  name={orbit.senderName}
+                ></BlinkTag>
+              ) : (
+                <Tag
+                  tagType="letter"
+                  name={orbit.senderName}
+                  onClick={() => {
+                    handleTagClick(orbit.letterId);
+                  }}
+                  onHold={() => {
+                    handleShowHold(orbit.letterId);
+                  }}
+                />
+              )}
+            </OrbitTag>
+          );
+        })}
       <PlanetTag>
         <Tag
           tagType="planet"
@@ -174,6 +189,16 @@ const PlanetImage = styled(Image)`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;
+  //드래그방지
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
 
 const Shadow = styled.div`
@@ -202,6 +227,7 @@ const OrbitTag = styled.div`
   width: 100px;
   height: 100px;
   display: flex;
+  margin-left: 30px;
   justify-content: center;
   align-items: center;
   z-index: 1;
