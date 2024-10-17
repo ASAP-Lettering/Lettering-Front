@@ -346,13 +346,15 @@ const PlanetPage = () => {
                 />
               </PageWrapper>
             </Container>
-            <Bottom
-              orbitMessages={orbitMessages || null}
-              onDelete={handleDeleteOrbit}
-            />
           </>
         )}
       </Layout>
+      <BottomWrapper>
+        <Bottom
+          orbitMessages={orbitMessages || null}
+          onDelete={handleDeleteOrbit}
+        />
+      </BottomWrapper>
     </DragDropContext>
   );
 };
@@ -365,9 +367,9 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   gap: 10px;
-  padding: 74px 0px 0px 0px;
+  padding: 20px 0px 0px 0px;
   position: relative;
 
   ::-webkit-scrollbar {
@@ -385,6 +387,7 @@ const Background = styled(Image)`
   top: 0;
   left: 0;
   z-index: -100;
+  background-color: ${theme.colors.bg};
 `;
 
 const Icon = styled(Image)`
@@ -445,9 +448,20 @@ const PageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 600px;
+  top: 550px;
   left: 50%;
   transform: translateX(-50%);
+`;
+
+const BottomWrapper = styled.div`
+  width: 100%;
+  max-width: 393px;
+  position: absolute;
+  /* padding: 0 20px; */
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 `;
 
 /* 로딩 */
