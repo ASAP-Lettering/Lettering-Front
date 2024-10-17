@@ -1,6 +1,6 @@
-import { deleteDraftLetter } from "@/api/send/send";
+import { deleteDraftLetter, getDraftLetter } from "@/api/send/send";
 import { formatDate } from "@/lib/day";
-import { draftState } from "@/recoil/letterStore";
+import { draftState, sendLetterState } from "@/recoil/letterStore";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";
@@ -21,23 +21,34 @@ const DraftList = (props: DraftListProps) => {
   const { id, name, content, timestamp, isDeleteMode, onDelete, onClose } =
     props;
 
-  const [draftKeyState, setDraftKeyState] = useRecoilState(draftState);
+  const [sendLetter, setSendLetter] = useRecoilState(sendLetterState);
 
-  const handleSelect = (id: string) => {
-    // 선택한 임시 저장 키 저장
-    setDraftKeyState(id);
-    onClose();
+  const handleSelect = async (id: string) => {
+    try {
+      const response = await getDraftLetter(id);
+      console.log("임시 저장 조회 성공", response.data);
+
+      setSendLetter({
+        draftId: response.data.draftKey,
+        receiverName: response.data.receiverName,
+        content: response.data.content,
+        images: response.data.images,
+        templateType: 0,
+      });
+
+      onClose();
+    } catch {
+      console.log("임시 저장 조회 실패");
+    }
   };
 
-  const handleDeleteDraft = async () => {
-    if (id && onDelete) {
-      try {
-        const response = await deleteDraftLetter(id);
-        console.log("임시 저장 삭제 성공", response);
-        onDelete(id);
-      } catch {
-        console.log("임시 저장 삭제 실패");
-      }
+  const handleDeleteDraft = async (
+    event: React.MouseEvent<HTMLImageElement>
+  ) => {
+    event.stopPropagation();
+
+    if (onDelete) {
+      onDelete(id);
     }
   };
 
@@ -79,12 +90,16 @@ const Container = styled.div`
   border-radius: 8px;
   background: ${theme.colors.gray800};
   position: relative;
+  overflow: visible;
 `;
 
 const Top = styled.div`
   width: 100%;
   color: ${theme.colors.white};
   ${theme.fonts.caption01};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const Name = styled.span`
@@ -109,4 +124,5 @@ const DeleteIcon = styled(Image)`
   position: absolute;
   top: -4px;
   right: -2px;
+  overflow: visible;
 `;

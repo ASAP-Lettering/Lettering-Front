@@ -83,7 +83,7 @@ const Bottom = (props: BottomProps) => {
           size="large"
           width="96px"
           height="60px"
-          onClick={() => router.push("/send/write")}
+          onClick={() => router.push("/send/letter")}
         >
           <Image
             src="/assets/icons/ic_rocket.svg"

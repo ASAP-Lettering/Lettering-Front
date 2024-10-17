@@ -1,6 +1,7 @@
 // components/KakaoShareButton.tsx
 import { useEffect, useState } from "react";
 import Button from "./Button";
+import Image from "next/image";
 
 interface KakaoShareButtonProps {
   senderName: string;
@@ -73,9 +74,16 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   return (
     <Button
       buttonType="primary"
-      text="카카오톡 공유하기"
+      text="카카오로 편지 보내기"
       onClick={shareToKakao}
-    />
+    >
+      <Image
+        src="/assets/icons/ic_kakao_talk.svg"
+        width={24}
+        height={24}
+        alt="카카오"
+      />
+    </Button>
   );
 };
 

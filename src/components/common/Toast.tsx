@@ -7,7 +7,7 @@ import { useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
 interface ToastProps {
-  text: string;
+  message: string;
   icon: boolean;
   top?: string;
   bottom?: string;
@@ -16,11 +16,22 @@ interface ToastProps {
   padding?: string;
   close?: boolean;
   onClose?: () => void;
+  duration?: number;
 }
 
 const Toast = (props: ToastProps) => {
-  const { text, icon, top, bottom, left, right, padding, close, onClose } =
-    props;
+  const {
+    message,
+    icon,
+    top,
+    bottom,
+    left,
+    right,
+    padding,
+    close,
+    onClose,
+    duration = 3000,
+  } = props;
   const setToast = useSetRecoilState(toastState);
 
   const [visible, setVisible] = useState(true);
@@ -28,13 +39,30 @@ const Toast = (props: ToastProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(false);
-    }, 3000);
+    }, duration);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [duration, onClose]);
+
+  const handleClose = () => {
+    setVisible(false);
+    setToast((prev) => ({
+      ...prev,
+      show: false,
+      message: "",
+      icon: false,
+      close: false,
+      top: prev.top || "",
+      bottom: prev.bottom || "",
+      left: prev.left || "",
+      right: prev.right || "",
+      padding: prev.padding || "",
+    }));
+    if (onClose) onClose();
+  };
 
   return (
-    <Container
+    <ToastContainer
       $icon={icon}
       $visible={visible}
       $top={top}
@@ -51,27 +79,26 @@ const Toast = (props: ToastProps) => {
           alt="info"
         />
       )}
-      <Text>
-        {text}
+      <Message>
+        {message}
         {close && (
-          <Image
-            src="/assets/icons/ic_close.svg"
-            width={16}
-            height={16}
-            alt="close"
-            onClick={() => {
-              onClose || setToast({ show: false, message: "", close: false });
-            }}
-          />
+          <CloseButton onClick={handleClose}>
+            <Image
+              src="/assets/icons/ic_close.svg"
+              width={16}
+              height={16}
+              alt="close"
+            />
+          </CloseButton>
         )}
-      </Text>
-    </Container>
+      </Message>
+    </ToastContainer>
   );
 };
 
 export default Toast;
 
-const Container = styled.div<{
+const ToastContainer = styled.div<{
   $icon: boolean;
   $visible: boolean;
   $top?: string;
@@ -99,7 +126,7 @@ const Container = styled.div<{
   left: ${({ $left }) => $left};
   right: ${({ $right }) => $right};
   transform: translateX(-50%);
-  ${(props) => props.theme.fonts.caption01};
+  ${theme.fonts.caption01};
   animation: ${(props) =>
     props.$visible
       ? css`
@@ -110,9 +137,18 @@ const Container = styled.div<{
         `};
 `;
 
-const Text = styled.div`
+const Message = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 5px;
+`;
+
+const CloseButton = styled.button`
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

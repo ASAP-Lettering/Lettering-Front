@@ -10,6 +10,7 @@ import { toastState } from "@/recoil/toastStore";
 import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 import { droppedLetterState } from "@/recoil/letterStore";
 import BlinkTag from "./BlinkingTag";
+import { useToast } from "@/hooks/useToast";
 
 interface Orbit {
   letterId: string;
@@ -31,14 +32,13 @@ const Planet = (props: PlanetProps) => {
     props;
 
   const router = useRouter();
+  const { showToast } = useToast();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [orbitId, setOrbitId] = useState<string>("");
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
-
-  const setToast = useSetRecoilState(toastState);
 
   //이제 막 추가된(드래그된) 아이템 깜빡거림 적용
   const [droppedLetter, setDroppedLetter] = useRecoilState(droppedLetterState);
@@ -82,16 +82,12 @@ const Planet = (props: PlanetProps) => {
     }
 
     // 토스트 메세지
-    const orbit = orbits
-      ? orbits?.find((item) => item.letterId === orbitId)
-      : null;
-    if (orbits) {
-      setToast({
-        show: true,
-        message: `${orbit!.senderName!} 님의 편지가 삭제되었어요`,
-        close: false,
-      });
-    }
+    const orbit = orbits?.find((item) => item.letterId === orbitId);
+    showToast(`${orbit?.senderName} 님의 편지가 삭제되었어요`, {
+      icon: true,
+      close: false,
+      bottom: "230px",
+    });
   };
 
   const handleCancelDelete = () => {
@@ -101,7 +97,7 @@ const Planet = (props: PlanetProps) => {
   return (
     <Container>
       <PlanetImage
-        src={`/assets/images/planet_png/planet${planetType}.png`}
+        src={`/assets/images/planet_orbit/planet${planetType}.png`}
         width={400}
         height={400}
         alt="planet"

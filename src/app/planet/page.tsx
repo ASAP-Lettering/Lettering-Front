@@ -9,12 +9,10 @@ import Tag from "@/components/common/Tag";
 import { Orbit } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
-import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
-import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
 // import { setSpaceId } from "@/utils/storage";
+import { getMainId, putSpace } from "@/api/planet/space/space";
 import {
   getOrbitLetter,
   getPlanetLetterList,
@@ -34,9 +32,11 @@ import { getLetterCount } from "@/api/letter/letter";
 import PlanetSlide from "@/components/planet/PlanetSlide";
 import { planetRefState } from "@/recoil/RefStore";
 import { droppedLetterState } from "@/recoil/letterStore";
+import { useToast } from "@/hooks/useToast";
 
 const PlanetPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -52,9 +52,6 @@ const PlanetPage = () => {
   const [userName, setUserName] = useState("");
   const [countLetter, setCountLetter] = useState<number>(0);
   const accessToken = getAccessToken(); // 에러핸들링
-
-  const { show, message, close } = useRecoilValue(toastState);
-  const setToast = useSetRecoilState(toastState);
 
   const fetchGetLetterCount = async () => {
     try {
@@ -214,24 +211,25 @@ const PlanetPage = () => {
       }
     }
     if (countLetter < 3 && getInitUserToast() !== "true") {
-      setToast({
-        show: true,
-        message: "궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요",
+      showToast("궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요", {
+        icon: false,
         close: true,
+        bottom: "230px",
+        padding: "11px 13px",
       });
       setInitUserToast();
     }
   }, []);
 
-  useEffect(() => {
-    if (show) {
-      const timer = setTimeout(() => {
-        setToast({ show: false, message: "", close: false });
-      }, 3000);
+  //   useEffect(() => {
+  //     if (show) {
+  //       const timer = setTimeout(() => {
+  //         setToast({ show: false, message: "", close: false });
+  //       }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [show, setToast]);
+  //       return () => clearTimeout(timer);
+  //     }
+  //   }, [show, setToast]);
 
   /* 궤도 편지 삭제 */
   const handleDeleteOrbit = (deletedId: string) => {
@@ -376,14 +374,13 @@ const PlanetPage = () => {
         letterId: letterId || "",
         spaceId: spaceInfo?.spaceId!,
       });
-      console.log(`${senderName}님의 편지가 행성으로 이동했습니다.`);
-      if (!show) {
-        setToast({
-          show: true,
-          message: `${senderName}님의 편지가 행성으로 이동했습니다.`,
-          close: false,
-        });
-      }
+
+      showToast(`${senderName}님의 편지가 행성으로 이동했습니다.`, {
+        icon: false,
+        close: true,
+        bottom: "230px",
+        padding: "11px 13px",
+      });
       //setDroppedItem(null);
     } catch {
       console.log("편지 다른 행성 이동 실패");
@@ -483,16 +480,6 @@ const PlanetPage = () => {
                 />
               </SliderWrapper>
               <PageWrapper>
-                {show && (
-                  <Toast
-                    text={message}
-                    icon={false}
-                    top="0px"
-                    left="50%"
-                    padding="11px 0px"
-                    close={close}
-                  />
-                )}
                 <Pagination
                   currentPage={currentPage}
                   totalPage={totalPages}
@@ -585,7 +572,13 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-// const PlanetWrapper = styled.div`
+const PlanetWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+`;
+
+// const PlanetWrapper = styled.div<{ currentPage: number }>`;
 //   width: 100%;
 //   height: 100%;
 //   position: relative;

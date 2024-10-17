@@ -9,19 +9,19 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import { userInfo } from "@/recoil/signupStore";
 import { useRecoilState } from "recoil";
 import { links } from "@/styles/theme";
-import Toast from "@/components/common/Toast";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import { useToast } from "@/hooks/useToast";
 
 const SignupStep1 = () => {
+  const router = useRouter();
+  const { showToast } = useToast();
+  const searchParams = useSearchParams();
+  const url = searchParams.get("url");
   const [user, setUser] = useRecoilState(userInfo);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isSerivceChecked, setIsServiceChecked] = useState(false);
   const [isPersonalChecked, setIsPersonalChecked] = useState(false);
   const [isMarketingChecked, setIsMarketingChecked] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const url = searchParams.get("url");
 
   const handleButtonClick = () => {
     if (isSerivceChecked && isPersonalChecked) {
@@ -38,15 +38,12 @@ const SignupStep1 = () => {
         privatePermission: isPersonalChecked,
       });
     } else {
-      handleShowToast();
+      showToast("필수 항목에 동의해주세요!", {
+        icon: true,
+        close: false,
+        bottom: "120px",
+      });
     }
-  };
-
-  const handleShowToast = () => {
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
   };
 
   const handleCheckChange = (type: string) => {
@@ -167,14 +164,6 @@ const SignupStep1 = () => {
               ></img>
             </SubContainer>
           </Content>
-          {showToast && (
-            <Toast
-              text={`필수 항목에 동의해주세요!`}
-              icon={true}
-              bottom="120px"
-              left="50%"
-            />
-          )}
         </MainWrapper>
       </div>
       <Button
