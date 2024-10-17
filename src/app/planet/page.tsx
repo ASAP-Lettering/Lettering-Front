@@ -45,7 +45,6 @@ const PlanetPage = () => {
   const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  //const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
   const [spaceTotalLetter, setSpaceTotalLetter] = useState<number>(0);
 
@@ -146,7 +145,6 @@ const PlanetPage = () => {
   useEffect(() => {}, [spaceInfo]);
 
   useEffect(() => {
-    //console.log("지금 페이지는 ", currentPage);
     if (spaceInfo?.spaceId) {
       fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
     }
@@ -439,19 +437,6 @@ const PlanetPage = () => {
                 onClick={() => router.push("/planet/add")}
               />
             </TagList>
-            {/* <PlanetWrapper
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              ref={planetRef}
-            >
-              <Planet
-                planetType={spaceInfo?.templateType || 0}
-                planet={spaceInfo?.spaceName || ""}
-                orbits={currentOrbits || []}
-                onEditPlanetName={handleEditPlanetName}
-                setCurrentOrbits={setCurrentOrbits}
-              />
-            </PlanetWrapper> */}
             <MainWrapper>
               <SliderWrapper
                 onDrop={handleDrop}
@@ -465,49 +450,8 @@ const PlanetPage = () => {
                   currentOrbits={currentOrbits || []}
                   setCurrentOrbits={setCurrentOrbits}
                   onEditPlanetName={handleEditPlanetName}
+                  setCountLetter={setCountLetter}
                 />
-                {/* </Top>
-              <TagList>
-                <Tag
-                  tagType="planet"
-                  name={spaceInfo?.spaceName}
-                  icon="chevron"
-                  onClick={() => {
-                    router.push("/planet/manage");
-                  }}
-                />
-                <Tag
-                  tagType="planet"
-                  name=""
-                  icon="plus"
-                  onClick={() => router.push("/planet/add")}
-                />
-              </TagList>
-              <PlanetWrapper>
-                <Droppable droppableId="droppable-planet">
-                  {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                      <Planet
-                        planetType={spaceInfo?.templateType || 0}
-                        planet={spaceInfo?.spaceName || ""}
-                        orbits={currentOrbits || []}
-                        onEditPlanetName={handleEditPlanetName}
-                        setCurrentOrbits={setCurrentOrbits}
-                        setCountLetter={setCountLetter}
-                      />
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </PlanetWrapper>
-              {showTooltip && (
-                <Tooltip
-                  message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
-                  close={true}
-                  bottom="225px"
-                  onClose={() => setShowTooltip(false)}
-                />
-              )} */}
               </SliderWrapper>
               {showTooltip && (
                 <Tooltip
