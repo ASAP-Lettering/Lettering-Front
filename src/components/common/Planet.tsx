@@ -5,9 +5,11 @@ import Tag from "./Tag";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
 import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
+import { droppedLetterState } from "@/recoil/letterStore";
+import BlinkTag from "./BlinkingTag";
 
 interface Orbit {
   letterId: string;
@@ -37,6 +39,9 @@ const Planet = (props: PlanetProps) => {
   const center = 150; // 행성이 위치할 중앙의 좌표
 
   const setToast = useSetRecoilState(toastState);
+
+  //이제 막 추가된(드래그된) 아이템 깜빡거림 적용
+  const [droppedLetter, setDroppedLetter] = useRecoilState(droppedLetterState);
 
   const handleTagClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -117,16 +122,23 @@ const Planet = (props: PlanetProps) => {
                 transition: "transform 0.8s ease",
               }}
             >
-              <Tag
-                tagType="letter"
-                name={orbit.senderName}
-                onClick={() => {
-                  handleTagClick(orbit.letterId);
-                }}
-                onHold={() => {
-                  handleShowHold(orbit.letterId);
-                }}
-              />
+              {orbit.letterId === droppedLetter.tagId ? (
+                <BlinkTag
+                  tagId={orbit.letterId}
+                  name={orbit.senderName}
+                ></BlinkTag>
+              ) : (
+                <Tag
+                  tagType="letter"
+                  name={orbit.senderName}
+                  onClick={() => {
+                    handleTagClick(orbit.letterId);
+                  }}
+                  onHold={() => {
+                    handleShowHold(orbit.letterId);
+                  }}
+                />
+              )}
             </OrbitTag>
           );
         })}

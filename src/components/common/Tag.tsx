@@ -2,12 +2,13 @@ import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
 import { Orbit } from "@/constants/orbit";
 import { planetRefState } from "@/recoil/RefStore";
 import { theme } from "@/styles/theme";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
-type tagType = "orbit" | "planet" | "letter";
+type tagType = "orbit" | "planet" | "letter" | "droppedLetter";
 type iconType = "chevron" | "edit" | "plus";
 
 interface TagProps {
@@ -220,12 +221,26 @@ const Tag = (props: TagProps) => {
   //     console.log(translate);
   //   }, [translate]);
 
-  useEffect(() => {
-    if (tagType === "letter") console.log(isHoldTriggered);
-  }, [isHoldTriggered]);
+  //   useEffect(() => {
+  //     if (tagType === "letter") console.log(isHoldTriggered);
+  //   }, [isHoldTriggered]);
+
+  //dragged Item일때 Blinking
+  const blinkingAnimation = {
+    animation: {
+      opacity: [1, 0, 1],
+      transition: {
+        duration: 1,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
 
   return (
     <Box
+      as={tagType === "droppedLetter" ? motion.div : "div"}
+      {...(tagType === "droppedLetter" && blinkingAnimation)}
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
@@ -334,7 +349,7 @@ const Box = styled.div<{
     `}
   
   ${({ $tagType }) =>
-    $tagType === "letter" &&
+    ($tagType === "letter" || $tagType === "droppedLetter") &&
     css`
       display: block;
       max-width: 90px;

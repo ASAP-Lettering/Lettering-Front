@@ -11,7 +11,6 @@ import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
-import { OrbitMessage } from "@/types/orbit";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { toastState } from "@/recoil/toastStore";
 import { getMainId, getSpaceList, putSpace } from "@/api/planet/space/space";
@@ -33,6 +32,7 @@ import {
 import { getLetterCount } from "@/api/letter/letter";
 import PlanetSlide from "@/components/planet/PlanetSlide";
 import { planetRefState } from "@/recoil/RefStore";
+import { droppedLetterState } from "@/recoil/letterStore";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -95,7 +95,7 @@ const PlanetPage = () => {
           return prevOrbits;
         });
       }
-      setDroppedItem(null);
+      //setDroppedItem(null);
       setIsLoading(false);
     } catch (error) {
       console.error("행성 편지 목록 조회 실패:", error);
@@ -247,6 +247,29 @@ const PlanetPage = () => {
   //승효 - 수정사항 코드(드래그앤드롭 & 슬라이드)
   const [droppedItem, setDroppedItem] = useState<Orbit | null>(null);
   const [planetRef, setPlanetRef] = useRecoilState(planetRefState);
+  const [droppedLetter, setDroppedLetter] = useRecoilState(droppedLetterState);
+  const [isDropped, setIsDroppped] = useState(false);
+
+  useEffect(() => {
+    if (droppedItem) {
+      setIsDroppped(true);
+      setDroppedLetter({
+        tagId: droppedItem.letterId,
+        name: droppedItem.senderName,
+      });
+      const timer = setTimeout(() => {
+        setDroppedItem(null);
+        setDroppedLetter({
+          tagId: "",
+          name: "",
+        });
+        setIsDroppped(false);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [droppedItem]);
+
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -319,7 +342,7 @@ const PlanetPage = () => {
           close: false,
         });
       }
-      setDroppedItem(null);
+      //setDroppedItem(null);
     } catch {
       console.log("편지 다른 행성 이동 실패");
     }
