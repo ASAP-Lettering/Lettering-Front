@@ -112,12 +112,11 @@ const Tag = (props: TagProps) => {
   };
 
   const handleHoldEnd = () => {
-    if (holdTimeout.current) {
+    if (isHoldTriggered && holdTimeout.current) {
       clearTimeout(holdTimeout.current);
       setIsHoldTriggered(false);
     }
-
-    if (!isHoldTriggered && onClick && !isDragging) {
+    if (!isHoldTriggered && onClick) {
       onClick();
     }
   };
@@ -142,7 +141,10 @@ const Tag = (props: TagProps) => {
 
   //모바일 터치 드래그
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isDragable) {
+    if (tagType === "letter") {
+      handleHoldStart();
+    }
+    if (isDragable && tagType === "orbit") {
       e.stopPropagation();
       console.log("터치 시작");
       const touch = e.touches[0];
@@ -179,9 +181,13 @@ const Tag = (props: TagProps) => {
   };
 
   const handleTouchEnd = () => {
+    if (tagType === "letter") {
+      handleHoldEnd();
+    }
+
     console.log("터치 끝");
 
-    if (planetRef && tagRef.current) {
+    if (planetRef && tagRef.current && tagType === "orbit") {
       const parentRect = planetRef.getBoundingClientRect();
       const tagRect = tagRef.current.getBoundingClientRect();
 
@@ -210,9 +216,13 @@ const Tag = (props: TagProps) => {
     document.removeEventListener("touchend", handleTouchEnd);
   };
 
+  //   useEffect(() => {
+  //     console.log(translate);
+  //   }, [translate]);
+
   useEffect(() => {
-    console.log(translate);
-  }, [translate]);
+    if (tagType === "letter") console.log(isHoldTriggered);
+  }, [isHoldTriggered]);
 
   return (
     <Box
