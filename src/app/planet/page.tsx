@@ -24,6 +24,7 @@ import {
 import Loader from "@/components/common/Loader";
 import { SpaceInfo } from "@/types/space";
 import {
+  getAccessToken,
   getCookie,
   getInitUserToast,
   setCookie,
@@ -50,6 +51,7 @@ const PlanetPage = () => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
   const [userName, setUserName] = useState("");
   const [countLetter, setCountLetter] = useState<number>(0);
+  const accessToken = getAccessToken(); // 에러핸들링
 
   const { show, message, close } = useRecoilValue(toastState);
   const setToast = useSetRecoilState(toastState);
@@ -140,16 +142,9 @@ const PlanetPage = () => {
   useEffect(() => {}, [spaceInfo]);
 
   useEffect(() => {
-    console.log("지금 페이지는 ", currentPage);
+    //console.log("지금 페이지는 ", currentPage);
     if (spaceInfo?.spaceId) {
-      if (spaceTotalLetter === totalPages * 5 && droppedItem) {
-        setTotalPages(totalPages + 1);
-        setCurrentOrbits([droppedItem]);
-        setDroppedItem(null);
-        return;
-      } else {
-        fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
-      }
+      fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
     }
   }, [currentPage]);
 
@@ -186,6 +181,11 @@ const PlanetPage = () => {
   };
 
   const handleNextPage = () => {
+    setDroppedItem(null);
+    setDroppedLetter({
+      tagId: "",
+      name: "",
+    });
     if (currentPage < totalPages) {
       setDirection(1);
       setCurrentPage(currentPage + 1);
@@ -193,6 +193,11 @@ const PlanetPage = () => {
   };
 
   const handlePrevPage = () => {
+    setDroppedItem(null);
+    setDroppedLetter({
+      tagId: "",
+      name: "",
+    });
     if (currentPage > 1) {
       setDirection(-1);
       setCurrentPage(currentPage - 1);
@@ -288,21 +293,30 @@ const PlanetPage = () => {
     setOrbitMessages((prevMessages) =>
       prevMessages?.filter((item) => item.letterId !== draggedItem.letterId)
     );
-    //현재 페이지가 1페이지 뿐일때
+    //total페이지가 1페이지 뿐일때
     if (totalPages === currentPage) {
       //행성에 편지가 존재할때
       if (currentOrbits && currentOrbits?.length > 0) {
-        setCurrentOrbits([...currentOrbits, draggedItem]);
+        if (currentOrbits.length === 5) {
+          setCurrentOrbits((prevOrbits) => {
+            if (prevOrbits) {
+              const updatedOrbits = [...prevOrbits];
+              updatedOrbits.pop();
+              return [draggedItem, ...updatedOrbits];
+            }
+            return prevOrbits;
+          });
+        } else {
+          setCurrentOrbits([...currentOrbits, draggedItem]);
+        }
         console.log("현재 행성에는 아이템이 있습니다.");
       } else {
         //행성에 편지가 존재하지 않을때(0개)
         setCurrentOrbits([draggedItem]);
         console.log("현재 행성에는 아이템이 없습니다.");
       }
-    } else if (currentPage !== 1) {
-      setDirection(-1);
-      setCurrentPage(1);
-    } else {
+    } else if (currentPage === 1) {
+      //페이지는 여러장이지만 현재 위치가 1페이지일때
       setCurrentOrbits((prevOrbits) => {
         if (prevOrbits) {
           const updatedOrbits = [...prevOrbits];
@@ -311,6 +325,10 @@ const PlanetPage = () => {
         }
         return prevOrbits;
       });
+    } else {
+      //페이지는 여러장이고, 현재 위치가 1페이지가 아닐때
+      setDirection(-1);
+      setCurrentPage(1);
     }
     // else if (spaceTotalLetter === totalPages * 5) {
     //   setCurrentPage(totalPages + 1);
@@ -371,6 +389,13 @@ const PlanetPage = () => {
       console.log("편지 다른 행성 이동 실패");
     }
   };
+
+  //토큰 유효한지 확인
+  useEffect(() => {
+    if (!accessToken) {
+      router.push("/login");
+    }
+  }, []);
 
   return (
     <Layout>
