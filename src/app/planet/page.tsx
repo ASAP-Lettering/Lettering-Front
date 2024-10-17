@@ -289,24 +289,20 @@ const PlanetPage = () => {
     setOrbitMessages((prevMessages) =>
       prevMessages?.filter((item) => item.letterId !== draggedItem.letterId)
     );
-    if (totalPages === currentPage && droppedItem) {
-      setCurrentOrbits(
-        currentOrbits
-          ? [
-              ...currentOrbits.filter(
-                (orbit): orbit is Orbit => orbit !== null
-              ),
-              droppedItem,
-            ]
-          : [droppedItem]
-      );
-    }
-    if (spaceTotalLetter === totalPages * 5) {
+
+    if (totalPages === currentPage) {
+      if (currentOrbits && currentOrbits?.length > 0) {
+        setCurrentOrbits([...currentOrbits, draggedItem]);
+        console.log("현재 행성에는 아이템이 있습니다.");
+      } else {
+        setCurrentOrbits([draggedItem]);
+        console.log("현재 행성에는 아이템이 없습니다.");
+      }
+    } else if (spaceTotalLetter === totalPages * 5) {
       setCurrentPage(totalPages + 1);
     } else {
       setCurrentPage(totalPages);
     }
-    console.log(totalPages, currentPage);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
