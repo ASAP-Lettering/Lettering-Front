@@ -68,7 +68,7 @@ const SendTemplatePage = () => {
             ))}
           </TemplatesList>
           <Page>
-            <Current>{templateType}</Current>/{totalPage}
+            <Current>{templateType + 1}</Current>/{totalPage}
           </Page>
         </Column>
         <ButtonWrapper>
