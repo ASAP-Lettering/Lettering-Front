@@ -244,7 +244,7 @@ const Layout = styled.div`
   flex-direction: column;
   overflow-x: hidden;
   gap: 7px;
-  padding: 74px 20px 20px 20px;
+  padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
 `;

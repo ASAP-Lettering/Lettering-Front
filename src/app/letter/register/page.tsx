@@ -234,12 +234,18 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Essential = styled.div`
   text-align: right;
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.caption03};
+  margin-top: 25px;
   margin-bottom: 17px;
 `;
 
@@ -272,6 +278,7 @@ const AddImageLabel = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 100px;
   padding: 18px;
   border-radius: 12px;
   background: ${theme.colors.gray700};
@@ -304,6 +311,7 @@ const ImagesList = styled.div`
   align-items: center;
   gap: 6px;
   margin-top: 16px;
+  margin-bottom: 100px;
 `;
 
 const ImagesWrapper = styled.div`
@@ -330,7 +338,7 @@ const DeleteIcon = styled.button`
 const ButtonWrapper = styled.div`
   width: 100%;
   position: absolute;
-  padding: 0 20px;
+  padding: 0px 20px;
   bottom: 40px;
   left: 0;
 `;
