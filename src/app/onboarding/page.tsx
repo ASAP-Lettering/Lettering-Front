@@ -63,7 +63,7 @@ const Onboarding = () => {
 
   const overlayLineImage = `/assets/onboarding/onboardingline${step}.svg`;
   const linePosition = {
-    top: step === 4 ? (windowHeight > 730 ? "380px" : "110px") : "",
+    top: step === 4 ? (windowHeight > 730 ? "380px" : "270px") : "",
     bottom:
       step === 1 ? "99px" : step === 2 ? "133px" : step === 3 ? "133px" : "",
     left:
@@ -77,7 +77,7 @@ const Onboarding = () => {
   };
 
   const textPosition = {
-    top: step === 4 ? (windowHeight > 730 ? "380px" : "50px") : "",
+    top: step === 4 ? (windowHeight > 730 ? "425px" : "210px") : "",
     bottom:
       step === 1 ? "141px" : step === 2 ? "122px" : step === 3 ? "122px" : "",
     left:
