@@ -14,7 +14,10 @@ import styled from "styled-components";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>([]);
+  const [orbitMessage, setOrbitMessage] = useState<Orbit[] | null>([]);
+  const [currentOrbits, setCurrentOrbits] = useState<Orbit[] | undefined>([]);
+  const [number, setNumber] = useState<number>(0);
+
   const [windowHeight, setWindowHeight] = useState<number>(0);
   const totalSteps = 4;
   const router = useRouter();
@@ -52,7 +55,7 @@ const Onboarding = () => {
 
   useEffect(() => {
     if (step > 1) {
-      setCurrentOrbits([
+      setOrbitMessage([
         {
           letterId: "",
           senderName: "규리",
@@ -218,7 +221,8 @@ const Onboarding = () => {
             planet={"민지"}
             orbits={[]}
             onEditPlanetName={() => {}}
-            setCurrentOrbits={() => {}}
+            setCurrentOrbits={setCurrentOrbits}
+            setCountLetter={setNumber}
           />
           <PageWrapper>
             <Pagination currentPage={1} totalPage={1} />
@@ -226,7 +230,7 @@ const Onboarding = () => {
         </MainWrapper>
       </BgContainer>
       <Bottom
-        orbitMessages={currentOrbits}
+        orbitMessages={orbitMessage}
         onDelete={() => {}}
         onOrbitDrag={() => {}}
         onOrbitTouch={() => {}}
