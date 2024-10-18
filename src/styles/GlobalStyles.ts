@@ -37,6 +37,21 @@ li {
   list-style: none;
 }
 
+div,
+img
+{
+  //드래그방지
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
 button {
   cursor:pointer;
   border: none;
@@ -51,7 +66,8 @@ input, textarea {
 
 @font-face {
     font-family: "Pretendard";
-    src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+    //src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
   }
 `;
 

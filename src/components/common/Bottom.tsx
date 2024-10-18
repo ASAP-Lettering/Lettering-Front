@@ -152,6 +152,7 @@ const Orbits = styled.div`
 `;
 
 const NoOrbit = styled.div`
+  height: 40px;
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.caption02};
 `;
