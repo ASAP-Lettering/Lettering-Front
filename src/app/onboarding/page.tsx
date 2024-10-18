@@ -118,7 +118,7 @@ const Onboarding = () => {
           <TotalStep> / 4</TotalStep>
         </OverlayClose>
         {step === 1 && (
-          <OverlayBtnWrapper left="24px" bottom="33px" width="65%">
+          <OverlayBtnWrapper left="24px" bottom="28px" width="65%">
             <Button
               buttonType="primary"
               size="large"
@@ -257,6 +257,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-width: 393px;
     height: 100%;
     justify-content: space-between;
     color: white;
