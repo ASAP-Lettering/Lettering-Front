@@ -15,11 +15,14 @@ import styled from "styled-components";
 const Onboarding = () => {
   const [step, setStep] = useState(1);
   const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>([]);
+  const [windowHeight, setWindowHeight] = useState<number>(0);
   const totalSteps = 4;
   const router = useRouter();
+
   const handleClose = () => {
     router.push("/planet");
   };
+
   const handleOverlayClick = () => {
     if (step < totalSteps) {
       setStep((prevStep) => prevStep + 1);
@@ -27,6 +30,26 @@ const Onboarding = () => {
       handleClose();
     }
   };
+
+  const handleResize = () => {
+    setWindowHeight(window.innerHeight);
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      handleResize();
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("윈도우 높이는 : ", windowHeight);
+  }, [windowHeight]);
+
   useEffect(() => {
     if (step > 1) {
       setCurrentOrbits([
@@ -40,7 +63,7 @@ const Onboarding = () => {
 
   const overlayLineImage = `/assets/onboarding/onboardingline${step}.svg`;
   const linePosition = {
-    top: step === 4 ? "380px" : "",
+    top: step === 4 ? (windowHeight > 730 ? "380px" : "110px") : "",
     bottom:
       step === 1 ? "99px" : step === 2 ? "133px" : step === 3 ? "133px" : "",
     left:
@@ -54,7 +77,7 @@ const Onboarding = () => {
   };
 
   const textPosition = {
-    top: step === 4 ? "435px" : "",
+    top: step === 4 ? (windowHeight > 730 ? "380px" : "50px") : "",
     bottom:
       step === 1 ? "141px" : step === 2 ? "122px" : step === 3 ? "122px" : "",
     left:
