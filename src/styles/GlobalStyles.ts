@@ -51,7 +51,8 @@ input, textarea {
 
 @font-face {
     font-family: "Pretendard";
-    src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+    //src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
   }
 `;
 
