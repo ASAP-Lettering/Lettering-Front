@@ -25,11 +25,18 @@ interface PlanetProps {
   orbits?: Orbit[];
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
+  setCountLetter: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Planet = (props: PlanetProps) => {
-  const { planetType, planet, orbits, onEditPlanetName, setCurrentOrbits } =
-    props;
+  const {
+    planetType,
+    planet,
+    orbits,
+    onEditPlanetName,
+    setCurrentOrbits,
+    setCountLetter,
+  } = props;
 
   const router = useRouter();
   const { showToast } = useToast();
@@ -77,6 +84,7 @@ const Planet = (props: PlanetProps) => {
       setCurrentOrbits((prevOrbits) =>
         prevOrbits?.filter((orbit) => orbit.letterId !== orbitId)
       );
+      setCountLetter((prevCount) => (prevCount ? prevCount - 1 : prevCount));
     } catch {
       console.log("편지 삭제 실패");
     }
@@ -103,7 +111,7 @@ const Planet = (props: PlanetProps) => {
         alt="planet"
         priority
       />
-      <Shadow />
+      {/* <Shadow /> */}
       {orbits &&
         orbits.map((orbit, index) => {
           const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
@@ -188,7 +196,7 @@ const PlanetImage = styled(Image)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 0;
+  z-index: 5;
   //드래그방지
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -202,11 +210,13 @@ const PlanetImage = styled(Image)`
 `;
 
 const Shadow = styled.div`
-  position: absolute;
+  position: fixed;
+  width: 100%;
+  height: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: -10;
+  z-index: 0;
   width: 80px;
   height: 80px;
   background: linear-gradient(
@@ -214,7 +224,7 @@ const Shadow = styled.div`
     rgba(140, 160, 255, 0.5) 0%,
     rgba(6, 8, 18, 0) 100%
   );
-  /* background: #a3c6ff; */
+  background: #a3c6ff;
   border-radius: 50%;
   filter: drop-shadow(0px 0px 7.29px #a3c6ff)
     drop-shadow(0px 0px 14.58px #a3c6ff) drop-shadow(0px 0px 51.03px #a3c6ff)
@@ -230,7 +240,7 @@ const OrbitTag = styled.div`
   margin-left: 30px;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const PlanetTag = styled.div`
@@ -241,7 +251,7 @@ const PlanetTag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const Overlay = styled.div`

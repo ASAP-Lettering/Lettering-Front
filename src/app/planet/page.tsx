@@ -33,6 +33,7 @@ import PlanetSlide from "@/components/planet/PlanetSlide";
 import { planetRefState } from "@/recoil/RefStore";
 import { droppedLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
+import Tooltip from "@/components/common/Tooltip";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -44,7 +45,6 @@ const PlanetPage = () => {
   const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  //const [draggedOrbit, setDraggedOrbit] = useState<OrbitMessage | null>(null);
   const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
   const [spaceTotalLetter, setSpaceTotalLetter] = useState<number>(0);
 
@@ -53,6 +53,8 @@ const PlanetPage = () => {
   const [countLetter, setCountLetter] = useState<number>(0);
   const accessToken = getAccessToken(); // 에러핸들링
 
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+
   const fetchGetLetterCount = async () => {
     try {
       const response = await getLetterCount();
@@ -60,6 +62,10 @@ const PlanetPage = () => {
       setCountLetter(response.data.count);
       setCurrentOrbits(response.data.content);
       setIsLoading(false);
+      if (response.data.count < 3 && getInitUserToast() !== "true") {
+        setShowTooltip(true);
+        setInitUserToast();
+      }
     } catch (error) {
       console.error("행성 편지 목록 조회 실패:", error);
     }
@@ -139,7 +145,6 @@ const PlanetPage = () => {
   useEffect(() => {}, [spaceInfo]);
 
   useEffect(() => {
-    //console.log("지금 페이지는 ", currentPage);
     if (spaceInfo?.spaceId) {
       fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
     }
@@ -210,26 +215,7 @@ const PlanetPage = () => {
         router.push("/onboarding");
       }
     }
-    if (countLetter < 3 && getInitUserToast() !== "true") {
-      showToast("궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요", {
-        icon: false,
-        close: true,
-        bottom: "230px",
-        padding: "11px 13px",
-      });
-      setInitUserToast();
-    }
   }, []);
-
-  //   useEffect(() => {
-  //     if (show) {
-  //       const timer = setTimeout(() => {
-  //         setToast({ show: false, message: "", close: false });
-  //       }, 3000);
-
-  //       return () => clearTimeout(timer);
-  //     }
-  //   }, [show, setToast]);
 
   /* 궤도 편지 삭제 */
   const handleDeleteOrbit = (deletedId: string) => {
@@ -395,109 +381,110 @@ const PlanetPage = () => {
   }, []);
 
   return (
-    <Layout>
-      {isLoading ? (
-        <LoaderContainer>
-          <Loader />
-        </LoaderContainer>
-      ) : (
-        <>
-          <Background
-            src="/assets/images/background/home.svg"
-            width={480}
-            height={800}
-            alt="background"
-            over-fit="cover"
-            priority
-          />
-          <Container>
-            <Top>
-              <Title>
-                {countLetter < 3 ? (
-                  <>
-                    {userName}님의 스페이스를
-                    <br />
-                    편지로 수놓아 보세요
-                  </>
-                ) : (
-                  <>
-                    {userName}님의 스페이스에
-                    <br />
-                    <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
-                  </>
+    <>
+      <Layout>
+        {isLoading ? (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        ) : (
+          <>
+            <Background
+              src="/assets/images/background/home.svg"
+              width={480}
+              height={800}
+              alt="background"
+              over-fit="cover"
+              priority
+            />
+            <Container>
+              <Top>
+                <Title>
+                  {countLetter < 3 ? (
+                    <>
+                      {userName}님의 스페이스를
+                      <br />
+                      편지로 수놓아 보세요
+                    </>
+                  ) : (
+                    <>
+                      {userName}님의 스페이스에
+                      <br />
+                      <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
+                    </>
+                  )}
+                </Title>
+                <Icon
+                  src="/assets/icons/ic_mypage.svg"
+                  width={24}
+                  height={24}
+                  alt="mypage"
+                  onClick={goToMyPage}
+                />
+              </Top>
+              <TagList>
+                <Tag
+                  tagType="planet"
+                  name={spaceInfo?.spaceName}
+                  icon="chevron"
+                  onClick={() => {
+                    router.push("/planet/manage");
+                  }}
+                />
+                <Tag
+                  tagType="planet"
+                  name=""
+                  icon="plus"
+                  onClick={() => router.push("/planet/add")}
+                />
+              </TagList>
+              <MainWrapper>
+                <SliderWrapper
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  ref={ref}
+                >
+                  <Shadow />
+                  <PlanetSlide
+                    idx={currentPage}
+                    direction={direction}
+                    spaceInfo={spaceInfo}
+                    currentOrbits={currentOrbits || []}
+                    setCurrentOrbits={setCurrentOrbits}
+                    onEditPlanetName={handleEditPlanetName}
+                    setCountLetter={setCountLetter}
+                  />
+                </SliderWrapper>
+                {showTooltip && (
+                  <Tooltip
+                    message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
+                    close={true}
+                    bottom="225px"
+                    onClose={() => setShowTooltip(false)}
+                  />
                 )}
-              </Title>
-              <Icon
-                src="/assets/icons/ic_mypage.svg"
-                width={24}
-                height={24}
-                alt="mypage"
-                onClick={goToMyPage}
-              />
-            </Top>
-            <TagList>
-              <Tag
-                tagType="planet"
-                name={spaceInfo?.spaceName}
-                icon="chevron"
-                onClick={() => {
-                  router.push("/planet/manage");
-                }}
-              />
-              <Tag
-                tagType="planet"
-                name=""
-                icon="plus"
-                onClick={() => router.push("/planet/add")}
-              />
-            </TagList>
-            {/* <PlanetWrapper
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              ref={planetRef}
-            >
-              <Planet
-                planetType={spaceInfo?.templateType || 0}
-                planet={spaceInfo?.spaceName || ""}
-                orbits={currentOrbits || []}
-                onEditPlanetName={handleEditPlanetName}
-                setCurrentOrbits={setCurrentOrbits}
-              />
-            </PlanetWrapper> */}
-            <MainWrapper>
-              <SliderWrapper
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                ref={ref}
-              >
-                <PlanetSlide
-                  idx={currentPage}
-                  direction={direction}
-                  spaceInfo={spaceInfo}
-                  currentOrbits={currentOrbits || []}
-                  setCurrentOrbits={setCurrentOrbits}
-                  onEditPlanetName={handleEditPlanetName}
-                />
-              </SliderWrapper>
-              <PageWrapper>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPage={totalPages}
-                  onPrevPage={handlePrevPage}
-                  onNextPage={handleNextPage}
-                />
-              </PageWrapper>
-            </MainWrapper>
-          </Container>
-          <Bottom
-            orbitMessages={orbitMessages || null}
-            onDelete={handleDeleteOrbit}
-            onOrbitDrag={handleTagDrag}
-            onOrbitTouch={handleTagTouch}
-          />
-        </>
-      )}
-    </Layout>
+                <PageWrapper>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPage={totalPages}
+                    onPrevPage={handlePrevPage}
+                    onNextPage={handleNextPage}
+                  />
+                </PageWrapper>
+              </MainWrapper>
+            </Container>
+          </>
+        )}
+      </Layout>
+      <BottomWrapper>
+        <Bottom
+          orbitMessages={orbitMessages || null}
+          onDelete={handleDeleteOrbit}
+          onOrbitDrag={handleTagDrag}
+          onOrbitTouch={handleTagTouch}
+        />
+      </BottomWrapper>
+    </>
   );
 };
 
@@ -511,7 +498,7 @@ const Layout = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   gap: 10px;
-  padding: 74px 0px 0px 0px;
+  padding: 20px 0px 0px 0px;
   position: relative;
 
   ::-webkit-scrollbar {
@@ -529,6 +516,7 @@ const Background = styled(Image)`
   top: 0;
   left: 0;
   z-index: -100;
+  background-color: ${theme.colors.bg};
 `;
 
 const Icon = styled(Image)`
@@ -540,6 +528,36 @@ const Container = styled.div`
   height: 100%;
   box-sizing: border-box;
   margin-bottom: 15px;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+`;
+
+const Shadow = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    rgba(140, 160, 255, 0.5) 0%,
+    rgba(6, 8, 18, 0) 100%
+  );
+  background: #a3c6ff;
+  border-radius: 50%;
+  filter: drop-shadow(0px 0px 7.29px #a3c6ff)
+    drop-shadow(0px 0px 14.58px #a3c6ff) drop-shadow(0px 0px 51.03px #a3c6ff)
+    drop-shadow(0px 0px 102.06px #a3c6ff) drop-shadow(0px 0px 174.96px #a3c6ff)
+    drop-shadow(0px 0px 306.18px #a3c6ff);
 `;
 
 const Top = styled.div`
@@ -572,40 +590,46 @@ const TagList = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const PlanetWrapper = styled.div`
+const MainWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  height: 100%;
+  height: 650px;
   position: relative;
 `;
 
-// const PlanetWrapper = styled.div<{ currentPage: number }>`;
-//   width: 100%;
-//   height: 100%;
-//   position: relative;
-//   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-// `;
-
 const SliderWrapper = styled.div`
-   width: 400px;
-   height: 400px;
-   overflow: scroll;
-   background-color: ${theme.colors.bg};
+  width: 400px;
+  height: 400px;
+  overflow: scroll;
+  background-color: ${theme.colors.bg};
 `;
 
 const PageWrapper = styled.div`
-    width: 100%;
-    height: 0px;
-    z-index: 1;
-    display: flex;
-    box-sizing: border-box;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: absolute;
-    top: 600px;
-    left: 50%;
-    padding: 20px;
-    transform: translateX(-50%);
+  width: 100%;
+  height: 0px;
+  z-index: 15;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  top: 360px;
+  left: 50%;
+  padding: 20px;
+  transform: translateX(-50%);
+`;
+
+const BottomWrapper = styled.div`
+  width: 100%;
+  max-width: 393px;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 `;
 
 /* 로딩 */
@@ -616,11 +640,4 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
 `;
