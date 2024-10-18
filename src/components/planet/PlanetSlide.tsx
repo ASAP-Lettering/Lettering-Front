@@ -13,6 +13,7 @@ interface PlanetSlideProps {
   direction: number;
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
+  setCountLetter: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const slideVariants = {
@@ -49,6 +50,7 @@ const PlanetSlide = ({
   spaceInfo,
   currentOrbits,
   setCurrentOrbits,
+  setCountLetter,
   onEditPlanetName,
 }: PlanetSlideProps) => {
   return (
@@ -68,6 +70,7 @@ const PlanetSlide = ({
             orbits={currentOrbits || []}
             onEditPlanetName={onEditPlanetName}
             setCurrentOrbits={setCurrentOrbits}
+            setCountLetter={setCountLetter}
           />
           {/* <TestDiv /> */}
         </Container>
@@ -79,22 +82,20 @@ const PlanetSlide = ({
 export default PlanetSlide;
 
 const TestDiv = styled.div`
-    background-color: aqua;
-    width: 300px;
-    height: 400px;
+  background-color: aqua;
+  width: 300px;
+  height: 400px;
 `;
 
 const ContainerWrapper = styled.div`
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    background-color: ${theme.colors.bg};
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 `;
 
 const Container = styled(motion.div)`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: ${theme.colors.bg};
+  position: absolute;
+  width: 100%;
+  height: 100%;
 `;

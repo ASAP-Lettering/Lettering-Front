@@ -112,6 +112,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Column = styled.div`
@@ -145,7 +150,7 @@ const ChangeButton = styled.button`
   gap: 4px;
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.caption02};
-  margin-bottom: 33px;
+  margin-bottom: 100px;
 `;
 
 const ButtonWrapper = styled.div`
