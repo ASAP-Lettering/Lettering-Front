@@ -165,7 +165,7 @@ const Onboarding = () => {
             <OverlayText bottom="149px" left="263px" textAlign="center">
               {overlayTexts[4]}
             </OverlayText>
-            <OverlayBtnWrapper right="24px" bottom="33px">
+            <OverlayBtnWrapper right="24px" bottom="28px">
               <Button
                 buttonType="secondary"
                 size="large"
