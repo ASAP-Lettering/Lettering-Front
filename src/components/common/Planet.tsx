@@ -103,7 +103,7 @@ const Planet = (props: PlanetProps) => {
         alt="planet"
         priority
       />
-      <Shadow />
+      {/* <Shadow /> */}
       {orbits &&
         orbits.map((orbit, index) => {
           const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산

@@ -81,68 +81,73 @@ const Onboarding = () => {
   ];
 
   return (
-    <Container backgroundImage={backgroundImage}>
-      <Overlay onClick={handleOverlayClick}>
-        <CloseSvg src="/assets/onboarding/ic_close.svg" onClick={handleClose} />
-        <OverlayClose>
-          <CurrentStep>{step}</CurrentStep>
-          <TotalStep> / 4</TotalStep>
-        </OverlayClose>
-        {step > 1 && (
-          <CustomOverlayImg
-            src={`/assets/onboarding/img_tag${step - 1}.png`}
-            bottom={tagPosition.bottom}
-            left={tagPosition.left}
-            width={step === 2 || step === 4 ? "71px" : "123px"}
+    <Wrapper>
+      <Container backgroundImage={backgroundImage}>
+        <Overlay onClick={handleOverlayClick}>
+          <CloseSvg
+            src="/assets/onboarding/ic_close.svg"
+            onClick={handleClose}
           />
-        )}
-        <OverlayLine
-          src={overlayLineImage}
-          alt={`Overlay Line ${step}`}
-          bottom={linePosition.bottom}
-          left={linePosition.left}
-        />
-        {step === 1 && <OverlayBtn>편지 등록하기</OverlayBtn>}
-        <OverlayText
-          bottom={textPosition.bottom}
-          left={textPosition.left}
-          textAlign={textAlign}
-        >
-          {overlayTexts[step - 1]}
-        </OverlayText>
-        {step === 3 && (
-          <TagContainer>궤도 메시지가 행성에 소속돼요</TagContainer>
-        )}
-        {step === 4 && (
-          <>
-            <OverlayLine
-              src="/assets/onboarding/onboardingline5.svg"
-              alt="Overlay Line 5"
-              bottom="103px"
-              left="313px"
+          <OverlayClose>
+            <CurrentStep>{step}</CurrentStep>
+            <TotalStep> / 4</TotalStep>
+          </OverlayClose>
+          {step > 1 && (
+            <CustomOverlayImg
+              src={`/assets/onboarding/img_tag${step - 1}.png`}
+              bottom={tagPosition.bottom}
+              left={tagPosition.left}
+              width={step === 2 || step === 4 ? "71px" : "123px"}
             />
-            <OverlayText bottom="149px" left="263px" textAlign="center">
-              {overlayTexts[4]}
-            </OverlayText>
-            <CustomOverlay bottom="33px" left="273px">
-              <Button
-                buttonType="secondary"
-                size="large"
-                width="96px"
-                height="60px"
-              >
-                <img
-                  src="/assets/icons/ic_rocket.svg"
-                  width={40}
-                  height={40}
-                  alt="rocket"
-                />
-              </Button>
-            </CustomOverlay>
-          </>
-        )}
-      </Overlay>
-    </Container>
+          )}
+          <OverlayLine
+            src={overlayLineImage}
+            alt={`Overlay Line ${step}`}
+            bottom={linePosition.bottom}
+            left={linePosition.left}
+          />
+          {step === 1 && <OverlayBtn>편지 등록하기</OverlayBtn>}
+          <OverlayText
+            bottom={textPosition.bottom}
+            left={textPosition.left}
+            textAlign={textAlign}
+          >
+            {overlayTexts[step - 1]}
+          </OverlayText>
+          {step === 3 && (
+            <TagContainer>궤도 메시지가 행성에 소속돼요</TagContainer>
+          )}
+          {step === 4 && (
+            <>
+              <OverlayLine
+                src="/assets/onboarding/onboardingline5.svg"
+                alt="Overlay Line 5"
+                bottom="103px"
+                left="313px"
+              />
+              <OverlayText bottom="149px" left="263px" textAlign="center">
+                {overlayTexts[4]}
+              </OverlayText>
+              <CustomOverlay bottom="33px" left="273px">
+                <Button
+                  buttonType="secondary"
+                  size="large"
+                  width="96px"
+                  height="60px"
+                >
+                  <img
+                    src="/assets/icons/ic_rocket.svg"
+                    width={40}
+                    height={40}
+                    alt="rocket"
+                  />
+                </Button>
+              </CustomOverlay>
+            </>
+          )}
+        </Overlay>
+      </Container>
+    </Wrapper>
   );
 };
 
@@ -159,6 +164,12 @@ export default function LetterTypePaging() {
     </Suspense>
   );
 }
+
+const Wrapper = styled.div`
+    //width: 100%;
+    height: 100%;
+    overflow: scroll;
+`;
 
 const Container = styled.div<{ backgroundImage: string }>`
     display: flex;
