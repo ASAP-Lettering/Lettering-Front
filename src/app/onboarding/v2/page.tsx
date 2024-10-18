@@ -9,12 +9,12 @@ import Pagination from "@/components/letter/Pagination";
 import { Orbit } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
+  const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>([]);
   const totalSteps = 4;
   const router = useRouter();
   const handleClose = () => {
@@ -27,16 +27,22 @@ const Onboarding = () => {
       handleClose();
     }
   };
+  useEffect(() => {
+    if (step > 1) {
+      setCurrentOrbits([
+        {
+          letterId: "",
+          senderName: "규리",
+        },
+      ]);
+    }
+  }, [step]);
+
   const overlayLineImage = `/assets/onboarding/onboardingline${step}.svg`;
   const linePosition = {
+    top: step === 4 ? "380px" : "",
     bottom:
-      step === 1
-        ? "99px"
-        : step === 2
-        ? "133px"
-        : step === 3
-        ? "133px"
-        : "35vh",
+      step === 1 ? "99px" : step === 2 ? "133px" : step === 3 ? "133px" : "",
     left:
       step === 1
         ? "136px"
@@ -48,14 +54,9 @@ const Onboarding = () => {
   };
 
   const textPosition = {
+    top: step === 4 ? "435px" : "",
     bottom:
-      step === 1
-        ? "141px"
-        : step === 2
-        ? "122px"
-        : step === 3
-        ? "122px"
-        : "25vh",
+      step === 1 ? "141px" : step === 2 ? "122px" : step === 3 ? "122px" : "",
     left:
       step === 1
         ? "71px"
@@ -67,7 +68,8 @@ const Onboarding = () => {
   };
 
   const tagPosition = {
-    bottom: step === 4 ? "483px" : "119px",
+    top: step === 4 ? "330px" : "",
+    bottom: step === 4 ? "" : "119px",
     left: step === 4 ? "21px" : "23px",
   };
 
@@ -90,7 +92,7 @@ const Onboarding = () => {
           <TotalStep> / 4</TotalStep>
         </OverlayClose>
         {step === 1 && (
-          <OverlayBtnWrapper>
+          <OverlayBtnWrapper left="24px" bottom="33px" width="65%">
             <Button
               buttonType="primary"
               size="large"
@@ -102,16 +104,58 @@ const Onboarding = () => {
         <OverlayLine
           src={overlayLineImage}
           alt={`Overlay Line ${step}`}
+          top={linePosition.top}
           bottom={linePosition.bottom}
           left={linePosition.left}
         />
         <OverlayText
+          top={textPosition.top}
           bottom={textPosition.bottom}
           left={textPosition.left}
           textAlign={textAlign}
         >
           {overlayTexts[step - 1]}
         </OverlayText>
+        {step > 1 && (
+          <CustomOverlayImg
+            src={`/assets/onboarding/img_tag${step - 1}.png`}
+            top={tagPosition.top}
+            bottom={tagPosition.bottom}
+            left={tagPosition.left}
+            width={step === 2 || step === 4 ? "71px" : "123px"}
+          />
+        )}
+        {step === 3 && (
+          <TagContainer>궤도 메시지가 행성에 소속돼요</TagContainer>
+        )}
+        {step === 4 && (
+          <>
+            <OverlayLine
+              src="/assets/onboarding/onboardingline5.svg"
+              alt="Overlay Line 5"
+              bottom="110px"
+              left="85%"
+            />
+            <OverlayText bottom="149px" left="263px" textAlign="center">
+              {overlayTexts[4]}
+            </OverlayText>
+            <OverlayBtnWrapper right="24px" bottom="33px">
+              <Button
+                buttonType="secondary"
+                size="large"
+                width="100%"
+                height="60px"
+              >
+                <img
+                  src="/assets/icons/ic_rocket.svg"
+                  width={40}
+                  height={40}
+                  alt="rocket"
+                />
+              </Button>
+            </OverlayBtnWrapper>
+          </>
+        )}
       </Overlay>
       <BgContainer>
         <Top>
@@ -151,7 +195,7 @@ const Onboarding = () => {
             planet={"민지"}
             orbits={[]}
             onEditPlanetName={() => {}}
-            setCurrentOrbits={setCurrentOrbits}
+            setCurrentOrbits={() => {}}
           />
           <PageWrapper>
             <Pagination currentPage={1} totalPage={1} />
@@ -159,7 +203,7 @@ const Onboarding = () => {
         </MainWrapper>
       </BgContainer>
       <Bottom
-        orbitMessages={[]}
+        orbitMessages={currentOrbits}
         onDelete={() => {}}
         onOrbitDrag={() => {}}
         onOrbitTouch={() => {}}
@@ -257,10 +301,6 @@ const Title = styled.div`
     ${(props) => props.theme.fonts.heading02};
 `;
 
-const Em = styled.span`
-    ${(props) => props.theme.fonts.heading01}
-`;
-
 const TagList = styled.div`
     display: flex;
     box-sizing: border-box;
@@ -320,32 +360,78 @@ const CurrentStep = styled.div`
     text-align: center;
 `;
 
-const OverlayBtnWrapper = styled.div`
+const OverlayBtnWrapper = styled.div<{
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  width?: string;
+}>`
     position: absolute;
-    width: 64%;
-    left: 24px;
-    bottom: 33px;
-`;
+    top: ${(props) => props.top || "auto"};
+    bottom: ${(props) => props.bottom || "auto"}; 
+    left: ${(props) => props.left || "auto"}; 
+    right: ${(props) => props.right || "auto"}; 
+    width: ${(props) => props.width || "auto"}; 
+  `;
 
-const OverlayLine = styled.img<{ bottom: string; left: string }>`
+const OverlayLine = styled.img<{
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+}>`
     position: absolute;
-    bottom: ${(props) => props.bottom}; 
-    left: ${(props) => props.left}; 
+    top: ${(props) => props.top || "auto"};
+    bottom: ${(props) => props.bottom || "auto"}; 
+    left: ${(props) => props.left || "auto"}; 
+    right: ${(props) => props.right || "auto"}; 
     z-index: 2; 
 `;
 
 const OverlayText = styled.div<{
-  bottom: string;
-  left: string;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
   textAlign: string;
 }>`
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: ${(props) => props.textAlign};
-      bottom: ${(props) => props.bottom}; 
-      left: ${(props) => props.left}; 
-      color:${(props) => props.theme.colors.white};
-      ${(props) => props.theme.fonts.body06};
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: ${(props) => props.textAlign};
+        top: ${(props) => props.top || "auto"};
+        bottom: ${(props) => props.bottom || "auto"}; 
+        left: ${(props) => props.left || "auto"}; 
+        right: ${(props) => props.right || "auto"}; 
+        color:${(props) => props.theme.colors.white};
+        ${(props) => props.theme.fonts.body06};
   `;
+
+const CustomOverlayImg = styled.img<{
+  top?: string;
+  bottom?: string;
+  left?: string;
+  width: string;
+}>`
+      position: absolute;
+      top: ${(props) => props.top || "auto"};
+      bottom: ${(props) => props.bottom || "auto"}; 
+      left: ${(props) => props.left || "auto"}; 
+      height: auto;
+      left: ${(props) => props.left}; 
+      z-index: 2;
+  `;
+
+const TagContainer = styled.div`
+    position: absolute;
+    bottom: 76px;
+    left: 147px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: rgba(62, 65, 81, 0.60);
+    backdrop-filter: blur(4px);
+    ${(props) => props.theme.fonts.button03};
+    color:${(props) => props.theme.colors.gray100}; 
+`;
