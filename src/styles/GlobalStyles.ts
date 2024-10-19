@@ -1,7 +1,6 @@
 "use client";
 
 import { createGlobalStyle, keyframes } from "styled-components";
-import { theme } from "./theme";
 
 const GlobalStyles = createGlobalStyle`    
 * {
@@ -37,7 +36,7 @@ li {
   list-style: none;
 }
 
-div,
+/* div,
 img
 {
   //드래그방지
@@ -50,7 +49,7 @@ img
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-}
+} */
 
 button {
   cursor:pointer;
