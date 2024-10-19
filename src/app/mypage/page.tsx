@@ -1,9 +1,10 @@
 "use client";
 
+import { logout } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { clearTokens } from "@/utils/storage";
+import { clearTokens, getRefreshToken } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import styled from "styled-components";
@@ -23,8 +24,17 @@ const MyPage = () => {
   };
 
   const handleLogout = () => {
-    clearTokens();
-    router.push("/login");
+    let refreshToken = getRefreshToken();
+
+    if (refreshToken) {
+      logout(refreshToken)
+        .then((res) => {
+          console.log(res.data);
+          clearTokens();
+          router.push("/login");
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const goToSendedLetter = () => {
