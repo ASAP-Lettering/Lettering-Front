@@ -243,8 +243,6 @@ const Tag = (props: TagProps) => {
 
   return (
     <Box
-      as={tagType === "droppedLetter" ? motion.div : "div"}
-      {...(tagType === "droppedLetter" && blinkingAnimation)}
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
@@ -270,7 +268,7 @@ const Tag = (props: TagProps) => {
           autoFocus
         />
       ) : (
-        name
+        <Name>{name}</Name>
       )}
       {tagType === "orbit" && isNew && !isDeleteMode && <Circle />}
       {tagType === "orbit" && isDeleteMode && (
@@ -380,6 +378,18 @@ const NameInput = styled.input<{ textLength: number }>`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
   background-color: transparent;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none;
+`;
+
+const Name = styled.span`
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none;
 `;
 
 const Circle = styled.div`
