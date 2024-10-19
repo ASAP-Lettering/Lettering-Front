@@ -144,6 +144,20 @@ const Tag = (props: TagProps) => {
     return "";
   };
 
+  //ref끼리 겹치는 영역 계산
+  const getOverlapArea = (rect1: DOMRect, rect2: DOMRect) => {
+    const x_overlap = Math.max(
+      0,
+      Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left)
+    );
+    const y_overlap = Math.max(
+      0,
+      Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top)
+    );
+    const overlapArea = x_overlap * y_overlap;
+    return overlapArea;
+  };
+
   //모바일 터치 드래그
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (tagType === "letter") {
@@ -195,6 +209,8 @@ const Tag = (props: TagProps) => {
     if (planetRef && tagRef.current && tagType === "orbit") {
       const parentRect = planetRef.getBoundingClientRect();
       const tagRect = tagRef.current.getBoundingClientRect();
+      const isAtLeast200pxAboveBottom =
+        tagRect.bottom <= parentRect.bottom - 200;
 
       const isWithinBounds =
         tagRect.left >= parentRect.left &&
@@ -202,15 +218,32 @@ const Tag = (props: TagProps) => {
         tagRect.top >= parentRect.top &&
         tagRect.bottom <= parentRect.bottom;
 
-      if (isWithinBounds && onTouchEnd && onDragEnd && tagId && name) {
+      if (
+        isWithinBounds &&
+        isAtLeast200pxAboveBottom &&
+        onTouchEnd &&
+        onDragEnd &&
+        tagId &&
+        name
+      ) {
+        // 태그가 부모 영역 내에 있고, 밑에서 100px 이상 떨어져 있을 때
         console.log("드래그한 태그가 영역 내에 있습니다.");
-        onDragEnd({ letterId: tagId!, senderName: name! });
-        onTouchEnd({ letterId: tagId!, senderName: name! });
+        onDragEnd({ letterId: tagId, senderName: name });
+        onTouchEnd({ letterId: tagId, senderName: name });
+      } else if (!isAtLeast200pxAboveBottom) {
+        // 태그가 부모 영역 밑에서 100px 이내에 있을 때
+        console.log(
+          "태그가 부모 영역의 밑에서 100px 이내에 있습니다. 이벤트를 취소합니다."
+        );
       } else {
         console.log("드래그한 태그가 영역 내에 없습니다.");
       }
     }
 
+    resetTag();
+  };
+
+  const resetTag = () => {
     if (tagRef.current) {
       tagRef.current.style.transform = "";
       tagRef.current.style.zIndex = "";
@@ -229,22 +262,8 @@ const Tag = (props: TagProps) => {
   //     if (tagType === "letter") console.log(isHoldTriggered);
   //   }, [isHoldTriggered]);
 
-  //dragged Item일때 Blinking
-  const blinkingAnimation = {
-    animation: {
-      opacity: [1, 0, 1],
-      transition: {
-        duration: 1,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
-
   return (
     <Box
-      as={tagType === "droppedLetter" ? motion.div : "div"}
-      {...(tagType === "droppedLetter" && blinkingAnimation)}
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
@@ -270,7 +289,7 @@ const Tag = (props: TagProps) => {
           autoFocus
         />
       ) : (
-        name
+        <Name>{name}</Name>
       )}
       {tagType === "orbit" && isNew && !isDeleteMode && <Circle />}
       {tagType === "orbit" && isDeleteMode && (
@@ -368,6 +387,10 @@ const Box = styled.div<{
       text-overflow: ellipsis;
       text-align: center;
       vertical-align: middle;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-use-select: all;
+      user-select: all;
 
       &:active {
         background: #565c81;
@@ -380,6 +403,18 @@ const NameInput = styled.input<{ textLength: number }>`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
   background-color: transparent;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none;
+`;
+
+const Name = styled.span`
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none;
 `;
 
 const Circle = styled.div`

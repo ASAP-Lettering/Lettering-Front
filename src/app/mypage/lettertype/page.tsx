@@ -4,8 +4,9 @@ import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { getCookie, setCookie } from "@/utils/storage";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const LetterType = () => {
@@ -18,10 +19,24 @@ const LetterType = () => {
     }
   };
 
+  useEffect(() => {
+    const type = getCookie("letter-tagtype");
+    console.log(type);
+    if (type !== null) {
+      if (type === "1") {
+        setIsCheckedBox(false);
+      } else if (type === "2") {
+        setIsCheckedBox(true);
+      }
+    }
+  }, []);
+
   const handleSumbit = () => {
     if (isCheckedBox) {
+      setCookie("letter-tagtype", "2", 300);
       console.log("이름과날짜");
     } else {
+      setCookie("letter-tagtype", "1", 300);
       console.log("이름만");
     }
     router.push("/mypage");
@@ -46,7 +61,7 @@ const LetterType = () => {
           </Select>
           <Select>
             <SelectTitle>이름과 날짜</SelectTitle>
-            <SampleImg src="/assets/mypage/img_date_sample.png" />
+            <SampleImg src="/assets/mypage/img_date_sample2.png" />
             <Check
               checkType="large"
               checked={isCheckedBox}

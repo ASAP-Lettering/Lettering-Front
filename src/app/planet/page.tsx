@@ -59,7 +59,7 @@ const PlanetPage = () => {
     try {
       const response = await getLetterCount();
       console.log("모든 편지 수 조회 성공:", response.data);
-      setCountLetter(response.data.count);
+      setCountLetter(response.data.letterCount);
       setCurrentOrbits(response.data.content);
       setIsLoading(false);
       if (response.data.count < 3 && getInitUserToast() !== "true") {
@@ -391,7 +391,7 @@ const PlanetPage = () => {
           <>
             <Background
               src="/assets/images/background/bg_planet.png"
-              width={480}
+              width={393}
               height={800}
               alt="background"
               over-fit="cover"
@@ -472,18 +472,18 @@ const PlanetPage = () => {
                   />
                 </PageWrapper>
               </MainWrapper>
+              <BottomWrapper>
+                <Bottom
+                  orbitMessages={orbitMessages || null}
+                  onDelete={handleDeleteOrbit}
+                  onOrbitDrag={handleTagDrag}
+                  onOrbitTouch={handleTagTouch}
+                />
+              </BottomWrapper>
             </Container>
           </>
         )}
       </Layout>
-      <BottomWrapper>
-        <Bottom
-          orbitMessages={orbitMessages || null}
-          onDelete={handleDeleteOrbit}
-          onOrbitDrag={handleTagDrag}
-          onOrbitTouch={handleTagTouch}
-        />
-      </BottomWrapper>
     </>
   );
 };
@@ -492,7 +492,7 @@ export default PlanetPage;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -527,8 +527,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  margin-bottom: 15px;
-
+  overflow-x: hidden;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
@@ -600,8 +599,9 @@ const MainWrapper = styled.div`
 `;
 
 const SliderWrapper = styled.div`
-  width: 400px;
-  height: 400px;
+  width: 393px;
+  height: auto;
+  min-height: 400px;
   overflow: scroll;
   background-color: ${theme.colors.bg};
 `;
