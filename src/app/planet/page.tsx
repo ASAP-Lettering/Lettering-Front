@@ -390,7 +390,7 @@ const PlanetPage = () => {
         ) : (
           <>
             <Background
-              src="/assets/images/background/home.svg"
+              src="/assets/images/background/bg_planet.png"
               width={480}
               height={800}
               alt="background"
@@ -444,7 +444,7 @@ const PlanetPage = () => {
                   onDragOver={handleDragOver}
                   ref={ref}
                 >
-                  <Shadow />
+                  {/* <Shadow /> */}
                   <PlanetSlide
                     idx={currentPage}
                     direction={direction}
