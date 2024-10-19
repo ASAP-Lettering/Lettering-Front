@@ -59,7 +59,7 @@ const PlanetPage = () => {
     try {
       const response = await getLetterCount();
       console.log("모든 편지 수 조회 성공:", response.data);
-      setCountLetter(response.data.count);
+      setCountLetter(response.data.letterCount);
       setCurrentOrbits(response.data.content);
       setIsLoading(false);
       if (response.data.count < 3 && getInitUserToast() !== "true") {

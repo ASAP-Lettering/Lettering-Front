@@ -71,7 +71,7 @@ authClient.interceptors.response.use(
       if (!accessToken) {
         window.location.href = "/login";
       } else {
-        window.location.href = "/error";
+        //window.location.href = "/error";
       }
     }
     return Promise.reject(error);

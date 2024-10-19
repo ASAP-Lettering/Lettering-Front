@@ -387,6 +387,10 @@ const Box = styled.div<{
       text-overflow: ellipsis;
       text-align: center;
       vertical-align: middle;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-use-select: all;
+      user-select: all;
 
       &:active {
         background: #565c81;
