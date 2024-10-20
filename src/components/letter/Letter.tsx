@@ -70,7 +70,8 @@ const Letter = (props: LetterProps) => {
 
   // const contentPages = isImage ? images : paginateContent(content!, 210);
   const contentPages = isImage ? images : paginateContent(content!, 7); // 한 페이지에 최대 7줄 설정
-  const totalPage = isImage ? images!.length : contentPages!.length;
+  const totalPage =
+    contentType === "one" ? 1 : isImage ? images!.length : contentPages!.length;
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
   const [isDelete, setIsDelete] = useState(false);
