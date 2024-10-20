@@ -1,11 +1,10 @@
-import { deleteDraftLetter, getDraftLetter } from "@/api/send/send";
 import { formatDate } from "@/lib/day";
-import { draftState, sendLetterState } from "@/recoil/letterStore";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { draftModalState } from "@/recoil/draftStore";
 
 interface DraftListProps {
   id: string;
@@ -14,34 +13,15 @@ interface DraftListProps {
   timestamp: string;
   isDeleteMode: boolean;
   onDelete: (draftId: string) => void;
-  onClose: () => void;
 }
 
 const DraftList = (props: DraftListProps) => {
-  const { id, name, content, timestamp, isDeleteMode, onDelete, onClose } =
-    props;
+  const { id, name, content, timestamp, isDeleteMode, onDelete } = props;
 
-  const [sendLetter, setSendLetter] = useRecoilState(sendLetterState);
+  const [draftModal, setDraftModal] = useRecoilState(draftModalState);
 
-  const handleUseDraft = () => {};
-
-  const handleSelect = async (id: string) => {
-    try {
-      const response = await getDraftLetter(id);
-      console.log("임시 저장 조회 성공", response.data);
-
-      setSendLetter({
-        draftId: response.data.draftKey,
-        receiverName: response.data.receiverName,
-        content: response.data.content,
-        images: response.data.images,
-        templateType: 0,
-      });
-
-      onClose();
-    } catch {
-      console.log("임시 저장 조회 실패");
-    }
+  const handleConfirmModal = () => {
+    setDraftModal({ id: id, isOpen: !draftModal.isOpen });
   };
 
   const handleDeleteDraft = async (
@@ -55,26 +35,28 @@ const DraftList = (props: DraftListProps) => {
   };
 
   return (
-    <Container onClick={handleUseDraft}>
-      <Top>
-        {name.length > 0 ? <Name>{name}</Name> : <Blank>이름 없음</Blank>}|
-        {content && content.length > 0 ? (
-          <Content>{content}</Content>
-        ) : (
-          <Blank>작성된 내용이 없어요</Blank>
+    <>
+      <Container onClick={handleConfirmModal}>
+        <Top>
+          {name.length > 0 ? <Name>{name}</Name> : <Blank>이름 없음</Blank>}|
+          {content && content.length > 0 ? (
+            <Content>{content}</Content>
+          ) : (
+            <Blank>작성된 내용이 없어요</Blank>
+          )}
+        </Top>
+        <TimeStamp>{formatDate(timestamp)}</TimeStamp>
+        {isDeleteMode && (
+          <DeleteIcon
+            src="/assets/icons/ic_delete_mode.svg"
+            width={20}
+            height={20}
+            alt="삭제"
+            onClick={handleDeleteDraft}
+          />
         )}
-      </Top>
-      <TimeStamp>{formatDate(timestamp)}</TimeStamp>
-      {isDeleteMode && (
-        <DeleteIcon
-          src="/assets/icons/ic_delete_mode.svg"
-          width={20}
-          height={20}
-          alt="삭제"
-          onClick={handleDeleteDraft}
-        />
-      )}
-    </Container>
+      </Container>
+    </>
   );
 };
 

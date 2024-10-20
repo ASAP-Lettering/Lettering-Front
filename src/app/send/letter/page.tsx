@@ -21,6 +21,8 @@ import { draftState, sendLetterState } from "@/recoil/letterStore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import { draftModalState } from "@/recoil/draftStore";
 
 const SendLetterPage = () => {
   const router = useRouter();
@@ -32,6 +34,7 @@ const SendLetterPage = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isToastShown, setIsToastShown] = useState(false);
 
+  const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
   const [tempCount, setTempCount] = useState<number>(3);
   const [isDraftBottom, setIsDraftBottom] = useState<boolean>(false);
@@ -222,6 +225,31 @@ const SendLetterPage = () => {
     }
   };
 
+  const handleConfirmModal = () => {
+    setDraftModal({ id: draftModal.id, isOpen: !draftModal.isOpen });
+  };
+
+  const handleSelect = async () => {
+    if (!draftModal.id) return;
+    try {
+      const response = await getDraftLetter(draftModal.id);
+      console.log("임시 저장 조회 성공", response.data);
+
+      setLetterState({
+        draftId: response.data.draftKey,
+        receiverName: response.data.receiverName,
+        content: response.data.content,
+        images: response.data.images,
+        templateType: 0,
+      });
+
+      // 모달 닫기
+      setDraftModal({ id: null, isOpen: false });
+      setIsDraftBottom(false);
+    } catch {
+      console.log("임시 저장 조회 실패");
+    }
+  };
   return (
     <Layout>
       <NavigatorBarWrapper>
@@ -331,6 +359,15 @@ const SendLetterPage = () => {
             handleDeleteDraft={handleDeleteDraft}
           />
         </BottomWrapper>
+      )}
+      {draftModal.isOpen && (
+        <ConfirmModal
+          title={`작성 중인 편지를 임시저장하고\n선택한 편지를 불러올까요?`}
+          onConfirm={handleSelect}
+          onCancel={handleConfirmModal}
+          confirmText="불러오기"
+          cancelText="취소"
+        />
       )}
     </Layout>
   );
