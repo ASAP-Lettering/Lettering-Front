@@ -8,7 +8,7 @@ type PickerType = "small" | "default";
 
 interface ItemPickerProps {
   items: string[];
-  defaultItem?: string;
+  defaultItem: string;
   unit: string;
   onChange: (item: string) => void;
   type?: PickerType;
@@ -23,13 +23,12 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   type = "default",
   scrollToItem,
 }) => {
-  const initialItem = defaultItem || items[0];
-  const [selectedItem, setSelectedItem] = useState<string>(initialItem);
+  const [selectedItem, setSelectedItem] = useState<string>(defaultItem);
   const refContainer = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
   const itemElementsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [isTouchScrolling, setIsTouchScrolling] = useState(false);
-  const [loading, setloading] = useState(true);
+  const [isContainerVisible, setIsContainerVisible] = useState(false);
 
   const scrollToSelectedItem = (item: string) => {
     const index = items.indexOf(item);
@@ -46,8 +45,11 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   };
 
   useEffect(() => {
-    scrollToSelectedItem(initialItem);
-  }, [initialItem]);
+    scrollToSelectedItem(defaultItem);
+    setTimeout(() => {
+      setIsContainerVisible(true);
+    }, 490);
+  }, [defaultItem]);
 
   useEffect(() => {
     observer.current = new IntersectionObserver(
@@ -129,7 +131,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   }, []);
 
   return (
-    <ItemPickerContainer ref={refContainer}>
+    <ItemPickerContainer ref={refContainer} isVisible={isContainerVisible}>
       {items.map((item, index) => (
         <Item
           key={index}
@@ -151,7 +153,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
 
 export default NewItemPicker;
 
-const ItemPickerContainer = styled.div`
+const ItemPickerContainer = styled.div<{ isVisible: boolean }>`
   display: flex;
   flex-direction: column;
   height: 200px;
@@ -164,6 +166,8 @@ const ItemPickerContainer = styled.div`
   scrollbar-width: none;
   z-index: 10;
   scroll-behavior: smooth;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: opacity 0.5s ease-in-out;
 
   &::-webkit-scrollbar {
     display: none;
