@@ -41,16 +41,6 @@ const SendLetterPage = () => {
 
   const isDraftDisabled = isLoading || (!receiver && !content);
 
-  // useEffect(() => {
-  //   setLetterState({
-  //     draftId: "",
-  //     receiverName: "",
-  //     content: "",
-  //     images: [],
-  //     templateType: 0,
-  //   });
-  // }, [setLetterState]);
-
   const fetchGetDraft = async () => {
     if (draftKey) {
       try {
@@ -207,13 +197,13 @@ const SendLetterPage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
-    setLetterState({
+    setLetterState((prevState) => ({
+      ...prevState,
       draftId: draftId,
       receiverName: receiver,
       content: content,
       images: images,
-      templateType: 0,
-    });
+    }));
     router.push("/send/template");
   };
 

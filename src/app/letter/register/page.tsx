@@ -114,12 +114,12 @@ const LetterRegisterPage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
-    setLetterState({
+    setLetterState((prevState) => ({
+      ...prevState,
       senderName: sender,
       content: content,
       images: images,
-      templateType: 0,
-    });
+    }));
     router.push("/letter/template");
   };
 
