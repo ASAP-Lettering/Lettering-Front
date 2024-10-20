@@ -4,7 +4,7 @@ import { toastState } from "@/recoil/toastStore";
 
 interface ShowToastOptions {
   icon?: boolean;
-  iconType?: string;
+  iconType?: "message" | "info";
   close?: boolean;
   duration?: number;
   top?: string;
