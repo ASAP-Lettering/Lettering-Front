@@ -214,7 +214,7 @@ const TopContainer = styled.div`
 `;
 
 const TopPreviewContainer = styled(TopContainer)`
-  margin-top: 20px;
+  margin-top: 0px;
   ${theme.fonts.subtitle}
 `;
 
