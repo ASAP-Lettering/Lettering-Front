@@ -83,6 +83,10 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
     }
   }, [scrollToItem, items]);
 
+  //   useEffect(() => {
+  //     console.log("현재 선택된 아이템:", selectedItem);
+  //   }, [selectedItem]);
+
   // 터치 스크롤이 끝난 후 현재 중앙 아이템을 다시 확인하는 로직
   const handleTouchEnd = () => {
     setTimeout(() => {
