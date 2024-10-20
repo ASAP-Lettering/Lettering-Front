@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
@@ -46,6 +46,11 @@ const Letter = (props: LetterProps) => {
     readOnly = false,
   } = props;
   const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [isImage]);
+
   // const paginateContent = (content: string, maxCharsPerPage: number) => {
   //   const pages = [];
   //   for (let i = 0; i < content.length; i += maxCharsPerPage) {

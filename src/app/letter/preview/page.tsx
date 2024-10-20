@@ -32,6 +32,7 @@ const LetterPreviewPage = () => {
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
   }, []);
+
   const handleFlipLetter = () => {
     setIsImage(!isImage);
   };
