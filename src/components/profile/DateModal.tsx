@@ -91,15 +91,20 @@ const Modal = (props: ModalProps) => {
     let intYear = parseInt(selectedYear);
     if (intMonth > 1) {
       intMonth = intMonth - 1;
-      handleSelectMonthChange(intMonth.toString());
+      if (!type) {
+        handleSelectMonthChange(intMonth.toString());
+      }
       console.log("leftClick" + selectedMonth);
       setNewYearItem(intYear.toString());
       setNewMonthItem(intMonth.toString());
     } else {
       if (intYear > 1910) {
         intYear = intYear - 1;
-        handleSelectYearChange(intYear.toString());
-        handleSelectMonthChange("12");
+        intMonth = 12;
+        if (!type) {
+          handleSelectYearChange(intYear.toString());
+          handleSelectMonthChange("12");
+        }
       }
       setNewYearItem(intYear.toString());
       setNewMonthItem(intMonth.toString());
@@ -113,15 +118,20 @@ const Modal = (props: ModalProps) => {
     if (intMonth < 12) {
       intMonth = intMonth + 1;
       console.log(intMonth);
-      handleSelectMonthChange(intMonth.toString());
+      if (!type) {
+        handleSelectMonthChange(intMonth.toString());
+      }
       console.log("rightClick" + selectedMonth);
       setNewYearItem(intYear.toString());
       setNewMonthItem(intMonth.toString());
     } else {
       if (intYear < 2024) {
         intYear = intYear + 1;
-        handleSelectYearChange(intYear.toString());
-        handleSelectMonthChange("1");
+        intMonth = 1;
+        if (!type) {
+          handleSelectYearChange(intYear.toString());
+          handleSelectMonthChange("1");
+        }
       }
       setNewYearItem(intYear.toString());
       setNewMonthItem(intMonth.toString());
