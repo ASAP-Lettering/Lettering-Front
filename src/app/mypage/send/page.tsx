@@ -1,43 +1,32 @@
 "use client";
 
+import { getSentLetter } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import LetterTag from "@/components/mypage/LetterTag";
+import { SentLetterListType } from "@/types/letter";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const SendedLetter = () => {
   const [isSelecting, setIsSelecting] = useState(false); // 항목을 선택중인지
-  const [selectedId, setSelectedId] = useState<number[]>([]);
-  const [senderArray, setSenderArray] = useState([
-    { id: 1, name: "진주" },
-    { id: 2, name: "예현" },
-    { id: 3, name: "동우" },
-    { id: 4, name: "민지" },
-    { id: 5, name: "규리" },
-    { id: 6, name: "규민" },
-    { id: 7, name: "유진주" },
-    { id: 8, name: "윤예현" },
-    { id: 9, name: "김동우" },
-    { id: 10, name: "오민지" },
-    { id: 11, name: "김규리" },
-    { id: 12, name: "심규민" },
-    { id: 13, name: "유유진주" },
-    { id: 14, name: "윤윤윤예현" },
-    { id: 15, name: "김김김김김동우" },
-    { id: 16, name: "민지" },
-    { id: 17, name: "규리" },
-    { id: 18, name: "규민" },
-  ]);
+  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const [senderArray, setSenderArray] = useState<SentLetterListType[] | null>();
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    fetchLetterList();
+  }, []);
+
   const selectAllItem = async () => {
-    const allIds = await senderArray.map((sender) => sender.id);
-    setSelectedId(allIds);
+    if (senderArray) {
+      const allIds = await senderArray.map((sender) => sender.letterId);
+      setSelectedId(allIds);
+    }
   };
 
   const cancelItems = () => {
@@ -48,17 +37,19 @@ const SendedLetter = () => {
 
   const discardItems = () => {
     setIsPopup(false);
-    const newSenderArray = senderArray.filter(
-      (sender) => !selectedId.includes(sender.id)
-    );
+    if (senderArray) {
+      const newSenderArray = senderArray.filter(
+        (sender) => !selectedId.includes(sender.letterId)
+      );
 
-    setSenderArray(newSenderArray);
-    setIsSelecting(false);
-    setSelectedId([]);
-    console.log("Deleted IDs:", selectedId);
+      setSenderArray(newSenderArray);
+      setIsSelecting(false);
+      setSelectedId([]);
+      console.log("Deleted IDs:", selectedId);
+    }
   };
 
-  const handleSelectItem = (id: number) => {
+  const handleSelectItem = (id: string) => {
     if (isSelecting) {
       if (selectedId.includes(id)) {
         setSelectedId(selectedId.filter((selected) => selected !== id));
@@ -67,6 +58,15 @@ const SendedLetter = () => {
       }
     } else {
       router.push(`/mypage/send/${id}`);
+    }
+  };
+
+  const fetchLetterList = async () => {
+    try {
+      const response = await getSentLetter();
+      setSenderArray(response.data.content);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -100,13 +100,13 @@ const SendedLetter = () => {
           )}
         </Header>
         <LetterGrid>
-          {senderArray.map(({ id, name }) => (
+          {senderArray?.map(({ letterId, receiverName }) => (
             <LetterTag
-              key={id}
-              id={id}
-              name={name}
+              key={letterId}
+              id={letterId}
+              name={receiverName}
               isSelecting={isSelecting}
-              isSelected={selectedId.includes(id)}
+              isSelected={selectedId.includes(letterId)}
               onSelect={handleSelectItem}
             />
           ))}
@@ -155,48 +155,48 @@ export default function SendedLetterPaging() {
 const Container = styled.div<{
   $isSelecting: boolean;
 }>`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    justify-content: space-between;
-   /* ${({ $isSelecting }) =>
-     $isSelecting ? "justify-content: space-between" : ""}; */
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    background-image: url("/assets/mypage/img_background.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    -webkit-scrollbar {
-        display: none;
-    }
-
-`;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 100%;
+      max-height: 100%;
+      justify-content: space-between;
+     /* ${({ $isSelecting }) =>
+       $isSelecting ? "justify-content: space-between" : ""}; */
+      color: white;
+      background:${(props) => props.theme.colors.bg};
+      background-image: url("/assets/mypage/img_background.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      -webkit-scrollbar {
+          display: none;
+      }
+  
+  `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 5px 24px;
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
-
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
-`;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px 24px;
+      height: 100%;
+      overflow-y: auto;
+      box-sizing: border-box;
+      &::-webkit-scrollbar {
+          width: 5px; /* Width of the scrollbar */
+      }
+  
+      &::-webkit-scrollbar-track {
+          background: ${(props: any) => props.theme.colors.gray800};
+          border-radius: 10px; /* Rounded corners */
+      }
+  
+      &::-webkit-scrollbar-thumb {
+          background: ${(props: any) => props.theme.colors.gray600};
+          border-radius: 10px; /* Rounded corners */
+      }
+  `;
 
 const Header = styled.div`
     width: 100%;
