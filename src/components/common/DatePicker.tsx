@@ -17,14 +17,36 @@ const YearSlider: React.FC<YearSliderProps> = ({
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const handleTouchStart = () => {
+    console.log("픽커 터치 시작");
     setIsDragging(true);
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    console.log("픽커 터치 끝");
     setIsDragging(false);
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const rect = slider.getBoundingClientRect();
+    const sliderHeight = rect.height;
+
+    const clientY = event.touches[0].clientY;
+    const offsetY = clientY - rect.top;
+    const percentage = 1 - offsetY / sliderHeight;
+
+    const yearRange = endYear - startYear;
+    const newYear = Math.round(startYear + yearRange * percentage);
+
+    const validYear = Math.max(startYear, Math.min(newYear, endYear));
+
+    setCurrentYear(validYear);
+    if (onYearChange) {
+      onYearChange(validYear);
+    }
   };
 
   const handleDrag = (event: React.TouchEvent<HTMLDivElement>) => {
+    console.log("픽커 터치 중");
     if (!isDragging) return;
 
     const slider = sliderRef.current;
@@ -33,16 +55,13 @@ const YearSlider: React.FC<YearSliderProps> = ({
     const rect = slider.getBoundingClientRect();
     const sliderHeight = rect.height;
 
-    // Calculate the percentage of drag within the slider
     const clientY = event.touches[0].clientY;
     const offsetY = clientY - rect.top;
     const percentage = 1 - offsetY / sliderHeight;
 
-    // Convert percentage to year
     const yearRange = endYear - startYear;
     const newYear = Math.round(startYear + yearRange * percentage);
 
-    // Ensure the year stays within bounds
     const validYear = Math.max(startYear, Math.min(newYear, endYear));
 
     setCurrentYear(validYear);
