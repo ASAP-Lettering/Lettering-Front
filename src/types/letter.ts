@@ -55,3 +55,17 @@ export type IndependentLetterType = {
     senderName: string;
   } | null;
 };
+
+export type SentLetterListType = {
+  letterId: string;
+  receiverName: string;
+  sendDate: string;
+};
+
+export type SentDetailLetterType = {
+  receiverName: string;
+  sendDate: string;
+  content: string;
+  images: string[];
+  templateType: number;
+};

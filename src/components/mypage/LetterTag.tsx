@@ -3,16 +3,16 @@ import styled from "styled-components";
 
 interface TagProps {
   name: string;
-  id: number;
+  id: string;
   isSelecting: boolean;
   isSelected: boolean;
-  onSelect: (id: number) => void;
+  onSelect: (id: string) => void;
 }
 
 const LetterTag = (props: TagProps) => {
   const {
     name,
-    id = 0,
+    id = "",
     isSelecting = false,
     isSelected = false,
     onSelect,
