@@ -10,6 +10,12 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
+type DateType = {
+  date: string;
+  month: string;
+  year: string;
+};
+
 const Profile = () => {
   const [email, setEmail] = useState("shyo0000@gmail.com");
   const [birthday, setBirthday] = useState("");
@@ -61,6 +67,11 @@ const Profile = () => {
     router.push("/mypage");
   };
 
+  const closeModal = () => {
+    setPicker(false);
+    fetchUserInfo();
+  };
+
   const fetchNewBirthday = async (birthday: string) => {
     try {
       await putUserBirthday(birthday);
@@ -77,11 +88,12 @@ const Profile = () => {
     <Container>
       {picker && (
         <Modal
-          onConfirm={updateNewBirthday}
+          onConfirm={popupPicker}
+          onClose={closeModal}
           onDateChange={setBirthday}
-          initialYear={selectedYear}
-          initialMonth={selectedMonth}
-          initialDate={selectedDate}
+          initialYear={String(selectedYear)}
+          initialMonth={String(selectedMonth)}
+          initialDate={String(selectedDate)}
         />
       )}
       <Wrapper>

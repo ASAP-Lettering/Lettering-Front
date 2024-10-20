@@ -10,6 +10,7 @@ interface ModalProps {
   confirmText?: string;
   onConfirm: (birthday: string) => void;
   onDateChange: (date: string) => void;
+  onClose: () => void;
   initialYear: string;
   initialMonth: string;
   initialDate: string;
@@ -20,6 +21,7 @@ const Modal = (props: ModalProps) => {
     confirmText = "선택 완료",
     onConfirm,
     onDateChange,
+    onClose,
     initialDate,
     initialMonth,
     initialYear,
@@ -28,6 +30,10 @@ const Modal = (props: ModalProps) => {
   const [selectedYear, setSelectedYear] = useState(initialYear);
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [selecetedDate, setSelecetedDate] = useState(initialDate);
+  const [newYearItem, setNewYearItem] = useState<string | null>();
+  const [newMonthItem, setNewMonthItem] = useState<string | null>();
+  const [isContainerVisible, setIsContainerVisible] = useState(false);
+
   const [type, setType] = useState(true);
 
   const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
@@ -74,6 +80,12 @@ const Modal = (props: ModalProps) => {
     console.log(selectedYear + "." + selectedMonth + "." + selecetedDate);
   }, [selecetedDate, selectedYear, selectedMonth]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsContainerVisible(true);
+    }, 500);
+  }, []);
+
   const handleLeftClick = () => {
     let intMonth = parseInt(selectedMonth);
     let intYear = parseInt(selectedYear);
@@ -81,12 +93,16 @@ const Modal = (props: ModalProps) => {
       intMonth = intMonth - 1;
       handleSelectMonthChange(intMonth.toString());
       console.log("leftClick" + selectedMonth);
+      setNewYearItem(intYear.toString());
+      setNewMonthItem(intMonth.toString());
     } else {
       if (intYear > 1910) {
         intYear = intYear - 1;
         handleSelectYearChange(intYear.toString());
         handleSelectMonthChange("12");
       }
+      setNewYearItem(intYear.toString());
+      setNewMonthItem(intMonth.toString());
     }
   };
 
@@ -99,12 +115,16 @@ const Modal = (props: ModalProps) => {
       console.log(intMonth);
       handleSelectMonthChange(intMonth.toString());
       console.log("rightClick" + selectedMonth);
+      setNewYearItem(intYear.toString());
+      setNewMonthItem(intMonth.toString());
     } else {
       if (intYear < 2024) {
         intYear = intYear + 1;
         handleSelectYearChange(intYear.toString());
         handleSelectMonthChange("1");
       }
+      setNewYearItem(intYear.toString());
+      setNewMonthItem(intMonth.toString());
     }
   };
 
@@ -128,7 +148,7 @@ const Modal = (props: ModalProps) => {
         }}
       >
         <Header>
-          <DateSwapWrapper>
+          <DateSwapWrapper isVisible={isContainerVisible}>
             <IconButton
               src="/assets/profile/ic_arrow_left.svg"
               onClick={handleLeftClick}
@@ -149,25 +169,28 @@ const Modal = (props: ModalProps) => {
               onClick={handleRightClick}
             />
           </DateSwapWrapper>
+          <IconButton src="/assets/profile/ic_close.svg" onClick={onClose} />
         </Header>
         <ContentWrapper>
           {type ? (
             <ItemPickerWrapper>
               <NewItemPicker
                 items={years}
-                defaultItem={initialYear}
+                defaultItem={selectedYear}
                 unit="년"
                 onChange={handleSelectYearChange}
+                newItem={newYearItem}
               />
               <NewItemPicker
                 items={months}
-                defaultItem={initialMonth}
+                defaultItem={selectedMonth}
                 unit="월"
                 onChange={handleSelectMonthChange}
+                newItem={newMonthItem}
               />
               <NewItemPicker
                 items={days}
-                defaultItem={initialDate}
+                defaultItem={selecetedDate}
                 unit="일"
                 onChange={handleSelectDayChange}
               ></NewItemPicker>
@@ -214,7 +237,7 @@ const ModalOverlay = styled(motion.div)`
 const ModalContainer = styled(motion.div)`
   width: 100%;
   max-width: 360px;
-  padding: 16px;
+  padding: 10px 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -232,10 +255,12 @@ const Header = styled.div`
   border-bottom: 2px solid ${(props) => props.theme.colors.gray800};
 `;
 
-const DateSwapWrapper = styled.div`
+const DateSwapWrapper = styled.div<{ isVisible: boolean }>`
     display: flex;
     align-items: center;
     gap: 28px;
+    opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+    transition: opacity 0.5s ease-in-out;
 `;
 
 const HeaderTitle = styled.div`

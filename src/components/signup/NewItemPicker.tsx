@@ -13,6 +13,7 @@ interface ItemPickerProps {
   onChange: (item: string) => void;
   type?: PickerType;
   scrollToItem?: string;
+  newItem?: string | null;
 }
 
 const NewItemPicker: React.FC<ItemPickerProps> = ({
@@ -22,6 +23,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   onChange,
   type = "default",
   scrollToItem,
+  newItem,
 }) => {
   const [selectedItem, setSelectedItem] = useState<string>(defaultItem);
   const refContainer = useRef<HTMLDivElement>(null);
@@ -48,8 +50,14 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
     scrollToSelectedItem(defaultItem);
     setTimeout(() => {
       setIsContainerVisible(true);
-    }, 490);
-  }, [defaultItem]);
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    if (newItem) {
+      scrollToSelectedItem(newItem);
+    }
+  }, [newItem]);
 
   useEffect(() => {
     observer.current = new IntersectionObserver(
