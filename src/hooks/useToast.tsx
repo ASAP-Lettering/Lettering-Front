@@ -51,7 +51,7 @@ export const useToast = () => {
           show: false,
           message: "",
           icon: false,
-          iconType: "",
+          iconType: "info",
           close: false,
           top,
           bottom,
