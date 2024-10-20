@@ -23,3 +23,13 @@ export const putUserBirthday = async (birthday: string) => {
     birthday: birthday,
   });
 };
+
+//보낸 편지함 목록
+export const getSentLetter = async () => {
+  return await authClient.get(`/api/v1/letters/send`);
+};
+
+//보낸 편지함 상세
+export const getSentLetterDetail = async (letterId: string) => {
+  return await authClient.get(`/api/v1/letters/send/${letterId}`);
+};
