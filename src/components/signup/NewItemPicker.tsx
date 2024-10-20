@@ -29,6 +29,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   const observer = useRef<IntersectionObserver | null>(null);
   const itemElementsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [isTouchScrolling, setIsTouchScrolling] = useState(false);
+  const [loading, setloading] = useState(true);
 
   const scrollToSelectedItem = (item: string) => {
     const index = items.indexOf(item);

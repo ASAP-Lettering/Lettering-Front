@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 interface ModalProps {
   confirmText?: string;
-  onConfirm: () => void;
+  onConfirm: (birthday: string) => void;
   onDateChange: (date: string) => void;
   initialYear: string;
   initialMonth: string;
@@ -66,7 +66,8 @@ const Modal = (props: ModalProps) => {
     }
     const fullDate = `${selectedYear}.${month}.${date}`;
     onDateChange(fullDate);
-    onConfirm();
+    console.log("제출되었습니다", fullDate);
+    onConfirm(fullDate);
   };
 
   useEffect(() => {
@@ -157,14 +158,12 @@ const Modal = (props: ModalProps) => {
                 defaultItem={initialYear}
                 unit="년"
                 onChange={handleSelectYearChange}
-                scrollToItem={selectedYear}
               />
               <NewItemPicker
                 items={months}
                 defaultItem={initialMonth}
                 unit="월"
                 onChange={handleSelectMonthChange}
-                scrollToItem={selectedMonth}
               />
               <NewItemPicker
                 items={days}
@@ -178,6 +177,7 @@ const Modal = (props: ModalProps) => {
             <Calendar
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
+              selectedDate={selecetedDate}
               onDateChange={handleSelectDayChange}
             />
           )}

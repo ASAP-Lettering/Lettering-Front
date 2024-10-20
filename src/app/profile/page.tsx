@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserInfo } from "@/api/mypage/user";
+import { getUserInfo, putUserBirthday } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
@@ -17,26 +17,27 @@ const Profile = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [picker, setPicker] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const router = useRouter();
 
   const fetchUserInfo = async () => {
     try {
       const response = await getUserInfo();
-      setBirthday(response.data.birthday);
+      setEmail(response.data.email);
+      setBirthday(response.data.birthday.replace(/-/g, "."));
       console.log("회원정보 조회 성공:", response.data);
+
+      const [year, month, day] = response.data.birthday.split("-");
+      setSelectedYear(year);
+      setSelectedMonth(parseInt(month).toString());
+      setSelectedDate(parseInt(day).toString());
+
+      setLoading(false);
     } catch (error) {
       console.error("회원정보 조회 실패:", error);
     }
   };
-
-  useEffect(() => {
-    if (birthday) {
-      const [year, month, day] = birthday.split("-");
-      setSelectedYear(year);
-      setSelectedMonth(parseInt(month).toString());
-      setSelectedDate(parseInt(day).toString());
-    }
-  }, [birthday]);
 
   useEffect(() => {
     fetchUserInfo();
@@ -45,23 +46,38 @@ const Profile = () => {
   const popupPicker = () => {
     if (birthday && selectedDate && selectedMonth && selectedYear) {
       setPicker(!picker);
-      updateNewBirthday(birthday);
     }
   };
 
   const updateNewBirthday = (newbirthday: string) => {
-    console.log("새 생일 날짜는 ", newbirthday);
+    let formatBirthday = newbirthday.replace(/\./g, "-");
+    console.log("새 생일 날짜는 ", formatBirthday);
+    fetchNewBirthday(formatBirthday);
+    setBirthday(newbirthday);
+    setPicker(false);
   };
 
   const handleSubmit = () => {
     router.push("/mypage");
   };
 
-  return (
+  const fetchNewBirthday = async (birthday: string) => {
+    try {
+      await putUserBirthday(birthday);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return loading ? (
+    <LoaderContainer>
+      <Loader />
+    </LoaderContainer>
+  ) : (
     <Container>
       {picker && (
         <Modal
-          onConfirm={popupPicker}
+          onConfirm={updateNewBirthday}
           onDateChange={setBirthday}
           initialYear={selectedYear}
           initialMonth={selectedMonth}
