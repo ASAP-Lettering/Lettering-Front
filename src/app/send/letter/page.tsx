@@ -82,7 +82,10 @@ const SendLetterPage = () => {
   };
 
   const handleContentChange = (newValue: string) => {
-    if (newValue.length <= 1000) {
+    const maxLength = 1000;
+    if (newValue.length > maxLength) {
+      setContent(newValue.substring(0, maxLength));
+    } else {
       setContent(newValue);
     }
   };
