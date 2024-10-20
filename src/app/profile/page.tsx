@@ -55,16 +55,15 @@ const Profile = () => {
     }
   };
 
-  const updateNewBirthday = (newbirthday: string) => {
-    let formatBirthday = newbirthday.replace(/\./g, "-");
-    console.log("새 생일 날짜는 ", formatBirthday);
+  const handleSubmit = () => {
+    let formatBirthday = birthday.replace(/\./g, "-");
     fetchNewBirthday(formatBirthday);
-    setBirthday(newbirthday);
-    setPicker(false);
+    router.push("/mypage");
   };
 
-  const handleSubmit = () => {
-    router.push("/mypage");
+  const confirmModal = (newbirthday: string) => {
+    setBirthday(newbirthday);
+    setPicker(!picker);
   };
 
   const closeModal = () => {
@@ -88,12 +87,12 @@ const Profile = () => {
     <Container>
       {picker && (
         <Modal
-          onConfirm={popupPicker}
+          onConfirm={confirmModal}
           onClose={closeModal}
           onDateChange={setBirthday}
-          initialYear={String(selectedYear)}
-          initialMonth={String(selectedMonth)}
-          initialDate={String(selectedDate)}
+          initialYear={selectedYear}
+          initialMonth={selectedMonth}
+          initialDate={selectedDate}
         />
       )}
       <Wrapper>
