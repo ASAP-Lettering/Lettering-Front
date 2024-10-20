@@ -387,7 +387,7 @@ const PlanetPage = () => {
         padding: "11px 13px",
       });
       //setDroppedItem(null);
-      setChange(true);
+      setChange(!change);
     } catch {
       console.log("편지 다른 행성 이동 실패");
     }
@@ -473,6 +473,7 @@ const PlanetPage = () => {
                     setCurrentOrbits={setCurrentOrbits}
                     onEditPlanetName={handleEditPlanetName}
                     setCountLetter={setCountLetter}
+                    setChange={setChange}
                   />
                 </SliderWrapper>
                 {showTooltip && (

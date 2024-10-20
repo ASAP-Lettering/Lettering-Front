@@ -26,6 +26,7 @@ interface PlanetProps {
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
   setCountLetter: React.Dispatch<React.SetStateAction<number>>;
+  setChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Planet = (props: PlanetProps) => {
@@ -36,6 +37,7 @@ const Planet = (props: PlanetProps) => {
     onEditPlanetName,
     setCurrentOrbits,
     setCountLetter,
+    setChange,
   } = props;
 
   const router = useRouter();
@@ -96,6 +98,7 @@ const Planet = (props: PlanetProps) => {
       close: false,
       bottom: "230px",
     });
+    setChange((prev) => !prev);
   };
 
   const handleCancelDelete = () => {
