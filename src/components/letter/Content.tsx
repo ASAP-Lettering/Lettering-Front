@@ -126,14 +126,10 @@ const ImageContainer = styled.div<{ src: string }>`
 `;
 
 const ClampedText = styled.div<{ contentType: contentType }>`
+  width: 100%;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
-  width: 100%;
-  white-space: normal;
-  word-break: break-all;
-  overflow-wrap: break-word;
 
   ${({ contentType }) =>
     contentType === "one"
@@ -142,6 +138,9 @@ const ClampedText = styled.div<{ contentType: contentType }>`
           text-overflow: ellipsis;
         `
       : css`
+          white-space: normal;
+          word-break: break-all;
+          overflow-wrap: break-word;
           white-space: pre-wrap;
         `}
 `;

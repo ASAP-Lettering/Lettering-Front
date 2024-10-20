@@ -68,13 +68,23 @@ const Letter = (props: LetterProps) => {
 
     context!.font = "16px Pretendard";
 
-    const maxWidth = 280; // 최대 너비
+    const maxWidth = contentType === "one" ? 200 : 280; // 최대 너비
     let currentLine = "";
     let lines: string[] = [];
 
     for (let i = 0; i < content.length; i++) {
       const char = content[i];
-      const testLine = currentLine + char; // 현재 줄에 글자 추가
+
+      // 줄바꿈 기호
+      if (char === "\n") {
+        if (currentLine.trim()) {
+          lines.push(currentLine.trim());
+        }
+        currentLine = "";
+        continue;
+      }
+
+      const testLine = currentLine + char;
       const { width } = context!.measureText(testLine);
 
       // 한 줄이 화면 너비를 넘지 않으면 계속 이어서 씀
