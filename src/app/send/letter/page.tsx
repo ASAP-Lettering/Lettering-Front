@@ -181,8 +181,9 @@ const SendLetterPage = () => {
       setTempCount(tempCount + 1);
 
       // 3. 토스트 메세지
-      showToast("임시 저장을 완료했어요", {
+      showToast("작성하던 편지가 임시 저장됐어요.", {
         icon: true,
+        iconType: "message",
         close: true,
         bottom: "113px",
       });

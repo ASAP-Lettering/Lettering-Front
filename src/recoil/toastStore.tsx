@@ -6,6 +6,7 @@ export const toastState = atom({
     show: false,
     message: "",
     icon: false,
+    iconType: "",
     close: false,
     top: "",
     bottom: "",
