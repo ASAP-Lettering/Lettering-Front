@@ -1,6 +1,6 @@
 // styles/DatePickerStyles.ts
 import styled from "styled-components";
-import { animate, motion, px } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { theme } from "@/styles/theme";
 
@@ -13,10 +13,6 @@ interface ItemPickerProps {
   onChange: (item: string) => void;
   type?: PickerType;
   scrollToItem?: string;
-}
-
-interface ItemProps {
-  isSelected: boolean;
 }
 
 const NewItemPicker: React.FC<ItemPickerProps> = ({
@@ -32,13 +28,13 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
   const refContainer = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
   const itemElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [isTouchScrolling, setIsTouchScrolling] = useState(false);
 
   const scrollToSelectedItem = (item: string) => {
     const index = items.indexOf(item);
     const currentElement = itemElementsRef.current[index];
-    if (currentElement && refContainer.current) {
+    if (currentElement && refContainer.current && !isTouchScrolling) {
       const offsetTop = currentElement.offsetTop;
-
       const scrollPosition =
         offsetTop -
         refContainer.current.offsetHeight / 2 +
@@ -50,7 +46,7 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
 
   useEffect(() => {
     scrollToSelectedItem(initialItem);
-  }, []);
+  }, [initialItem]);
 
   useEffect(() => {
     observer.current = new IntersectionObserver(
@@ -79,13 +75,53 @@ const NewItemPicker: React.FC<ItemPickerProps> = ({
       elements.forEach((elem) => observer.current?.unobserve(elem!));
       observer.current?.disconnect();
     };
-  }, [items]);
+  }, [items, onChange]);
 
   useEffect(() => {
     if (scrollToItem && items.includes(scrollToItem)) {
       scrollToSelectedItem(scrollToItem);
     }
-  }, [scrollToItem]);
+  }, [scrollToItem, items]);
+
+  // 터치 스크롤이 끝난 후 현재 중앙 아이템을 다시 확인하는 로직
+  const handleTouchEnd = () => {
+    setTimeout(() => {
+      setIsTouchScrolling(false);
+
+      if (refContainer.current) {
+        const middleY =
+          refContainer.current.scrollTop +
+          refContainer.current.offsetHeight / 2;
+        const selectedElement = itemElementsRef.current.find(
+          (element) =>
+            element &&
+            element.offsetTop <= middleY &&
+            element.offsetTop + element.offsetHeight > middleY
+        );
+        if (selectedElement) {
+          const itemStr = selectedElement.getAttribute("data-item");
+          if (itemStr) {
+            setSelectedItem(itemStr);
+            onChange(itemStr);
+          }
+        }
+      }
+    }, 200); // 약간의 딜레이를 주어 터치 스크롤이 끝난 후에 다시 확인
+  };
+
+  useEffect(() => {
+    const handleTouchStart = () => {
+      setIsTouchScrolling(true);
+    };
+
+    refContainer.current?.addEventListener("touchstart", handleTouchStart);
+    refContainer.current?.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      refContainer.current?.removeEventListener("touchstart", handleTouchStart);
+      refContainer.current?.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   return (
     <ItemPickerContainer ref={refContainer}>
@@ -122,6 +158,8 @@ const ItemPickerContainer = styled.div`
   padding-bottom: 70px;
   scrollbar-width: none;
   z-index: 10;
+  scroll-behavior: smooth;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -130,7 +168,7 @@ const ItemPickerContainer = styled.div`
 const Item = styled(motion.div)<{ $isSelected: boolean; $type: PickerType }>`
   flex: 0 0 auto;
   height: 60px;
-  width: ${({ $type }) => ($type === "small" ? "65px" : "85px")}; 
+  width: ${({ $type }) => ($type === "small" ? "65px" : "85px")};
   box-sizing: border-box;
   padding: 10px 0;
   line-height: 60px;
@@ -145,7 +183,7 @@ const Item = styled(motion.div)<{ $isSelected: boolean; $type: PickerType }>`
         : "24px"
       : $type === "small"
       ? "16px"
-      : "20px"}; 
+      : "20px"};
   color: ${({ $isSelected }) => ($isSelected ? "white" : theme.colors.gray600)};
   transition: color 0.7s;
   -webkit-user-select: none;
