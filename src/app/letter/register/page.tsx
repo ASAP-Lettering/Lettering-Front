@@ -206,7 +206,7 @@ const LetterRegisterPage = () => {
             buttonType="primary"
             size="large"
             text="다음"
-            disabled={!sender || (!content && !images)}
+            disabled={!sender || (!content && images.length === 0)}
             onClick={handleAddNext}
           />
         </ButtonWrapper>
