@@ -33,3 +33,17 @@ export const getSentLetter = async () => {
 export const getSentLetterDetail = async (letterId: string) => {
   return await authClient.get(`/api/v1/letters/send/${letterId}`);
 };
+
+//보낸 편지 삭제 (1개 이상)
+export const deleteSentLetters = async (letterIds: string[]) => {
+  return await authClient.delete(`/api/v1/letters/send`, {
+    data: {
+      letterIds: letterIds,
+    },
+  });
+};
+
+//보낸 편지 삭제 (1개)
+export const deleteSentLetter = async (letterId: string) => {
+  return await authClient.delete(`/api/v1/letters/send/${letterId}`);
+};

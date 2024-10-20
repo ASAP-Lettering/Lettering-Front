@@ -1,6 +1,10 @@
 "use client";
 
-import { getSentLetter } from "@/api/mypage/user";
+import {
+  deleteSentLetter,
+  deleteSentLetters,
+  getSentLetter,
+} from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
@@ -22,9 +26,9 @@ const SendedLetter = () => {
     fetchLetterList();
   }, []);
 
-  const selectAllItem = async () => {
+  const selectAllItem = () => {
     if (senderArray) {
-      const allIds = await senderArray.map((sender) => sender.letterId);
+      const allIds = senderArray.map((sender) => sender.letterId);
       setSelectedId(allIds);
     }
   };
@@ -35,17 +39,14 @@ const SendedLetter = () => {
     setIsPopup(false);
   };
 
-  const discardItems = () => {
+  const discardItems = async () => {
     setIsPopup(false);
-    if (senderArray) {
-      const newSenderArray = senderArray.filter(
-        (sender) => !selectedId.includes(sender.letterId)
-      );
-
-      setSenderArray(newSenderArray);
+    if (senderArray && selectedId) {
+      await fetchDeleteLetter(selectedId);
       setIsSelecting(false);
       setSelectedId([]);
       console.log("Deleted IDs:", selectedId);
+      fetchLetterList();
     }
   };
 
@@ -67,6 +68,22 @@ const SendedLetter = () => {
       setSenderArray(response.data.content);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const fetchDeleteLetter = async (letterIds: string[]) => {
+    if (letterIds.length === 1) {
+      try {
+        const response = await deleteSentLetter(letterIds[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (letterIds.length > 1) {
+      try {
+        const response = await deleteSentLetters(letterIds);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
