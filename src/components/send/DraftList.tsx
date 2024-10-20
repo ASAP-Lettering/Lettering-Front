@@ -23,6 +23,8 @@ const DraftList = (props: DraftListProps) => {
 
   const [sendLetter, setSendLetter] = useRecoilState(sendLetterState);
 
+  const handleUseDraft = () => {};
+
   const handleSelect = async (id: string) => {
     try {
       const response = await getDraftLetter(id);
@@ -53,14 +55,14 @@ const DraftList = (props: DraftListProps) => {
   };
 
   return (
-    <Container
-      onClick={() => {
-        handleSelect(id);
-      }}
-    >
+    <Container onClick={handleUseDraft}>
       <Top>
-        <Name>{name}</Name>
-        {` `}|{` `} <Content>{content}</Content>
+        {name.length > 0 ? <Name>{name}</Name> : <Blank>이름 없음</Blank>}|
+        {content && content.length > 0 ? (
+          <Content>{content}</Content>
+        ) : (
+          <Blank>작성된 내용이 없어요</Blank>
+        )}
       </Top>
       <TimeStamp>{formatDate(timestamp)}</TimeStamp>
       {isDeleteMode && (
@@ -95,6 +97,9 @@ const Container = styled.div`
 
 const Top = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: ${theme.colors.white};
   ${theme.fonts.caption01};
   overflow: hidden;
@@ -111,6 +116,11 @@ const Content = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   width: auto;
+`;
+
+const Blank = styled.div`
+  color: ${theme.colors.gray500};
+  white-space: nowrap;
 `;
 
 const TimeStamp = styled.div`
