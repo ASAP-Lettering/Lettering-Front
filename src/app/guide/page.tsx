@@ -307,6 +307,7 @@ const GuidePage = () => {
       </Background> */}
       <h3>카카오톡 공유하기</h3>
       <KakaoShareButton senderName="승효" letterId="aa" />
+      <KakaoShareButton type="small" senderName="승효" letterId="aa" />
     </Container>
   );
 };

@@ -2,13 +2,18 @@
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
+import styled from "styled-components";
+
+type buttonType = "default" | "small";
 
 interface KakaoShareButtonProps {
+  type?: buttonType;
   senderName: string;
   letterId: string;
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
+  type = "default",
   senderName,
   letterId,
 }) => {
@@ -71,7 +76,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
     });
   };
 
-  return (
+  return type === "default" ? (
     <Button
       buttonType="primary"
       text="카카오로 편지 보내기"
@@ -84,7 +89,28 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
         alt="카카오"
       />
     </Button>
+  ) : (
+    <ReShareBtnWrapper onClick={shareToKakao}>
+      <img src="/assets/icons/ic_kakao_talk.svg" />
+      편지 다시 보내기
+    </ReShareBtnWrapper>
   );
 };
 
 export default KakaoShareButton;
+
+const ReShareBtnWrapper = styled.button`
+    display: flex;
+    width: 45%;
+    box-sizing: border-box;
+    padding: 12px;
+    gap: 10px;
+    border-radius: 20px;
+    text-align: center;
+    justify-content: center;
+    min-width: 151px;
+    flex-direction: row;
+    color: ${(props) => props.theme.colors.gray100};
+    background-color: ${(props) => props.theme.colors.gray800};
+    ${(props) => props.theme.fonts.caption01};
+`;
