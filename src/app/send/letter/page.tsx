@@ -82,6 +82,10 @@ const SendLetterPage = () => {
 
   const handleReceiverChange = (newValue: string) => {
     setReceiver(newValue);
+    setLetterState((prevState) => ({
+      ...prevState,
+      receiverName: newValue,
+    }));
   };
 
   const handleContentChange = (newValue: string) => {
@@ -91,6 +95,10 @@ const SendLetterPage = () => {
     } else {
       setContent(newValue);
     }
+    setLetterState((prevState) => ({
+      ...prevState,
+      content: newValue,
+    }));
   };
 
   const handleAddImages = async (
@@ -117,6 +125,10 @@ const SendLetterPage = () => {
               .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
+          setLetterState((prevState) => ({
+            ...prevState,
+            images: newImages,
+          }));
           return;
         }
       } else {
