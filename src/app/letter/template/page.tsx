@@ -46,7 +46,10 @@ const LetterTemplatePage = () => {
 
   return (
     <Layout>
-      <NavigatorBar title="새 편지 등록하기" cancel={false} />
+      <NavigatorBar
+        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        cancel={false}
+      />
       <Container>
         <Essential>* 필수</Essential>
         <Column>

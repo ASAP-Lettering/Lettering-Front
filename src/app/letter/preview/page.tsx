@@ -92,10 +92,13 @@ const LetterPreviewPage = () => {
 
   return (
     <Layout>
-      <NavigatorBar title="새 편지 등록하기" cancel={false} />
+      <NavigatorBar
+        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        cancel={false}
+      />
       <Container>
         <Column>
-          <Label>이렇게 편지를 등록할까요?</Label>
+          <Label>이렇게 편지를 {letterId ? "수정" : "등록"}할까요?</Label>
           <LetterWrapper>
             <Letter
               showType="previewReceive"
