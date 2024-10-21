@@ -12,13 +12,13 @@ import { useRecoilValue } from "recoil";
 import { postSendLtter } from "@/api/send/send";
 import { sendLetterState } from "@/recoil/letterStore";
 import useKakaoSDK from "@/hooks/useKakaoSDK";
-import KakaoShareButton from "@/components/common/KakaoShareButton";
+import { userState } from "@/recoil/userStore";
 
 const SendPreviewPage = () => {
   const router = useRouter();
   const { draftId, receiverName, content, images, templateType } =
     useRecoilValue(sendLetterState);
-
+  const { name } = useRecoilValue(userState);
   const [isImage, setIsImage] = useState<boolean>(false);
   const [letterId, setLetterId] = useState<string | null>(null);
 
@@ -72,7 +72,7 @@ const SendPreviewPage = () => {
           requestUrl: location.origin + location.pathname,
           templateId: 112798,
           templateArgs: {
-            senderName: receiverName,
+            senderName: name,
             id: letterId,
           },
           success: () => {
