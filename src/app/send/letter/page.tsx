@@ -557,7 +557,5 @@ const BottomWrapper = styled.div`
   max-width: 393px;
   position: absolute;
   bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 1000;
 `;

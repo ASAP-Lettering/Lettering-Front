@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import { motion, AnimatePresence } from "framer-motion";
 import DraftList from "./DraftList";
 import Image from "next/image";
 import { getDraftList } from "@/api/send/send";
@@ -21,6 +22,7 @@ const DraftBottom = (props: DraftBottomProps) => {
   const { onClose, handleDeleteDraft } = props;
   const [draftLists, setDraftLists] = useState<Draft[] | null>(null);
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
+  const [isClosing, setIsClosing] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchGetDraftList = async () => {
@@ -46,50 +48,70 @@ const DraftBottom = (props: DraftBottomProps) => {
     }
   };
 
+  const handleCloseModal = () => {
+    setIsClosing(true);
+  };
+
   return (
-    <Overlay>
-      <Container>
-        <CloseWrapper>
-          <CloseButton
-            src="/assets/icons/ic_close.svg"
-            width={24}
-            height={24}
-            alt="닫기"
-            onClick={onClose}
-          />
-        </CloseWrapper>
-        <Top>
-          <Title>
-            임시 저장 편지
-            <Span>총 {draftLists?.length}개</Span>
-          </Title>
-          {draftLists && draftLists.length > 0 && (
-            <EditButton onClick={() => setIsDeleteMode(!isDeleteMode)}>
-              {isDeleteMode ? "완료" : "삭제"}
-            </EditButton>
-          )}
-        </Top>
-        {draftLists && draftLists?.length > 0 ? (
-          <DraftListContainer>
-            {draftLists.map((item) => (
-              <DraftListWrapper key={item.draftKey}>
-                <DraftList
-                  id={item.draftKey}
-                  name={item.receiverName}
-                  content={item.content}
-                  timestamp={item.lastUpdated}
-                  isDeleteMode={isDeleteMode}
-                  onDelete={handleDelete}
-                  onClose={onClose}
-                />
-              </DraftListWrapper>
-            ))}
-          </DraftListContainer>
-        ) : (
-          <NoData>저장된 편지가 없어요</NoData>
-        )}
-      </Container>
-    </Overlay>
+    <AnimatePresence>
+      {!isClosing && (
+        <Overlay
+          as={motion.div}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Container
+            as={motion.div}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <CloseWrapper>
+              <CloseButton
+                src="/assets/icons/ic_close.svg"
+                width={24}
+                height={24}
+                alt="닫기"
+                onClick={handleCloseModal}
+              />
+            </CloseWrapper>
+            <Top>
+              <Title>
+                임시 저장 편지
+                <Span>총 {draftLists?.length}개</Span>
+              </Title>
+              {draftLists && draftLists.length > 0 && (
+                <EditButton onClick={() => setIsDeleteMode(!isDeleteMode)}>
+                  {isDeleteMode ? "완료" : "삭제"}
+                </EditButton>
+              )}
+            </Top>
+            {draftLists && draftLists?.length > 0 ? (
+              <DraftListContainer>
+                {draftLists.map((item) => (
+                  <DraftListWrapper key={item.draftKey}>
+                    <DraftList
+                      id={item.draftKey}
+                      name={item.receiverName}
+                      content={item.content}
+                      timestamp={item.lastUpdated}
+                      isDeleteMode={isDeleteMode}
+                      onDelete={handleDelete}
+                      onClose={onClose}
+                    />
+                  </DraftListWrapper>
+                ))}
+              </DraftListContainer>
+            ) : (
+              <NoData>저장된 편지가 없어요</NoData>
+            )}
+          </Container>
+        </Overlay>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -181,7 +203,6 @@ const DraftListWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  /* background-color: white; */
   flex-shrink: 0;
 `;
 
