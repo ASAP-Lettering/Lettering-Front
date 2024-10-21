@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -10,6 +10,7 @@ import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -100,7 +101,19 @@ const LetterTemplatePage = () => {
   );
 };
 
-export default LetterTemplatePage;
+export default function LetterTemplatePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <LetterTemplatePage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;

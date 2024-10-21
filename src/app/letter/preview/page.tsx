@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -15,6 +15,7 @@ import {
 } from "@/api/letter/letter";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterPreviewPage = () => {
   const router = useRouter();
@@ -139,8 +140,19 @@ const LetterPreviewPage = () => {
   );
 };
 
-export default LetterPreviewPage;
-
+export default function LetterPreviewPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <LetterPreviewPage />
+    </Suspense>
+  );
+}
 const Layout = styled.div`
   width: 100%;
   height: 100%;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -12,6 +12,7 @@ import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -232,7 +233,19 @@ const LetterRegisterPage = () => {
   );
 };
 
-export default LetterRegisterPage;
+export default function LetterRegisterPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <LetterRegisterPage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
