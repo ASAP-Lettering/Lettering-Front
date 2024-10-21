@@ -14,6 +14,7 @@ interface PlanetSlideProps {
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
   setCountLetter: React.Dispatch<React.SetStateAction<number>>;
+  setChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const slideVariants = {
@@ -51,6 +52,7 @@ const PlanetSlide = ({
   currentOrbits,
   setCurrentOrbits,
   setCountLetter,
+  setChange,
   onEditPlanetName,
 }: PlanetSlideProps) => {
   return (
@@ -71,6 +73,7 @@ const PlanetSlide = ({
             onEditPlanetName={onEditPlanetName}
             setCurrentOrbits={setCurrentOrbits}
             setCountLetter={setCountLetter}
+            setChange={setChange}
           />
           {/* <TestDiv /> */}
         </Container>

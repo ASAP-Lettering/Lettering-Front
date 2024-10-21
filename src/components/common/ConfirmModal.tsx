@@ -5,7 +5,7 @@ import { theme } from "@/styles/theme";
 
 interface ConfirmModalProps {
   title: string;
-  sub: string;
+  sub?: string;
   confirmText?: string;
   cancelText?: string;
   onConfirm: () => void;
@@ -52,7 +52,7 @@ const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 50;
+  z-index: 1000;
 `;
 
 const ModalContainer = styled.div`
@@ -68,6 +68,7 @@ const ModalContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 100;
 `;
 
 const ContentWrapper = styled.div`

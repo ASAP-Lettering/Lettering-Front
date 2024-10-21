@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
@@ -46,6 +46,11 @@ const Letter = (props: LetterProps) => {
     readOnly = false,
   } = props;
   const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [isImage]);
+
   // const paginateContent = (content: string, maxCharsPerPage: number) => {
   //   const pages = [];
   //   for (let i = 0; i < content.length; i += maxCharsPerPage) {
@@ -58,19 +63,65 @@ const Letter = (props: LetterProps) => {
 
   /* 한 페이지에 최대 7줄의 텍스트를 표시하도록 조정 */
   const paginateContent = (content: string, maxLinesPerPage: number) => {
-    const lines = content.split("\n"); // 줄바꿈 기준
-    const pages = [];
+    const [pages, setPages] = useState<string[]>([]);
 
-    for (let i = 0; i < lines.length; i += maxLinesPerPage) {
-      pages.push(lines.slice(i, i + maxLinesPerPage).join("\n")); // 최대 7줄씩 분리하여 각 페이지로 나눔
-    }
+    useEffect(() => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      context!.font = "16px Pretendard";
+      const maxWidth = contentType === "one" ? 200 : 280;
+      let currentLine = "";
+      let lines: string[] = [];
+
+      for (let i = 0; i < content.length; i++) {
+        const char = content[i];
+        if (char === "\n") {
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+          }
+          currentLine = "";
+          continue;
+        }
+
+        const testLine = currentLine + char;
+        const { width } = context!.measureText(testLine);
+        if (width < maxWidth) {
+          currentLine = testLine;
+        } else {
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+          }
+          currentLine = char;
+        }
+      }
+
+      if (currentLine.trim()) lines.push(currentLine.trim());
+
+      const paginated: string[] = [];
+      for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+        paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
+      }
+      setPages(paginated);
+    }, [content, maxLinesPerPage]);
 
     return pages;
+
+    /* 기존 코드 */
+    // const lines = content.split("\n"); // 줄바꿈 기준
+    // const pages = [];
+
+    // for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+    //   pages.push(lines.slice(i, i + maxLinesPerPage).join("\n")); // 최대 7줄씩 분리하여 각 페이지로 나눔
+    // }
+
+    // return pages;
   };
 
   // const contentPages = isImage ? images : paginateContent(content!, 210);
   const contentPages = isImage ? images : paginateContent(content!, 7); // 한 페이지에 최대 7줄 설정
-  const totalPage = isImage ? images!.length : contentPages!.length;
+  const totalPage =
+    contentType === "one" ? 1 : isImage ? images!.length : contentPages!.length;
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
   const [isDelete, setIsDelete] = useState(false);
@@ -122,7 +173,7 @@ const Letter = (props: LetterProps) => {
       )}
       {(showType === "receive" || showType === "send") && (
         <>
-          <TopContainer>
+          <TopContainer $contentType={contentType}>
             <Name $showType={showType} $contentType={contentType}>
               {`${showType === "send" ? `To. ` : `From. `} ${name}`}
             </Name>
@@ -139,7 +190,7 @@ const Letter = (props: LetterProps) => {
       )}
       {(showType === "previewReceive" || showType === "previewSend") && (
         <>
-          <TopPreviewContainer>
+          <TopPreviewContainer $contentType={contentType}>
             <Name $showType={showType} $contentType={contentType}>
               {`${showType === "previewSend" ? `To. ` : `From. `} ${name}`}
             </Name>
@@ -203,7 +254,9 @@ const Container = styled.div<{
   border: 1px solid ${theme.colors.gray700};
 `;
 
-const TopContainer = styled.div`
+const TopContainer = styled.div<{
+  $contentType: string;
+}>`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -214,7 +267,7 @@ const TopContainer = styled.div`
 `;
 
 const TopPreviewContainer = styled(TopContainer)`
-  margin-top: 20px;
+  margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
 `;
 

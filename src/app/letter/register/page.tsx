@@ -37,7 +37,10 @@ const LetterRegisterPage = () => {
   };
 
   const handleContentChange = (newValue: string) => {
-    if (newValue.length <= 1000) {
+    const maxLength = 1000;
+    if (newValue.length > maxLength) {
+      setContent(newValue.substring(0, maxLength));
+    } else {
       setContent(newValue);
     }
   };
@@ -114,12 +117,12 @@ const LetterRegisterPage = () => {
 
   const handleAddNext = () => {
     /* 다음 페이지 */
-    setLetterState({
+    setLetterState((prevState) => ({
+      ...prevState,
       senderName: sender,
       content: content,
       images: images,
-      templateType: 0,
-    });
+    }));
     router.push("/letter/template");
   };
 
@@ -206,7 +209,7 @@ const LetterRegisterPage = () => {
             buttonType="primary"
             size="large"
             text="다음"
-            disabled={!sender || (!content && !images)}
+            disabled={!sender || (!content && images.length === 0)}
             onClick={handleAddNext}
           />
         </ButtonWrapper>

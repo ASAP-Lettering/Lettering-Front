@@ -254,35 +254,35 @@ export default function LetterTypePaging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-width: 393px;
-    height: 100%;
-    justify-content: space-between;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    background-size: cover; 
-    background-position: center; 
-    overflow: hidden;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 393px;
+  height: 100%;
+  justify-content: space-between;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  position: relative;
 `;
 
 //배경용
 const PageWrapper = styled.div`
-    width: 100%;
-    height: 0px;
-    z-index: 1;
-    display: flex;
-    box-sizing: border-box;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: absolute;
-    top: 600px;
-    left: 50%;
-    padding: 20px;
-    transform: translateX(-50%);
+  width: 100%;
+  height: 0px;
+  z-index: 1;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  top: 600px;
+  left: 50%;
+  padding: 20px;
+  transform: translateX(-50%);
 `;
 
 /* 로딩 */
@@ -296,96 +296,96 @@ const LoaderContainer = styled.div`
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 
 const BgContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding-top: 70px;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    ::-webkit-scrollbar {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 70px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  ::-webkit-scrollbar {
     display: none;
-    }
-    -ms-overflow-style: none; /* IE, Edge */
-    scrollbar-width: none; /* Firefox */
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Top = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 20px;
-    box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Title = styled.div`
-    color: ${theme.colors.white};
-    ${(props) => props.theme.fonts.heading02};
+  color: ${theme.colors.white};
+  ${(props) => props.theme.fonts.heading02};
 `;
 
 const TagList = styled.div`
-    display: flex;
-    box-sizing: border-box;
-    gap: 8px;
-    overflow-x: scroll;
-    padding: 0 20px;
-    ::-webkit-scrollbar {
-        display: none;
-    }
-    -ms-overflow-style: none; /* IE, Edge */
-    scrollbar-width: none; /* Firefox */
+  display: flex;
+  box-sizing: border-box;
+  gap: 8px;
+  overflow-x: scroll;
+  padding: 0 20px;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 //오버레이 레이아웃
 const Overlay = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.8); 
-    z-index: 9999; 
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
 `;
 
 const OverlayClose = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    gap: 3px;
-    position: absolute;
-    top: 112px;
-    right: 24px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  gap: 3px;
+  position: absolute;
+  top: 112px;
+  right: 24px;
 `;
 
 const CloseSvg = styled.img`
-    position: absolute;
-    top: 78px;
-    right: 24px;
+  position: absolute;
+  top: 78px;
+  right: 24px;
 `;
 
 const TotalStep = styled.div`
-    display: flex;
-    align-items: center;
-    ${(props) => props.theme.fonts.caption02};
-    color:${(props) => props.theme.colors.gray500}; 
-    text-align: center;
+  display: flex;
+  align-items: center;
+  ${(props) => props.theme.fonts.caption02};
+  color: ${(props) => props.theme.colors.gray500};
+  text-align: center;
 `;
 
 const CurrentStep = styled.div`
-    display: flex;
-    align-items: center;
-    color:${(props) => props.theme.colors.white};
-    ${(props) => props.theme.fonts.caption02};
-    text-align: center;
+  display: flex;
+  align-items: center;
+  color: ${(props) => props.theme.colors.white};
+  ${(props) => props.theme.fonts.caption02};
+  text-align: center;
 `;
 
 const OverlayBtnWrapper = styled.div<{
@@ -395,13 +395,13 @@ const OverlayBtnWrapper = styled.div<{
   right?: string;
   width?: string;
 }>`
-    position: absolute;
-    top: ${(props) => props.top || "auto"};
-    bottom: ${(props) => props.bottom || "auto"}; 
-    left: ${(props) => props.left || "auto"}; 
-    right: ${(props) => props.right || "auto"}; 
-    width: ${(props) => props.width || "auto"}; 
-  `;
+  position: absolute;
+  top: ${(props) => props.top || "auto"};
+  bottom: ${(props) => props.bottom || "auto"};
+  left: ${(props) => props.left || "auto"};
+  right: ${(props) => props.right || "auto"};
+  width: ${(props) => props.width || "auto"};
+`;
 
 const OverlayLine = styled.img<{
   top?: string;
@@ -409,12 +409,12 @@ const OverlayLine = styled.img<{
   left?: string;
   right?: string;
 }>`
-    position: absolute;
-    top: ${(props) => props.top || "auto"};
-    bottom: ${(props) => props.bottom || "auto"}; 
-    left: ${(props) => props.left || "auto"}; 
-    right: ${(props) => props.right || "auto"}; 
-    z-index: 2; 
+  position: absolute;
+  top: ${(props) => props.top || "auto"};
+  bottom: ${(props) => props.bottom || "auto"};
+  left: ${(props) => props.left || "auto"};
+  right: ${(props) => props.right || "auto"};
+  z-index: 2;
 `;
 
 const OverlayText = styled.div<{
@@ -424,18 +424,18 @@ const OverlayText = styled.div<{
   right?: string;
   textAlign: string;
 }>`
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: ${(props) => props.textAlign};
-        top: ${(props) => props.top || "auto"};
-        bottom: ${(props) => props.bottom || "auto"}; 
-        left: ${(props) => props.left || "auto"}; 
-        right: ${(props) => props.right || "auto"}; 
-        color:${(props) => props.theme.colors.white};
-        ${(props) => props.theme.fonts.body06};
-  `;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: ${(props) => props.textAlign};
+  top: ${(props) => props.top || "auto"};
+  bottom: ${(props) => props.bottom || "auto"};
+  left: ${(props) => props.left || "auto"};
+  right: ${(props) => props.right || "auto"};
+  color: ${(props) => props.theme.colors.white};
+  ${(props) => props.theme.fonts.body06};
+`;
 
 const CustomOverlayImg = styled.img<{
   top?: string;
@@ -443,23 +443,23 @@ const CustomOverlayImg = styled.img<{
   left?: string;
   width: string;
 }>`
-      position: absolute;
-      top: ${(props) => props.top || "auto"};
-      bottom: ${(props) => props.bottom || "auto"}; 
-      left: ${(props) => props.left || "auto"}; 
-      height: auto;
-      left: ${(props) => props.left}; 
-      z-index: 2;
-  `;
+  position: absolute;
+  top: ${(props) => props.top || "auto"};
+  bottom: ${(props) => props.bottom || "auto"};
+  left: ${(props) => props.left || "auto"};
+  height: auto;
+  left: ${(props) => props.left};
+  z-index: 2;
+`;
 
 const TagContainer = styled.div`
-    position: absolute;
-    bottom: 76px;
-    left: 147px;
-    padding: 10px 20px;
-    border-radius: 20px;
-    background: rgba(62, 65, 81, 0.60);
-    backdrop-filter: blur(4px);
-    ${(props) => props.theme.fonts.button03};
-    color:${(props) => props.theme.colors.gray100}; 
+  position: absolute;
+  bottom: 76px;
+  left: 147px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background: rgba(62, 65, 81, 0.6);
+  backdrop-filter: blur(4px);
+  ${(props) => props.theme.fonts.button03};
+  color: ${(props) => props.theme.colors.gray100};
 `;

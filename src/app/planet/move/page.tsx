@@ -16,6 +16,8 @@ import {
 import Image from "next/image";
 import { getSpaceList } from "@/api/planet/space/space";
 import { useToast } from "@/hooks/useToast";
+import { userState } from "@/recoil/userStore";
+import { useRecoilValue } from "recoil";
 
 const PlanetMovePage = () => {
   const router = useRouter();
@@ -23,7 +25,7 @@ const PlanetMovePage = () => {
   const searchParams = useSearchParams();
   const letterId = searchParams.get("letter");
 
-  const name = "규리";
+  const { name } = useRecoilValue(userState);
   const [planets, setPlanets] = useState<Planet[]>();
   const [checkedPlanet, setCheckedPlanet] = useState<string>("");
   const [checkedIndep, setCheckedIndep] = useState<boolean>(false);
@@ -67,6 +69,7 @@ const PlanetMovePage = () => {
             `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
             {
               icon: true,
+              iconType: "info",
               close: false,
               bottom: "230px",
             }
@@ -86,6 +89,7 @@ const PlanetMovePage = () => {
             `${name} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
             {
               icon: true,
+              iconType: "info",
               close: false,
               bottom: "230px",
             }

@@ -80,7 +80,6 @@ const DraftBottom = (props: DraftBottomProps) => {
                   timestamp={item.lastUpdated}
                   isDeleteMode={isDeleteMode}
                   onDelete={handleDelete}
-                  onClose={onClose}
                 />
               </DraftListWrapper>
             ))}
