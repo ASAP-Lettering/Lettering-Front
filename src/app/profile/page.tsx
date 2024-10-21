@@ -24,14 +24,18 @@ const Profile = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [picker, setPicker] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [prevBirthday, setPrevBirthday] = useState("");
+  const [isAbled, setIsAbled] = useState(false);
 
   const router = useRouter();
 
   const fetchUserInfo = async () => {
     try {
       const response = await getUserInfo();
+
       setEmail(response.data.email);
       setBirthday(response.data.birthday.replace(/-/g, "."));
+      setPrevBirthday(response.data.birthday.replace(/-/g, "."));
       console.log("회원정보 조회 성공:", response.data);
 
       const [year, month, day] = response.data.birthday.split("-");
@@ -48,6 +52,14 @@ const Profile = () => {
   useEffect(() => {
     fetchUserInfo();
   }, []);
+
+  useEffect(() => {
+    if (birthday !== prevBirthday) {
+      setIsAbled(true);
+    } else {
+      setIsAbled(false);
+    }
+  }, [birthday]);
 
   const popupPicker = () => {
     if (birthday && selectedDate && selectedMonth && selectedYear) {
@@ -131,6 +143,7 @@ const Profile = () => {
           buttonType="primary"
           size="large"
           text="수정하기"
+          disabled={!isAbled}
           onClick={handleSubmit}
         />
       </Wrapper>
@@ -160,7 +173,7 @@ const Container = styled.div`
     max-height: 100%;
     justify-content: space-between;
     color: white;
-    background:${(props) => props.theme.colors.bg};
+    background:${(props) => props.theme.colors.bg}; 
 `;
 
 const MainWrapper = styled.div`
