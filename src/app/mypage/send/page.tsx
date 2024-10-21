@@ -10,6 +10,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import LetterTag from "@/components/mypage/LetterTag";
+import { useToast } from "@/hooks/useToast";
 import { SentLetterListType } from "@/types/letter";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -19,6 +20,7 @@ const SendedLetter = () => {
   const [isSelecting, setIsSelecting] = useState(false); // 항목을 선택중인지
   const [selectedId, setSelectedId] = useState<string[]>([]);
   const [senderArray, setSenderArray] = useState<SentLetterListType[] | null>();
+  const { showToast } = useToast();
   const [isPopup, setIsPopup] = useState(false);
   const router = useRouter();
 
@@ -75,12 +77,22 @@ const SendedLetter = () => {
     if (letterIds.length === 1) {
       try {
         const response = await deleteSentLetter(letterIds[0]);
+        showToast(`1개의 편지가 삭제되었어요`, {
+          icon: false,
+          close: true,
+          bottom: "50px",
+        });
       } catch (error) {
         console.log(error);
       }
     } else if (letterIds.length > 1) {
       try {
         const response = await deleteSentLetters(letterIds);
+        showToast(`${letterIds.length}개의 편지가 삭제되었어요`, {
+          icon: false,
+          close: true,
+          bottom: "50px",
+        });
       } catch (error) {
         console.log(error);
       }

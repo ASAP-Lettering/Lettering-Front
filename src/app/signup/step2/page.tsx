@@ -21,7 +21,6 @@ export interface DatePickerState {
 }
 
 const SignupStep2 = () => {
-  const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -82,37 +81,6 @@ const SignupStep2 = () => {
       }
     }
   }, [isBirthdayUpdated]);
-
-  // const handleButtonClick = async (mybirthday: string) => {
-  //   setUser((prevUser) => ({
-  //     ...prevUser,
-  //     birthday: mybirthday,
-  //   }));
-
-  //   signup({
-  //     registerToken: registerToken,
-  //     privatePermission: user.privatePermission,
-  //     servicePermission: user.servicePermission,
-  //     marketingPermission: user.marketingPermission,
-  //     // birthday: mybirthday,
-  //     birthday: "", // "" 값으로 임시
-  //   })
-  //     .then((res) => {
-  //       console.log("accessToken", res.data.accessToken);
-  //       setTokens(res.data.accessToken, res.data.refreshToken);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       router.push("/error");
-  //       return;
-  //     });
-
-  //   if (url) {
-  //     router.push(`/signup/complete?url=${url}`);
-  //   } else {
-  //     router.push(`/signup/complete`);
-  //     console.log(user);
-  //   }
 
   return (
     <Container>
@@ -215,6 +183,8 @@ const ItemPickerWrapper = styled.div`
   gap: 12px;
   justify-content: center;
   position: relative;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y mandatory; 
 `;
 
 const PickedItemContainer = styled.div`

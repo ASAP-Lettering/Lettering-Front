@@ -102,7 +102,7 @@ const SignupStep1 = () => {
   return (
     <Container>
       <div>
-        <NavigatorBar cancel={false} />
+        <NavigatorBar cancel={false} url="/login" />
         <MainWrapper>
           <HeaderTitle>
             레터링을 이용하려면

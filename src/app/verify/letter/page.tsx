@@ -83,7 +83,7 @@ const VerifyLetter = () => {
         .catch((error) => {
           //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
           console.log(error);
-          router.push("/error/letter");
+          // router.push("/error/letter");
         });
     }
 

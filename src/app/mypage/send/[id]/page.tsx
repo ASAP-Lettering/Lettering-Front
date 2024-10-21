@@ -2,10 +2,11 @@
 
 import { getSentLetterDetail } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
+import KakaoShareButton from "@/components/common/KakaoShareButton";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
-import { SendedLetterType, SentDetailLetterType } from "@/types/letter";
+import { SentDetailLetterType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -90,6 +91,7 @@ const SendDetailPage = () => {
         ) : (
           <WhiteSpace />
         )}
+        <KakaoShareButton type="small" senderName="승효" letterId={letterId} />
       </MainWrapper>
     </Container>
   ) : (
@@ -213,4 +215,20 @@ const Wrapper = styled.div`
     display: flex;
     width: 100%;
     padding: 24px;
+`;
+
+const ReShareBtnWrapper = styled.button`
+    display: flex;
+    width: 45%;
+    box-sizing: border-box;
+    padding: 12px;
+    gap: 10px;
+    border-radius: 20px;
+    text-align: center;
+    justify-content: center;
+    min-width: 151px;
+    flex-direction: row;
+    color: ${(props) => props.theme.colors.gray100};
+    background-color: ${(props) => props.theme.colors.gray800};
+    ${(props) => props.theme.fonts.caption01};
 `;

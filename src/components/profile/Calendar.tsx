@@ -5,16 +5,18 @@ import styled from "styled-components";
 interface CalendarProps {
   selectedYear: string;
   selectedMonth: string;
+  selectedDate: string;
   onDateChange: (day: string) => void;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
   selectedYear,
   selectedMonth,
+  selectedDate,
   onDateChange,
 }) => {
   const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
-  const [selectedDay, setSelectedDay] = useState<string | null>("1");
+  const [selectedDay, setSelectedDay] = useState<string | null>(selectedDate);
   const [startDay, setStartDay] = useState<number>(0);
   const [prevMonthDays, setPrevMonthDays] = useState<number[]>([]);
   const [nextMonthDays, setNextMonthDays] = useState<number[]>([]);
