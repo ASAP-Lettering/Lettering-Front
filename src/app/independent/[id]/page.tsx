@@ -109,7 +109,12 @@ const IndependentLetterPage = () => {
         </PaginationWrapper>
       </MainWrapper>
       <ButtonContainer>
-        <Button buttonType="primary" size="large" text="답장하기" />
+        <Button
+          buttonType="primary"
+          size="large"
+          text="답장하기"
+          onClick={() => router.push("/send/letter")}
+        />
       </ButtonContainer>
     </Container>
   ) : (
