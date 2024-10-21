@@ -6,6 +6,8 @@ import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "../common/ConfirmModal";
 import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
+import { useRecoilState } from "recoil";
+import { registerLetterState } from "@/recoil/letterStore";
 
 type showType = "previewSend" | "previewReceive" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
@@ -46,6 +48,13 @@ const Letter = (props: LetterProps) => {
     readOnly = false,
   } = props;
   const [currentPage, setCurrentPage] = useState(0);
+  const [paginatedContent, setPaginatedContent] = useState<string[]>([]);
+  const [isPopup, setIsPopup] = useState(false);
+  const router = useRouter();
+  const [isDelete, setIsDelete] = useState(false);
+
+  /* 수정 클릭 시 등록하기 store 저장 */
+  const [letterState, setLetterState] = useRecoilState(registerLetterState);
 
   useEffect(() => {
     setCurrentPage(0);
@@ -61,70 +70,109 @@ const Letter = (props: LetterProps) => {
   //   return pages;
   // };
 
-  /* 한 페이지에 최대 7줄의 텍스트를 표시하도록 조정 */
-  const paginateContent = (content: string, maxLinesPerPage: number) => {
-    const [pages, setPages] = useState<string[]>([]);
-
-    useEffect(() => {
+  // 페이지 내용 분할 처리
+  useEffect(() => {
+    if (!isImage && content) {
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
 
-      context!.font = "16px Pretendard";
-      const maxWidth = contentType === "one" ? 200 : 280;
-      let currentLine = "";
-      let lines: string[] = [];
+      if (context) {
+        context.font = "16px Pretendard";
+        const maxWidth = contentType === "one" ? 200 : 280;
+        let currentLine = "";
+        let lines: string[] = [];
 
-      for (let i = 0; i < content.length; i++) {
-        const char = content[i];
-        if (char === "\n") {
-          if (currentLine.trim()) {
+        for (let i = 0; i < content.length; i++) {
+          const char = content[i];
+          if (char === "\n") {
             lines.push(currentLine.trim());
+            currentLine = "";
+            continue;
           }
-          currentLine = "";
-          continue;
+
+          const testLine = currentLine + char;
+          if (context.measureText(testLine).width < maxWidth) {
+            currentLine = testLine;
+          } else {
+            lines.push(currentLine.trim());
+            currentLine = char;
+          }
+        }
+        if (currentLine) lines.push(currentLine.trim());
+
+        const maxLinesPerPage = 7;
+        const paginated = [];
+        for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+          paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
         }
 
-        const testLine = currentLine + char;
-        const { width } = context!.measureText(testLine);
-        if (width < maxWidth) {
-          currentLine = testLine;
-        } else {
-          if (currentLine.trim()) {
-            lines.push(currentLine.trim());
-          }
-          currentLine = char;
-        }
+        setPaginatedContent(paginated);
       }
+    }
+  }, [content, isImage, contentType]);
+  /* 한 페이지에 최대 7줄의 텍스트를 표시하도록 조정 */
+  // const paginateContent = (content: string, maxLinesPerPage: number) => {
+  //   const [pages, setPages] = useState<string[]>([]);
 
-      if (currentLine.trim()) lines.push(currentLine.trim());
+  //   useEffect(() => {
+  //     const canvas = document.createElement("canvas");
+  //     const context = canvas.getContext("2d");
 
-      const paginated: string[] = [];
-      for (let i = 0; i < lines.length; i += maxLinesPerPage) {
-        paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
-      }
-      setPages(paginated);
-    }, [content, maxLinesPerPage]);
+  //     context!.font = "16px Pretendard";
+  //     const maxWidth = contentType === "one" ? 200 : 280;
+  //     let currentLine = "";
+  //     let lines: string[] = [];
 
-    return pages;
+  //     for (let i = 0; i < content.length; i++) {
+  //       const char = content[i];
+  //       if (char === "\n") {
+  //         if (currentLine.trim()) {
+  //           lines.push(currentLine.trim());
+  //         }
+  //         currentLine = "";
+  //         continue;
+  //       }
 
-    /* 기존 코드 */
-    // const lines = content.split("\n"); // 줄바꿈 기준
-    // const pages = [];
+  //       const testLine = currentLine + char;
+  //       const { width } = context!.measureText(testLine);
+  //       if (width < maxWidth) {
+  //         currentLine = testLine;
+  //       } else {
+  //         if (currentLine.trim()) {
+  //           lines.push(currentLine.trim());
+  //         }
+  //         currentLine = char;
+  //       }
+  //     }
 
-    // for (let i = 0; i < lines.length; i += maxLinesPerPage) {
-    //   pages.push(lines.slice(i, i + maxLinesPerPage).join("\n")); // 최대 7줄씩 분리하여 각 페이지로 나눔
-    // }
+  //     if (currentLine.trim()) lines.push(currentLine.trim());
 
-    // return pages;
-  };
+  //     const paginated: string[] = [];
+  //     for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+  //       paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
+  //     }
+  //     setPages(paginated);
+  //   }, [content, maxLinesPerPage]);
+
+  //   return pages;
+
+  //   /* 기존 코드 */
+  //   // const lines = content.split("\n"); // 줄바꿈 기준
+  //   // const pages = [];
+
+  //   // for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+  //   //   pages.push(lines.slice(i, i + maxLinesPerPage).join("\n")); // 최대 7줄씩 분리하여 각 페이지로 나눔
+  //   // }
+
+  //   // return pages;
+  // };
 
   // const contentPages = isImage ? images : paginateContent(content!, 210);
-  const contentPages = isImage ? images : paginateContent(content!, 7); // 한 페이지에 최대 7줄 설정
-  const totalPage =
-    contentType === "one" ? 1 : isImage ? images!.length : contentPages!.length;
-  const [isPopup, setIsPopup] = useState(false);
-  const router = useRouter();
-  const [isDelete, setIsDelete] = useState(false);
+
+  // const contentPages = isImage ? images : paginateContent(content!, 7); // 한 페이지에 최대 7줄 설정
+  // const totalPage =
+  //   contentType === "one" ? 1 : isImage ? images!.length : contentPages!.length;
+  const totalPage = isImage ? images?.length ?? 0 : paginatedContent.length;
 
   function replaceDashWithDot(dateString: string) {
     return dateString.replace(/-/g, ".");
@@ -147,6 +195,20 @@ const Letter = (props: LetterProps) => {
     setIsPopup(false);
   };
 
+  const handleModify = () => {
+    setLetterState({
+      senderName: name,
+      content: content || "",
+      images: images || [],
+      templateType: templateType,
+    });
+    if (pageType === "independent") {
+      router.push(`/letter/register?letterId=${id}&independent=true`);
+    } else {
+      router.push(`/letter/register?letterId=${id}`);
+    }
+  };
+
   return (
     <Container
       $templateType={templateType}
@@ -165,9 +227,7 @@ const Letter = (props: LetterProps) => {
       {!readOnly && isPopup && (
         <PopupContainer>
           {date && <ModalDate>{replaceDashWithDot(date)}</ModalDate>}
-          <EditBtn onClick={() => router.push(`/letter/edit/${id}`)}>
-            수정
-          </EditBtn>
+          <EditBtn onClick={handleModify}>수정</EditBtn>
           <DeleteBtn onClick={() => setIsDelete(true)}>삭제</DeleteBtn>
         </PopupContainer>
       )}
@@ -200,7 +260,8 @@ const Letter = (props: LetterProps) => {
       <Content $showType={showType} $contentType={contentType}>
         <SwipeableContent
           contentType={contentType}
-          content={isImage ? images! : contentPages!}
+          // content={isImage ? images! : contentPages!}
+          content={isImage ? images ?? [] : paginatedContent}
           setPage={setCurrentPage}
           totalPage={totalPage ? totalPage : 0}
           isImage={isImage}

@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
@@ -23,6 +23,9 @@ const LetterRegisterPage = () => {
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isToastShown, setIsToastShown] = useState(false);
+  const searchParams = useSearchParams();
+  const letterId = searchParams.get("letterId");
+  const independent = searchParams.get("independent");
 
   useEffect(() => {
     if (letterState) {
@@ -123,7 +126,15 @@ const LetterRegisterPage = () => {
       content: content,
       images: images,
     }));
-    router.push("/letter/template");
+    if (letterId) {
+      if (independent === "true") {
+        router.push(`/letter/template?letterId=${letterId}&independent=true`);
+      } else {
+        router.push(`/letter/template?letterId=${letterId}`);
+      }
+    } else {
+      router.push("/letter/template");
+    }
   };
 
   return (

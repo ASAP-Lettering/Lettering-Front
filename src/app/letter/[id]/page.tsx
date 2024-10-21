@@ -84,31 +84,18 @@ const LetterPage = () => {
           </HeaderTitle>
           <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
         </Header>
-        {isImage ? (
-          <Letter
-            showType="receive"
-            key={key}
-            pageType="space"
-            id={letterId}
-            templateType={letterData.templateType}
-            name={letterData.sender}
-            images={letterData.images}
-            date={letterData.date}
-            isImage={true}
-          />
-        ) : (
-          <Letter
-            showType="receive"
-            pageType="space"
-            key={key}
-            id={letterId}
-            templateType={letterData.templateType}
-            name={letterData.sender}
-            content={letterData.content}
-            date={letterData.date}
-            isImage={false}
-          />
-        )}
+        <Letter
+          showType="receive"
+          key={key}
+          pageType="space"
+          id={letterId}
+          templateType={letterData.templateType}
+          name={letterData.sender}
+          content={letterData.content}
+          images={letterData.images}
+          date={letterData.date}
+          isImage={isImage}
+        />
         {letterData.images.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>

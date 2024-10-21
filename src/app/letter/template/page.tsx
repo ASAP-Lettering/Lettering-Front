@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,6 +13,9 @@ import { registerLetterState } from "@/recoil/letterStore";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const letterId = searchParams.get("letterId");
+  const independent = searchParams.get("independent");
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
@@ -30,7 +33,15 @@ const LetterTemplatePage = () => {
       ...prevState,
       templateType: template,
     }));
-    router.push("/letter/preview");
+    if (letterId) {
+      if (independent === "true") {
+        router.push(`/letter/preview?letterId=${letterId}&independent=true`);
+      } else {
+        router.push(`/letter/preview?letterId=${letterId}`);
+      }
+    } else {
+      router.push("/letter/preview");
+    }
   };
 
   return (
