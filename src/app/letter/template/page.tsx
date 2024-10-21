@@ -13,10 +13,11 @@ import { registerLetterState } from "@/recoil/letterStore";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
-  const { senderName, content, images } = useRecoilValue(registerLetterState);
+  const { senderName, content, images, templateType } =
+    useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
 
-  const [templateType, setTemplateType] = useState<number>(1);
+  const [template, setTemplateType] = useState<number>(templateType || 0);
   const totalPage = 10;
 
   const hanleChangeTemplate = (id: number) => {
@@ -27,7 +28,7 @@ const LetterTemplatePage = () => {
     /* 다음 페이지 */
     setRegisterLetterState((prevState) => ({
       ...prevState,
-      templateType: templateType,
+      templateType: template,
     }));
     router.push("/letter/preview");
   };
@@ -45,7 +46,7 @@ const LetterTemplatePage = () => {
               showType="previewReceive"
               contentType="one"
               id={"0"}
-              templateType={templateType}
+              templateType={template}
               name={senderName}
               content={content}
               images={images}
@@ -62,13 +63,13 @@ const LetterTemplatePage = () => {
                 height={70}
                 alt="편지지"
                 style={{ borderRadius: "8px" }}
-                $selected={templateType === item}
+                $selected={template === item}
                 onClick={() => hanleChangeTemplate(item)}
               />
             ))}
           </TemplatesList>
           <Page>
-            <Current>{templateType + 1}</Current>/{totalPage}
+            <Current>{template + 1}</Current>/{totalPage}
           </Page>
         </Column>
         <ButtonWrapper>
@@ -76,7 +77,7 @@ const LetterTemplatePage = () => {
             buttonType="primary"
             size="large"
             text="다음"
-            disabled={!templateType}
+            disabled={template == null}
             onClick={handleAddNext}
           />
         </ButtonWrapper>

@@ -9,6 +9,7 @@ import styled, { css } from "styled-components";
 interface ToastProps {
   message: string;
   icon: boolean;
+  iconType: "info" | "message";
   top?: string;
   bottom?: string;
   left?: string;
@@ -23,6 +24,7 @@ const Toast = (props: ToastProps) => {
   const {
     message,
     icon,
+    iconType,
     top,
     bottom,
     left,
@@ -73,10 +75,12 @@ const Toast = (props: ToastProps) => {
     >
       {icon && (
         <Image
-          src="/assets/icons/ic_info.svg"
+          src={`/assets/icons/ic_${
+            iconType === "info" ? "info" : "message"
+          }.svg`}
           width={28}
           height={28}
-          alt="info"
+          alt={iconType === "info" ? "info" : "message"}
         />
       )}
       <Message>

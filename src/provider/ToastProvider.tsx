@@ -11,6 +11,7 @@ const ToastProvider = () => {
         <Toast
           message={toast.message}
           icon={toast.icon}
+          iconType={toast.iconType as "info" | "message"}
           top={toast.top}
           bottom={toast.bottom}
           left={toast.left}

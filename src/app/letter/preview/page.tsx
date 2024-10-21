@@ -32,6 +32,7 @@ const LetterPreviewPage = () => {
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
   }, []);
+
   const handleFlipLetter = () => {
     setIsImage(!isImage);
   };
@@ -57,6 +58,7 @@ const LetterPreviewPage = () => {
           <LetterWrapper>
             <Letter
               showType="previewReceive"
+              contentType="all"
               id={"0"}
               templateType={templateType}
               name={senderName}

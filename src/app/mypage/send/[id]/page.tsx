@@ -1,11 +1,11 @@
 "use client";
 
+import { getSentLetterDetail } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
-import { LETTER_DETAIL_DATA } from "@/constants/letter";
-import { SendedLetterType } from "@/types/letter";
+import { SendedLetterType, SentDetailLetterType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -14,9 +14,10 @@ import styled from "styled-components";
 const SendDetailPage = () => {
   const router = useRouter();
   const { id } = useParams();
+  const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
   //const searchParams = useSearchParams();
-  const [letterData, setLetterData] = useState<SendedLetterType>();
+  const [letterData, setLetterData] = useState<SentDetailLetterType>();
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
 
@@ -26,30 +27,19 @@ const SendDetailPage = () => {
   };
 
   useEffect(() => {
-    //LetterData 받아오는 로직
-    if (id && accessToken) {
-      setLetterData({
-        id: 1,
-        templateType: 3,
-        receiver: "유진주",
-        content: "안녕",
-        images: [
-          "https://picsum.photos/200/300",
-          "https://picsum.photos/100/200",
-        ],
-        date: "2024-10-01",
-      });
-
-      //api 요청
-      //   getLetter(letterId, accessToken)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error.response);
-      //   });
+    if (letterId) {
+      fetchLetterData(letterId);
     }
-  }, []);
+  }, [id]);
+
+  const fetchLetterData = async (id: string) => {
+    try {
+      const response = await getSentLetterDetail(id);
+      setLetterData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return letterData ? (
     <Container>
@@ -68,11 +58,11 @@ const SendDetailPage = () => {
           <Letter
             showType="send"
             key={key}
-            id={letterData.id.toString()}
+            id={letterId}
             templateType={letterData.templateType}
-            name={letterData.receiver}
+            name={letterData.receiverName}
             images={letterData.images}
-            date={letterData.date}
+            date={letterData.sendDate}
             readOnly={true}
             isImage={true}
           />
@@ -80,11 +70,11 @@ const SendDetailPage = () => {
           <Letter
             showType="send"
             key={key}
-            id={letterData.id.toString()}
+            id={letterId}
             templateType={letterData.templateType}
-            name={letterData.receiver}
+            name={letterData.receiverName}
             content={letterData.content}
-            date={letterData.date}
+            date={letterData.sendDate}
             readOnly={true}
             isImage={false}
           />

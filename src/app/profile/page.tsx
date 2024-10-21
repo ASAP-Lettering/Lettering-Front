@@ -1,5 +1,6 @@
 "use client";
 
+import { getUserInfo } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
@@ -18,9 +19,19 @@ const Profile = () => {
   const [picker, setPicker] = useState(false);
   const router = useRouter();
 
+  const fetchUserInfo = async () => {
+    try {
+      const response = await getUserInfo();
+      setBirthday(response.data.birthday);
+      console.log("회원정보 조회 성공:", response.data);
+    } catch (error) {
+      console.error("회원정보 조회 실패:", error);
+    }
+  };
+
   useEffect(() => {
     if (birthday) {
-      const [year, month, day] = birthday.split(".");
+      const [year, month, day] = birthday.split("-");
       setSelectedYear(year);
       setSelectedMonth(parseInt(month).toString());
       setSelectedDate(parseInt(day).toString());
@@ -28,22 +39,18 @@ const Profile = () => {
   }, [birthday]);
 
   useEffect(() => {
-    setBirthday("2001.02.18");
-    const [year, month, day] = birthday.split(".");
-    setSelectedYear(year);
-    setSelectedMonth(parseInt(month).toString());
-    setSelectedDate(parseInt(day).toString());
+    fetchUserInfo();
   }, []);
 
   const popupPicker = () => {
     if (birthday && selectedDate && selectedMonth && selectedYear) {
       setPicker(!picker);
-      updateNewBirthday();
+      updateNewBirthday(birthday);
     }
   };
 
-  const updateNewBirthday = () => {
-    console.log("새 생일 날짜는 ", birthday);
+  const updateNewBirthday = (newbirthday: string) => {
+    console.log("새 생일 날짜는 ", newbirthday);
   };
 
   const handleSubmit = () => {

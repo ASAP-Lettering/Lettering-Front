@@ -1,14 +1,14 @@
 import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
+import { Orbit } from "@/constants/orbit";
+import { planetRefState } from "@/recoil/RefStore";
 import { theme } from "@/styles/theme";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
-import {
-  DraggableProvidedDraggableProps,
-  DraggableProvidedDragHandleProps,
-} from "react-beautiful-dnd";
+import React, { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
-type tagType = "orbit" | "planet" | "letter";
+type tagType = "orbit" | "planet" | "letter" | "droppedLetter";
 type iconType = "chevron" | "edit" | "plus";
 
 interface TagProps {
@@ -22,9 +22,10 @@ interface TagProps {
   onEdit?: (editedName: string) => void;
   onHold?: () => void;
   innerRef?: (element: HTMLElement | null) => void;
-  dragHandleProps?: DraggableProvidedDragHandleProps | null;
-  draggableProps?: DraggableProvidedDraggableProps | null;
   onDelete?: (deleteId: string) => void;
+  isDragable?: boolean;
+  onDragEnd?: (item: Orbit) => void;
+  onTouchEnd?: (item: Orbit) => void;
 }
 
 const Tag = (props: TagProps) => {
@@ -39,20 +40,43 @@ const Tag = (props: TagProps) => {
     onEdit,
     onHold,
     innerRef,
-    dragHandleProps,
-    draggableProps,
     onDelete,
+    isDragable = false,
+    onDragEnd,
+    onTouchEnd,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
   const [isHoldTriggered, setIsHoldTriggered] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startPosition, setStartPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
+  const tagRef = useRef<HTMLDivElement | null>(null);
+  const [planetRef, setPlanetRef] = useRecoilState(planetRefState);
 
   const handleEditClick = () => {
     if (icon === "edit") {
       setIsEditing(true);
     }
+  };
+
+  const handleDragStart = () => {
+    if (onDragEnd && tagId && name && tagType === "orbit") {
+      console.log("드래그 시작");
+      setIsDragging(true);
+      clearHoldTimeout();
+      onDragEnd({ letterId: tagId!, senderName: name! });
+    }
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    setStartPosition(null);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,10 +107,11 @@ const Tag = (props: TagProps) => {
   };
 
   const handleHoldStart = () => {
-    setIsHoldTriggered(true);
-    if (onHold) {
+    if (onHold && !isDragging) {
+      setIsHoldTriggered(true);
       holdTimeout.current = setTimeout(() => {
         onHold();
+        setIsHoldTriggered(false);
       }, 1000);
     }
   };
@@ -101,6 +126,13 @@ const Tag = (props: TagProps) => {
     }
   };
 
+  const clearHoldTimeout = () => {
+    if (holdTimeout.current) {
+      clearTimeout(holdTimeout.current);
+      setIsHoldTriggered(false);
+    }
+  };
+
   const renderIcon = () => {
     if (icon === "chevron") {
       return "/assets/icons/ic_chevron_right.svg";
@@ -112,19 +144,140 @@ const Tag = (props: TagProps) => {
     return "";
   };
 
+  //ref끼리 겹치는 영역 계산
+  const getOverlapArea = (rect1: DOMRect, rect2: DOMRect) => {
+    const x_overlap = Math.max(
+      0,
+      Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left)
+    );
+    const y_overlap = Math.max(
+      0,
+      Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top)
+    );
+    const overlapArea = x_overlap * y_overlap;
+    return overlapArea;
+  };
+
+  //모바일 터치 드래그
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (tagType === "letter") {
+      handleHoldStart();
+    }
+    if (isDragable && tagType === "orbit") {
+      e.stopPropagation();
+      console.log("터치 시작");
+      const touch = e.touches[0];
+      setStartPosition({ x: touch.clientX, y: touch.clientY });
+
+      e.currentTarget.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      e.currentTarget.addEventListener("touchend", handleTouchEnd, {
+        once: true,
+      });
+    }
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    console.log("터치 움직임");
+    if (startPosition) {
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startPosition.x;
+      const deltaY = touch.clientY - startPosition.y;
+      setTranslate({ x: deltaX, y: deltaY });
+
+      if (tagRef.current) {
+        tagRef.current.style.zIndex = "999999";
+        tagRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        tagRef.current.style.position = "absolute";
+        tagRef.current.style.touchAction = "none";
+      }
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (tagType === "letter") {
+      handleHoldEnd();
+    }
+
+    console.log("터치 끝");
+
+    if (planetRef && tagRef.current && tagType === "orbit") {
+      const parentRect = planetRef.getBoundingClientRect();
+      const tagRect = tagRef.current.getBoundingClientRect();
+      const isAtLeast200pxAboveBottom =
+        tagRect.bottom <= parentRect.bottom - 200;
+
+      const isWithinBounds =
+        tagRect.left >= parentRect.left &&
+        tagRect.right <= parentRect.right &&
+        tagRect.top >= parentRect.top &&
+        tagRect.bottom <= parentRect.bottom;
+
+      if (
+        isWithinBounds &&
+        isAtLeast200pxAboveBottom &&
+        onTouchEnd &&
+        onDragEnd &&
+        tagId &&
+        name
+      ) {
+        // 태그가 부모 영역 내에 있고, 밑에서 100px 이상 떨어져 있을 때
+        console.log("드래그한 태그가 영역 내에 있습니다.");
+        onDragEnd({ letterId: tagId, senderName: name });
+        onTouchEnd({ letterId: tagId, senderName: name });
+      } else if (!isAtLeast200pxAboveBottom) {
+        // 태그가 부모 영역 밑에서 100px 이내에 있을 때
+        console.log(
+          "태그가 부모 영역의 밑에서 100px 이내에 있습니다. 이벤트를 취소합니다."
+        );
+      } else {
+        console.log("드래그한 태그가 영역 내에 없습니다.");
+      }
+    }
+
+    resetTag();
+  };
+
+  const resetTag = () => {
+    if (tagRef.current) {
+      tagRef.current.style.transform = "";
+      tagRef.current.style.zIndex = "";
+      tagRef.current.style.position = "relative";
+    }
+
+    document.removeEventListener("touchmove", handleTouchMove);
+    document.removeEventListener("touchend", handleTouchEnd);
+  };
+
+  //   useEffect(() => {
+  //     console.log(translate);
+  //   }, [translate]);
+
+  //   useEffect(() => {
+  //     if (tagType === "letter") console.log(isHoldTriggered);
+  //   }, [isHoldTriggered]);
+
   return (
     <Box
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
       onClick={onHold ? handleHoldEnd : onClick}
-      onMouseDown={handleHoldStart} // 마우스를 누를 때
-      onMouseUp={handleHoldEnd} // 마우스를 뗄 때
-      onTouchStart={handleHoldStart} // 터치 시작
-      onTouchEnd={handleHoldEnd} // 터치 종료
-      ref={innerRef}
-      {...draggableProps}
-      {...dragHandleProps}
+      ref={(el) => {
+        tagRef.current = el;
+        if (innerRef) innerRef(el);
+      }}
+      draggable={isDragable}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onMouseDown={handleHoldStart}
+      onMouseUp={handleHoldEnd}
+      onTouchStart={handleTouchStart}
     >
       {isEditing ? (
         <NameInput
@@ -136,7 +289,7 @@ const Tag = (props: TagProps) => {
           autoFocus
         />
       ) : (
-        name
+        <Name>{name}</Name>
       )}
       {tagType === "orbit" && isNew && !isDeleteMode && <Circle />}
       {tagType === "orbit" && isDeleteMode && (
@@ -163,7 +316,7 @@ const Tag = (props: TagProps) => {
 
 export default Tag;
 
-const Box = styled.button<{
+const Box = styled.div<{
   $tagType: tagType;
   $hasName?: boolean;
   $hasEditIcon?: boolean;
@@ -175,6 +328,7 @@ const Box = styled.button<{
   border-radius: 100px;
   color: ${theme.colors.white};
   white-space: nowrap;
+  cursor: pointer;
   z-index: 10;
 
   ${({ $tagType }) =>
@@ -197,8 +351,9 @@ const Box = styled.button<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${$hasEditIcon &&
-      css`
+      ${
+        $hasEditIcon &&
+        css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -206,15 +361,18 @@ const Box = styled.button<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `}
-      ${$hasName === false &&
-      css`
+      `
+      }
+      ${
+        $hasName === false &&
+        css`
         padding: 7.5px 13px 7.5px 13px;
-      `}
+      `
+      }
     `}
   
   ${({ $tagType }) =>
-    $tagType === "letter" &&
+    ($tagType === "letter" || $tagType === "droppedLetter") &&
     css`
       display: block;
       max-width: 90px;
@@ -229,6 +387,10 @@ const Box = styled.button<{
       text-overflow: ellipsis;
       text-align: center;
       vertical-align: middle;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-use-select: all;
+      user-select: all;
 
       &:active {
         background: #565c81;
@@ -241,6 +403,18 @@ const NameInput = styled.input<{ textLength: number }>`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
   background-color: transparent;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none;
+`;
+
+const Name = styled.span`
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none;
 `;
 
 const Circle = styled.div`

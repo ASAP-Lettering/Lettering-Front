@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteUser } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import Dropdown from "@/components/common/Dropdown";
@@ -23,6 +24,16 @@ const DeleteAccount = () => {
 
   const handleBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCheckedBox(e.target.checked);
+  };
+
+  const handleDeleteUser = () => {
+    deleteUser()
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -68,7 +79,12 @@ const DeleteAccount = () => {
         />
       </MainWrapper>
       <Wrapper>
-        <Button buttonType="primary" size="large" text="탈퇴하기" />
+        <Button
+          buttonType="primary"
+          size="large"
+          text="탈퇴하기"
+          onClick={handleDeleteUser}
+        />
       </Wrapper>
     </Container>
   );

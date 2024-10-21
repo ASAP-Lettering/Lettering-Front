@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSwipeable } from "react-swipeable";
 import { contentType } from "./Letter";
 
@@ -37,7 +37,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             {isImage ? (
               <ImageContainer src={content[0]} />
             ) : (
-              <ClampedText>{content}</ClampedText>
+              <ClampedText contentType={contentType}>{content}</ClampedText>
             )}
           </ContentItem>
         ) : (
@@ -48,7 +48,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
               </ContentItem>
             ) : (
               <ContentItem key={index}>
-                <ClampedText>{item}</ClampedText>
+                <ClampedText contentType={contentType}>{item}</ClampedText>
               </ContentItem>
             )
           )
@@ -125,10 +125,22 @@ const ImageContainer = styled.div<{ src: string }>`
   -o-user-drag: none;
 `;
 
-const ClampedText = styled.div`
+const ClampedText = styled.div<{ contentType: contentType }>`
+  width: 100%;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 7; /* 7줄까지만 표시 */
   overflow: hidden;
-  text-overflow: ellipsis;
+
+  ${({ contentType }) =>
+    contentType === "one"
+      ? css`
+          -webkit-line-clamp: 7;
+          text-overflow: ellipsis;
+        `
+      : css`
+          white-space: normal;
+          word-break: break-all;
+          overflow-wrap: break-word;
+          white-space: pre-wrap;
+        `}
 `;

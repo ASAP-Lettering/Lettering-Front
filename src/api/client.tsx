@@ -50,8 +50,8 @@ authClient.interceptors.response.use(
     } = error;
     const originalRequest = error.config;
     console.log("인터셉터 에러:", error.response);
-
-    if (status === 401) {
+    console.log(error.status);
+    if (error.status === 401) {
       try {
         const newAccessToken = await getNewTokens().catch((tokenError) => {
           console.error("토큰 갱신 실패:", tokenError);
@@ -65,11 +65,18 @@ authClient.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("토큰 갱신 중 에러 발생:", refreshError);
+        clearTokens();
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
+    } else {
+      const accessToken = getAccessToken();
+      if (!accessToken) {
+        window.location.href = "/login";
+      } else {
+        //window.location.href = "/error";
+      }
     }
-
-    window.location.href = "/error";
     return Promise.reject(error);
   }
 );
