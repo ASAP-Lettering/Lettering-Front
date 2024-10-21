@@ -231,6 +231,7 @@ const SendLetterPage = () => {
 
   const handleSelect = async () => {
     if (!draftModal.id) return;
+    handleSaveLetter();
     try {
       const response = await getDraftLetter(draftModal.id);
       console.log("임시 저장 조회 성공", response.data);
