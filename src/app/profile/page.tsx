@@ -54,8 +54,12 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (birthday !== prevBirthday) {
+    if (birthday !== prevBirthday && birthday) {
       setIsAbled(true);
+      const [year, month, day] = birthday.split(".");
+      setSelectedYear(year);
+      setSelectedMonth(parseInt(month).toString());
+      setSelectedDate(parseInt(day).toString());
     } else {
       setIsAbled(false);
     }
