@@ -116,16 +116,16 @@ const PlanetPage = () => {
       console.log("페이지", response.data.totalPages);
       setSpaceTotalLetter(response.data.totalElements);
       //드래그 된 아이템이 있을때
-      if (droppedItem) {
-        setCurrentOrbits((prevOrbits) => {
-          if (prevOrbits) {
-            const updatedOrbits = [...prevOrbits];
-            updatedOrbits.pop(); // 마지막 항목 제거
-            return [droppedItem, ...updatedOrbits];
-          }
-          return prevOrbits;
-        });
-      }
+      // if (droppedItem) {
+      //   setCurrentOrbits((prevOrbits) => {
+      //     if (prevOrbits) {
+      //       const updatedOrbits = [...prevOrbits];
+      //       updatedOrbits.pop(); // 마지막 항목 제거
+      //       return [droppedItem, ...updatedOrbits];
+      //     }
+      //     return prevOrbits;
+      //   });
+      // }
       //setDroppedItem(null);
       setIsLoading(false);
     } catch (error) {
