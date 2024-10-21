@@ -171,7 +171,15 @@ const Modal = (props: ModalProps) => {
                     ? "/assets/profile/ic_arrow_up.svg"
                     : "/assets/profile/ic_arrow_down.svg"
                 }
-                onClick={() => setType(!type)}
+                onClick={() => {
+                  setType(!type);
+                  if (!type) {
+                    setIsContainerVisible(false);
+                    setTimeout(() => {
+                      setIsContainerVisible(true);
+                    }, 500);
+                  }
+                }}
               />
             </HeaderTitle>
             <IconButton
@@ -270,7 +278,7 @@ const DateSwapWrapper = styled.div<{ isVisible: boolean }>`
     align-items: center;
     gap: 28px;
     opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.1s ease-in-out;
 `;
 
 const HeaderTitle = styled.div`
