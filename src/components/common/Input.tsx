@@ -181,22 +181,22 @@ const StyledTextarea = styled.textarea<{
     letter-spacing: 1px;
   }
 
-  ::-webkit-scrollbar {
-    width: 5px; /* 스크롤바의 너비 */
+  &::-webkit-scrollbar {
+    width: 23px;
+    height: 100px;
     background: transparent;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent; /* 스크롤바 트랙의 배경색 */
+  &::-webkit-scrollbar-thumb {
+    width: 6px;
+    border-radius: 26px;
+    background: ${theme.colors.gray500};
+    background-clip: padding-box;
+    border: 8px solid transparent;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: ${theme.colors.gray600}; /* 스크롤바 thumb의 배경색 */
-    border-radius: 200px; /* 스크롤바 thumb의 둥글기 */
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 스크롤바 thumb에 마우스를 올렸을 때의 배경색 */
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 `;
 

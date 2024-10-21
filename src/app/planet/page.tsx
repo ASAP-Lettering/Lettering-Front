@@ -34,6 +34,7 @@ import { planetRefState } from "@/recoil/RefStore";
 import { droppedLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import Tooltip from "@/components/common/Tooltip";
+import { userState } from "@/recoil/userStore";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -44,12 +45,13 @@ const PlanetPage = () => {
   const [direction, setDirection] = useState(0); //슬라이드 방향
   const [currentOrbits, setCurrentOrbits] = useState<Orbit[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [change, setChange] = useState<boolean>(false);
 
   const [orbitMessages, setOrbitMessages] = useState<Orbit[] | null>();
   const [spaceTotalLetter, setSpaceTotalLetter] = useState<number>(0);
 
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
-  const [userName, setUserName] = useState("");
+  const [user, setUser] = useRecoilState(userState);
   const [countLetter, setCountLetter] = useState<number>(0);
   const accessToken = getAccessToken(); // 에러핸들링
 
@@ -87,6 +89,7 @@ const PlanetPage = () => {
       setTotalPages(
         response.data.totalElements === 0 ? 1 : response.data.totalPages
       );
+      console.log("페이지", response.data.totalPages);
       setSpaceTotalLetter(response.data.totalElements);
       //드래그 된 아이템이 있을때
       if (droppedItem) {
@@ -116,7 +119,10 @@ const PlanetPage = () => {
         spaceName: response.data.spaceName,
         templateType: response.data.templateType,
       });
-      setUserName(response.data.username);
+      setUser((prevState) => ({
+        ...prevState,
+        name: response.data.username,
+      }));
       fetchPlanetLetterList(response.data.spaceId, currentPage, itemsPerPage);
     } catch (error) {
       console.error("메인 ID 조회 실패:", error);
@@ -148,7 +154,7 @@ const PlanetPage = () => {
     if (spaceInfo?.spaceId) {
       fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
     }
-  }, [currentPage]);
+  }, [currentPage, change]);
 
   const handleEditPlanetName = async (newName: string) => {
     // 행성 이름 수정 API
@@ -272,7 +278,7 @@ const PlanetPage = () => {
   };
 
   //터치 드래그 마무리
-  const handleTagTouch = (draggedItem: Orbit) => {
+  const handleTagTouch = async (draggedItem: Orbit) => {
     handleMovePlanet(draggedItem.letterId!, draggedItem.senderName);
     setOrbitMessages((prevMessages) =>
       prevMessages?.filter((item) => item.letterId !== draggedItem.letterId)
@@ -319,7 +325,20 @@ const PlanetPage = () => {
     // } else {
     //   setCurrentPage(totalPages);
     // }
+
+    // totalPage 업데이트
+    // if (spaceInfo?.spaceId) {
+    //   await fetchPlanetLetterList(spaceInfo.spaceId, currentPage, itemsPerPage);
+    // }
+    setCurrentPage(1);
   };
+
+  // currentPage가 변경될 때마다 fetchPlanetLetterList를 호출
+  useEffect(() => {
+    if (spaceInfo?.spaceId) {
+      fetchPlanetLetterList(spaceInfo?.spaceId, currentPage, itemsPerPage);
+    }
+  }, [currentPage, spaceInfo]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -368,6 +387,7 @@ const PlanetPage = () => {
         padding: "11px 13px",
       });
       //setDroppedItem(null);
+      setChange(!change);
     } catch {
       console.log("편지 다른 행성 이동 실패");
     }
@@ -402,13 +422,13 @@ const PlanetPage = () => {
                 <Title>
                   {countLetter < 3 ? (
                     <>
-                      {userName}님의 스페이스를
+                      {user.name}님의 스페이스를
                       <br />
                       편지로 수놓아 보세요
                     </>
                   ) : (
                     <>
-                      {userName}님의 스페이스에
+                      {user.name}님의 스페이스에
                       <br />
                       <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
                     </>
@@ -453,6 +473,7 @@ const PlanetPage = () => {
                     setCurrentOrbits={setCurrentOrbits}
                     onEditPlanetName={handleEditPlanetName}
                     setCountLetter={setCountLetter}
+                    setChange={setChange}
                   />
                 </SliderWrapper>
                 {showTooltip && (

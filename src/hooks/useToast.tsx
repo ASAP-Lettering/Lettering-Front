@@ -4,6 +4,7 @@ import { toastState } from "@/recoil/toastStore";
 
 interface ShowToastOptions {
   icon?: boolean;
+  iconType?: "message" | "info";
   close?: boolean;
   duration?: number;
   top?: string;
@@ -20,6 +21,7 @@ export const useToast = () => {
     (message: string, options: ShowToastOptions = {}) => {
       const {
         icon = false,
+        iconType = "info",
         close = false,
         duration = 3000,
         top = "",
@@ -34,6 +36,7 @@ export const useToast = () => {
         show: true,
         message,
         icon,
+        iconType,
         close,
         top,
         bottom,
@@ -48,6 +51,7 @@ export const useToast = () => {
           show: false,
           message: "",
           icon: false,
+          iconType: "info",
           close: false,
           top,
           bottom,
