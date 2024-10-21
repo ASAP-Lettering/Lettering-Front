@@ -63,49 +63,47 @@ const Letter = (props: LetterProps) => {
 
   /* 한 페이지에 최대 7줄의 텍스트를 표시하도록 조정 */
   const paginateContent = (content: string, maxLinesPerPage: number) => {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
+    const [pages, setPages] = useState<string[]>([]);
 
-    context!.font = "16px Pretendard";
+    useEffect(() => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
 
-    const maxWidth = contentType === "one" ? 200 : 280; // 최대 너비
-    let currentLine = "";
-    let lines: string[] = [];
+      context!.font = "16px Pretendard";
+      const maxWidth = contentType === "one" ? 200 : 280;
+      let currentLine = "";
+      let lines: string[] = [];
 
-    for (let i = 0; i < content.length; i++) {
-      const char = content[i];
-
-      // 줄바꿈 기호
-      if (char === "\n") {
-        if (currentLine.trim()) {
-          lines.push(currentLine.trim());
+      for (let i = 0; i < content.length; i++) {
+        const char = content[i];
+        if (char === "\n") {
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+          }
+          currentLine = "";
+          continue;
         }
-        currentLine = "";
-        continue;
+
+        const testLine = currentLine + char;
+        const { width } = context!.measureText(testLine);
+        if (width < maxWidth) {
+          currentLine = testLine;
+        } else {
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+          }
+          currentLine = char;
+        }
       }
 
-      const testLine = currentLine + char;
-      const { width } = context!.measureText(testLine);
+      if (currentLine.trim()) lines.push(currentLine.trim());
 
-      // 한 줄이 화면 너비를 넘지 않으면 계속 이어서 씀
-      if (width < maxWidth) {
-        currentLine = testLine;
-      } else {
-        // 넘는 경우 현재 줄을 추가하고 새로운 줄 시작
-        if (currentLine.trim()) {
-          lines.push(currentLine.trim());
-        }
-        currentLine = char; // 새 줄 시작 (현재 글자로)
+      const paginated: string[] = [];
+      for (let i = 0; i < lines.length; i += maxLinesPerPage) {
+        paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
       }
-    }
-
-    // 마지막 남은 줄 추가
-    if (currentLine.trim()) lines.push(currentLine.trim());
-
-    const pages: string[] = [];
-    for (let i = 0; i < lines.length; i += maxLinesPerPage) {
-      pages.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
-    }
+      setPages(paginated);
+    }, [content, maxLinesPerPage]);
 
     return pages;
 
