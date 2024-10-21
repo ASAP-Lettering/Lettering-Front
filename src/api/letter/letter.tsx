@@ -53,19 +53,66 @@ export const getVerifyedLetter = async (letterId: string) => {
   return await authClient.get(`/api/v1/letters/${letterId}/verify`);
 };
 
-//편지 수령
+// 편지 수령
 export const saveVerifyedLetter = async (letterId: string) => {
   return await authClient.post(`/api/v1/letters/verify/receive`, {
     letterId: letterId,
   });
 };
 
-//궤도 편지 삭제
+// 행성 편지 수정
+export const putLetter = async ({
+  letterId,
+  senderName,
+  content,
+  images,
+  templateType,
+}: {
+  letterId: string;
+  senderName: string;
+  content: string;
+  images: string[];
+  templateType: number;
+}) => {
+  return await authClient.put(`/api/v1/spaces/letters/${letterId}/content`, {
+    senderName,
+    content,
+    images,
+    templateType,
+  });
+};
+
+// 행성 편지 수정
+export const putIndependentLetter = async ({
+  letterId,
+  senderName,
+  content,
+  images,
+  templateType,
+}: {
+  letterId: string;
+  senderName: string;
+  content: string;
+  images: string[];
+  templateType: number;
+}) => {
+  return await authClient.put(
+    `/api/v1/letters/independent/${letterId}/content`,
+    {
+      senderName,
+      content,
+      images,
+      templateType,
+    }
+  );
+};
+
+// 궤도 편지 삭제
 export const deleteIndependentLetter = async (letterId: string) => {
   return await authClient.delete(`/api/v1/letters/independent/${letterId}`);
 };
 
-//행성 편지 삭제
+// 행성 편지 삭제
 export const deleteLetter = async (letterId: string) => {
   return await authClient.delete(`/api/v1/spaces/letters/${letterId}`);
 };

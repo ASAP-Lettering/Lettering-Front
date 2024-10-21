@@ -6,13 +6,14 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SendCompletePage = () => {
   const router = useRouter();
 
   const { receiverName } = useRecoilValue(sendLetterState);
+  const resetLetterState = useResetRecoilState(sendLetterState);
 
   return (
     <Layout>
@@ -25,9 +26,9 @@ const SendCompletePage = () => {
         </Title>
         <ImageWrapper>
           <Image
-            src="/assets/send/send_complete.svg"
-            width={623}
-            height={623}
+            src="/assets/send/send_complete.png"
+            width={480}
+            height={460}
             alt="편지"
           />
         </ImageWrapper>
@@ -38,6 +39,7 @@ const SendCompletePage = () => {
           text="홈으로 돌아가기"
           onClick={() => {
             router.push("/planet");
+            resetLetterState();
           }}
         />
       </ButtonWrapper>
@@ -87,12 +89,15 @@ const Sub = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 623px;
-  height: 623px;
+  width: 480px;
+  height: 460px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ButtonWrapper = styled.div`

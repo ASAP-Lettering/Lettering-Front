@@ -91,7 +91,7 @@ const SendDetailPage = () => {
         ) : (
           <WhiteSpace />
         )}
-        <KakaoShareButton type="small" senderName="승효" letterId={letterId} />
+        <KakaoShareButton type="small" letterId={letterId} />
       </MainWrapper>
     </Container>
   ) : (
@@ -117,55 +117,55 @@ export default function SendDetailPaging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    justify-content: space-between;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  justify-content: space-between;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 5px 24px;
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    align-items: center;
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+  display: flex;
+  flex-direction: column;
+  padding: 5px 24px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  align-items: center;
+  &::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar */
+  }
 
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 10px;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  width: 100%;
 `;
 
 const LetterCount = styled.div`
-    display: flex;
-    ${(props) => props.theme.fonts.caption03};
-    color: ${(props) => props.theme.colors.gray400};
-    flex:1;
-    flex-direction: column;
-    text-align: end;
-    justify-content: end;
-    padding: 5px;
+  display: flex;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${(props) => props.theme.colors.gray400};
+  flex: 1;
+  flex-direction: column;
+  text-align: end;
+  justify-content: end;
+  padding: 5px;
 `;
 
 const LoaderContainer = styled.div`
@@ -190,45 +190,45 @@ const Guidetext = styled.div`
 `;
 
 const ChangeButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 70%;
-    justify-content: center;
-    cursor: pointer;
-    ${(props) => props.theme.fonts.caption03};
-    color: ${(props) => props.theme.colors.gray400};
-    gap: 4px;
-    padding: 16px;
-    img{
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  justify-content: center;
+  cursor: pointer;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${(props) => props.theme.colors.gray400};
+  gap: 4px;
+  padding: 16px;
+  img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
 `;
 
 const WhiteSpace = styled.div`
-    height: 24px;
+  height: 24px;
 `;
 
 const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;
 
 const ReShareBtnWrapper = styled.button`
-    display: flex;
-    width: 45%;
-    box-sizing: border-box;
-    padding: 12px;
-    gap: 10px;
-    border-radius: 20px;
-    text-align: center;
-    justify-content: center;
-    min-width: 151px;
-    flex-direction: row;
-    color: ${(props) => props.theme.colors.gray100};
-    background-color: ${(props) => props.theme.colors.gray800};
-    ${(props) => props.theme.fonts.caption01};
+  display: flex;
+  width: 45%;
+  box-sizing: border-box;
+  padding: 12px;
+  gap: 10px;
+  border-radius: 20px;
+  text-align: center;
+  justify-content: center;
+  min-width: 151px;
+  flex-direction: row;
+  color: ${(props) => props.theme.colors.gray100};
+  background-color: ${(props) => props.theme.colors.gray800};
+  ${(props) => props.theme.fonts.caption01};
 `;

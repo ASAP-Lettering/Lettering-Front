@@ -5,6 +5,8 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { draftModalState } from "@/recoil/draftStore";
+import { sendLetterState } from "@/recoil/letterStore";
+import { getDraftLetter } from "@/api/send/send";
 
 interface DraftListProps {
   id: string;
@@ -13,15 +15,37 @@ interface DraftListProps {
   timestamp: string;
   isDeleteMode: boolean;
   onDelete: (draftId: string) => void;
+  onClose: () => void;
 }
 
 const DraftList = (props: DraftListProps) => {
-  const { id, name, content, timestamp, isDeleteMode, onDelete } = props;
+  const { id, name, content, timestamp, isDeleteMode, onDelete, onClose } =
+    props;
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
+  const [letterState, setLetterState] = useRecoilState(sendLetterState);
 
-  const handleConfirmModal = () => {
-    setDraftModal({ id: id, isOpen: !draftModal.isOpen });
+  const handleConfirmModal = async () => {
+    if (!letterState.receiverName && !letterState.content) {
+      try {
+        const response = await getDraftLetter(id);
+        console.log("임시 저장 조회 성공", response.data);
+
+        setLetterState({
+          draftId: response.data.draftKey,
+          receiverName: response.data.receiverName,
+          content: response.data.content,
+          images: response.data.images,
+          templateType: 0,
+        });
+
+        onClose();
+      } catch {
+        console.log("임시 저장 조회 실패");
+      }
+    } else {
+      setDraftModal({ id: id, isOpen: !draftModal.isOpen });
+    }
   };
 
   const handleDeleteDraft = async (

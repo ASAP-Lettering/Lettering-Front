@@ -82,6 +82,10 @@ const SendLetterPage = () => {
 
   const handleReceiverChange = (newValue: string) => {
     setReceiver(newValue);
+    setLetterState((prevState) => ({
+      ...prevState,
+      receiverName: newValue,
+    }));
   };
 
   const handleContentChange = (newValue: string) => {
@@ -91,6 +95,10 @@ const SendLetterPage = () => {
     } else {
       setContent(newValue);
     }
+    setLetterState((prevState) => ({
+      ...prevState,
+      content: newValue,
+    }));
   };
 
   const handleAddImages = async (
@@ -117,6 +125,10 @@ const SendLetterPage = () => {
               .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
+          setLetterState((prevState) => ({
+            ...prevState,
+            images: newImages,
+          }));
           return;
         }
       } else {
@@ -231,6 +243,7 @@ const SendLetterPage = () => {
 
   const handleSelect = async () => {
     if (!draftModal.id) return;
+    handleSaveLetter();
     try {
       const response = await getDraftLetter(draftModal.id);
       console.log("임시 저장 조회 성공", response.data);
@@ -556,7 +569,5 @@ const BottomWrapper = styled.div`
   max-width: 393px;
   position: absolute;
   bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 1000;
 `;

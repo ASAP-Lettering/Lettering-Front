@@ -1,18 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const letterId = searchParams.get("letterId");
+  const independent = searchParams.get("independent");
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
@@ -30,12 +34,23 @@ const LetterTemplatePage = () => {
       ...prevState,
       templateType: template,
     }));
-    router.push("/letter/preview");
+    if (letterId) {
+      if (independent === "true") {
+        router.push(`/letter/preview?letterId=${letterId}&independent=true`);
+      } else {
+        router.push(`/letter/preview?letterId=${letterId}`);
+      }
+    } else {
+      router.push("/letter/preview");
+    }
   };
 
   return (
     <Layout>
-      <NavigatorBar title="새 편지 등록하기" cancel={false} />
+      <NavigatorBar
+        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        cancel={false}
+      />
       <Container>
         <Essential>* 필수</Essential>
         <Column>
@@ -86,7 +101,19 @@ const LetterTemplatePage = () => {
   );
 };
 
-export default LetterTemplatePage;
+export default function LetterTemplatePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <LetterTemplatePage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
