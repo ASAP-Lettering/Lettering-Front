@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
@@ -8,6 +8,7 @@ import ConfirmModal from "../common/ConfirmModal";
 import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
+import { flipAnimation } from "@/styles/animation";
 
 type showType = "previewSend" | "previewReceive" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
@@ -47,18 +48,28 @@ const Letter = (props: LetterProps) => {
     padding,
     readOnly = false,
   } = props;
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
   const [paginatedContent, setPaginatedContent] = useState<string[]>([]);
   const [isPopup, setIsPopup] = useState(false);
-  const router = useRouter();
   const [isDelete, setIsDelete] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const [isChangeImage, setIsChangeImage] = useState(false);
 
   /* 수정 클릭 시 등록하기 store 저장 */
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
 
   useEffect(() => {
-    setCurrentPage(0);
+    setFlip(true);
+    const timer = setTimeout(() => {
+      setIsChangeImage(isImage);
+      setCurrentPage(0);
+      setFlip(false);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, [isImage]);
+
+  useEffect(() => {}, [isChangeImage]);
 
   // 페이지 내용 분할 처리
   useEffect(() => {
@@ -149,6 +160,7 @@ const Letter = (props: LetterProps) => {
       $width={width}
       $height={height}
       $padding={padding}
+      className={flip ? "flip" : ""}
     >
       {isDelete && (
         <ConfirmModal
@@ -194,11 +206,10 @@ const Letter = (props: LetterProps) => {
       <Content $showType={showType} $contentType={contentType}>
         <SwipeableContent
           contentType={contentType}
-          // content={isImage ? images! : contentPages!}
-          content={isImage ? images ?? [] : paginatedContent}
+          content={isChangeImage ? images ?? [] : paginatedContent}
           setPage={setCurrentPage}
           totalPage={totalPage ? totalPage : 0}
-          isImage={isImage}
+          isImage={isChangeImage}
           page={currentPage}
         />
       </Content>
@@ -247,6 +258,12 @@ const Container = styled.div<{
   position: relative;
   border-radius: 12px;
   border: 1px solid ${theme.colors.gray700};
+
+  &.flip {
+    animation: ${flipAnimation} 0.8s ease-in-out;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
 `;
 
 const TopContainer = styled.div<{
