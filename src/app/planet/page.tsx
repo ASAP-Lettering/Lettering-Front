@@ -31,7 +31,11 @@ import {
 import { getLetterCount } from "@/api/letter/letter";
 import PlanetSlide from "@/components/planet/PlanetSlide";
 import { planetRefState } from "@/recoil/RefStore";
-import { droppedLetterState } from "@/recoil/letterStore";
+import {
+  droppedLetterState,
+  registerLetterState,
+  sendLetterState,
+} from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import Tooltip from "@/components/common/Tooltip";
 import { userState } from "@/recoil/userStore";
@@ -56,6 +60,26 @@ const PlanetPage = () => {
   const accessToken = getAccessToken(); // 에러핸들링
 
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
+
+  const [registerState, setRegisterState] = useRecoilState(registerLetterState);
+  const [sendState, setSendState] = useRecoilState(sendLetterState);
+
+  /* 홈에서 편지 등록 및 쓰기 store 초기화 */
+  useEffect(() => {
+    setRegisterState({
+      senderName: "",
+      content: "",
+      images: [],
+      templateType: 0,
+    });
+    setSendState({
+      draftId: "",
+      receiverName: "",
+      content: "",
+      images: [] as string[],
+      templateType: 0,
+    });
+  }, []);
 
   const fetchGetLetterCount = async () => {
     try {
@@ -92,16 +116,16 @@ const PlanetPage = () => {
       console.log("페이지", response.data.totalPages);
       setSpaceTotalLetter(response.data.totalElements);
       //드래그 된 아이템이 있을때
-      if (droppedItem) {
-        setCurrentOrbits((prevOrbits) => {
-          if (prevOrbits) {
-            const updatedOrbits = [...prevOrbits];
-            updatedOrbits.pop(); // 마지막 항목 제거
-            return [droppedItem, ...updatedOrbits];
-          }
-          return prevOrbits;
-        });
-      }
+      // if (droppedItem) {
+      //   setCurrentOrbits((prevOrbits) => {
+      //     if (prevOrbits) {
+      //       const updatedOrbits = [...prevOrbits];
+      //       updatedOrbits.pop(); // 마지막 항목 제거
+      //       return [droppedItem, ...updatedOrbits];
+      //     }
+      //     return prevOrbits;
+      //   });
+      // }
       //setDroppedItem(null);
       setIsLoading(false);
     } catch (error) {

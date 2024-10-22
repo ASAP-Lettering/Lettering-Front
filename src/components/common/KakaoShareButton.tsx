@@ -1,24 +1,24 @@
-// components/KakaoShareButton.tsx
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { userState } from "@/recoil/userStore";
 
 type buttonType = "default" | "small";
 
 interface KakaoShareButtonProps {
   type?: buttonType;
-  senderName: string;
   letterId: string;
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   type = "default",
-  senderName,
   letterId,
 }) => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
   const JS_KEY = process.env.NEXT_PUBLIC_JAVASCRIPT_KEY;
+  const { name } = useRecoilValue(userState);
 
   useEffect(() => {
     if (!JS_KEY) {
@@ -70,7 +70,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
       requestUrl: location.origin + location.pathname,
       templateId: 112798,
       templateArgs: {
-        senderName: senderName,
+        senderName: name,
         id: letterId,
       },
     });
@@ -100,17 +100,17 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
 export default KakaoShareButton;
 
 const ReShareBtnWrapper = styled.button`
-    display: flex;
-    width: 45%;
-    box-sizing: border-box;
-    padding: 12px;
-    gap: 10px;
-    border-radius: 20px;
-    text-align: center;
-    justify-content: center;
-    min-width: 151px;
-    flex-direction: row;
-    color: ${(props) => props.theme.colors.gray100};
-    background-color: ${(props) => props.theme.colors.gray800};
-    ${(props) => props.theme.fonts.caption01};
+  display: flex;
+  width: 45%;
+  box-sizing: border-box;
+  padding: 12px;
+  gap: 10px;
+  border-radius: 20px;
+  text-align: center;
+  justify-content: center;
+  min-width: 151px;
+  flex-direction: row;
+  color: ${(props) => props.theme.colors.gray100};
+  background-color: ${(props) => props.theme.colors.gray800};
+  ${(props) => props.theme.fonts.caption01};
 `;

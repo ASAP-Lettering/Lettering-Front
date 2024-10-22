@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -23,6 +24,9 @@ const LetterRegisterPage = () => {
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isToastShown, setIsToastShown] = useState(false);
+  const searchParams = useSearchParams();
+  const letterId = searchParams.get("letterId");
+  const independent = searchParams.get("independent");
 
   useEffect(() => {
     if (letterState) {
@@ -123,12 +127,23 @@ const LetterRegisterPage = () => {
       content: content,
       images: images,
     }));
-    router.push("/letter/template");
+    if (letterId) {
+      if (independent === "true") {
+        router.push(`/letter/template?letterId=${letterId}&independent=true`);
+      } else {
+        router.push(`/letter/template?letterId=${letterId}`);
+      }
+    } else {
+      router.push("/letter/template");
+    }
   };
 
   return (
     <Layout>
-      <NavigatorBar title="새 편지 등록하기" cancel={false} />
+      <NavigatorBar
+        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        cancel={false}
+      />
       <Container>
         <Essential>* 필수</Essential>
         <Column>
@@ -218,7 +233,19 @@ const LetterRegisterPage = () => {
   );
 };
 
-export default LetterRegisterPage;
+export default function LetterRegisterPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <LetterRegisterPage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
