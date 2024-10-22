@@ -57,7 +57,7 @@ export default function Home() {
           text="로그아웃하기"
           onClick={handleLogout}
         ></Button>
-        <KakaoShareButton senderName="승효" letterId="aa" />
+        <KakaoShareButton letterId="aa" />
       </ButtonContainer>
     </Container>
   );

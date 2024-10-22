@@ -1,19 +1,24 @@
-// components/KakaoShareButton.tsx
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
+import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { userState } from "@/recoil/userStore";
+
+type buttonType = "default" | "small";
 
 interface KakaoShareButtonProps {
-  senderName: string;
+  type?: buttonType;
   letterId: string;
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
-  senderName,
+  type = "default",
   letterId,
 }) => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
   const JS_KEY = process.env.NEXT_PUBLIC_JAVASCRIPT_KEY;
+  const { name } = useRecoilValue(userState);
 
   useEffect(() => {
     if (!JS_KEY) {
@@ -65,13 +70,13 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
       requestUrl: location.origin + location.pathname,
       templateId: 112798,
       templateArgs: {
-        senderName: senderName,
+        senderName: name,
         id: letterId,
       },
     });
   };
 
-  return (
+  return type === "default" ? (
     <Button
       buttonType="primary"
       text="카카오로 편지 보내기"
@@ -84,7 +89,28 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
         alt="카카오"
       />
     </Button>
+  ) : (
+    <ReShareBtnWrapper onClick={shareToKakao}>
+      <img src="/assets/icons/ic_kakao_talk.svg" />
+      편지 다시 보내기
+    </ReShareBtnWrapper>
   );
 };
 
 export default KakaoShareButton;
+
+const ReShareBtnWrapper = styled.button`
+  display: flex;
+  width: 45%;
+  box-sizing: border-box;
+  padding: 12px;
+  gap: 10px;
+  border-radius: 20px;
+  text-align: center;
+  justify-content: center;
+  min-width: 151px;
+  flex-direction: row;
+  color: ${(props) => props.theme.colors.gray100};
+  background-color: ${(props) => props.theme.colors.gray800};
+  ${(props) => props.theme.fonts.caption01};
+`;

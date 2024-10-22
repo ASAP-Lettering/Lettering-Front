@@ -145,6 +145,7 @@ const SheetBackground = styled(motion.div)`
   border-radius: 24px 24px 0 0;
   padding: 12px 0 24px 0;
   will-change: transform;
+  z-index: 9999;
 `;
 
 const BottomHeader = styled.div`

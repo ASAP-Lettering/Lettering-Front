@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserInfo } from "@/api/mypage/user";
+import { getUserInfo, putUserBirthday } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
@@ -10,6 +10,12 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
+type DateType = {
+  date: string;
+  month: string;
+  year: string;
+};
+
 const Profile = () => {
   const [email, setEmail] = useState("shyo0000@gmail.com");
   const [birthday, setBirthday] = useState("");
@@ -17,51 +23,88 @@ const Profile = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [picker, setPicker] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [prevBirthday, setPrevBirthday] = useState("");
+  const [isAbled, setIsAbled] = useState(false);
+
   const router = useRouter();
 
   const fetchUserInfo = async () => {
     try {
       const response = await getUserInfo();
-      setBirthday(response.data.birthday);
+
+      setEmail(response.data.email);
+      setBirthday(response.data.birthday.replace(/-/g, "."));
+      setPrevBirthday(response.data.birthday.replace(/-/g, "."));
       console.log("회원정보 조회 성공:", response.data);
+
+      const [year, month, day] = response.data.birthday.split("-");
+      setSelectedYear(year);
+      setSelectedMonth(parseInt(month).toString());
+      setSelectedDate(parseInt(day).toString());
+
+      setLoading(false);
     } catch (error) {
       console.error("회원정보 조회 실패:", error);
     }
   };
 
   useEffect(() => {
-    if (birthday) {
-      const [year, month, day] = birthday.split("-");
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    if (birthday !== prevBirthday && birthday) {
+      setIsAbled(true);
+      const [year, month, day] = birthday.split(".");
       setSelectedYear(year);
       setSelectedMonth(parseInt(month).toString());
       setSelectedDate(parseInt(day).toString());
+    } else {
+      setIsAbled(false);
     }
   }, [birthday]);
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
 
   const popupPicker = () => {
     if (birthday && selectedDate && selectedMonth && selectedYear) {
       setPicker(!picker);
-      updateNewBirthday(birthday);
     }
   };
 
-  const updateNewBirthday = (newbirthday: string) => {
-    console.log("새 생일 날짜는 ", newbirthday);
-  };
-
   const handleSubmit = () => {
+    let formatBirthday = birthday.replace(/\./g, "-");
+    fetchNewBirthday(formatBirthday);
     router.push("/mypage");
   };
 
-  return (
+  const confirmModal = (newbirthday: string) => {
+    setBirthday(newbirthday);
+    setPicker(!picker);
+  };
+
+  const closeModal = () => {
+    setPicker(false);
+    fetchUserInfo();
+  };
+
+  const fetchNewBirthday = async (birthday: string) => {
+    try {
+      await putUserBirthday(birthday);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return loading ? (
+    <LoaderContainer>
+      <Loader />
+    </LoaderContainer>
+  ) : (
     <Container>
       {picker && (
         <Modal
-          onConfirm={popupPicker}
+          onConfirm={confirmModal}
+          onClose={closeModal}
           onDateChange={setBirthday}
           initialYear={selectedYear}
           initialMonth={selectedMonth}
@@ -104,6 +147,7 @@ const Profile = () => {
           buttonType="primary"
           size="large"
           text="수정하기"
+          disabled={!isAbled}
           onClick={handleSubmit}
         />
       </Wrapper>
@@ -133,7 +177,7 @@ const Container = styled.div`
     max-height: 100%;
     justify-content: space-between;
     color: white;
-    background:${(props) => props.theme.colors.bg};
+    background:${(props) => props.theme.colors.bg}; 
 `;
 
 const MainWrapper = styled.div`

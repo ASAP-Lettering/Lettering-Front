@@ -36,11 +36,13 @@ const Signup = () => {
           <Image src="/assets/signup/signup_image.png" />
         </ImageWrapper>
       </MainWrapper>
-      <Button
-        buttonType="primary"
-        text={url ? "나에게 온 편지 열기" : "나의 스페이스에 접속하기"}
-        onClick={handleButtonClick}
-      ></Button>
+      <Wrapper>
+        <Button
+          buttonType="primary"
+          text={url ? "나에게 온 편지 열기" : "나의 스페이스에 접속하기"}
+          onClick={handleButtonClick}
+        ></Button>
+      </Wrapper>
     </Container>
   );
 };
@@ -63,9 +65,10 @@ const Container = styled.div`
   color: white;
   display: flex;
   box-sizing: border-box;
-  padding: 50px 20px;
   width: 100%;
+  max-width: 393px;
   height: 100%;
+  max-height: 853px;
   flex-direction: column;
   //overflow: scroll;
   justify-content: space-between;
@@ -78,6 +81,22 @@ const Container = styled.div`
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  padding: 0 24px;
+  padding-top: 20px;
+  &::-webkit-scrollbar {
+        width: 5px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: ${(props: any) => props.theme.colors.gray800};
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: ${(props: any) => props.theme.colors.gray600};
+        border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -114,4 +133,10 @@ const Image = styled.img`
   height: auto;
   max-width: 520px;
   max-height: 400px;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 24px;
 `;

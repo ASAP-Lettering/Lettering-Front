@@ -45,6 +45,9 @@ authClient.interceptors.response.use(
     return response;
   },
   async (error) => {
+    const {
+      response: { status },
+    } = error;
     const originalRequest = error.config;
     console.log("인터셉터 에러:", error.response);
     console.log(error.status);
