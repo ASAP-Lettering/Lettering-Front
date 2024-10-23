@@ -109,6 +109,7 @@ const LetterPage = () => {
         <PaginationWrapper>
           {letterData.prev_letter ? (
             <Page
+              type="left"
               onClick={() =>
                 handleButtonClick(letterData.prev_letter!.letter_id)
               }
@@ -117,11 +118,12 @@ const LetterPage = () => {
               <Text>{letterData.prev_letter.sender_name}</Text>
             </Page>
           ) : (
-            <Page />
+            <Page type="center" />
           )}
           <CurrentPage>{letterData.sender}</CurrentPage>
           {letterData.next_letter ? (
             <Page
+              type="right"
               onClick={() =>
                 handleButtonClick(letterData.next_letter!.letter_id)
               }
@@ -130,7 +132,7 @@ const LetterPage = () => {
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
           ) : (
-            <Page />
+            <Page type="center" />
           )}
         </PaginationWrapper>
       </MainWrapper>
@@ -304,11 +306,12 @@ const PaginationWrapper = styled.div`
   gap: 24px;
 `;
 
-const Page = styled.div`
+const Page = styled.div<{ type: "left" | "center" | "right" }>`
   width: 75px;
   display: flex;
   flex-direction: row;
   cursor: pointer;
+  text-align: ${(props) => props.type};
 `;
 
 const Text = styled.div`
