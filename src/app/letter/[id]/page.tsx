@@ -48,7 +48,7 @@ const LetterPage = () => {
               letter_count: res.data.letterCount,
               content: res.data.content,
               images: res.data.images,
-              date: res.data.sendDate,
+              date: res.data.receiveDate,
               templateType: res.data.templateType,
               prev_letter: res.data.prevLetter
                 ? {
