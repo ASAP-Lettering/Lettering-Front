@@ -216,8 +216,7 @@ const Tag = (props: TagProps) => {
     if (planetRef && tagRef.current && tagType === "orbit") {
       const parentRect = planetRef.getBoundingClientRect();
       const tagRect = tagRef.current.getBoundingClientRect();
-      const isAtLeast200pxAboveBottom =
-        tagRect.bottom <= parentRect.bottom - 200;
+      const isAtLeast80pxAboveBottom = tagRect.bottom <= parentRect.bottom - 80;
 
       const isWithinBounds =
         tagRect.left >= parentRect.left &&
@@ -227,7 +226,7 @@ const Tag = (props: TagProps) => {
 
       if (
         isWithinBounds &&
-        isAtLeast200pxAboveBottom &&
+        isAtLeast80pxAboveBottom &&
         onTouchEnd &&
         onDragEnd &&
         tagId &&
