@@ -1,7 +1,7 @@
 export interface Orbit {
   letterId: string;
   senderName: string;
-  receivedDate: string;
+  receivedDate?: string;
   isNew?: boolean;
   date?: string;
 }

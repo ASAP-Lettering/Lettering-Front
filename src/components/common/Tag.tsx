@@ -70,14 +70,13 @@ const Tag = (props: TagProps) => {
   };
 
   const handleDragStart = () => {
-    if (onDragEnd && tagId && name && tagType === "orbit" && receivedDate) {
+    if (onDragEnd && tagId && name && tagType === "orbit") {
       console.log("드래그 시작");
       setIsDragging(true);
       clearHoldTimeout();
       onDragEnd({
         letterId: tagId,
         senderName: name,
-        receivedDate: receivedDate,
       });
     }
   };
@@ -232,20 +231,17 @@ const Tag = (props: TagProps) => {
         onTouchEnd &&
         onDragEnd &&
         tagId &&
-        name &&
-        receivedDate
+        name
       ) {
         // 태그가 부모 영역 내에 있고, 밑에서 100px 이상 떨어져 있을 때
         console.log("드래그한 태그가 영역 내에 있습니다.");
         onDragEnd({
           letterId: tagId,
           senderName: name,
-          receivedDate: receivedDate,
         });
         onTouchEnd({
           letterId: tagId,
           senderName: name,
-          receivedDate: receivedDate,
         });
       } else if (!isAtLeast200pxAboveBottom) {
         // 태그가 부모 영역 밑에서 100px 이내에 있을 때

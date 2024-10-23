@@ -384,11 +384,18 @@ const PlanetPage = () => {
         ) {
           console.log(
             "드래그 대상",
+            droppedItem,
             droppedItem?.letterId,
             droppedItem?.senderName
           );
           if (droppedItem) {
-            handleTagTouch(droppedItem);
+            const orbitItem: Orbit = {
+              letterId: droppedItem.letterId,
+              senderName: droppedItem.senderName,
+              receivedDate: "",
+            };
+
+            handleTagTouch(orbitItem);
           }
         } else {
           console.log("드래그 범위가 아님");
