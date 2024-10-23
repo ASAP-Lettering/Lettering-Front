@@ -10,8 +10,10 @@ import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const LetterType = () => {
+  const type = getCookie("letter-tagtype");
   const [isCheckedBox, setIsCheckedBox] = useState(false); // false라면 이름만, true라면 이름과 날짜
   const router = useRouter();
+  const [isAbled, setisAbled] = useState(false);
 
   const handleBoxChange = (newCheckedState: boolean) => {
     if (!isCheckedBox || !newCheckedState) {
@@ -20,8 +22,16 @@ const LetterType = () => {
   };
 
   useEffect(() => {
-    const type = getCookie("letter-tagtype");
-    console.log(type);
+    if (type === "1" && isCheckedBox) {
+      setisAbled(true);
+    } else if (type === "2" && !isCheckedBox) {
+      setisAbled(true);
+    } else {
+      setisAbled(false);
+    }
+  }, [isCheckedBox]);
+
+  useEffect(() => {
     if (type !== null) {
       if (type === "1") {
         setIsCheckedBox(false);
@@ -75,6 +85,7 @@ const LetterType = () => {
           buttonType="primary"
           size="large"
           text="저장하기"
+          disabled={!isAbled}
           onClick={handleSumbit}
         />
       </Wrapper>
