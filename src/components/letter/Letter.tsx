@@ -9,6 +9,7 @@ import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { flipAnimation } from "@/styles/animation";
+import { useToast } from "@/hooks/useToast";
 
 type showType = "previewSend" | "previewReceive" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
@@ -57,6 +58,7 @@ const Letter = (props: LetterProps) => {
   const [isDelete, setIsDelete] = useState(false);
   const [flip, setFlip] = useState(false);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const { showToast } = useToast();
 
   /* 수정 클릭 시 등록하기 store 저장 */
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
@@ -139,6 +141,11 @@ const Letter = (props: LetterProps) => {
     } else {
       router.push("/planet");
     }
+    showToast(`${name} 님의 편지가 삭제되었어요`, {
+      icon: false,
+      close: true,
+      bottom: "80px",
+    });
   };
 
   const handleCancel = () => {
