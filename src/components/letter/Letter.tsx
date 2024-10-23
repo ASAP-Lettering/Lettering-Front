@@ -29,6 +29,7 @@ interface LetterProps {
   height?: string;
   padding?: string;
   readOnly?: boolean;
+  nextLetterId?: string;
 }
 
 const Letter = (props: LetterProps) => {
@@ -47,6 +48,7 @@ const Letter = (props: LetterProps) => {
     height,
     padding,
     readOnly = false,
+    nextLetterId,
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -132,7 +134,11 @@ const Letter = (props: LetterProps) => {
     } else {
       deleteLetter(id.toString()).then((res) => console.log(res.data));
     }
-    router.push("/planet");
+    if (nextLetterId) {
+      router.push(`/letter/${nextLetterId}`);
+    } else {
+      router.push("/planet");
+    }
   };
 
   const handleCancel = () => {

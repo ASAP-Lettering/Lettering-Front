@@ -95,6 +95,7 @@ const LetterPage = () => {
           images={letterData.images}
           date={letterData.date}
           isImage={isImage}
+          nextLetterId={letterData.next_letter?.letter_id}
         />
         {letterData.images.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
