@@ -242,7 +242,7 @@ const Tag = (props: TagProps) => {
           letterId: tagId,
           senderName: name,
         });
-      } else if (!isAtLeast200pxAboveBottom) {
+      } else if (!isAtLeast80pxAboveBottom) {
         // 태그가 부모 영역 밑에서 100px 이내에 있을 때
         console.log(
           "태그가 부모 영역의 밑에서 100px 이내에 있습니다. 이벤트를 취소합니다."
