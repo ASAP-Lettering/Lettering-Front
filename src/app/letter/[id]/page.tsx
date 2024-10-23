@@ -71,6 +71,16 @@ const LetterPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (
+      letterData &&
+      letterData?.content.length < 1 &&
+      letterData.images.length > 0
+    ) {
+      setIsImage(true);
+    }
+  }, [letterData]);
+
   return letterData ? (
     <Container>
       <Wrapper>
@@ -93,11 +103,11 @@ const LetterPage = () => {
           name={letterData.sender}
           content={letterData.content}
           images={letterData.images}
-          date={letterData.date}
           isImage={isImage}
+          date={letterData.date}
           nextLetterId={letterData.next_letter?.letter_id}
         />
-        {letterData.images.length > 0 ? (
+        {letterData.images.length > 0 && letterData.content.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
