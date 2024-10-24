@@ -123,18 +123,19 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   background: rgba(0, 0, 0, 0.7);
 `;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 393px;
   min-height: 258px;
   padding: 18px 20px;
   border-radius: 20px 20px 0px 0px;
   background: ${theme.colors.gray900};
-  position: absolute;
-  bottom: 0;
-  left: 0;
   z-index: 10;
 `;
 
