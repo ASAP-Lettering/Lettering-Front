@@ -11,10 +11,12 @@ import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
 import { droppedLetterState } from "@/recoil/letterStore";
 import BlinkTag from "./BlinkingTag";
 import { useToast } from "@/hooks/useToast";
+import { getCookie } from "@/utils/storage";
 
 interface Orbit {
   letterId: string;
   senderName: string;
+  receivedDate?: string;
   isNew?: boolean;
   date?: string;
 }
@@ -45,6 +47,7 @@ const Planet = (props: PlanetProps) => {
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [orbitId, setOrbitId] = useState<string>("");
+  const type = getCookie("letter-tagtype"); // 편지 태그 - 이름(1) / 이름과날짜(2) 구분용
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -137,16 +140,20 @@ const Planet = (props: PlanetProps) => {
                   name={orbit.senderName}
                 ></BlinkTag>
               ) : (
-                <Tag
-                  tagType="letter"
-                  name={orbit.senderName}
-                  onClick={() => {
-                    handleTagClick(orbit.letterId);
-                  }}
-                  onHold={() => {
-                    handleShowHold(orbit.letterId);
-                  }}
-                />
+                orbit.receivedDate && (
+                  <Tag
+                    tagType="letter"
+                    {...(type ? { orbitType: type } : {})}
+                    name={orbit.senderName}
+                    receivedDate={orbit.receivedDate}
+                    onClick={() => {
+                      handleTagClick(orbit.letterId);
+                    }}
+                    onHold={() => {
+                      handleShowHold(orbit.letterId);
+                    }}
+                  />
+                )
               )}
             </OrbitTag>
           );

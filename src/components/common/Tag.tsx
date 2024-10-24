@@ -4,11 +4,11 @@ import { planetRefState } from "@/recoil/RefStore";
 import { theme } from "@/styles/theme";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
-type tagType = "orbit" | "planet" | "letter" | "droppedLetter";
+type tagType = "orbit" | "planet" | "letter";
 type iconType = "chevron" | "edit" | "plus";
 
 interface TagProps {
@@ -18,6 +18,8 @@ interface TagProps {
   isNew?: boolean;
   isDeleteMode?: boolean;
   icon?: iconType;
+  orbitType?: string;
+  receivedDate?: string;
   onClick?: () => void;
   onEdit?: (editedName: string) => void;
   onHold?: () => void;
@@ -36,6 +38,8 @@ const Tag = (props: TagProps) => {
     isNew,
     isDeleteMode = false,
     icon,
+    orbitType,
+    receivedDate,
     onClick,
     onEdit,
     onHold,
@@ -70,7 +74,10 @@ const Tag = (props: TagProps) => {
       console.log("드래그 시작");
       setIsDragging(true);
       clearHoldTimeout();
-      onDragEnd({ letterId: tagId!, senderName: name! });
+      onDragEnd({
+        letterId: tagId,
+        senderName: name,
+      });
     }
   };
 
@@ -209,8 +216,7 @@ const Tag = (props: TagProps) => {
     if (planetRef && tagRef.current && tagType === "orbit") {
       const parentRect = planetRef.getBoundingClientRect();
       const tagRect = tagRef.current.getBoundingClientRect();
-      const isAtLeast200pxAboveBottom =
-        tagRect.bottom <= parentRect.bottom - 200;
+      const isAtLeast80pxAboveBottom = tagRect.bottom <= parentRect.bottom - 80;
 
       const isWithinBounds =
         tagRect.left >= parentRect.left &&
@@ -220,7 +226,7 @@ const Tag = (props: TagProps) => {
 
       if (
         isWithinBounds &&
-        isAtLeast200pxAboveBottom &&
+        isAtLeast80pxAboveBottom &&
         onTouchEnd &&
         onDragEnd &&
         tagId &&
@@ -228,9 +234,15 @@ const Tag = (props: TagProps) => {
       ) {
         // 태그가 부모 영역 내에 있고, 밑에서 100px 이상 떨어져 있을 때
         console.log("드래그한 태그가 영역 내에 있습니다.");
-        onDragEnd({ letterId: tagId, senderName: name });
-        onTouchEnd({ letterId: tagId, senderName: name });
-      } else if (!isAtLeast200pxAboveBottom) {
+        onDragEnd({
+          letterId: tagId,
+          senderName: name,
+        });
+        onTouchEnd({
+          letterId: tagId,
+          senderName: name,
+        });
+      } else if (!isAtLeast80pxAboveBottom) {
         // 태그가 부모 영역 밑에서 100px 이내에 있을 때
         console.log(
           "태그가 부모 영역의 밑에서 100px 이내에 있습니다. 이벤트를 취소합니다."
@@ -267,6 +279,7 @@ const Tag = (props: TagProps) => {
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
+      {...(orbitType ? { $orbitType: orbitType } : {})}
       onClick={onHold ? handleHoldEnd : onClick}
       ref={(el) => {
         tagRef.current = el;
@@ -288,6 +301,11 @@ const Tag = (props: TagProps) => {
           textLength={editedName?.length || 0} // 텍스트 길이 전달
           autoFocus
         />
+      ) : orbitType && receivedDate && orbitType === "2" ? (
+        <OrbitContainer>
+          <Name>{name}</Name>
+          <Date>{receivedDate}</Date>
+        </OrbitContainer>
       ) : (
         <Name>{name}</Name>
       )}
@@ -320,6 +338,7 @@ const Box = styled.div<{
   $tagType: tagType;
   $hasName?: boolean;
   $hasEditIcon?: boolean;
+  $orbitType?: string;
 }>`
   width: auto;
   display: inline-flex;
@@ -371,13 +390,12 @@ const Box = styled.div<{
       }
     `}
   
-  ${({ $tagType }) =>
-    ($tagType === "letter" || $tagType === "droppedLetter") &&
-    css`
+    ${({ $tagType, $orbitType }) =>
+      $tagType === "letter" &&
+      css`
       display: block;
       max-width: 90px;
-      height: 39px;
-      padding: 11px 15px;
+      padding: ${$orbitType === "2" ? "10px" : "11px 15px"};
       border-radius: 100px;
       background: ${theme.colors.sub01};
       ${(props) => props.theme.fonts.body07};
@@ -410,11 +428,25 @@ const NameInput = styled.input<{ textLength: number }>`
   user-select: none;
 `;
 
+const OrbitContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
 const Name = styled.span`
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-use-select: none; 
   user-select: none;
+`;
+
+const Date = styled.span`
+  color: ${theme.colors.gray300}; 
+ ${(props) => props.theme.fonts.caption03};
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none; 
+  user-select: none; 
 `;
 
 const Circle = styled.div`

@@ -9,6 +9,7 @@ import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { flipAnimation } from "@/styles/animation";
+import { useToast } from "@/hooks/useToast";
 
 type showType = "previewSend" | "previewReceive" | "receive" | "send" | "url";
 export type contentType = "one" | "all";
@@ -29,6 +30,7 @@ interface LetterProps {
   height?: string;
   padding?: string;
   readOnly?: boolean;
+  nextLetterId?: string;
 }
 
 const Letter = (props: LetterProps) => {
@@ -47,6 +49,7 @@ const Letter = (props: LetterProps) => {
     height,
     padding,
     readOnly = false,
+    nextLetterId,
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -55,6 +58,7 @@ const Letter = (props: LetterProps) => {
   const [isDelete, setIsDelete] = useState(false);
   const [flip, setFlip] = useState(false);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const { showToast } = useToast();
 
   /* 수정 클릭 시 등록하기 store 저장 */
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
@@ -132,7 +136,16 @@ const Letter = (props: LetterProps) => {
     } else {
       deleteLetter(id.toString()).then((res) => console.log(res.data));
     }
-    router.push("/planet");
+    if (nextLetterId) {
+      router.push(`/letter/${nextLetterId}`);
+    } else {
+      router.push("/planet");
+    }
+    showToast(`${name} 님의 편지가 삭제되었어요`, {
+      icon: false,
+      close: true,
+      bottom: "80px",
+    });
   };
 
   const handleCancel = () => {

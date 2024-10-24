@@ -311,34 +311,34 @@ const PlanetPage = () => {
     if (totalPages === currentPage) {
       //행성에 편지가 존재할때
       if (currentOrbits && currentOrbits?.length > 0) {
-        if (currentOrbits.length === 5) {
-          setCurrentOrbits((prevOrbits) => {
-            if (prevOrbits) {
-              const updatedOrbits = [...prevOrbits];
-              updatedOrbits.pop();
-              return [draggedItem, ...updatedOrbits];
-            }
-            return prevOrbits;
-          });
-        } else {
-          setCurrentOrbits([...currentOrbits, draggedItem]);
-        }
+        // if (currentOrbits.length === 5) {
+        //   setCurrentOrbits((prevOrbits) => {
+        //     if (prevOrbits) {
+        //       const updatedOrbits = [...prevOrbits];
+        //       updatedOrbits.pop();
+        //       return [draggedItem, ...updatedOrbits];
+        //     }
+        //     return prevOrbits;
+        //   });
+        // } else {
+        //   setCurrentOrbits([...currentOrbits, draggedItem]);
+        // }
         console.log("현재 행성에는 아이템이 있습니다.");
       } else {
         //행성에 편지가 존재하지 않을때(0개)
-        setCurrentOrbits([draggedItem]);
+        // setCurrentOrbits([draggedItem]);
         console.log("현재 행성에는 아이템이 없습니다.");
       }
     } else if (currentPage === 1) {
       //페이지는 여러장이지만 현재 위치가 1페이지일때
-      setCurrentOrbits((prevOrbits) => {
-        if (prevOrbits) {
-          const updatedOrbits = [...prevOrbits];
-          updatedOrbits.pop();
-          return [draggedItem, ...updatedOrbits];
-        }
-        return prevOrbits;
-      });
+      //   setCurrentOrbits((prevOrbits) => {
+      //     if (prevOrbits) {
+      //       const updatedOrbits = [...prevOrbits];
+      //       updatedOrbits.pop();
+      //       return [draggedItem, ...updatedOrbits];
+      //     }
+      //     return prevOrbits;
+      //   });
     } else {
       //페이지는 여러장이고, 현재 위치가 1페이지가 아닐때
       setDirection(-1);
@@ -384,11 +384,18 @@ const PlanetPage = () => {
         ) {
           console.log(
             "드래그 대상",
+            droppedItem,
             droppedItem?.letterId,
             droppedItem?.senderName
           );
           if (droppedItem) {
-            handleTagTouch(droppedItem);
+            const orbitItem: Orbit = {
+              letterId: droppedItem.letterId,
+              senderName: droppedItem.senderName,
+              receivedDate: "",
+            };
+
+            handleTagTouch(orbitItem);
           }
         } else {
           console.log("드래그 범위가 아님");

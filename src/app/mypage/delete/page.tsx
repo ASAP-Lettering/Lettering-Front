@@ -7,7 +7,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const DeleteAccount = () => {
@@ -21,6 +21,15 @@ const DeleteAccount = () => {
   ];
   const [textarea, setTextarea] = useState(""); //질문2
   const [isCheckedBox, setIsCheckedBox] = useState(false); // 체크박스
+  const [isAbled, setisAbled] = useState(false);
+
+  useEffect(() => {
+    if (selectedOption.length > 0 && textarea.length > 0 && isCheckedBox) {
+      setisAbled(true);
+    } else {
+      setisAbled(false);
+    }
+  }, [selectedOption, textarea, isCheckedBox]);
 
   const handleBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCheckedBox(e.target.checked);
@@ -83,6 +92,7 @@ const DeleteAccount = () => {
           buttonType="primary"
           size="large"
           text="탈퇴하기"
+          disabled={!isAbled}
           onClick={handleDeleteUser}
         />
       </Wrapper>

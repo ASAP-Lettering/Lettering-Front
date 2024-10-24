@@ -48,7 +48,7 @@ const LetterPage = () => {
               letter_count: res.data.letterCount,
               content: res.data.content,
               images: res.data.images,
-              date: res.data.sendDate,
+              date: res.data.receiveDate,
               templateType: res.data.templateType,
               prev_letter: res.data.prevLetter
                 ? {
@@ -70,6 +70,16 @@ const LetterPage = () => {
         });
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      letterData &&
+      letterData?.content.length < 1 &&
+      letterData.images.length > 0
+    ) {
+      setIsImage(true);
+    }
+  }, [letterData]);
 
   return letterData ? (
     <Container>
@@ -93,10 +103,11 @@ const LetterPage = () => {
           name={letterData.sender}
           content={letterData.content}
           images={letterData.images}
-          date={letterData.date}
           isImage={isImage}
+          date={letterData.date}
+          nextLetterId={letterData.next_letter?.letter_id}
         />
-        {letterData.images.length > 0 ? (
+        {letterData.images.length > 0 && letterData.content.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
@@ -109,6 +120,7 @@ const LetterPage = () => {
         <PaginationWrapper>
           {letterData.prev_letter ? (
             <Page
+              type="left"
               onClick={() =>
                 handleButtonClick(letterData.prev_letter!.letter_id)
               }
@@ -117,11 +129,12 @@ const LetterPage = () => {
               <Text>{letterData.prev_letter.sender_name}</Text>
             </Page>
           ) : (
-            <Page />
+            <Page type="center" />
           )}
           <CurrentPage>{letterData.sender}</CurrentPage>
           {letterData.next_letter ? (
             <Page
+              type="right"
               onClick={() =>
                 handleButtonClick(letterData.next_letter!.letter_id)
               }
@@ -130,7 +143,7 @@ const LetterPage = () => {
               <img src="/assets/icons/ic_arrow_right.svg" />
             </Page>
           ) : (
-            <Page />
+            <Page type="center" />
           )}
         </PaginationWrapper>
       </MainWrapper>
@@ -304,11 +317,12 @@ const PaginationWrapper = styled.div`
   gap: 24px;
 `;
 
-const Page = styled.div`
+const Page = styled.div<{ type: "left" | "center" | "right" }>`
   width: 75px;
   display: flex;
   flex-direction: row;
   cursor: pointer;
+  text-align: ${(props) => props.type};
 `;
 
 const Text = styled.div`
