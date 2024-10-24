@@ -12,7 +12,10 @@ export default function RootLayout({
           defer
           src="https://developers.kakao.com/sdk/js/kakao.min.js"
         ></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1,  maximumScale=1, user-scalable=no"
+        />
       </head>
       <body>
         <Providers>{children}</Providers>
