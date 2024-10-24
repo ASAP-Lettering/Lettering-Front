@@ -40,7 +40,7 @@ const PlanetManagePage = () => {
     };
 
     fetchSpaceList();
-  }, []);
+  }, [planets]);
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
