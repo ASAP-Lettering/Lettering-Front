@@ -16,7 +16,7 @@ import { getCookie } from "@/utils/storage";
 interface Orbit {
   letterId: string;
   senderName: string;
-  receivedDate: string;
+  receivedDate?: string;
   isNew?: boolean;
   date?: string;
 }
@@ -140,18 +140,20 @@ const Planet = (props: PlanetProps) => {
                   name={orbit.senderName}
                 ></BlinkTag>
               ) : (
-                <Tag
-                  tagType="letter"
-                  {...(type ? { orbitType: type } : {})}
-                  name={orbit.senderName}
-                  receivedDate={orbit.receivedDate}
-                  onClick={() => {
-                    handleTagClick(orbit.letterId);
-                  }}
-                  onHold={() => {
-                    handleShowHold(orbit.letterId);
-                  }}
-                />
+                orbit.receivedDate && (
+                  <Tag
+                    tagType="letter"
+                    {...(type ? { orbitType: type } : {})}
+                    name={orbit.senderName}
+                    receivedDate={orbit.receivedDate}
+                    onClick={() => {
+                      handleTagClick(orbit.letterId);
+                    }}
+                    onHold={() => {
+                      handleShowHold(orbit.letterId);
+                    }}
+                  />
+                )
               )}
             </OrbitTag>
           );
