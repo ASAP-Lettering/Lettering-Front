@@ -65,8 +65,6 @@ const SendPreviewPage = () => {
             console.log("카카오 공유 실패:", err);
           },
         });
-      } else {
-        console.log("카카오가 초기화되지 않았거나 편지 ID가 없습니다.");
       }
     } catch (error) {
       console.log("편지 전송 또는 카카오 공유 실패:", error);

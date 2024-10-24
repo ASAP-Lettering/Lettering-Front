@@ -4,6 +4,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { userState } from "@/recoil/userStore";
+import useKakaoSDK from "@/hooks/useKakaoSDK";
 
 type buttonType = "default" | "small";
 
@@ -16,33 +17,8 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   type = "default",
   letterId,
 }) => {
-  const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
-  const JS_KEY = process.env.NEXT_PUBLIC_JAVASCRIPT_KEY;
+  const isKakaoLoaded = useKakaoSDK();
   const { name } = useRecoilValue(userState);
-
-  useEffect(() => {
-    if (!JS_KEY) {
-      console.error("Kakao JavaScript key is missing");
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://developers.kakao.com/sdk/js/kakao.js";
-    script.async = true;
-
-    script.onload = () => {
-      if (window.Kakao && !window.Kakao.isInitialized()) {
-        window.Kakao.init(JS_KEY);
-        setIsKakaoLoaded(true);
-      }
-    };
-
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, [JS_KEY]);
 
   const shareToKakao = () => {
     const { Kakao, location } = window;
@@ -66,7 +42,6 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
     // });
 
     Kakao.Share.sendScrap({
-      //     requestUrl: ,
       requestUrl: location.origin + location.pathname,
       templateId: 112798,
       templateArgs: {
