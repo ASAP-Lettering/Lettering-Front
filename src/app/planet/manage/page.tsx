@@ -27,20 +27,20 @@ const PlanetManagePage = () => {
 
   const [planets, setPlanets] = useState<Planet[]>();
 
-  useEffect(() => {
-    const fetchSpaceList = async () => {
-      try {
-        const response = await getSpaceList();
-        console.log("전체 스페이스 목록 조회 성공:", response.data);
-        setPlanets(response.data.spaces);
-        setCount(response.data.spaces.length);
-      } catch (error) {
-        console.error("전체 스페이스 목록 조회 실패:", error);
-      }
-    };
+  const fetchSpaceList = async () => {
+    try {
+      const response = await getSpaceList();
+      console.log("전체 스페이스 목록 조회 성공:", response.data);
+      setPlanets(response.data.spaces);
+      setCount(response.data.spaces.length);
+    } catch (error) {
+      console.error("전체 스페이스 목록 조회 실패:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchSpaceList();
-  }, [planets]);
+  }, []);
 
   const handleClickDeleteMode = () => {
     setDeleteMode(!deleteMode);
@@ -83,6 +83,7 @@ const PlanetManagePage = () => {
         setPlanets(
           planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
         );
+        await fetchSpaceList();
       } catch (error) {
         console.error("행성 삭제 실패:", error);
       }
