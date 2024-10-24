@@ -70,10 +70,11 @@ const PlanetManagePage = () => {
 
   const handleConfirmDeletePlanet = async () => {
     if (checkedPlanets.length > 0) {
-      const firstCheckedPlanetId = checkedPlanets[0]; // 첫 번째 체크된 행성의 ID
-      const firstCheckedPlanet = planets?.find(
-        (planet) => planet.spaceId === firstCheckedPlanetId
-      );
+      const smallestIndexPlanet = planets
+        ?.filter((planet) => checkedPlanets.includes(planet.spaceId))
+        ?.reduce((prev, curr) =>
+          planets.indexOf(prev) < planets.indexOf(curr) ? prev : curr
+        );
 
       /* 행성 삭제하기 */
       try {
@@ -89,8 +90,8 @@ const PlanetManagePage = () => {
       setConfirmDeleteModal(false);
       setDeleteMode(false);
       showToast(
-        `${firstCheckedPlanet?.spaceName} ${
-          checkedPlanets.length > 0 && "외 N개"
+        `${smallestIndexPlanet?.spaceName} ${
+          checkedPlanets.length > 1 ? `외 ${checkedPlanets.length - 1}개` : ""
         } 행성과 등록된 편지들이 함께 삭제 되었어요`,
         {
           icon: false,
@@ -225,7 +226,7 @@ const PlanetManagePage = () => {
       </Container>
       {confirmDeleteModal && (
         <ConfirmModal
-          title="해당 행성를 정말 삭제할까요?"
+          title="해당 행성을 정말 삭제할까요?"
           sub="행성에 등록된 편지들도 함께 삭제됩니다."
           onConfirm={handleConfirmDeletePlanet}
           onCancel={handleCancelDeletePlanet}
