@@ -12,7 +12,7 @@ export const postSendLtter = async ({
   content: string;
   images: string[];
   templateType: number;
-  draftId: string;
+  draftId: string | null;
 }) => {
   return await authClient.post(`/api/v1/letters/send`, {
     receiverName,

@@ -73,7 +73,7 @@ const PlanetPage = () => {
       templateType: 0,
     });
     setSendState({
-      draftId: "",
+      draftId: null,
       receiverName: "",
       content: "",
       images: [] as string[],
@@ -588,28 +588,28 @@ const Container = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const Shadow = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(
-    90deg,
-    rgba(140, 160, 255, 0.5) 0%,
-    rgba(6, 8, 18, 0) 100%
-  );
-  background: #a3c6ff;
-  border-radius: 50%;
-  filter: drop-shadow(0px 0px 7.29px #a3c6ff)
-    drop-shadow(0px 0px 14.58px #a3c6ff) drop-shadow(0px 0px 51.03px #a3c6ff)
-    drop-shadow(0px 0px 102.06px #a3c6ff) drop-shadow(0px 0px 174.96px #a3c6ff)
-    drop-shadow(0px 0px 306.18px #a3c6ff);
-`;
+// const Shadow = styled.div`
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   top: 30%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+//   z-index: 0;
+//   width: 80px;
+//   height: 80px;
+//   background: linear-gradient(
+//     90deg,
+//     rgba(140, 160, 255, 0.5) 0%,
+//     rgba(6, 8, 18, 0) 100%
+//   );
+//   background: #a3c6ff;
+//   border-radius: 50%;
+//   filter: drop-shadow(0px 0px 7.29px #a3c6ff)
+//     drop-shadow(0px 0px 14.58px #a3c6ff) drop-shadow(0px 0px 51.03px #a3c6ff)
+//     drop-shadow(0px 0px 102.06px #a3c6ff) drop-shadow(0px 0px 174.96px #a3c6ff)
+//     drop-shadow(0px 0px 306.18px #a3c6ff);
+// `;
 
 const Top = styled.div`
   display: flex;

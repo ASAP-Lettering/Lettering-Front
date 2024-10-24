@@ -32,23 +32,6 @@ const SendPreviewPage = () => {
     setIsImage(!isImage);
   };
 
-  // const handleSendLetter = async () => {
-  //   /* 편지 등록 */
-  //   try {
-  //     const response = await postSendLtter({
-  //       draftId,
-  //       receiverName,
-  //       content,
-  //       images,
-  //       templateType,
-  //     });
-  //     console.log("편지 쓰기 성공");
-
-  //     setLetterId(response.data.letterCode);
-  //   } catch {
-  //     console.log("편지 쓰기 실패");
-  //   }
-  // };
   const handleSendLetterAndShare = async () => {
     /* 편지 전송 및 카카오 공유 */
     try {
