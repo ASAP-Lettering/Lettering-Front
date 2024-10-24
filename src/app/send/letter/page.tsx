@@ -78,7 +78,7 @@ const SendLetterPage = () => {
       setContent(letterState.content);
       setImages(letterState.images);
     }
-  }, [draftKey, letterState]);
+  }, [draftKey]);
 
   const handleReceiverChange = (newValue: string) => {
     setReceiver(newValue);

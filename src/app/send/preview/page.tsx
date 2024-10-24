@@ -46,25 +46,27 @@ const SendPreviewPage = () => {
         });
         console.log("편지 쓰기 성공");
         setLetterId(response.data.letterCode);
-      }
 
-      // 2. 카카오 공유 로직 실행
-      if (isKakaoLoaded && letterId) {
-        const { Kakao, location } = window;
-        Kakao.Share.sendScrap({
-          requestUrl: location.origin + location.pathname,
-          templateId: 112798,
-          templateArgs: {
-            senderName: name,
-            id: letterId,
-          },
-          success: () => {
-            router.push("/send/complete");
-          },
-          fail: (err: any) => {
-            console.log("카카오 공유 실패:", err);
-          },
-        });
+        // 2. 카카오 공유 로직 실행
+        if (isKakaoLoaded && response.data.letterCode) {
+          setTimeout(() => {
+            const { Kakao, location } = window;
+            Kakao.Share.sendScrap({
+              requestUrl: location.origin + location.pathname,
+              templateId: 112798,
+              templateArgs: {
+                senderName: name,
+                id: response.data.letterCode,
+              },
+              success: () => {
+                router.push("/send/complete");
+              },
+              fail: (err: any) => {
+                console.log("카카오 공유 실패:", err);
+              },
+            });
+          }, 1000);
+        }
       }
     } catch (error) {
       console.log("편지 전송 또는 카카오 공유 실패:", error);
