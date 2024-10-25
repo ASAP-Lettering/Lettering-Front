@@ -27,18 +27,18 @@ const PlanetManagePage = () => {
 
   const [planets, setPlanets] = useState<Planet[]>();
 
-  useEffect(() => {
-    const fetchSpaceList = async () => {
-      try {
-        const response = await getSpaceList();
-        console.log("전체 스페이스 목록 조회 성공:", response.data);
-        setPlanets(response.data.spaces);
-        setCount(response.data.spaces.length);
-      } catch (error) {
-        console.error("전체 스페이스 목록 조회 실패:", error);
-      }
-    };
+  const fetchSpaceList = async () => {
+    try {
+      const response = await getSpaceList();
+      console.log("전체 스페이스 목록 조회 성공:", response.data);
+      setPlanets(response.data.spaces);
+      setCount(response.data.spaces.length);
+    } catch (error) {
+      console.error("전체 스페이스 목록 조회 실패:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchSpaceList();
   }, []);
 
@@ -70,10 +70,11 @@ const PlanetManagePage = () => {
 
   const handleConfirmDeletePlanet = async () => {
     if (checkedPlanets.length > 0) {
-      const firstCheckedPlanetId = checkedPlanets[0]; // 첫 번째 체크된 행성의 ID
-      const firstCheckedPlanet = planets?.find(
-        (planet) => planet.spaceId === firstCheckedPlanetId
-      );
+      const smallestIndexPlanet = planets
+        ?.filter((planet) => checkedPlanets.includes(planet.spaceId))
+        ?.reduce((prev, curr) =>
+          planets.indexOf(prev) < planets.indexOf(curr) ? prev : curr
+        );
 
       /* 행성 삭제하기 */
       try {
@@ -82,6 +83,7 @@ const PlanetManagePage = () => {
         setPlanets(
           planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
         );
+        await fetchSpaceList();
       } catch (error) {
         console.error("행성 삭제 실패:", error);
       }
@@ -89,8 +91,8 @@ const PlanetManagePage = () => {
       setConfirmDeleteModal(false);
       setDeleteMode(false);
       showToast(
-        `${firstCheckedPlanet?.spaceName} ${
-          checkedPlanets.length > 0 && "외 N개"
+        `${smallestIndexPlanet?.spaceName} ${
+          checkedPlanets.length > 1 ? `외 ${checkedPlanets.length - 1}개` : ""
         } 행성과 등록된 편지들이 함께 삭제 되었어요`,
         {
           icon: false,
@@ -225,7 +227,7 @@ const PlanetManagePage = () => {
       </Container>
       {confirmDeleteModal && (
         <ConfirmModal
-          title="해당 행성를 정말 삭제할까요?"
+          title="해당 행성을 정말 삭제할까요?"
           sub="행성에 등록된 편지들도 함께 삭제됩니다."
           onConfirm={handleConfirmDeletePlanet}
           onCancel={handleCancelDeletePlanet}

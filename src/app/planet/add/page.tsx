@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -28,6 +28,7 @@ const PlanetAddPage = () => {
         templateType: templateType,
       });
       console.log("새 행성 추가 성공:", response.data);
+      console.log("templateType", templateType);
       // 추가 완료 후 페이지 이동
       router.push("/planet");
     } catch (error) {

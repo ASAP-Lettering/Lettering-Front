@@ -27,7 +27,7 @@ import { draftModalState } from "@/recoil/draftStore";
 const SendLetterPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [draftId, setDraftId] = useState<string>("");
+  const [draftId, setDraftId] = useState<string | null>(null);
   const [receiver, setReceiver] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [images, setImages] = useState<string[]>([]);
@@ -78,7 +78,7 @@ const SendLetterPage = () => {
       setContent(letterState.content);
       setImages(letterState.images);
     }
-  }, [draftKey, letterState]);
+  }, [draftKey]);
 
   const handleReceiverChange = (newValue: string) => {
     setReceiver(newValue);

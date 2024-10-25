@@ -83,7 +83,7 @@ const VerifyLetter = () => {
         .catch((error) => {
           //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
           console.log(error);
-          // router.push("/error/letter");
+          router.push("/error/letter");
         });
     }
 
@@ -206,18 +206,18 @@ const MainWrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+    width: 5px; /* Width of the scrollbar */
+  }
 
   &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
 
   &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const Header = styled.div`
