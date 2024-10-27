@@ -21,6 +21,7 @@ const SendDetailPage = () => {
   const [letterData, setLetterData] = useState<SentDetailLetterType>();
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
+  const [letterCode, setLetterCode] = useState("");
 
   const changeImageorContent = () => {
     setIsImage(!isImage);
@@ -37,6 +38,7 @@ const SendDetailPage = () => {
     try {
       const response = await getSentLetterDetail(id);
       setLetterData(response.data);
+      setLetterCode(response.data.letterCode);
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +93,7 @@ const SendDetailPage = () => {
         ) : (
           <WhiteSpace />
         )}
-        <KakaoShareButton type="small" letterId={letterId} />
+        <KakaoShareButton type="small" letterId={letterCode} />
       </MainWrapper>
     </Container>
   ) : (
