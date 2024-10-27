@@ -18,47 +18,25 @@ import styled from "styled-components";
 export default function Home() {
   const router = useRouter();
   const accessToken = getAccessToken();
-  const [isloading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!accessToken) {
       router.push("/login");
     } else {
-      setIsLoading(false);
-      //token이 유효한지 테스트용
-      if (typeof window !== "undefined") {
-        const response = getAllSpaceName();
-      }
+      router.push("/planet");
     }
   }, []);
 
-  const handleLogout = () => {
-    clearTokens();
-    clearInitUserToast();
-    router.push("/login");
-  };
-
-  //로딩 처리 화면
-  if (isloading) {
-    return (
-      <Container>
-        <LoaderContainer>
-          <Loader />
-        </LoaderContainer>
-      </Container>
-    );
-  }
-
   return (
     <Container>
-      <ButtonContainer>
+      {/* <ButtonContainer>
         <Button
           buttonType="primary"
           text="로그아웃하기"
           onClick={handleLogout}
         ></Button>
         <KakaoShareButton letterId="aa" />
-      </ButtonContainer>
+      </ButtonContainer> */}
     </Container>
   );
 }
