@@ -7,6 +7,8 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { clearTokens, removeCookie } from "@/utils/storage";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -22,6 +24,7 @@ const DeleteAccount = () => {
   const [textarea, setTextarea] = useState(""); //질문2
   const [isCheckedBox, setIsCheckedBox] = useState(false); // 체크박스
   const [isAbled, setisAbled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (selectedOption.length > 0 && textarea.length > 0 && isCheckedBox) {
@@ -39,6 +42,8 @@ const DeleteAccount = () => {
     deleteUser()
       .then((res) => {
         console.log(res.data);
+        clearTokens();
+        router.push("/login");
       })
       .catch((err) => {
         console.log(err);

@@ -69,6 +69,17 @@ const Tag = (props: TagProps) => {
     }
   };
 
+  const formatDate = (dateString: string): string => {
+    const regex = /(\d{4})-(\d{2})-(\d{2})/;
+    const match = dateString.match(regex);
+
+    if (match) {
+      return `${match[1]}.${match[2]}.${match[3]}`;
+    }
+
+    throw new Error("Invalid date format");
+  };
+
   const handleDragStart = () => {
     if (onDragEnd && tagId && name && tagType === "orbit") {
       console.log("드래그 시작");
@@ -304,7 +315,7 @@ const Tag = (props: TagProps) => {
       ) : orbitType && receivedDate && orbitType === "2" ? (
         <OrbitContainer>
           <Name>{name}</Name>
-          <Date>{receivedDate}</Date>
+          <Date>{formatDate(receivedDate)}</Date>
         </OrbitContainer>
       ) : (
         <Name>{name}</Name>

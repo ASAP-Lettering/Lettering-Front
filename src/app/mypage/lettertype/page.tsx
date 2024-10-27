@@ -38,6 +38,8 @@ const LetterType = () => {
       } else if (type === "2") {
         setIsCheckedBox(true);
       }
+    } else {
+      setCookie("letter-tagtype", "1", 300);
     }
   }, []);
 
