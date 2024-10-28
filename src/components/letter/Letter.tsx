@@ -65,12 +65,15 @@ const Letter = (props: LetterProps) => {
 
   useEffect(() => {
     setFlip(true);
+    setIsChangeImage(isImage);
     const timer = setTimeout(() => {
-      setIsChangeImage(isImage);
       setCurrentPage(0);
       setFlip(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    }, 700);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [isImage]);
 
   useEffect(() => {}, [isChangeImage]);
