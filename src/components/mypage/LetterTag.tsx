@@ -36,14 +36,14 @@ const Box = styled.button`
   width: 80px;
   display: flex;
   justify-content: center;
-  padding: 10px 20px;
+  padding: 10px 12px;
   box-sizing: border-box;
   position: relative;
   align-items: center;
   color: ${theme.colors.white};
   white-space: nowrap;
   border-radius: 41px;
-  border: 1px solid rgba(86, 92, 129, 0.00);
+  border: 1px solid rgba(86, 92, 129, 0);
   background: ${theme.colors.sub01};
 `;
 
@@ -53,8 +53,9 @@ const CheckCircle = styled.div<{ isSelected: boolean }>`
   left: -6px;
   width: 20px;
   height: 20px;
-  border: 1px solid ${(props) =>
-    props.isSelected ? props.theme.colors.white : props.theme.colors.gray700};
+  border: 1px solid
+    ${(props) =>
+      props.isSelected ? props.theme.colors.white : props.theme.colors.gray700};
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -65,13 +66,13 @@ const CheckCircle = styled.div<{ isSelected: boolean }>`
 `;
 
 const CheckImg = styled.img`
-    width: 21px;
-    height: auto;
+  width: 21px;
+  height: auto;
 `;
 
 const SenderName = styled.span`
   color: ${(props) => props.theme.colors.white};
-  max-width: 100%; 
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
