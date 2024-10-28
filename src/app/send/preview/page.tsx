@@ -51,7 +51,7 @@ const SendPreviewPage = () => {
         if (isKakaoLoaded && response.data.letterCode) {
           setTimeout(() => {
             const { Kakao, location } = window;
-            Kakao.Share.sendDefault({
+            Kakao.Share.sendScrap({
               requestUrl: location.origin + location.pathname,
               templateId: 112798,
               templateArgs: {
