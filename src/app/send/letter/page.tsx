@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { draftModalState } from "@/recoil/draftStore";
+import imageCompression from "browser-image-compression";
 
 const SendLetterPage = () => {
   const router = useRouter();
@@ -157,7 +158,12 @@ const SendLetterPage = () => {
       const imageUrls: string[] = [];
       for (const file of selectedImages) {
         try {
-          const response = await postImage(file);
+          const compressedFile = await imageCompression(file, {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 800,
+            useWebWorker: true,
+          });
+          const response = await postImage(compressedFile);
           console.log("이미지 업로드 성공", response.data);
           imageUrls.push(response.data.imageUrl);
         } catch (error) {
