@@ -184,83 +184,82 @@ export default function SendedLetterPaging() {
 const Container = styled.div<{
   $isSelecting: boolean;
 }>`
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      min-height: 100%;
-      max-height: 100%;
-      justify-content: space-between;
-     /* ${({ $isSelecting }) =>
-       $isSelecting ? "justify-content: space-between" : ""}; */
-      color: white;
-      background:${(props) => props.theme.colors.bg};
-      background-image: url("/assets/mypage/img_background.png");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      -webkit-scrollbar {
-          display: none;
-      }
-  
-  `;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  justify-content: space-between;
+  /* ${({ $isSelecting }) =>
+    $isSelecting ? "justify-content: space-between" : ""}; */
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
+  background-image: url("/assets/mypage/img_background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const MainWrapper = styled.div`
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 5px 24px;
-      height: 100%;
-      overflow-y: auto;
-      box-sizing: border-box;
-      &::-webkit-scrollbar {
-          width: 5px; /* Width of the scrollbar */
-      }
-  
-      &::-webkit-scrollbar-track {
-          background: ${(props: any) => props.theme.colors.gray800};
-          border-radius: 10px; /* Rounded corners */
-      }
-  
-      &::-webkit-scrollbar-thumb {
-          background: ${(props: any) => props.theme.colors.gray600};
-          border-radius: 10px; /* Rounded corners */
-      }
-  `;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 24px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
+`;
 
 const Header = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: end;
+  width: 100%;
+  display: flex;
+  justify-content: end;
 `;
 
 const SelectText = styled.button`
-    ${(props: any) => props.theme.fonts.body09};
-    color: ${(props: any) => props.theme.colors.gray300};
-    display: flex;
-    cursor: pointer;
-    gap: 6px;
-    align-items: center;
+  ${(props: any) => props.theme.fonts.body09};
+  color: ${(props: any) => props.theme.colors.gray300};
+  display: flex;
+  cursor: pointer;
+  gap: 6px;
+  align-items: center;
 `;
 
 const LetterGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px 28px; 
-    padding: 32px 0;
-    width: 100%;
-    place-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px 15px;
+  padding: 32px 0;
+  width: 100%;
+  place-items: center;
 `;
 
 const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;
 
 const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 10px;
-    padding: 24px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+  padding: 24px;
 `;
