@@ -62,7 +62,7 @@ const SendPreviewPage = () => {
           }, 1000);
           setTimeout(() => {
             router.push("/send/complete");
-          }, 2000);
+          }, 8000);
         }
       }
     } catch (error) {
