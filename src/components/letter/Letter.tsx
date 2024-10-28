@@ -224,7 +224,7 @@ const Letter = (props: LetterProps) => {
           contentType={contentType}
           content={isChangeImage ? images ?? [] : paginatedContent}
           setPage={setCurrentPage}
-          totalPage={totalPage ? totalPage : 0}
+          totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
           isImage={isChangeImage}
           page={currentPage}
         />
@@ -238,7 +238,7 @@ const Letter = (props: LetterProps) => {
       {contentType === "all" && totalPage > 1 && (
         <Pagination
           currentPage={currentPage}
-          totalPage={totalPage ? totalPage : 0}
+          totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
         />
       )}
     </Container>
