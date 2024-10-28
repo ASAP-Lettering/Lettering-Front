@@ -69,6 +69,7 @@ const VerifyLetter = () => {
     //accessToken이 없는 상황이라면 로그인으로
     if (!accessToken) {
       router.push(`/login?url=${url}`);
+      return;
     }
     //letterCode가 있다면 검증 진행
     if (url) {
