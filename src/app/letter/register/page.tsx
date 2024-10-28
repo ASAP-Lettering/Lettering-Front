@@ -6,13 +6,14 @@ import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import imageCompression from "browser-image-compression";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -100,8 +101,13 @@ const LetterRegisterPage = () => {
 
       const imageUrls: string[] = [];
       for (const file of selectedImages) {
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        });
         try {
-          const response = await postImage(file);
+          const response = await postImage(compressedFile);
           console.log("이미지 업로드 성공", response.data);
           imageUrls.push(response.data.imageUrl);
         } catch (error) {
