@@ -51,21 +51,18 @@ const SendPreviewPage = () => {
         if (isKakaoLoaded && response.data.letterCode) {
           setTimeout(() => {
             const { Kakao, location } = window;
-            Kakao.Share.sendScrap({
+            Kakao.Share.sendDefault({
               requestUrl: location.origin + location.pathname,
               templateId: 112798,
               templateArgs: {
                 senderName: name,
                 id: response.data.letterCode,
               },
-              success: () => {
-                router.push("/send/complete");
-              },
-              fail: (err: any) => {
-                console.log("카카오 공유 실패:", err);
-              },
             });
           }, 1000);
+          setTimeout(() => {
+            router.push("/send/complete");
+          }, 2000);
         }
       }
     } catch (error) {
