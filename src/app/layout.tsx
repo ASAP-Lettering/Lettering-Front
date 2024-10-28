@@ -5,12 +5,6 @@ export const metadata = {
   titleTemplate: "%s - 레터링",
   description:
     "다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: "no",
-  },
   icons: {
     icon: "/favicon.png",
   },
@@ -32,6 +26,10 @@ export default function RootLayout({
   return (
     <html>
       <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1,  maximumScale=1, user-scalable=no"
+        />
         <script defer src="https://developers.kakao.com/sdk/js/kakao.min.js" />
       </head>
       <body>
