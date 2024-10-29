@@ -43,6 +43,7 @@ const DeleteAccount = () => {
       .then((res) => {
         console.log(res.data);
         clearTokens();
+        removeCookie("letter-onboard");
         router.push("/login");
       })
       .catch((err) => {
