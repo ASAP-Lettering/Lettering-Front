@@ -32,16 +32,20 @@ const Profile = () => {
   const fetchUserInfo = async () => {
     try {
       const response = await getUserInfo();
-
       setEmail(response.data.email);
-      setBirthday(response.data.birthday.replace(/-/g, "."));
-      setPrevBirthday(response.data.birthday.replace(/-/g, "."));
-      console.log("회원정보 조회 성공:", response.data);
+      if (response.data.birthday) {
+        setBirthday(response.data.birthday.replace(/-/g, "."));
+        setPrevBirthday(response.data.birthday.replace(/-/g, "."));
 
-      const [year, month, day] = response.data.birthday.split("-");
-      setSelectedYear(year);
-      setSelectedMonth(parseInt(month).toString());
-      setSelectedDate(parseInt(day).toString());
+        const [year, month, day] = response.data.birthday.split("-");
+        setSelectedYear(year);
+        setSelectedMonth(parseInt(month).toString());
+        setSelectedDate(parseInt(day).toString());
+      } else {
+        setPrevBirthday("null");
+      }
+
+      console.log("회원정보 조회 성공:", response.data);
 
       setLoading(false);
     } catch (error) {
@@ -68,6 +72,12 @@ const Profile = () => {
   const popupPicker = () => {
     if (birthday && selectedDate && selectedMonth && selectedYear) {
       setPicker(!picker);
+    } else {
+      setBirthday("2004-01-01");
+      setSelectedYear("2004");
+      setSelectedMonth("01");
+      setSelectedDate("01");
+      setPicker(true);
     }
   };
 
@@ -133,7 +143,7 @@ const Profile = () => {
           <InfoName>생년월일</InfoName>
           <Input
             inputType="boxText"
-            value={birthday}
+            value={birthday ? birthday : "생년월일을 입력해주세요"}
             onChange={setBirthday}
             placeholder="BoxText Input"
             disabled={true}

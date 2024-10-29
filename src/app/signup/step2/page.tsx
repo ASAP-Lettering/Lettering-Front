@@ -59,6 +59,19 @@ const SignupStep2 = () => {
     }
   };
 
+  const skipButtonClick = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      birthday: "",
+    }));
+    if (url) {
+      router.push(`/signup/step3?url=${url}`);
+    } else {
+      router.push(`/signup/step3`);
+      console.log(user);
+    }
+  };
+
   const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
   const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
   const days = Array.from(
@@ -88,7 +101,7 @@ const SignupStep2 = () => {
         <NavigatorBar
           cancel={false}
           nextlabel={true}
-          nextClick={() => handleButtonClick()}
+          nextClick={() => skipButtonClick()}
         />
         <Header>
           <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
