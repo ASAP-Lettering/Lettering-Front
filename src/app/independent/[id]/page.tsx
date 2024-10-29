@@ -33,6 +33,16 @@ const IndependentLetterPage = () => {
   };
 
   useEffect(() => {
+    if (
+      letterData &&
+      letterData?.content.length < 1 &&
+      letterData.images.length > 0
+    ) {
+      setIsImage(true);
+    }
+  }, [letterData]);
+
+  useEffect(() => {
     //LetterData 받아오는 로직
     if (id && accessToken) {
       const letterId = Array.isArray(id) ? id[0] : id;
@@ -74,7 +84,7 @@ const IndependentLetterPage = () => {
           date={letterData.sendDate}
           isImage={isImage}
         />
-        {letterData.images.length > 0 ? (
+        {letterData.images.length > 0 && letterData.content.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
