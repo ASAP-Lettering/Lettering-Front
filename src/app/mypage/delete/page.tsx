@@ -27,16 +27,22 @@ const DeleteAccount = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (selectedOption.length > 0 && textarea.length > 0 && isCheckedBox) {
+    if (selectedOption.length > 0 && isCheckedBox) {
       setisAbled(true);
     } else {
       setisAbled(false);
     }
-  }, [selectedOption, textarea, isCheckedBox]);
+  }, [selectedOption, isCheckedBox]);
 
   const handleBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCheckedBox(e.target.checked);
   };
+
+  useEffect(() => {
+    if (textarea.length > 500) {
+      setTextarea(textarea.substring(0, 500));
+    }
+  }, [textarea]);
 
   const handleDeleteUser = () => {
     deleteUser()
