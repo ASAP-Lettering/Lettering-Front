@@ -213,9 +213,11 @@ const Letter = (props: LetterProps) => {
       {(showType === "previewReceive" || showType === "previewSend") && (
         <>
           <TopPreviewContainer $contentType={contentType}>
-            <Name $showType={showType} $contentType={contentType}>
-              {`${showType === "previewSend" ? `To. ` : `From. `} ${name}`}
-            </Name>
+            {name && (
+              <Name $showType={showType} $contentType={contentType}>
+                {`${showType === "previewSend" ? `To. ` : `From. `} ${name}`}
+              </Name>
+            )}
           </TopPreviewContainer>
         </>
       )}
