@@ -152,6 +152,9 @@ const PlanetPage = () => {
       console.error("메인 ID 조회 실패:", error);
       setSpaceInfo(null);
       setIsLoading(false);
+
+      /* 메인 ID 없을 경우 회원 탈퇴로 간주 */
+      router.push("/login");
     }
   };
 
