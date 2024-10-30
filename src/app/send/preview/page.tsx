@@ -107,6 +107,7 @@ const SendPreviewPage = () => {
             buttonType="primary"
             text="카카오로 편지 보내기"
             onClick={handleSendLetterAndShare}
+            disabled={!receiverName || !content}
           >
             <Image
               src="/assets/icons/ic_kakao_talk.svg"

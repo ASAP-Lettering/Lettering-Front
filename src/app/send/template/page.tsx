@@ -19,10 +19,10 @@ const SendTemplatePage = () => {
 
   const [template, setTemplate] = useState<number>(templateType || 0);
   const totalPage = 10;
+
   /* SSR 완료 시 상태 업데이트 */
   const setSsrCompleted = useSsrComplectedState();
 
-  // SSR 완료 후에 상태를 업데이트
   useEffect(() => {
     if (typeof window !== "undefined") {
       setSsrCompleted();
