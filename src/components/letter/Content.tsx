@@ -37,7 +37,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             {isImage ? (
               <ImageContainer src={content[0]} />
             ) : (
-              <ClampedText contentType={contentType}>{content}</ClampedText>
+              <ClampedText $contentType={contentType}>{content}</ClampedText>
             )}
           </ContentItem>
         ) : (
@@ -48,7 +48,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
               </ContentItem>
             ) : (
               <ContentItem key={index}>
-                <ClampedText contentType={contentType}>{item}</ClampedText>
+                <ClampedText $contentType={contentType}>{item}</ClampedText>
               </ContentItem>
             )
           )
@@ -125,14 +125,14 @@ const ImageContainer = styled.div<{ src: string }>`
   -o-user-drag: none;
 `;
 
-const ClampedText = styled.div<{ contentType: contentType }>`
+const ClampedText = styled.div<{ $contentType: contentType }>`
   width: 100%;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 
-  ${({ contentType }) =>
-    contentType === "one"
+  ${({ $contentType }) =>
+    $contentType === "one"
       ? css`
           -webkit-line-clamp: 7;
           text-overflow: ellipsis;

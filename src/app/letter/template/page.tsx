@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -9,8 +9,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
+import {
+  registerLetterState,
+  useSsrComplectedState,
+} from "@/recoil/letterStore";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -23,6 +25,13 @@ const LetterTemplatePage = () => {
 
   const [template, setTemplateType] = useState<number>(templateType || 0);
   const totalPage = 10;
+
+  /* SSR 완료 시 상태 업데이트 */
+  const setSsrCompleted = useSsrComplectedState();
+
+  useEffect(() => {
+    setSsrCompleted();
+  }, [setSsrCompleted]);
 
   const hanleChangeTemplate = (id: number) => {
     setTemplateType(id);
@@ -73,6 +82,7 @@ const LetterTemplatePage = () => {
           <TemplatesList>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
               <TemplateImage
+                key={item}
                 src={`/assets/letter/background_${item}.png`}
                 width={70}
                 height={70}
@@ -101,19 +111,7 @@ const LetterTemplatePage = () => {
   );
 };
 
-export default function LetterTemplatePaging() {
-  return (
-    <Suspense
-      fallback={
-        <LoaderContainer>
-          <Loader />
-        </LoaderContainer>
-      }
-    >
-      <LetterTemplatePage />
-    </Suspense>
-  );
-}
+export default LetterTemplatePage;
 
 const Layout = styled.div`
   width: 100%;
