@@ -73,7 +73,6 @@ const TooltipContainer = styled.div<{
   $padding?: string;
 }>`
   width: calc(100% - 50px);
-  height: 46px;
   padding: ${({ $padding }) => ($padding ? $padding : "8px 14px")};
   display: flex;
   justify-content: space-between;

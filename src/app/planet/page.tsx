@@ -88,7 +88,7 @@ const PlanetPage = () => {
       setCountLetter(response.data.letterCount);
       setCurrentOrbits(response.data.content);
       setIsLoading(false);
-      if (response.data.count < 3 && getInitUserToast() !== "true") {
+      if (response.data.letterCount < 3 && getInitUserToast() !== "true") {
         setShowTooltip(true);
         setInitUserToast();
       }
@@ -510,14 +510,6 @@ const PlanetPage = () => {
                     setChange={setChange}
                   />
                 </SliderWrapper>
-                {showTooltip && (
-                  <Tooltip
-                    message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
-                    close={true}
-                    bottom="225px"
-                    onClose={() => setShowTooltip(false)}
-                  />
-                )}
                 <PageWrapper>
                   <Pagination
                     currentPage={currentPage}
@@ -535,6 +527,14 @@ const PlanetPage = () => {
                   onOrbitTouch={handleTagTouch}
                 />
               </BottomWrapper>
+              {showTooltip && (
+                <Tooltip
+                  message="궤도에 있는 편지들을 끌어 당겨 행성으로 옮길 수 있어요"
+                  close={true}
+                  bottom="230px"
+                  onClose={() => setShowTooltip(false)}
+                />
+              )}
             </Container>
           </>
         )}
