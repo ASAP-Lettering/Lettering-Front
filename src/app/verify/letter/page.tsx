@@ -50,7 +50,7 @@ const VerifyLetter = () => {
     } catch (error) {
       //검증 완료된 사용자이지만 모종의 이유로 데이터 받아오는 것이 실패한 경우
       console.error("편지 조회 실패:", error);
-      router.push(`/error/network?url=${url}`);
+      router.push(`/error/network`);
     }
   };
 
@@ -68,7 +68,7 @@ const VerifyLetter = () => {
   useEffect(() => {
     //accessToken이 없는 상황이라면 로그인으로
     if (!accessToken) {
-      router.push(`/login?url=${url}`);
+      router.push(url ? `/login?url=${url}` : `/login`);
       return;
     }
     //letterCode가 있다면 검증 진행
@@ -84,7 +84,7 @@ const VerifyLetter = () => {
         .catch((error) => {
           //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
           console.log(error);
-          router.push("/error/letter");
+          router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
         });
     }
 
