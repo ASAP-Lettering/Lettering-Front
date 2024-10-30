@@ -73,6 +73,7 @@ const StyledButton = styled.button<{
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.button01};
   transition: color 200ms, opacity 300ms;
+  user-select: none;
 
   ${({ $size }) =>
     $size === "small" &&

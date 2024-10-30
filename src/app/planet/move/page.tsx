@@ -53,18 +53,21 @@ const PlanetMovePage = () => {
   };
 
   const handleMovePlanet = async () => {
-    /* 편지 다른 행성으로 이동하기 */
+    /* 편지 다른 행성 또는 궤도로 이동하기 */
     if (letterId) {
-      if (checkedPlanet) {
-        try {
+      try {
+        // 우선, 편지 궤도(독립 편지)로 보내기
+        await putLetterToIndep(letterId);
+        console.log("편지 궤도 보내기 성공");
+
+        // checkedPlanet가 있을 경우, 다른 행성으로 이동
+        if (checkedPlanet) {
           await putLetterToPlanet({
             letterId: letterId,
             spaceId: checkedPlanet,
           });
           console.log("편지 다른 행성 이동 성공");
-          router.push("/planet");
 
-          // 토스트 메세지
           showToast(
             `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
             {
@@ -74,17 +77,7 @@ const PlanetMovePage = () => {
               bottom: "230px",
             }
           );
-        } catch {
-          console.log("편지 다른 행성 이동 실패");
-        }
-      } else {
-        /* 편지 궤도(독립 편지)로 보내기 */
-        try {
-          await putLetterToIndep(letterId);
-          console.log("편지 궤도 보내기 성공");
-          router.push("/planet");
-
-          // 토스트 메세지
+        } else {
           showToast(
             `${name} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
             {
@@ -94,9 +87,11 @@ const PlanetMovePage = () => {
               bottom: "230px",
             }
           );
-        } catch {
-          console.log("편지 궤도 보내기 실패");
         }
+
+        router.push("/planet");
+      } catch (error) {
+        console.log("편지 이동 실패", error);
       }
     }
   };
@@ -251,6 +246,7 @@ const Small = styled.div`
   text-align: center;
   color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.caption03}
+  white-space: nowrap;
 `;
 
 const ButtonWrapper = styled.div`

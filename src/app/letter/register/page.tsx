@@ -12,8 +12,8 @@ import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
 import imageCompression from "browser-image-compression";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterRegisterPage = () => {
   const router = useRouter();

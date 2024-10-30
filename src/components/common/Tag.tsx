@@ -139,7 +139,7 @@ const Tag = (props: TagProps) => {
       clearTimeout(holdTimeout.current);
       setIsHoldTriggered(false);
     }
-    if (!isHoldTriggered && onClick) {
+    if (!isHoldTriggered && !isDeleteMode && onClick) {
       onClick();
     }
   };
@@ -285,13 +285,19 @@ const Tag = (props: TagProps) => {
   //     if (tagType === "letter") console.log(isHoldTriggered);
   //   }, [isHoldTriggered]);
 
+  const handleBoxClick = () => {
+    if (!isDeleteMode && onClick) {
+      onClick();
+    }
+  };
+
   return (
     <Box
       $tagType={tagType}
       $hasName={!!name}
       $hasEditIcon={icon === "edit"}
       {...(orbitType ? { $orbitType: orbitType } : {})}
-      onClick={onHold ? handleHoldEnd : onClick}
+      onClick={onHold ? handleHoldEnd : handleBoxClick}
       ref={(el) => {
         tagRef.current = el;
         if (innerRef) innerRef(el);
@@ -381,9 +387,8 @@ const Box = styled.div<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${
-        $hasEditIcon &&
-        css`
+      ${$hasEditIcon &&
+      css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -391,19 +396,16 @@ const Box = styled.div<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `
-      }
-      ${
-        $hasName === false &&
-        css`
+      `}
+      ${$hasName === false &&
+      css`
         padding: 7.5px 13px 7.5px 13px;
-      `
-      }
+      `}
     `}
   
     ${({ $tagType, $orbitType }) =>
-      $tagType === "letter" &&
-      css`
+    $tagType === "letter" &&
+    css`
       display: block;
       max-width: 90px;
       padding: ${$orbitType === "2" ? "10px" : "11px 15px"};
@@ -435,29 +437,29 @@ const NameInput = styled.input<{ textLength: number }>`
 
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-use-select: none; 
+  -ms-use-select: none;
   user-select: none;
 `;
 
 const OrbitContainer = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Name = styled.span`
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-use-select: none; 
+  -ms-use-select: none;
   user-select: none;
 `;
 
 const Date = styled.span`
-  color: ${theme.colors.gray300}; 
- ${(props) => props.theme.fonts.caption03};
+  color: ${theme.colors.gray300};
+  ${(props) => props.theme.fonts.caption03};
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-use-select: none; 
-  user-select: none; 
+  -ms-use-select: none;
+  user-select: none;
 `;
 
 const Circle = styled.div`

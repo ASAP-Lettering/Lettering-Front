@@ -13,7 +13,6 @@ const SendCompletePage = () => {
   const router = useRouter();
 
   const { receiverName } = useRecoilValue(sendLetterState);
-  const resetLetterState = useResetRecoilState(sendLetterState);
 
   return (
     <Layout>
@@ -39,7 +38,6 @@ const SendCompletePage = () => {
           text="홈으로 돌아가기"
           onClick={() => {
             router.push("/planet");
-            resetLetterState();
           }}
         />
       </ButtonWrapper>

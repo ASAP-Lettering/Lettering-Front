@@ -1,13 +1,13 @@
 "use client";
 
-import { deleteUser } from "@/api/mypage/user";
+import { deleteUser, logout } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { clearTokens, removeCookie } from "@/utils/storage";
+import { clearTokens, getRefreshToken, removeCookie } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -56,6 +56,31 @@ const DeleteAccount = () => {
         console.log(err);
       });
   };
+
+  // 테스트 해본 코드
+  // const handleDeleteUser = async () => {
+  //   try {
+  //     // 회원 탈퇴 요청
+  //     const res = await deleteUser();
+  //     console.log(res.data);
+
+  //     // 로그아웃 요청을 위해 refreshToken 가져오기
+  //     const refreshToken = getRefreshToken();
+
+  //     if (refreshToken) {
+  //       // 서버 로그아웃 요청
+  //       const logoutRes = await logout(refreshToken);
+  //       console.log(logoutRes.data);
+  //     }
+
+  //     clearTokens();
+  //     removeCookie("letter-onboard");
+
+  //     router.push("/login");
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   return (
     <Container>
@@ -127,76 +152,76 @@ export default function SendedLetterPaging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    justify-content: space-between;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  justify-content: space-between;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 5px 24px;
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+  display: flex;
+  flex-direction: column;
+  padding: 5px 24px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar */
+  }
 
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;
 
 const MainTitle = styled.div`
-    ${(props: any) => props.theme.fonts.title01};
-    color: ${(props: any) => props.theme.colors.white};
-    padding: 9px 0;
+  ${(props: any) => props.theme.fonts.title01};
+  color: ${(props: any) => props.theme.colors.white};
+  padding: 9px 0;
 `;
 
 const SubTitle = styled.div`
-    ${(props: any) => props.theme.fonts.body08};
-    color: ${(props: any) => props.theme.colors.white};
-    margin-bottom: 35px;
+  ${(props: any) => props.theme.fonts.body08};
+  color: ${(props: any) => props.theme.colors.white};
+  margin-bottom: 35px;
 `;
 
 const QuestionText = styled.div`
-    ${(props: any) => props.theme.fonts.subtitle};
-    color: ${(props: any) => props.theme.colors.white}; 
-    display : flex;
-    justify-content: space-between;
+  ${(props: any) => props.theme.fonts.subtitle};
+  color: ${(props: any) => props.theme.colors.white};
+  display: flex;
+  justify-content: space-between;
 
-    //글자수
-    span {
-        display: flex;
-        text-align: center;
-        align-items: center;
-        ${(props: any) => props.theme.fonts.caption03};
-        color: ${(props: any) => props.theme.colors.white}; 
-    }
+  //글자수
+  span {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    ${(props: any) => props.theme.fonts.caption03};
+    color: ${(props: any) => props.theme.colors.white};
+  }
 `;
 
 const QuestionWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    gap: 12px;
-    padding: 20px 0;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
 `;
