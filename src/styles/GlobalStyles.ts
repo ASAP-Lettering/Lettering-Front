@@ -55,6 +55,13 @@ button {
   cursor:pointer;
   border: none;
   background: transparent;
+  
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select:none;
+
 }
 
 input, textarea {

@@ -109,6 +109,12 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   z-index: 10;
+
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 `;
 
 const Top = styled.div`

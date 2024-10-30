@@ -246,6 +246,7 @@ const Small = styled.div`
   text-align: center;
   color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.caption03}
+  white-space: nowrap;
 `;
 
 const ButtonWrapper = styled.div`
