@@ -154,7 +154,7 @@ const PlanetPage = () => {
       setIsLoading(false);
 
       /* 메인 ID 없을 경우 회원 탈퇴로 간주 */
-      router.push("/login");
+      // router.push("/login");
     }
   };
 
