@@ -26,11 +26,14 @@ export default function RootLayout({
   return (
     <html>
       <head>
+        <script
+          defer
+          src="https://developers.kakao.com/sdk/js/kakao.min.js"
+        ></script>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1,  maximumScale=1, user-scalable=no"
+          content="width=device-width, initial-scale=1, maximumScale=1, user-scalable=no"
         />
-        <script defer src="https://developers.kakao.com/sdk/js/kakao.min.js" />
       </head>
       <body>
         <script

@@ -149,6 +149,10 @@ const SendLetterPage = () => {
               .map((file) => URL.createObjectURL(file)),
           ];
           setImages(newImages);
+          setLetterState((prevState) => ({
+            ...prevState,
+            images: newImages,
+          }));
           return;
         }
       }
@@ -171,6 +175,10 @@ const SendLetterPage = () => {
         }
       }
       setImages((prevImages) => [...prevImages, ...imageUrls]);
+      setLetterState((prevState) => ({
+        ...prevState,
+        images: [...(prevState.images || []), ...imageUrls],
+      }));
     }
   };
 
