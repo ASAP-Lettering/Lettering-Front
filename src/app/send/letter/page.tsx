@@ -183,6 +183,10 @@ const SendLetterPage = () => {
 
   /* 임시 저장 */
   const handleSaveLetter = async () => {
+    if (!receiver || !content) {
+      return;
+    }
+
     try {
       setIsLoading(true);
       // 1. 임시 저장 키 발급
@@ -243,17 +247,19 @@ const SendLetterPage = () => {
     }
   };
 
-  const handleConfirmModal = () => {
+  const handleCancelModal = () => {
     setDraftModal({ id: draftModal.id, isOpen: !draftModal.isOpen });
   };
 
   const handleSelect = async () => {
     if (!draftModal.id) return;
-    handleSaveLetter();
+    await handleSaveLetter();
+
     try {
       const response = await getDraftLetter(draftModal.id);
       console.log("임시 저장 조회 성공", response.data);
 
+      console.log("상태 변경됨");
       setLetterState({
         draftId: response.data.draftKey,
         receiverName: response.data.receiverName,
@@ -262,6 +268,12 @@ const SendLetterPage = () => {
         templateType: 0,
       });
 
+      // 각 input 상태 업데이트
+      setDraftId(response.data.draftKey);
+      setReceiver(response.data.receiverName);
+      setContent(response.data.content);
+      setImages(response.data.images);
+
       // 모달 닫기
       setDraftModal({ id: null, isOpen: false });
       setIsDraftBottom(false);
@@ -269,6 +281,16 @@ const SendLetterPage = () => {
       console.log("임시 저장 조회 실패");
     }
   };
+
+  useEffect(() => {
+    if (letterState) {
+      setDraftId(letterState.draftId);
+      setReceiver(letterState.receiverName);
+      setContent(letterState.content);
+      setImages(letterState.images);
+    }
+  }, [letterState]);
+
   return (
     <Layout>
       <NavigatorBarWrapper>
@@ -383,7 +405,7 @@ const SendLetterPage = () => {
         <ConfirmModal
           title={`작성 중인 편지를 임시저장하고\n선택한 편지를 불러올까요?`}
           onConfirm={handleSelect}
-          onCancel={handleConfirmModal}
+          onCancel={handleCancelModal}
           confirmText="불러오기"
           cancelText="취소"
         />
