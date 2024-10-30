@@ -50,7 +50,7 @@ const VerifyLetter = () => {
     } catch (error) {
       //검증 완료된 사용자이지만 모종의 이유로 데이터 받아오는 것이 실패한 경우
       console.error("편지 조회 실패:", error);
-      router.push("/error/network");
+      router.push(`/error/network?url=${url}`);
     }
   };
 
