@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -13,6 +13,7 @@ import { registerLetterState } from "@/recoil/letterStore";
 import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
 import imageCompression from "browser-image-compression";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -27,13 +28,6 @@ const LetterRegisterPage = () => {
   const searchParams = useSearchParams();
   const letterId = searchParams.get("letterId");
   const independent = searchParams.get("independent");
-
-  /* SSR 완료 시 상태 업데이트 */
-  // const setSsrCompleted = useSsrComplectedState();
-
-  // useEffect(() => {
-  //   setSsrCompleted();
-  // }, [setSsrCompleted]);
 
   useEffect(() => {
     if (letterState) {
@@ -245,7 +239,19 @@ const LetterRegisterPage = () => {
   );
 };
 
-export default LetterRegisterPage;
+export default function LetterRegisterPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <LetterRegisterPage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;
