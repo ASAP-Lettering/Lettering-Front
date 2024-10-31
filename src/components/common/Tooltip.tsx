@@ -36,6 +36,9 @@ const Tooltip = (props: ToolTipProps) => {
       setIsVisible(true);
     }, 1000);
   }, []);
+
+  const [firstLine, secondLine] = message.split("\n");
+
   return (
     shouldRender && (
       <TooltipContainer
@@ -46,7 +49,10 @@ const Tooltip = (props: ToolTipProps) => {
         $right={right}
         $padding={padding}
       >
-        <Message>{message}</Message>
+        <Message>
+          <span>{firstLine}</span>
+          {secondLine && <span className="second-line">{secondLine}</span>}
+        </Message>
         {close && (
           <CloseButton onClick={handleClose}>
             <Image
@@ -72,7 +78,9 @@ const TooltipContainer = styled.div<{
   $right?: string;
   $padding?: string;
 }>`
-  width: calc(100% - 50px);
+  max-width: calc(100% - 50px);
+  min-width: 280px;
+  width: auto;
   padding: ${({ $padding }) => ($padding ? $padding : "8px 14px")};
   display: flex;
   justify-content: space-between;
@@ -111,11 +119,24 @@ const TooltipContainer = styled.div<{
 `;
 
 const Message = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
+  display: inline;
+  white-space: nowrap;
+
+  span {
+    display: inline;
+  }
+
+  .second-line {
+    display: inline;
+  }
+
+  @media (max-width: 380px) {
+    white-space: normal;
+
+    .second-line {
+      display: block; /* 공간이 부족할 때 줄바꿈 */
+    }
+  }
 `;
 
 const CloseButton = styled.button`
