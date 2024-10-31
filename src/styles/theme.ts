@@ -134,11 +134,11 @@ const fonts = {
 
 export const links = {
   personal:
-    "https://sparkling-streetcar-d42.notion.site/Lettering-a4a1bfc211c147ab92b4b1a43b71d2c9",
+    "https://purrfect-place-f01.notion.site/Lettering-11cf1d47368f8173a392e5c36d67a26d?pvs=74",
   service:
-    "https://sparkling-streetcar-d42.notion.site/4993fe0fe9204fb6806ce6422aa686b2",
+    "https://purrfect-place-f01.notion.site/11cf1d47368f812cbb0aeaf81806e635",
   marketing:
-    "https://sparkling-streetcar-d42.notion.site/0178d3b682e54799952075c4364e8994",
+    "https://purrfect-place-f01.notion.site/11cf1d47368f81209dc0cb87132629e2?pvs=74",
 };
 
 export type ColorsTypes = typeof colors;
