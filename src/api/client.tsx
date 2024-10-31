@@ -83,12 +83,12 @@ authClient.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     } else {
-      // const accessToken = getAccessToken();
-      // if (!accessToken) {
-      // window.location.href = "/login";
-      // } else {
-      //window.location.href = "/error";
-      // }
+      const accessToken = getAccessToken();
+      if (!accessToken) {
+        window.location.href = "/login";
+      } else {
+        //window.location.href = "/error";
+      }
     }
     return Promise.reject(error);
   }
