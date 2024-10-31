@@ -162,20 +162,6 @@ const Tag = (props: TagProps) => {
     return "";
   };
 
-  //ref끼리 겹치는 영역 계산
-  const getOverlapArea = (rect1: DOMRect, rect2: DOMRect) => {
-    const x_overlap = Math.max(
-      0,
-      Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left)
-    );
-    const y_overlap = Math.max(
-      0,
-      Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top)
-    );
-    const overlapArea = x_overlap * y_overlap;
-    return overlapArea;
-  };
-
   //모바일 터치 드래그
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (tagType === "letter") {
@@ -200,9 +186,13 @@ const Tag = (props: TagProps) => {
     console.log("터치 움직임");
     if (startPosition) {
       const touch = e.touches[0];
-      const deltaX = touch.clientX - startPosition.x;
+      console.log(startPosition.x);
+      const deltaX = touch.clientX - 60;
       const deltaY = touch.clientY - startPosition.y;
-      setTranslate({ x: deltaX, y: deltaY });
+      setTranslate({
+        x: touch.clientX - startPosition.x,
+        y: touch.clientY - startPosition.y,
+      });
 
       if (tagRef.current) {
         tagRef.current.style.zIndex = "999999";
@@ -387,8 +377,9 @@ const Box = styled.div<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${$hasEditIcon &&
-      css`
+      ${
+        $hasEditIcon &&
+        css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -396,16 +387,19 @@ const Box = styled.div<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `}
-      ${$hasName === false &&
-      css`
+      `
+      }
+      ${
+        $hasName === false &&
+        css`
         padding: 7.5px 13px 7.5px 13px;
-      `}
+      `
+      }
     `}
   
     ${({ $tagType, $orbitType }) =>
-    $tagType === "letter" &&
-    css`
+      $tagType === "letter" &&
+      css`
       display: block;
       max-width: 90px;
       padding: ${$orbitType === "2" ? "10px" : "11px 15px"};
