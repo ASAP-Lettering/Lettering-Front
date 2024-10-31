@@ -106,30 +106,30 @@ const VerifyLetter = () => {
     //accessToken이 없는 상황이라면 로그인으로
 
     //letterCode가 있다면 검증 진행
-    if (url) {
-      verifyLetter(url)
-        .then((res) => {
-          if (res.data.letterId) {
-            //검증 성공하면 letterData를 받아온다
-            setletterId(res.data.letterId);
-            fetchLetterData(res.data.letterId);
-          }
-        })
-        .catch((error) => {
-          //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
-          console.log(error);
-          router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
-        });
-    }
+    // if (url) {
+    //   verifyLetter(url)
+    //     .then((res) => {
+    //       if (res.data.letterId) {
+    //         //검증 성공하면 letterData를 받아온다
+    //         setletterId(res.data.letterId);
+    //         fetchLetterData(res.data.letterId);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
+    //       console.log(error);
+    //       router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
+    //     });
+    // }
 
-    if (letterData === null) {
-      //LetterData 받아오는 로직
-      for (let i = 0; i < LETTER_DATA.length; i++) {
-        if (LETTER_DATA[i].url === url) {
-          setLetterData(LETTER_DATA[i]);
-        }
-      }
-    }
+    // if (letterData === null) {
+    //   //LetterData 받아오는 로직
+    //   for (let i = 0; i < LETTER_DATA.length; i++) {
+    //     if (LETTER_DATA[i].url === url) {
+    //       setLetterData(LETTER_DATA[i]);
+    //     }
+    //   }
+    // }
     setIsLoading(false);
   }, []);
 
