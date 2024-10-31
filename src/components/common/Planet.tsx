@@ -110,6 +110,11 @@ const Planet = (props: PlanetProps) => {
     setConfirmDeleteModal(false);
   };
 
+  // 컴포넌트에서 이미지 컨텍스트 메뉴 방지
+  const handleContextMenu = (e: React.MouseEvent<HTMLImageElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <Container>
       <PlanetImage
@@ -118,6 +123,7 @@ const Planet = (props: PlanetProps) => {
         height={400}
         alt="planet"
         priority
+        onContextMenu={handleContextMenu}
       />
       {/* <Shadow /> */}
       {orbits &&
@@ -209,7 +215,9 @@ const PlanetImage = styled(Image)`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  //드래그방지
+
+  touch-action: none;
+  pointer-events: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -219,6 +227,7 @@ const PlanetImage = styled(Image)`
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
+  -webkit-touch-callout: none;
 `;
 
 const Shadow = styled.div`

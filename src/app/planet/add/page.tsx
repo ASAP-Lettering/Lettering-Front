@@ -53,7 +53,7 @@ const PlanetAddPage = () => {
         </Column>
         <Label>원하는 행성의 종류를 선택해주세요 *</Label>
         <PlanetWrapper>
-          <Image
+          <PlanetImage
             src={`/assets/images/planet/planet${templateType}.png`}
             width={200}
             height={200}
@@ -123,6 +123,21 @@ const Add = styled.div`
 const PlanetWrapper = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const PlanetImage = styled(Image)`
+  touch-action: none;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  -webkit-touch-callout: none;
 `;
 
 const ButtonWrapper = styled.div`
