@@ -70,7 +70,7 @@ const VerifyLetter = () => {
     const checkMainIdAndVerify = async () => {
       try {
         // 메인 ID 조회를 통한 회원 검증 (탈퇴회원 포함)
-        //await getMainId();
+        await getMainId();
 
         // letterCode가 있을 경우 추가 검증 진행
         if (url) {
@@ -89,33 +89,37 @@ const VerifyLetter = () => {
       } catch (error) {
         // 메인 ID 조회 실패 시 로그인 페이지로 이동
         console.error("유효한 회원이 아닌 것으로 판단:", error);
-        router.push(url ? `/login?url=${url}` : "/login");
+        if (url) {
+          router.push(`/login?url=${url}`);
+        } else {
+          router.push(`/login`);
+        }
       }
     };
 
-    checkMainIdAndVerify();
-    // //accessToken이 없는 상황이라면 로그인으로
-    // if (!accessToken) {
-    //   router.push(url ? `/login?url=${url}` : `/login`);
-    //   return;
-    // }
+    //checkMainIdAndVerify();
+    //accessToken이 없는 상황이라면 로그인으로
+    if (!accessToken) {
+      router.push(url ? `/login?url=${url}` : `/login`);
+      return;
+    }
 
-    // //letterCode가 있다면 검증 진행
-    // if (url) {
-    //   verifyLetter(url)
-    //     .then((res) => {
-    //       if (res.data.letterId) {
-    //         //검증 성공하면 letterData를 받아온다
-    //         setletterId(res.data.letterId);
-    //         fetchLetterData(res.data.letterId);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
-    //       console.log(error);
-    //       router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
-    //     });
-    // }
+    //letterCode가 있다면 검증 진행
+    if (url) {
+      verifyLetter(url)
+        .then((res) => {
+          if (res.data.letterId) {
+            //검증 성공하면 letterData를 받아온다
+            setletterId(res.data.letterId);
+            fetchLetterData(res.data.letterId);
+          }
+        })
+        .catch((error) => {
+          //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
+          console.log(error);
+          router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
+        });
+    }
 
     if (letterData === null) {
       //LetterData 받아오는 로직
