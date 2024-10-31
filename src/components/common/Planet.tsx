@@ -47,6 +47,7 @@ const Planet = (props: PlanetProps) => {
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [orbitId, setOrbitId] = useState<string>("");
+  const [senderName, setSenderName] = useState<string>("");
   const type = getCookie("letter-tagtype"); // 편지 태그 - 이름(1) / 이름과날짜(2) 구분용
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
@@ -59,8 +60,15 @@ const Planet = (props: PlanetProps) => {
     router.push(`/letter/${id}`);
   };
 
+  const findSenderName = (orbitId: string, orbits?: Orbit[]) => {
+    const orbit = orbits?.find((orbit) => orbit.letterId === orbitId);
+    return orbit ? orbit.senderName : undefined;
+  };
+
   const handleShowHold = (orbitId: string) => {
+    const senderName = findSenderName(orbitId, orbits);
     setOrbitId(orbitId);
+    setSenderName(senderName ?? "");
     setHold(!hold);
   };
 
@@ -70,7 +78,7 @@ const Planet = (props: PlanetProps) => {
 
   const handleMoveButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    router.push(`/planet/move?letter=${orbitId}`);
+    router.push(`/planet/move?letter=${orbitId}&senderName=${senderName}`);
   };
 
   const handleDeleteButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {

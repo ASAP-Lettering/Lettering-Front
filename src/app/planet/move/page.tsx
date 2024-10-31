@@ -16,16 +16,14 @@ import {
 import Image from "next/image";
 import { getSpaceList } from "@/api/planet/space/space";
 import { useToast } from "@/hooks/useToast";
-import { userState } from "@/recoil/userStore";
-import { useRecoilValue } from "recoil";
 
 const PlanetMovePage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const searchParams = useSearchParams();
   const letterId = searchParams.get("letter");
+  const senderName = searchParams.get("senderName");
 
-  const { name } = useRecoilValue(userState);
   const [planets, setPlanets] = useState<Planet[]>();
   const [checkedPlanet, setCheckedPlanet] = useState<string>("");
   const [checkedIndep, setCheckedIndep] = useState<boolean>(false);
@@ -69,7 +67,7 @@ const PlanetMovePage = () => {
           console.log("편지 다른 행성 이동 성공");
 
           showToast(
-            `${name} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
+            `${senderName} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
             {
               icon: true,
               iconType: "info",
@@ -79,7 +77,7 @@ const PlanetMovePage = () => {
           );
         } else {
           showToast(
-            `${name} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
+            `${senderName} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
             {
               icon: true,
               iconType: "info",
@@ -109,7 +107,7 @@ const PlanetMovePage = () => {
     <Layout>
       <NavigatorBar title="편지 이동하기" cancel={false} />
       <Container>
-        <Label>{name}의 편지를 어디로 이동할까요?</Label>
+        <Label>{senderName}의 편지를 어디로 이동할까요?</Label>
         <Divider />
         <PlanetBoxList>
           {planets?.map((item, index) => (
