@@ -67,11 +67,12 @@ const VerifyLetter = () => {
   };
 
   useEffect(() => {
+    //액세스 토큰이 없을 때 미리 처리
     if (!accessToken) {
       router.push(url ? `/login?url=${url}` : `/login`);
       return;
     }
-
+    //액세스 토큰이 있다면
     const checkMainIdAndVerify = async () => {
       try {
         // 메인 ID 조회를 통한 회원 검증 (탈퇴회원 포함)
@@ -87,8 +88,14 @@ const VerifyLetter = () => {
               }
             })
             .catch((error) => {
-              console.error("검증 실패:", error);
-              router.push(`/error/letter`);
+              if (error.status === 403) {
+                //해당 사용자가 열람 가능한 편지가 아님
+                console.error("검증 실패:", error);
+                router.push(`/error/letter`);
+              } else if (error.status === 400) {
+                //편지가 존재하지 않음
+                router.push(`/error`);
+              }
             });
         }
       } catch (error) {
