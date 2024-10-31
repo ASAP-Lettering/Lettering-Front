@@ -92,9 +92,8 @@ const VerifyLetter = () => {
                 //해당 사용자가 열람 가능한 편지가 아님
                 console.error("검증 실패:", error);
                 router.push(`/error/letter`);
-              } else if (error.status === 400) {
-                //편지가 존재하지 않음
-                router.push(`/error`);
+              } else {
+                router.push("/error");
               }
             });
         }
