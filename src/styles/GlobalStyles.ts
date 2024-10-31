@@ -68,6 +68,8 @@ input, textarea {
   border: none;
   outline: none;
   resize: none;
+
+  font-size: 16px;
 }
 
 @font-face {
