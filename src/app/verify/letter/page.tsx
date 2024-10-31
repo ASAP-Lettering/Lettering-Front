@@ -67,6 +67,11 @@ const VerifyLetter = () => {
   };
 
   useEffect(() => {
+    if (!accessToken) {
+      router.push(url ? `/login?url=${url}` : `/login`);
+      return;
+    }
+
     const checkMainIdAndVerify = async () => {
       try {
         // 메인 ID 조회를 통한 회원 검증 (탈퇴회원 포함)
@@ -97,12 +102,8 @@ const VerifyLetter = () => {
       }
     };
 
-    //checkMainIdAndVerify();
+    checkMainIdAndVerify();
     //accessToken이 없는 상황이라면 로그인으로
-    if (!accessToken) {
-      router.push(url ? `/login?url=${url}` : `/login`);
-      return;
-    }
 
     //letterCode가 있다면 검증 진행
     if (url) {
