@@ -19,13 +19,13 @@ export default function Home() {
   const router = useRouter();
   const accessToken = getAccessToken();
 
-  // useEffect(() => {
-  //   if (!accessToken) {
-  //     router.push("/login");
-  //   } else {
-  //     router.push("/planet");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!accessToken) {
+      router.push("/login");
+    } else {
+      router.push("/planet");
+    }
+  }, []);
 
   return (
     <Container>
