@@ -67,11 +67,12 @@ const VerifyLetter = () => {
   };
 
   useEffect(() => {
+    //액세스 토큰이 없을 때 미리 처리
     if (!accessToken) {
       router.push(url ? `/login?url=${url}` : `/login`);
       return;
     }
-
+    //액세스 토큰이 있다면
     const checkMainIdAndVerify = async () => {
       try {
         // 메인 ID 조회를 통한 회원 검증 (탈퇴회원 포함)
@@ -87,8 +88,13 @@ const VerifyLetter = () => {
               }
             })
             .catch((error) => {
-              console.error("검증 실패:", error);
-              router.push(`/error/letter`);
+              if (error.status === 403) {
+                //해당 사용자가 열람 가능한 편지가 아님
+                console.error("검증 실패:", error);
+                router.push(`/error/letter`);
+              } else {
+                router.push("/error");
+              }
             });
         }
       } catch (error) {
@@ -106,30 +112,30 @@ const VerifyLetter = () => {
     //accessToken이 없는 상황이라면 로그인으로
 
     //letterCode가 있다면 검증 진행
-    if (url) {
-      verifyLetter(url)
-        .then((res) => {
-          if (res.data.letterId) {
-            //검증 성공하면 letterData를 받아온다
-            setletterId(res.data.letterId);
-            fetchLetterData(res.data.letterId);
-          }
-        })
-        .catch((error) => {
-          //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
-          console.log(error);
-          router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
-        });
-    }
+    // if (url) {
+    //   verifyLetter(url)
+    //     .then((res) => {
+    //       if (res.data.letterId) {
+    //         //검증 성공하면 letterData를 받아온다
+    //         setletterId(res.data.letterId);
+    //         fetchLetterData(res.data.letterId);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
+    //       console.log(error);
+    //       router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
+    //     });
+    // }
 
-    if (letterData === null) {
-      //LetterData 받아오는 로직
-      for (let i = 0; i < LETTER_DATA.length; i++) {
-        if (LETTER_DATA[i].url === url) {
-          setLetterData(LETTER_DATA[i]);
-        }
-      }
-    }
+    // if (letterData === null) {
+    //   //LetterData 받아오는 로직
+    //   for (let i = 0; i < LETTER_DATA.length; i++) {
+    //     if (LETTER_DATA[i].url === url) {
+    //       setLetterData(LETTER_DATA[i]);
+    //     }
+    //   }
+    // }
     setIsLoading(false);
   }, []);
 
