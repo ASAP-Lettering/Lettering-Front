@@ -129,11 +129,12 @@ const sharedStyles = `
   border-radius: 8px;
   background: ${theme.colors.gray800};
   color: ${theme.colors.white};
-  ${(props: any) => props.theme.fonts.body08};
+  ${(props: any) => props.theme.fonts.body07};
+  font-family: "Pretendard";
 
   &::placeholder {
     color: ${theme.colors.gray500};
-    ${(props: any) => props.theme.fonts.body09};
+    ${(props: any) => props.theme.fonts.body07};
   }
 
   &:disabled {
@@ -173,11 +174,10 @@ const StyledTextarea = styled.textarea<{
 }>`
   ${sharedStyles}
   height: ${({ $height }) => $height};
-  font-family: "Pretendard";
-  ${(props: any) => props.theme.fonts.medium14};
+  ${(props: any) => props.theme.fonts.body07};
 
   &::placeholder {
-    ${(props: any) => props.theme.fonts.regular14};
+    ${(props: any) => props.theme.fonts.body07};
     letter-spacing: 1px;
   }
 

@@ -327,7 +327,7 @@ const Tag = (props: TagProps) => {
         />
       )}
       {tagType === "planet" && (
-        <Image
+        <IconImage
           src={renderIcon()}
           width={24}
           height={24}
@@ -470,4 +470,13 @@ const DeleteIcon = styled(Image)`
   position: absolute;
   top: -4px;
   right: -2px;
+`;
+
+const IconImage = styled(Image)`
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 `;
