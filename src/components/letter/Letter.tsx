@@ -264,7 +264,6 @@ const Container = styled.div<{
   height: auto;
   padding: ${({ $padding }) => ($padding ? $padding : "34px")};
   max-width: ${({ $width }) => ($width ? $width : "345px")};
-  min-width: ${({ $width }) => ($width ? $width : "345px")};
   max-height: ${({ $height }) => ($height ? $height : "349px")};
   min-height: ${({ $height }) => ($height ? $height : "349px")};
   background-image: ${({ $templateType }) =>
