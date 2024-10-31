@@ -287,5 +287,5 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   gap: 15px;
-  z-index: 20;
+  z-index: 100;
 `;
