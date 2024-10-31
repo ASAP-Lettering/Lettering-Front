@@ -162,20 +162,6 @@ const Tag = (props: TagProps) => {
     return "";
   };
 
-  //ref끼리 겹치는 영역 계산
-  const getOverlapArea = (rect1: DOMRect, rect2: DOMRect) => {
-    const x_overlap = Math.max(
-      0,
-      Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left)
-    );
-    const y_overlap = Math.max(
-      0,
-      Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top)
-    );
-    const overlapArea = x_overlap * y_overlap;
-    return overlapArea;
-  };
-
   //모바일 터치 드래그
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (tagType === "letter") {
@@ -185,13 +171,7 @@ const Tag = (props: TagProps) => {
       e.stopPropagation();
       console.log("터치 시작");
       const touch = e.touches[0];
-      //setStartPosition({ x: touch.clientX, y: touch.clientY });
-      // 컨테이너의 초기 위치를 가져와 시작 위치에 반영
-      const container = e.currentTarget.getBoundingClientRect();
-      setStartPosition({
-        x: touch.clientX - container.left,
-        y: touch.clientY - container.top,
-      });
+      setStartPosition({ x: touch.clientX, y: touch.clientY });
 
       e.currentTarget.addEventListener("touchmove", handleTouchMove, {
         passive: false,
@@ -206,9 +186,13 @@ const Tag = (props: TagProps) => {
     console.log("터치 움직임");
     if (startPosition) {
       const touch = e.touches[0];
-      const deltaX = touch.clientX - startPosition.x;
+      console.log(startPosition.x);
+      const deltaX = touch.clientX - 60;
       const deltaY = touch.clientY - startPosition.y;
-      setTranslate({ x: deltaX, y: deltaY });
+      setTranslate({
+        x: touch.clientX - startPosition.x,
+        y: touch.clientY - startPosition.y,
+      });
 
       if (tagRef.current) {
         tagRef.current.style.zIndex = "999999";
