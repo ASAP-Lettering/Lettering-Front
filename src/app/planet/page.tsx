@@ -428,11 +428,11 @@ const PlanetPage = () => {
   };
 
   //토큰 유효한지 확인
-  useEffect(() => {
-    if (!accessToken) {
-      router.push("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     router.push("/login");
+  //   }
+  // }, []);
 
   return (
     <>
