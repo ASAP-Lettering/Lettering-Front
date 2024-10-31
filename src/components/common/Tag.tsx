@@ -185,7 +185,13 @@ const Tag = (props: TagProps) => {
       e.stopPropagation();
       console.log("터치 시작");
       const touch = e.touches[0];
-      setStartPosition({ x: touch.clientX, y: touch.clientY });
+      //setStartPosition({ x: touch.clientX, y: touch.clientY });
+      // 컨테이너의 초기 위치를 가져와 시작 위치에 반영
+      const container = e.currentTarget.getBoundingClientRect();
+      setStartPosition({
+        x: touch.clientX - container.left,
+        y: touch.clientY - container.top,
+      });
 
       e.currentTarget.addEventListener("touchmove", handleTouchMove, {
         passive: false,
@@ -387,8 +393,9 @@ const Box = styled.div<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${$hasEditIcon &&
-      css`
+      ${
+        $hasEditIcon &&
+        css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -396,16 +403,19 @@ const Box = styled.div<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `}
-      ${$hasName === false &&
-      css`
+      `
+      }
+      ${
+        $hasName === false &&
+        css`
         padding: 7.5px 13px 7.5px 13px;
-      `}
+      `
+      }
     `}
   
     ${({ $tagType, $orbitType }) =>
-    $tagType === "letter" &&
-    css`
+      $tagType === "letter" &&
+      css`
       display: block;
       max-width: 90px;
       padding: ${$orbitType === "2" ? "10px" : "11px 15px"};
