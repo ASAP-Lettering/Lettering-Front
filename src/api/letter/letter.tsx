@@ -1,4 +1,4 @@
-import { authClient } from "../client";
+import client, { authClient } from "../client";
 
 // 편지 조회
 export const getLetter = async (letterId: string) => {
@@ -43,7 +43,7 @@ export const uploadImage = async ({ imageUrl }: { imageUrl: string }) => {
 
 // 편지 열람 가능 검증
 export const verifyLetter = async (letterCode: string) => {
-  return await authClient.put(`/api/v1/letters/verify`, {
+  return await client.put(`/api/v1/letters/verify`, {
     letterCode: letterCode,
   });
 };
