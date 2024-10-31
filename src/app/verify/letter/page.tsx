@@ -70,7 +70,7 @@ const VerifyLetter = () => {
     const checkMainIdAndVerify = async () => {
       try {
         // 메인 ID 조회를 통한 회원 검증 (탈퇴회원 포함)
-        await getMainId();
+        //await getMainId();
 
         // letterCode가 있을 경우 추가 검증 진행
         if (url) {
