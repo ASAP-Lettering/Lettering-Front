@@ -5,11 +5,7 @@ import { getAccessToken } from "@/utils/storage";
 export const getMainId = async () => {
   const accessToken = getAccessToken();
 
-  const response = await client.get(`/api/v1/spaces/main`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  const response = await authClient.get(`/api/v1/spaces/main`);
 
   return response;
 };

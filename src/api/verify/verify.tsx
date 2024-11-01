@@ -1,18 +1,10 @@
-import client from "../client";
+import client, { authClient } from "../client";
 
 //편지 검증 - > 여기서 id를 받음
-export const verifyLetter = async (letterCode: string, accessToken: string) => {
-  return await client.put(
-    `/api/v1/letters/verify`,
-    {
-      letterCode: letterCode,
-    },
-    {
-      headers: {
-        Authorization: `${accessToken}`,
-      },
-    }
-  );
+export const verifyLetter = async (letterCode: string) => {
+  return await authClient.put(`/api/v1/letters/verify`, {
+    letterCode: letterCode,
+  });
 };
 
 //편지 수령 처리
