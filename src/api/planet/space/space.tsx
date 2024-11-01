@@ -1,8 +1,17 @@
 import client, { authClient } from "@/api/client";
+import { getAccessToken } from "@/utils/storage";
 
 // 메인 스페이스 아이디 조회
 export const getMainId = async () => {
-  return await client.get(`/api/v1/spaces/main`);
+  const accessToken = getAccessToken();
+
+  const response = await client.get(`/api/v1/spaces/main`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response;
 };
 
 // 전체 스페이스 목록 조회
