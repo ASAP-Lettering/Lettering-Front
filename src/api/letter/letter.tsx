@@ -1,3 +1,4 @@
+import { getAccessToken } from "@/utils/storage";
 import client, { authClient } from "../client";
 
 // 편지 조회
@@ -42,9 +43,12 @@ export const uploadImage = async ({ imageUrl }: { imageUrl: string }) => {
 };
 
 // 편지 열람 가능 검증
-export const verifyLetter = async (letterCode: string) => {
+export const verifyLetter = async (letterCode: string, accessToken: string) => {
   return await client.put(`/api/v1/letters/verify`, {
     letterCode: letterCode,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 };
 
