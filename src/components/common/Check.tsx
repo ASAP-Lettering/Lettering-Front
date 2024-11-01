@@ -81,8 +81,8 @@ const CheckContainer = styled.label<{ $checkType: checkType }>`
 const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
   appearance: none;
   flex-shrink: 0;
-  width: ${({ $checkType }) => ($checkType ? "24px" : "32px")};
-  height: ${({ $checkType }) => ($checkType ? "24px" : "32px")};
+  width: ${({ $checkType }) => ($checkType !== "large" ? "24px" : "32px")};
+  height: ${({ $checkType }) => ($checkType !== "large" ? "24px" : "32px")};
   margin-right: ${({ $label }) => ($label ? "17px" : "0px")};
   border-radius: 4px;
   background-color: ${(props) =>
@@ -92,12 +92,13 @@ const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
         : theme.colors.gray500
       : "transparent"};
   position: relative;
+  display: flex;
 `;
 
 const StyledImage = styled(Image)<{ $checkType: checkType }>`
   position: absolute;
-  top: ${({ $checkType }) => ($checkType ? "2px" : "6px")};
-  left: ${({ $checkType }) => ($checkType ? "2px" : "6px")};
+  top: ${({ $checkType }) => ($checkType !== "large" ? "2px" : "6px")};
+  left: ${({ $checkType }) => ($checkType !== "large" ? "2px" : "6px")};
   pointer-events: none;
   z-index: 10;
 `;

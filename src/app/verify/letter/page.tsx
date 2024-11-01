@@ -80,7 +80,7 @@ const VerifyLetter = () => {
 
         // letterCode가 있을 경우 추가 검증 진행
         if (url) {
-          verifyLetter(url)
+          await verifyLetter(url)
             .then((res) => {
               if (res.data.letterId) {
                 setletterId(res.data.letterId);
