@@ -27,18 +27,18 @@ export const authClient = axios.create({
   },
 });
 
-client.interceptors.request.use(
-  (config) => {
-    const accessToken = getAccessToken();
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// client.interceptors.request.use(
+//   (config) => {
+//     const accessToken = getAccessToken();
+//     if (accessToken && config.headers) {
+//       config.headers.Authorization = `Bearer ${accessToken}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 authClient.interceptors.request.use(
   (config) => {
