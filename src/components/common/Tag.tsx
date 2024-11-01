@@ -377,9 +377,8 @@ const Box = styled.div<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${
-        $hasEditIcon &&
-        css`
+      ${$hasEditIcon &&
+      css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -387,26 +386,25 @@ const Box = styled.div<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `
-      }
-      ${
-        $hasName === false &&
-        css`
+      `}
+      ${$hasName === false &&
+      css`
         padding: 7.5px 13px 7.5px 13px;
-      `
-      }
+      `}
     `}
   
     ${({ $tagType, $orbitType }) =>
-      $tagType === "letter" &&
-      css`
+    $tagType === "letter" &&
+    css`
       display: block;
       max-width: 90px;
-      padding: ${$orbitType === "2" ? "10px" : "11px 15px"};
-      border-radius: 100px;
+      padding: ${$orbitType === "2" ? "7.5px 15px" : "11px 15px"};
+      border-radius: 40px;
       background: ${theme.colors.sub01};
-      ${(props) => props.theme.fonts.body07};
+      ${(props) =>
+        $orbitType === "2" ? props.theme.fonts.body8 : props.theme.fonts.body6};
       line-height: 16px;
+      font-size: ${$orbitType === "2" && "14px"};
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -449,7 +447,7 @@ const Name = styled.span`
 
 const Date = styled.span`
   color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.caption03};
+  ${(props) => props.theme.fonts.caption05};
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-use-select: none;
