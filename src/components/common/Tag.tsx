@@ -54,10 +54,7 @@ const Tag = (props: TagProps) => {
   const [editedName, setEditedName] = useState(name);
   const [isHoldTriggered, setIsHoldTriggered] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [startPosition, setStartPosition] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
+  const startPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
   const tagRef = useRef<HTMLDivElement | null>(null);
@@ -94,7 +91,7 @@ const Tag = (props: TagProps) => {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    setStartPosition(null);
+    startPositionRef.current = { x: 0, y: 0 };
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,9 +166,13 @@ const Tag = (props: TagProps) => {
     }
     if (isDragable && tagType === "orbit") {
       e.stopPropagation();
-      console.log("터치 시작");
-      const touch = e.touches[0];
-      setStartPosition({ x: touch.clientX, y: touch.clientY });
+      console.log("터치 시작", e.touches?.[0]);
+
+      const touch = e.touches?.[0];
+      if (touch) {
+        const position = { x: touch.clientX, y: touch.clientY };
+        startPositionRef.current = position;
+      }
 
       e.currentTarget.addEventListener("touchmove", handleTouchMove, {
         passive: false,
@@ -183,12 +184,14 @@ const Tag = (props: TagProps) => {
   };
 
   const handleTouchMove = (e: TouchEvent) => {
-    console.log("터치 움직임");
+    const startPosition = startPositionRef.current;
+    console.log("터치 움직임", startPosition);
+
     if (startPosition) {
       const touch = e.touches[0];
-      console.log(startPosition.x);
       const deltaX = touch.clientX - 60;
       const deltaY = touch.clientY - startPosition.y;
+
       setTranslate({
         x: touch.clientX - startPosition.x,
         y: touch.clientY - startPosition.y,
@@ -377,8 +380,9 @@ const Box = styled.div<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${$hasEditIcon &&
-      css`
+      ${
+        $hasEditIcon &&
+        css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -386,16 +390,19 @@ const Box = styled.div<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `}
-      ${$hasName === false &&
-      css`
+      `
+      }
+      ${
+        $hasName === false &&
+        css`
         padding: 7.5px 13px 7.5px 13px;
-      `}
+      `
+      }
     `}
   
     ${({ $tagType, $orbitType }) =>
-    $tagType === "letter" &&
-    css`
+      $tagType === "letter" &&
+      css`
       display: block;
       max-width: 90px;
       padding: ${$orbitType === "2" ? "7.5px 15px" : "11px 15px"};

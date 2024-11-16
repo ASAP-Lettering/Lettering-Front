@@ -27,6 +27,12 @@ const MyPage = () => {
     fetchGetCount();
   }, []);
 
+  useEffect(() => {
+    if (name.length > 0 && email.length > 0) {
+      setLoading(false);
+    }
+  }, [name, email]);
+
   const goToLetterType = () => {
     router.push("/mypage/lettertype");
   };
@@ -69,7 +75,6 @@ const MyPage = () => {
       const response = await getLetterCount();
       setLetterCount(response.data.letterCount);
       setPlanetCount(response.data.spaceCount);
-      setLoading(false);
     } catch (error) {
       console.error("편지수, 행성수 조회 실패:", error);
     }
