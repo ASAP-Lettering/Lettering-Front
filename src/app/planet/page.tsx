@@ -87,7 +87,7 @@ const PlanetPage = () => {
       console.log("모든 편지 수 조회 성공:", response.data);
       setCountLetter(response.data.letterCount);
       setCurrentOrbits(response.data.content);
-      setIsLoading(false);
+
       if (response.data.letterCount < 3 && getInitUserToast() !== "true") {
         setShowTooltip(true);
         setInitUserToast();
@@ -127,10 +127,8 @@ const PlanetPage = () => {
       //   });
       // }
       //setDroppedItem(null);
-      setIsLoading(false);
     } catch (error) {
       console.error("행성 편지 목록 조회 실패:", error);
-      setIsLoading(false);
     }
   };
 
@@ -151,7 +149,6 @@ const PlanetPage = () => {
     } catch (error) {
       console.error("메인 ID 조회 실패:", error);
       setSpaceInfo(null);
-      setIsLoading(false);
 
       /* 메인 ID 없을 경우 회원 탈퇴로 간주 */
       // router.push("/login");
@@ -166,6 +163,8 @@ const PlanetPage = () => {
     } catch (error) {
       console.error("궤도 편지 목록 조회 실패:", error);
       setOrbitMessages(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -695,4 +694,5 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: ${theme.colors.bg};
 `;
