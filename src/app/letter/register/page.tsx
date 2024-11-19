@@ -20,8 +20,11 @@ const LetterRegisterPage = () => {
   const { showToast } = useToast();
   const [sender, setSender] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]); // 서버 전송용
+  const [previewImages, setPreviewImages] = useState<string[]>([]); // 미리보기용
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 서버 이미지 업로드 상태
+  const [loadingResolved, setLoadingResolved] = useState(false); // 로딩 플래그
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isToastShown, setIsToastShown] = useState(false);
@@ -34,6 +37,7 @@ const LetterRegisterPage = () => {
       setSender(letterState.senderName);
       setContent(letterState.content);
       setImages(letterState.images);
+      setPreviewImages(letterState.previewImages);
     }
   }, [letterState]);
 
@@ -50,30 +54,37 @@ const LetterRegisterPage = () => {
     }
   };
 
+  const handleShowToast = () => {
+    /* 토스트 메세지 보여지기 전*/
+    if (previewImages.length >= 4 && !isToastShown) {
+      showToast("사진 첨부는 최대 4장까지 가능해요.", {
+        icon: true,
+        close: false,
+        bottom: "113px",
+      });
+      setIsToastShown(true);
+    }
+  };
+
   const handleAddImages = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const files = event.target.files;
     if (files) {
       const selectedImages: File[] = Array.from(files).slice(0, 4);
-      const totalImages = images.length + selectedImages.length;
+      const totalImages = previewImages?.length + selectedImages.length;
 
       /* 토스트 메세지 이미 보여짐 */
       if (isToastShown) {
         if (totalImages >= 4) {
-          setIsButtonDisabled(true);
-          return;
-        }
-
-        if (totalImages > 4) {
-          const additionalImagesNeeded = 4 - images.length;
+          const additionalImagesNeeded = 4 - previewImages.length;
           const newImages = [
-            ...images,
+            ...previewImages,
             ...selectedImages
               .slice(0, additionalImagesNeeded)
               .map((file) => URL.createObjectURL(file)),
           ];
-          setImages(newImages);
+          setPreviewImages(newImages);
           return;
         }
       } else {
@@ -87,7 +98,7 @@ const LetterRegisterPage = () => {
           setIsToastShown(true);
           setIsButtonDisabled(true);
           const newImages = [
-            ...images,
+            ...previewImages,
             ...selectedImages
               .slice(0, 4 - images.length)
               .map((file) => URL.createObjectURL(file)),
@@ -99,6 +110,12 @@ const LetterRegisterPage = () => {
 
       setIsButtonDisabled(false);
 
+      /* 클라이언트에서 미리보기를 위한 URL 설정 */
+      const previewUrls = selectedImages?.map((file) =>
+        URL.createObjectURL(file)
+      );
+      setPreviewImages((prevImages) => [...(prevImages || []), ...previewUrls]);
+
       const imageUrls: string[] = [];
       for (const file of selectedImages) {
         const compressedFile = await imageCompression(file, {
@@ -106,7 +123,10 @@ const LetterRegisterPage = () => {
           maxWidthOrHeight: 1024,
           useWebWorker: true,
         });
+
         try {
+          setIsLoading(true);
+
           const response = await postImage(compressedFile);
           console.log("이미지 업로드 성공", response.data);
           imageUrls.push(response.data.imageUrl);
@@ -115,24 +135,49 @@ const LetterRegisterPage = () => {
         }
       }
       setImages((prevImages) => [...prevImages, ...imageUrls]);
+      setIsLoading(false);
     }
   };
 
   const handleDeleteImages = (id: number) => {
-    if (images.length - 1 < 4) {
+    if (previewImages.length - 1 < 4) {
       setIsButtonDisabled(false);
     }
     setImages((prevImages) => prevImages.filter((_, index) => index !== id));
+    setPreviewImages((prevImages) =>
+      prevImages.filter((_, index) => index !== id)
+    );
   };
 
-  const handleAddNext = () => {
+  useEffect(() => {
+    // console.log("images", images);
+    // console.log("previewImages", previewImages);
+  }, [images, previewImages]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLoadingResolved(true); // 로딩 완료 플래그
+    }
+  }, [isLoading]);
+
+  const handleAddNext = async () => {
     /* 다음 페이지 */
+    if (isLoading) {
+      // 로딩 완료될 때까지 대기
+      while (!loadingResolved) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    /* 로딩(서버 URL 반환)이 끝난 뒤, 이후 코드 실행 */
     setLetterState((prevState) => ({
       ...prevState,
       senderName: sender,
       content: content,
       images: images,
+      previewImages: previewImages,
     }));
+    console.log("저장완료");
     if (letterId) {
       if (independent === "true") {
         router.push(`/letter/template?letterId=${letterId}&independent=true`);
@@ -176,7 +221,8 @@ const LetterRegisterPage = () => {
             placeholder="최대 1000자까지 입력이 가능해요"
             height="228px"
           />
-          {images.length === 0 ? (
+          {(previewImages || []).length === 0 ? (
+            // {images.length === 0 ? (
             <AddImageLabel>
               <input
                 type="file"
@@ -189,20 +235,24 @@ const LetterRegisterPage = () => {
             </AddImageLabel>
           ) : (
             <ImagesList>
-              <AddImagesLabel>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleAddImages}
-                  style={{ display: "none" }}
-                  disabled={isButtonDisabled}
-                />
+              <AddImagesLabel onClick={handleShowToast}>
+                {previewImages.length < 4 && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleAddImages}
+                    style={{ display: "none" }}
+                    disabled={isButtonDisabled}
+                  />
+                )}
                 +<br />
-                {images.length}/4
+                {/* {images.length}/4 */}
+                {previewImages.length}/4
               </AddImagesLabel>
               <ImagesWrapper>
-                {images.map((image, index) => (
+                {/* {images.map((image, index) => ( */}
+                {previewImages.map((image, index) => (
                   <ImageDiv>
                     <Image
                       src={image}
@@ -230,7 +280,7 @@ const LetterRegisterPage = () => {
             buttonType="primary"
             size="large"
             text="다음"
-            disabled={!sender || (!content && images.length === 0)}
+            disabled={!sender || (!content && previewImages?.length === 0)}
             onClick={handleAddNext}
           />
         </ButtonWrapper>
