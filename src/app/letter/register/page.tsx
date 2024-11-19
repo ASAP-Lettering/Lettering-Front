@@ -71,41 +71,36 @@ const LetterRegisterPage = () => {
   ) => {
     const files = event.target.files;
     if (files) {
-      const selectedImages: File[] = Array.from(files).slice(0, 4);
-      const totalImages = previewImages?.length + selectedImages.length;
+      const selectedImages: File[] = Array.from(files);
+      const totalImages = (previewImages || []).length + selectedImages.length;
+      console.log("Total Images:", totalImages);
 
-      /* 토스트 메세지 이미 보여짐 */
-      if (isToastShown) {
-        if (totalImages >= 4) {
-          const additionalImagesNeeded = 4 - previewImages.length;
-          const newImages = [
-            ...previewImages,
-            ...selectedImages
-              .slice(0, additionalImagesNeeded)
-              .map((file) => URL.createObjectURL(file)),
-          ];
-          setPreviewImages(newImages);
-          return;
-        }
-      } else {
+      if (totalImages > 4) {
+        const additionalImagesNeeded = 4 - (previewImages || []).length;
+        const newImages = [
+          ...(previewImages || []),
+          ...selectedImages
+            .slice(0, additionalImagesNeeded)
+            .map((file) => URL.createObjectURL(file)),
+        ];
+        setPreviewImages(newImages);
         /* 토스트 메세지 보여지기 전*/
-        if (totalImages > 4) {
+        showToast("사진 첨부는 최대 4장까지 가능해요.", {
+          icon: true,
+          close: false,
+          bottom: "113px",
+        });
+        if (!isToastShown) {
+          console.log("여기");
           showToast("사진 첨부는 최대 4장까지 가능해요.", {
             icon: true,
             close: false,
             bottom: "113px",
           });
+          console.log("실행");
           setIsToastShown(true);
-          setIsButtonDisabled(true);
-          const newImages = [
-            ...previewImages,
-            ...selectedImages
-              .slice(0, 4 - images.length)
-              .map((file) => URL.createObjectURL(file)),
-          ];
-          setImages(newImages);
-          return;
         }
+        return;
       }
 
       setIsButtonDisabled(false);
