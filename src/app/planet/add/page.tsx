@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -18,6 +18,12 @@ const PlanetAddPage = () => {
 
   const handleChangeType = (id: number) => {
     setTemplateType(id);
+  };
+
+  const handleChangePlanet = (value: string) => {
+    if (value.length <= 10) {
+      setPlanet(value);
+    }
   };
 
   const handleAddPlanet = async () => {
@@ -46,7 +52,7 @@ const PlanetAddPage = () => {
           <Input
             inputType="boxText"
             value={planet}
-            onChange={setPlanet}
+            onChange={handleChangePlanet}
             placeholder="최대 10자까지 입력할 수 있어요"
           />
           <Add>내 스페이스에 {planet} 행성이 추가돼요</Add>
