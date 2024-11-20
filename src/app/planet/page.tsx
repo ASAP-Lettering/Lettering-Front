@@ -70,6 +70,7 @@ const PlanetPage = () => {
       senderName: "",
       content: "",
       images: [],
+      previewImages: [],
       templateType: 0,
     });
     setSendState({
@@ -77,6 +78,7 @@ const PlanetPage = () => {
       receiverName: "",
       content: "",
       images: [] as string[],
+      previewImages: [] as string[],
       templateType: 0,
     });
   }, []);
