@@ -25,7 +25,6 @@ const LetterRegisterPage = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
-  const [loadingResolved, setLoadingResolved] = useState(false); // 로딩 플래그
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isToastShown, setIsToastShown] = useState(false);
@@ -44,6 +43,10 @@ const LetterRegisterPage = () => {
 
   const handleSenderChange = (newValue: string) => {
     setSender(newValue);
+    setLetterState((prevState) => ({
+      ...prevState,
+      senderName: newValue,
+    }));
   };
 
   const handleContentChange = (newValue: string) => {
@@ -53,6 +56,10 @@ const LetterRegisterPage = () => {
     } else {
       setContent(newValue);
     }
+    setLetterState((prevState) => ({
+      ...prevState,
+      content: newValue,
+    }));
   };
 
   const handleShowToast = () => {

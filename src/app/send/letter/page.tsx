@@ -38,7 +38,6 @@ const SendLetterPage = () => {
 
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
-  const [loadingResolved, setLoadingResolved] = useState(false); // 로딩 플래그
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
@@ -216,12 +215,6 @@ const SendLetterPage = () => {
     }));
   };
 
-  useEffect(() => {
-    if (!isImageUploadLoading) {
-      setLoadingResolved(true); // 로딩 완료 플래그
-    }
-  }, [isImageUploadLoading]);
-
   /* 임시 저장 */
   const handleSaveLetter = async () => {
     console.log("클릭");
@@ -279,14 +272,6 @@ const SendLetterPage = () => {
 
   const handleAddNext = async () => {
     /* 다음 페이지 */
-    if (isLoading) {
-      // 로딩 완료될 때까지 대기
-      while (!loadingResolved) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-    }
-
-    /* 로딩(서버 URL 반환)이 끝난 뒤, 이후 코드 실행 */
     setLetterState((prevState) => ({
       ...prevState,
       draftId: draftId,
