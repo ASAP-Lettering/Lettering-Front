@@ -36,6 +36,7 @@ const DraftList = (props: DraftListProps) => {
           receiverName: response.data.receiverName,
           content: response.data.content,
           images: response.data.images,
+          previewImages: response.data.images, // 미리보기로 이미지 불러오기
           templateType: 0,
         });
 

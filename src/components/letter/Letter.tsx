@@ -161,6 +161,7 @@ const Letter = (props: LetterProps) => {
       senderName: name,
       content: content || "",
       images: images || [],
+      previewImages: images || [],
       templateType: templateType,
     });
     if (pageType === "independent") {

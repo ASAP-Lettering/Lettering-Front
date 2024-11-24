@@ -31,9 +31,13 @@ const SendLetterPage = () => {
   const [draftId, setDraftId] = useState<string | null>(null);
   const [receiver, setReceiver] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]); // 서버 전송용
+  const [previewImages, setPreviewImages] = useState<string[]>([]); // 미리보기용
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isToastShown, setIsToastShown] = useState(false);
+
+  const [isImageUploadLoading, setImageUploadLoading] =
+    useState<boolean>(false); // 서버 이미지 업로드 상태
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
@@ -44,6 +48,16 @@ const SendLetterPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isDraftDisabled = isLoading || (!receiver && !content);
+
+  useEffect(() => {
+    if (letterState) {
+      setDraftId(letterState.draftId);
+      setReceiver(letterState.receiverName);
+      setContent(letterState.content);
+      setImages(letterState.images);
+      setPreviewImages(letterState.images);
+    }
+  }, [letterState]);
 
   const fetchGetDraft = async () => {
     if (draftKey) {
@@ -78,6 +92,7 @@ const SendLetterPage = () => {
       setReceiver(letterState.receiverName);
       setContent(letterState.content);
       setImages(letterState.images);
+      setPreviewImages(letterState.images);
     }
   }, [draftKey]);
 
@@ -102,71 +117,64 @@ const SendLetterPage = () => {
     }));
   };
 
+  const handleShowToast = () => {
+    /* 토스트 메세지 보여지기 전*/
+    if (previewImages.length >= 4 && !isToastShown) {
+      showToast("사진 첨부는 최대 4장까지 가능해요.", {
+        icon: true,
+        close: false,
+        bottom: "113px",
+      });
+      setIsToastShown(true);
+    }
+  };
+
   const handleAddImages = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const files = event.target.files;
     if (files) {
-      const selectedImages: File[] = Array.from(files).slice(0, 4);
-      const totalImages = images.length + selectedImages.length;
+      const selectedImages: File[] = Array.from(files);
+      const existingImageCount = (previewImages || []).length;
 
-      /* 토스트 메세지 이미 보여짐 */
-      if (isToastShown) {
-        if (totalImages >= 4) {
-          setIsButtonDisabled(true);
-          return;
-        }
+      // 총 이미지 개수를 4개로 제한
+      const additionalImagesNeeded = Math.max(0, 4 - existingImageCount);
 
-        if (totalImages > 4) {
-          const additionalImagesNeeded = 4 - images.length;
-          const newImages = [
-            ...images,
-            ...selectedImages
-              .slice(0, additionalImagesNeeded)
-              .map((file) => URL.createObjectURL(file)),
-          ];
-          setImages(newImages);
-          setLetterState((prevState) => ({
-            ...prevState,
-            images: newImages,
-          }));
-          return;
-        }
-      } else {
-        /* 토스트 메세지 보여지기 전*/
-        if (totalImages > 4) {
-          showToast("사진 첨부는 최대 4장까지 가능해요.", {
-            icon: true,
-            close: false,
-            bottom: "113px",
-          });
-          setIsToastShown(true);
-          setIsButtonDisabled(true);
-          const newImages = [
-            ...images,
-            ...selectedImages
-              .slice(0, 4 - images.length)
-              .map((file) => URL.createObjectURL(file)),
-          ];
-          setImages(newImages);
-          setLetterState((prevState) => ({
-            ...prevState,
-            images: newImages,
-          }));
-          return;
-        }
+      // 초과된 이미지는 제외한 업로드 가능한 이미지
+      const validImages = selectedImages.slice(0, additionalImagesNeeded);
+
+      // 미리보기 이미지 업데이트
+      const newPreviewImages = [
+        ...(previewImages || []),
+        ...validImages.map((file) => URL.createObjectURL(file)),
+      ];
+
+      setPreviewImages(newPreviewImages);
+
+      // 총 이미지가 4개를 초과하려고 할 때 (토스트 메세지 보여지기 전)
+      if (selectedImages.length > additionalImagesNeeded && !isToastShown) {
+        showToast("사진 첨부는 최대 4장까지 가능해요.", {
+          icon: true,
+          close: false,
+          bottom: "113px",
+        });
+        setIsToastShown(true);
+        setIsButtonDisabled(false);
       }
 
       setIsButtonDisabled(false);
 
       const imageUrls: string[] = [];
-      for (const file of selectedImages) {
+      for (const file of validImages) {
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: 0.1,
+          maxWidthOrHeight: 512,
+          useWebWorker: true,
+        });
+
         try {
-          const compressedFile = await imageCompression(file, {
-            maxSizeMB: 0.5,
-            maxWidthOrHeight: 800,
-            useWebWorker: true,
-          });
+          setImageUploadLoading(true);
+
           const response = await postImage(compressedFile);
           console.log("이미지 업로드 성공", response.data);
           imageUrls.push(response.data.imageUrl);
@@ -175,28 +183,57 @@ const SendLetterPage = () => {
         }
       }
       setImages((prevImages) => [...prevImages, ...imageUrls]);
+      setImageUploadLoading(false);
+
       setLetterState((prevState) => ({
         ...prevState,
         images: [...(prevState.images || []), ...imageUrls],
+        previewImages: newPreviewImages,
       }));
     }
   };
 
   const handleDeleteImages = (id: number) => {
-    if (images.length - 1 < 4) {
+    const updatedImages = images.filter((_, index) => index !== id);
+    const updatedPreviewImages = previewImages.filter(
+      (_, index) => index !== id
+    );
+
+    if (previewImages.length - 1 < 4) {
       setIsButtonDisabled(false);
     }
-    setImages((prevImages) => prevImages.filter((_, index) => index !== id));
+
+    // 상태 업데이트
+    setImages(updatedImages);
+    setPreviewImages(updatedPreviewImages);
+
+    // setLetterState에 변경된 상태 반영
+    setLetterState((prevState) => ({
+      ...prevState,
+      images: updatedImages,
+      previewImages: updatedPreviewImages,
+    }));
   };
 
   /* 임시 저장 */
   const handleSaveLetter = async () => {
+    console.log("클릭");
+    console.log(isImageUploadLoading);
     if (!receiver || !content) {
       return;
     }
 
+    console.log("이후 코드 실행");
     try {
       setIsLoading(true);
+
+      // 이미지 업로드 상태 확인
+      while (isImageUploadLoading) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+
+      console.log("이미지 업로드 완료. 임시 저장 진행 중...");
+
       // 1. 임시 저장 키 발급
       const draftKeyResponse = await postDraftKey();
       const newDraftId = draftKeyResponse.data.draftId;
@@ -225,6 +262,7 @@ const SendLetterPage = () => {
     } finally {
       setIsLoading(false);
     }
+    console.log("종료!");
   };
 
   /* 임시 저장 목록 */
@@ -232,7 +270,7 @@ const SendLetterPage = () => {
     setIsDraftBottom(!isDraftBottom);
   };
 
-  const handleAddNext = () => {
+  const handleAddNext = async () => {
     /* 다음 페이지 */
     setLetterState((prevState) => ({
       ...prevState,
@@ -240,6 +278,7 @@ const SendLetterPage = () => {
       receiverName: receiver,
       content: content,
       images: images,
+      previewImages: previewImages,
     }));
     router.push("/send/template");
   };
@@ -273,6 +312,7 @@ const SendLetterPage = () => {
         receiverName: response.data.receiverName,
         content: response.data.content,
         images: response.data.images,
+        previewImages: response.data.images,
         templateType: 0,
       });
 
@@ -281,6 +321,7 @@ const SendLetterPage = () => {
       setReceiver(response.data.receiverName);
       setContent(response.data.content);
       setImages(response.data.images);
+      setPreviewImages(response.data.images);
 
       // 모달 닫기
       setDraftModal({ id: null, isOpen: false });
@@ -290,22 +331,16 @@ const SendLetterPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (letterState) {
-      setDraftId(letterState.draftId);
-      setReceiver(letterState.receiverName);
-      setContent(letterState.content);
-      setImages(letterState.images);
-    }
-  }, [letterState]);
-
   return (
     <Layout>
       <NavigatorBarWrapper>
         <NavigatorBar title="편지 보내기" cancel={false} />
         <ButtonDiv>
-          <DraftButton onClick={handleSaveLetter} disabled={isDraftDisabled}>
-            임시저장
+          <DraftButton
+            onClick={handleSaveLetter}
+            disabled={isDraftDisabled || isImageUploadLoading}
+          >
+            {isImageUploadLoading ? "Loading..." : "임시저장"}
           </DraftButton>
           I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
         </ButtonDiv>
@@ -339,7 +374,7 @@ const SendLetterPage = () => {
         </Column>
         <Column>
           <Label>사진을 추가해주세요</Label>
-          {images.length === 0 ? (
+          {(previewImages || []).length === 0 ? (
             <AddImageWrapper>
               <AddImageLabel>
                 <input
@@ -355,20 +390,22 @@ const SendLetterPage = () => {
             </AddImageWrapper>
           ) : (
             <ImagesList>
-              <AddImagesLabel>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleAddImages}
-                  style={{ display: "none" }}
-                  disabled={isButtonDisabled}
-                />
+              <AddImagesLabel onClick={handleShowToast}>
+                {previewImages.length < 4 && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleAddImages}
+                    style={{ display: "none" }}
+                    disabled={isButtonDisabled}
+                  />
+                )}
                 +<br />
-                {images.length}/4
+                {previewImages.length}/4
               </AddImagesLabel>
               <ImagesWrapper>
-                {images.map((image, index) => (
+                {previewImages.map((image, index) => (
                   <ImageDiv>
                     <Image
                       src={image}
@@ -395,8 +432,8 @@ const SendLetterPage = () => {
           <Button
             buttonType="primary"
             size="large"
-            text="다음"
-            disabled={!receiver || !content}
+            text={isImageUploadLoading ? "Loading..." : "다음"}
+            disabled={!receiver || !content || isImageUploadLoading}
             onClick={handleAddNext}
           />
         </ButtonWrapper>
@@ -464,8 +501,8 @@ const DraftButton = styled.button`
   ${theme.fonts.caption03};
 
   &:disabled {
-    /* color: ${theme.colors.gray400}; */
-    /* transition: color 0.5s; */
+    opacity: 0.6;
+    transition: opacity 0.5s;
   }
 `;
 
