@@ -282,6 +282,13 @@ const Container = styled.div<{
     transform-style: preserve-3d;
     perspective: 1000px;
   }
+
+  @media (max-height: 735px) {
+    max-width: 178px;
+    max-height: 200px;
+    min-height: 182px;
+    padding: 30px 20px;
+  }
 `;
 
 const TopContainer = styled.div<{
@@ -299,6 +306,10 @@ const TopContainer = styled.div<{
 const TopPreviewContainer = styled(TopContainer)`
   margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
+
+  @media (max-height: 735px) {
+    margin-top: 0;
+  }
 `;
 
 const Name = styled.div<{ $showType: string; $contentType: string }>`
@@ -309,6 +320,13 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
     props.$showType === "preview" && props.$contentType === "one"
       ? props.theme.fonts.caption01
       : props.theme.fonts.title01};
+
+  @media (max-height: 735px) {
+    ${(props) =>
+      props.$showType === "preview" && props.$contentType === "one"
+        ? props.theme.fonts.caption01
+        : props.theme.fonts.body10};
+  }
 `;
 
 const Date = styled.div<{ $showType: string }>`
@@ -339,6 +357,13 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  @media (max-height: 735px) {
+    ${(props) =>
+      props.$showType === "preview" && props.$contentType === "one"
+        ? props.theme.fonts.caption09
+        : props.theme.fonts.caption05};
+  }
 `;
 
 const PopupContainer = styled.div`

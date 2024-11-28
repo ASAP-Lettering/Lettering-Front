@@ -194,6 +194,12 @@ const Label = styled.div`
   ${(props) => props.theme.fonts.title01};
   margin-top: 49px;
   margin-bottom: 28px;
+
+  @media (max-height: 735px) {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    ${theme.fonts.body14};
+  }
 `;
 
 const LetterWrapper = styled.div`
@@ -201,7 +207,12 @@ const LetterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 49px;
+
+  @media (max-height: 735px) {
+    gap: 20px;
+  }
 `;
 
 const ChangeButton = styled.button`
@@ -213,6 +224,13 @@ const ChangeButton = styled.button`
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 100px;
+
+  @media (max-height: 735px) {
+    flex-direction: row;
+    margin-bottom: 50px;
+    gap: 6px;
+    ${theme.fonts.body12};
+  }
 `;
 
 const ButtonWrapper = styled.div`

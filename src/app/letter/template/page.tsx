@@ -62,7 +62,7 @@ const LetterTemplatePage = () => {
         cancel={false}
       />
       <Container>
-        <Essential>* 필수</Essential>
+        {/* <Essential>* 필수</Essential> */}
         <Column>
           <Label>편지지를 골라볼까요? *</Label>
           <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
@@ -88,7 +88,6 @@ const LetterTemplatePage = () => {
                 width={70}
                 height={70}
                 alt="편지지"
-                style={{ borderRadius: "8px" }}
                 $selected={template === item}
                 onClick={() => hanleChangeTemplate(item)}
               />
@@ -167,12 +166,21 @@ const Label = styled.div`
   align-items: center;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body14};
+  }
 `;
 
 const SmallText = styled.div`
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 33px;
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body13};
+    margin-bottom: 24px;
+  }
 `;
 
 const LetterWrapper = styled.div`
@@ -197,6 +205,13 @@ const TemplatesList = styled.div`
   }
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
+
+  @media (max-height: 735px) {
+    margin-top: 18px;
+    margin-bottom: 17px;
+    ${theme.fonts.body14};
+    gap: 11px;
+  }
 `;
 
 const TemplateImage = styled(Image)<{ $selected: boolean }>`
@@ -210,6 +225,17 @@ const TemplateImage = styled(Image)<{ $selected: boolean }>`
     css`
       box-shadow: 0 0 0 4px ${theme.colors.sub03};
     `}
+
+  @media (max-height: 735px) {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    ${({ $selected, theme }) =>
+      $selected &&
+      css`
+        box-shadow: 0 0 0 2px ${theme.colors.sub03};
+      `}
+  }
 `;
 
 const Page = styled.div`
@@ -223,6 +249,10 @@ const Page = styled.div`
 const Current = styled.span`
   color: ${theme.colors.white};
   margin-bottom: 100px;
+
+  @media (max-height: 735px) {
+    margin-bottom: 50px;
+  }
 `;
 
 const ButtonWrapper = styled.div`
