@@ -247,16 +247,14 @@ const LetterRegisterPage = () => {
                   <ImageDiv>
                     <Image
                       src={image}
-                      width={52}
-                      height={52}
+                      fill
                       alt="images"
                       style={{ borderRadius: "8px" }}
                     />
                     <DeleteIcon onClick={() => handleDeleteImages(index)}>
                       <Image
                         src="/assets/icons/ic_image_delete.svg"
-                        width={20}
-                        height={20}
+                        fill
                         alt="delete"
                       />
                     </DeleteIcon>
@@ -328,10 +326,21 @@ const Essential = styled.div`
   ${(props) => props.theme.fonts.caption03};
   margin-top: 25px;
   margin-bottom: 17px;
+
+  @media (max-height: 735px) {
+    margin: 0;
+    position: absolute;
+    top: 55px;
+    right: 24px;
+  }
 `;
 
 const Column = styled.div`
   margin-bottom: 40px;
+
+  @media (max-height: 735px) {
+    margin-bottom: 20px;
+  }
 `;
 
 const Label = styled.div`
@@ -341,12 +350,21 @@ const Label = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.subtitle};
   margin-bottom: 20px;
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body10}
+    margin-bottom: 8px;
+  }
 `;
 
 const Count = styled.div`
   display: flex;
   color: ${theme.colors.gray400};
   ${theme.fonts.body09};
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body10};
+  }
 `;
 
 const Span = styled.span`
@@ -369,6 +387,11 @@ const AddImageLabel = styled.label`
   font-weight: 500;
   ${theme.fonts.body08}
   margin-top: 16px;
+
+  @media (max-height: 735px) {
+    height: 42px;
+    ${theme.fonts.caption04}
+  }
 `;
 
 const AddImagesLabel = styled.label`
@@ -384,6 +407,12 @@ const AddImagesLabel = styled.label`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.body08};
   text-align: center;
+
+  @media (max-height: 735px) {
+    width: 39px;
+    height: 39px;
+    ${theme.fonts.body12}
+  }
 `;
 
 const ImagesList = styled.div`
@@ -406,6 +435,11 @@ const ImageDiv = styled.div`
   width: 52px;
   height: 52px;
   position: relative;
+
+  @media (max-height: 735px) {
+    width: 39px;
+    height: 39px;
+  }
 `;
 
 const DeleteIcon = styled.button`
@@ -414,6 +448,11 @@ const DeleteIcon = styled.button`
   position: absolute;
   top: -5px;
   right: -5px;
+
+  @media (max-height: 735px) {
+    width: 13px;
+    height: 13px;
+  }
 `;
 
 const ButtonWrapper = styled.div`

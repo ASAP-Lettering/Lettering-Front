@@ -166,6 +166,14 @@ const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
     css`
       border-bottom: 1px solid ${theme.colors.red};
     `}
+
+  @media (max-height: 735px) {
+    height: 39px;
+    ${theme.fonts.caption04}
+    &::placeholder {
+      ${theme.fonts.caption04}
+    }
+  }
 `;
 
 const StyledTextarea = styled.textarea<{
@@ -198,6 +206,14 @@ const StyledTextarea = styled.textarea<{
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+
+  @media (max-height: 735px) {
+    height: 171px;
+    ${theme.fonts.caption04}
+    &::placeholder {
+      ${theme.fonts.caption04}
+    }
+  }
 `;
 
 const ValidationMessage = styled.div`
@@ -220,8 +236,5 @@ const IconWrapper = styled.div<{ clickable: boolean }>`
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  cursor: ${({ clickable }) =>
-    clickable
-      ? "pointer"
-      : "default"}; /* Only show pointer cursor if clickable */
+  cursor: ${({ clickable }) => (clickable ? "pointer" : "default")};
 `;
