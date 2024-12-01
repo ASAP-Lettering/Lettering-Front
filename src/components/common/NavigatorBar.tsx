@@ -103,6 +103,14 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.body04};
 
   @media (max-height: 735px) {
+    ${theme.fonts.body04}
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.body08};
+  }
+
+  @media (max-height: 570px) {
     ${theme.fonts.body12}
   }
 `;

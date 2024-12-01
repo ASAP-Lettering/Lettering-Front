@@ -231,6 +231,20 @@ const ChangeButton = styled.button`
     gap: 6px;
     ${theme.fonts.body12};
   }
+
+  @media (max-height: 650px) {
+    flex-direction: row;
+    margin-bottom: 50px;
+    gap: 6px;
+    ${theme.fonts.body12};
+  }
+
+  @media (max-height: 570px) {
+    flex-direction: row;
+    margin-bottom: 50px;
+    gap: 6px;
+    ${theme.fonts.body12};
+  }
 `;
 
 const ButtonWrapper = styled.div`

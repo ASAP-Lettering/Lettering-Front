@@ -284,8 +284,22 @@ const Container = styled.div<{
   }
 
   @media (max-height: 735px) {
+    max-width: 280px;
+    max-height: 280px;
+    min-height: 280px;
+    padding: 34px;
+  }
+
+  @media (max-height: 650px) {
+    max-width: 220px;
+    max-height: 220px;
+    min-height: 220px;
+    padding: 30px 20px;
+  }
+
+  @media (max-height: 570px) {
     max-width: 178px;
-    max-height: 200px;
+    max-height: 182px;
     min-height: 182px;
     padding: 30px 20px;
   }

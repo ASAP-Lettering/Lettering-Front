@@ -330,7 +330,6 @@ const Essential = styled.div`
   @media (max-height: 735px) {
     margin: 0;
     position: absolute;
-    top: 55px;
     right: 24px;
   }
 `;
@@ -411,7 +410,7 @@ const AddImagesLabel = styled.label`
   @media (max-height: 735px) {
     width: 39px;
     height: 39px;
-    ${theme.fonts.body12}
+    ${theme.fonts.body12};
   }
 `;
 

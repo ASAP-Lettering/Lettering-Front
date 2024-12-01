@@ -168,6 +168,14 @@ const Label = styled.div`
   ${(props) => props.theme.fonts.title01};
 
   @media (max-height: 735px) {
+    ${theme.fonts.title01};
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.subtitle};
+  }
+
+  @media (max-height: 570px) {
     ${theme.fonts.body14};
   }
 `;
@@ -177,7 +185,11 @@ const SmallText = styled.div`
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 33px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 650px) {
+    ${theme.fonts.body09};
+  }
+
+  @media (max-height: 570px) {
     ${theme.fonts.body13};
     margin-bottom: 24px;
   }
@@ -208,7 +220,7 @@ const TemplatesList = styled.div`
 
   @media (max-height: 735px) {
     margin-top: 18px;
-    margin-bottom: 17px;
+    margin-bottom: 5px;
     ${theme.fonts.body14};
     gap: 11px;
   }
