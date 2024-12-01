@@ -67,6 +67,11 @@ const SwipeableContainer = styled.div`
   height: auto;
   box-sizing: border-box;
   border-radius: 10px;
+
+  @media (max-width: 375px) {
+    max-height: 235px;
+  }
+
 `;
 
 const ContentSlider = styled.div`
@@ -80,6 +85,7 @@ const ContentItem = styled.div`
   display: flex;
   align-items: center;
   min-height: 200px;
+
 `;
 
 // const ContentImage = styled.img`
