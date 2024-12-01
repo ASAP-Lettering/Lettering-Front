@@ -195,6 +195,7 @@ const MainWrapper = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 5px 24px;
+    align-items: center;
     height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
@@ -217,6 +218,7 @@ const InfoWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;
+    width: 100%;
     gap: 12px;
 `;
 
@@ -230,6 +232,10 @@ const InfoName = styled.div`
 const ProfileImage = styled.img`
     width: 100%;
     height: auto;
+
+    @media (max-width: 375px) {
+        width: 200px;
+    }
 `;
 
 const Wrapper = styled.div`
