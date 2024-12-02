@@ -306,6 +306,10 @@ const Layout = styled.div`
   padding: 20px 20px 20px 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  @media (max-height: 570px) {
+    padding-top: 0px;
+  }
 `;
 
 const Container = styled.div`
@@ -337,7 +341,7 @@ const Essential = styled.div`
 const Column = styled.div`
   margin-bottom: 40px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 570px) {
     margin-bottom: 20px;
   }
 `;
@@ -351,6 +355,11 @@ const Label = styled.div`
   margin-bottom: 20px;
 
   @media (max-height: 735px) {
+    ${theme.fonts.body6}
+    margin-bottom: 12px;
+  }
+
+  @media (max-height: 650px) {
     ${theme.fonts.body10}
     margin-bottom: 8px;
   }
@@ -362,7 +371,7 @@ const Count = styled.div`
   ${theme.fonts.body09};
 
   @media (max-height: 735px) {
-    ${theme.fonts.body10};
+    ${theme.fonts.body11};
   }
 `;
 

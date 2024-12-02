@@ -164,6 +164,10 @@ const Layout = styled.div`
   padding: 20px 20px 20px 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  @media (max-height: 570px) {
+    padding-top: 0px;
+  }
 `;
 
 const Container = styled.div`
@@ -233,13 +237,6 @@ const ChangeButton = styled.button`
   }
 
   @media (max-height: 650px) {
-    flex-direction: row;
-    margin-bottom: 50px;
-    gap: 6px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 570px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;

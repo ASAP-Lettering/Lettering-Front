@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Input from "@/components/common/Input";
@@ -373,7 +373,7 @@ const SendLetterPage = () => {
           />
         </Column>
         <Column>
-          <Label>사진을 추가해주세요</Label>
+          <Label $show={false}>사진을 추가해주세요</Label>
           {(previewImages || []).length === 0 ? (
             <AddImageWrapper>
               <AddImageLabel>
@@ -409,16 +409,14 @@ const SendLetterPage = () => {
                   <ImageDiv>
                     <Image
                       src={image}
-                      width={52}
-                      height={52}
+                      fill
                       alt="images"
                       style={{ borderRadius: "8px" }}
                     />
                     <DeleteIcon onClick={() => handleDeleteImages(index)}>
                       <Image
                         src="/assets/icons/ic_image_delete.svg"
-                        width={20}
-                        height={20}
+                        fill
                         alt="delete"
                       />
                     </DeleteIcon>
@@ -471,6 +469,10 @@ const Layout = styled.div`
   padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  @media (max-height: 570px) {
+    padding-top: 0px;
+  }
 `;
 
 const NavigatorBarWrapper = styled.div`
@@ -494,21 +496,54 @@ const ButtonDiv = styled.div`
   position: absolute;
   top: 6.5px;
   right: 0px;
+
+  @media (max-height: 735px) {
+    width: 80px;
+    height: 28px;
+    ${theme.fonts.caption03};
+    gap: 5px;
+    top: 7px;
+  }
+
+  @media (max-height: 650px) {
+    width: 65px;
+    height: 20px;
+    ${theme.fonts.body15};
+    gap: 5px;
+    top: 10px;
+  }
 `;
 
 const DraftButton = styled.button`
   color: ${theme.colors.gray200};
   ${theme.fonts.caption03};
+  white-space: nowrap;
 
   &:disabled {
     opacity: 0.6;
     transition: opacity 0.5s;
+  }
+
+  @media (max-height: 735px) {
+    ${theme.fonts.caption03};
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.body15};
   }
 `;
 
 const ListButton = styled.button`
   color: ${theme.colors.gray200};
   ${theme.fonts.caption03};
+
+  @media (max-height: 735px) {
+    ${theme.fonts.caption03};
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.body15};
+  }
 `;
 
 const Container = styled.div`
@@ -529,25 +564,62 @@ const Essential = styled.div`
   ${(props) => props.theme.fonts.caption03};
   margin-top: 25px;
   margin-bottom: 17px;
+
+  @media (max-height: 790px) {
+    margin: 0;
+    position: absolute;
+    right: 24px;
+  }
 `;
 
 const Column = styled.div`
   margin-bottom: 40px;
+
+  /* @media (max-height: 735px) {
+    margin-bottom: 20px;
+  } */
+
+  @media (max-height: 570px) {
+    margin-bottom: 20px;
+  }
 `;
 
-const Label = styled.div`
+const Label = styled.div<{ $show?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.subtitle};
   margin-bottom: 12px;
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body6}
+    margin-bottom: 12px;
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.body10}
+    margin-bottom: 8px;
+  }
+
+  @media (max-height: 570px) {
+    ${({ $show }) =>
+      $show === false &&
+      css`
+        display: none;
+        margin-bottom: 0px;
+      `}
+  }
 `;
 
 const Count = styled.div`
   display: flex;
   color: ${theme.colors.gray400};
   ${theme.fonts.body09};
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body11};
+  }
 `;
 
 const Span = styled.span`
@@ -575,6 +647,11 @@ const AddImageLabel = styled.label`
   font-style: normal;
   font-weight: 500;
   ${theme.fonts.body08}
+
+  @media (max-height: 735px) {
+    height: 42px;
+    ${theme.fonts.caption04}
+  }
 `;
 
 const SmallText = styled.div`
@@ -582,6 +659,10 @@ const SmallText = styled.div`
   ${theme.fonts.caption04};
   text-align: center;
   margin-bottom: 100px;
+
+  @media (max-height: 570px) {
+    display: none;
+  }
 `;
 
 const AddImagesLabel = styled.label`
@@ -597,6 +678,12 @@ const AddImagesLabel = styled.label`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.body08};
   text-align: center;
+
+  @media (max-height: 735px) {
+    width: 39px;
+    height: 39px;
+    ${theme.fonts.body12};
+  }
 `;
 
 const ImagesList = styled.div`
@@ -606,6 +693,10 @@ const ImagesList = styled.div`
   gap: 6px;
   margin-top: 16px;
   margin-bottom: 100px;
+
+  @media (max-height: 570px) {
+    margin-top: 0px;
+  }
 `;
 
 const ImagesWrapper = styled.div`
@@ -619,6 +710,11 @@ const ImageDiv = styled.div`
   width: 52px;
   height: 52px;
   position: relative;
+
+  @media (max-height: 735px) {
+    width: 39px;
+    height: 39px;
+  }
 `;
 
 const DeleteIcon = styled.button`
@@ -627,6 +723,11 @@ const DeleteIcon = styled.button`
   position: absolute;
   top: -5px;
   right: -5px;
+
+  @media (max-height: 735px) {
+    width: 13px;
+    height: 13px;
+  }
 `;
 
 const ButtonWrapper = styled.div`

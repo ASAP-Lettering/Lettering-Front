@@ -62,7 +62,7 @@ const LetterTemplatePage = () => {
         cancel={false}
       />
       <Container>
-        {/* <Essential>* 필수</Essential> */}
+        <Essential>* 필수</Essential>
         <Column>
           <Label>편지지를 골라볼까요? *</Label>
           <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
@@ -135,6 +135,10 @@ const Layout = styled.div`
   padding: 20px 20px 20px 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  @media (max-height: 570px) {
+    padding-top: 0px;
+  }
 `;
 
 const Container = styled.div`
@@ -154,6 +158,10 @@ const Essential = styled.div`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.caption03};
   margin-bottom: 17px;
+
+  @media (max-height: 570px) {
+    display: none;
+  }
 `;
 
 const Column = styled.div`

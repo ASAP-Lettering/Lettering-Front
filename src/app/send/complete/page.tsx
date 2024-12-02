@@ -24,12 +24,7 @@ const SendCompletePage = () => {
           <Sub>레터링으로 편지에 담긴 진심을 수놓았어요</Sub>
         </Title>
         <ImageWrapper>
-          <Image
-            src="/assets/send/send_complete.png"
-            width={480}
-            height={460}
-            alt="편지"
-          />
+          <Image src="/assets/send/send_complete.png" fill alt="편지" />
         </ImageWrapper>
       </Container>
       <ButtonWrapper>
@@ -96,6 +91,18 @@ const ImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-height: 650px) {
+    width: 350px;
+    height: 340px;
+    top: 55%;
+  }
+
+  @media (max-height: 570px) {
+    width: 300px;
+    height: 290px;
+    top: 55%;
+  }
 `;
 
 const ButtonWrapper = styled.div`
