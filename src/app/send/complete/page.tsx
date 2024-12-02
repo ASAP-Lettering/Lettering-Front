@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/common/Button";
+import KakaoShareButton from "@/components/common/KakaoShareButton";
 import { sendLetterState } from "@/recoil/letterStore";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -12,7 +13,7 @@ import styled from "styled-components";
 const SendCompletePage = () => {
   const router = useRouter();
 
-  const { receiverName } = useRecoilValue(sendLetterState);
+  const { receiverName, letterId } = useRecoilValue(sendLetterState);
 
   return (
     <Layout>
@@ -34,6 +35,11 @@ const SendCompletePage = () => {
           onClick={() => {
             router.push("/planet");
           }}
+        />
+        <KakaoShareButton
+          type="reshare"
+          letterId={letterId || ""}
+          width="90px"
         />
       </ButtonWrapper>
     </Layout>
@@ -107,6 +113,9 @@ const ImageWrapper = styled.div`
 
 const ButtonWrapper = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   position: absolute;
   padding: 0 24px;
   bottom: 54px;
