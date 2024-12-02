@@ -45,6 +45,7 @@ export const sendLetterState = atom({
     images: [] as string[],
     previewImages: [] as string[],
     templateType: 0,
+    letterId: null as string | null,
   },
   effects_UNSTABLE: [persistAtomEffect],
 });
