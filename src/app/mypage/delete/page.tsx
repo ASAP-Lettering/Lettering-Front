@@ -200,6 +200,11 @@ const SubTitle = styled.div`
   ${(props: any) => props.theme.fonts.body08};
   color: ${(props: any) => props.theme.colors.white};
   margin-bottom: 35px;
+
+  //반응형
+  @media (max-width: 375px) {
+    margin-bottom: 5px;
+  }
 `;
 
 const QuestionText = styled.div`

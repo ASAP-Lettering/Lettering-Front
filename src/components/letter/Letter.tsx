@@ -277,6 +277,16 @@ const Container = styled.div<{
   border-radius: 12px;
   border: 1px solid ${theme.colors.gray700};
 
+  //반응형
+  @media (max-width: 375px) {
+    gap: 5px;
+    padding: 20px;
+    justify-content: start;
+    max-width: 300px;
+    max-height: ${({ $height }) => ($height ? $height : "300px")};
+    min-height: 270px;
+  }
+
   &.flip {
     animation: ${flipAnimation} 0.8s ease-in-out;
     transform-style: preserve-3d;
@@ -331,15 +341,21 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
   align-items: center;
   text-align: center;
   ${(props) =>
-    props.$showType === "preview" && props.$contentType === "one"
+    (props.$showType === "previewSend" ||
+      props.$showType === "previewReceive") &&
+    props.$contentType === "one"
       ? props.theme.fonts.caption01
       : props.theme.fonts.title01};
 
   @media (max-height: 735px) {
     ${(props) =>
-      props.$showType === "preview" && props.$contentType === "one"
+      (props.$showType === "previewSend" ||
+        props.$showType === "previewReceive") &&
+      props.$contentType === "one"
         ? props.theme.fonts.caption01
         : props.theme.fonts.body10};
+    /* @media (max-width: 375px) {
+    font-size: 12px; */
   }
 `;
 
@@ -352,7 +368,7 @@ const Date = styled.div<{ $showType: string }>`
 const Content = styled.div<{ $showType: string; $contentType: string }>`
   width: 100%;
   ${(props) =>
-    props.$showType === "preview"
+    props.$showType === "previewSend" || props.$showType === "previewReceive"
       ? `flex: 1; height: calc(100% - 80px);`
       : `height: 90%;`}
   display: flex;
@@ -363,7 +379,9 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   border-radius: 10px;
   padding: 10px 0;
   ${(props) =>
-    props.$showType === "preview" && props.$contentType === "one"
+    (props.$showType === "previewSend" ||
+      props.$showType === "previewReceive") &&
+    props.$contentType === "one"
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
   overflow: hidden;
@@ -374,9 +392,14 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
 
   @media (max-height: 735px) {
     ${(props) =>
-      props.$showType === "preview" && props.$contentType === "one"
+      (props.$showType === "previewSend" ||
+        props.$showType === "previewReceive") &&
+      props.$contentType === "one"
         ? props.theme.fonts.caption09
         : props.theme.fonts.caption05};
+    //반응형
+    /* @media (max-width: 375px) {
+    font-size: 11px; */
   }
 `;
 
