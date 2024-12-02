@@ -174,6 +174,9 @@ const SelectTitle = styled.div`
 const SampleImg = styled.img`
     width: 100%;
     height: auto;
+    @media (max-width: 400px) {
+        width: 100px;
+    }
 `;
 
 const Wrapper = styled.div`

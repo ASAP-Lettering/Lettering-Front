@@ -277,6 +277,16 @@ const Container = styled.div<{
   border-radius: 12px;
   border: 1px solid ${theme.colors.gray700};
 
+  //반응형
+  @media (max-width: 375px) {
+    gap: 5px;
+    padding: 20px;
+    justify-content: start;
+    max-width: 300px;
+    max-height: ${({ $height }) => ($height ? $height : "300px")};
+    min-height: 270px;
+  }
+
   &.flip {
     animation: ${flipAnimation} 0.8s ease-in-out;
     transform-style: preserve-3d;
@@ -309,6 +319,9 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
     props.$showType === "preview" && props.$contentType === "one"
       ? props.theme.fonts.caption01
       : props.theme.fonts.title01};
+  @media (max-width: 375px) {
+    font-size: 12px;
+  }
 `;
 
 const Date = styled.div<{ $showType: string }>`
@@ -339,6 +352,10 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  //반응형
+  @media (max-width: 375px) {
+    font-size: 11px;
+  }
 `;
 
 const PopupContainer = styled.div`

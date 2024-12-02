@@ -94,19 +94,21 @@ const LetterPage = () => {
           </HeaderTitle>
           <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
         </Header>
-        <Letter
-          showType="receive"
-          key={key}
-          pageType="space"
-          id={letterId}
-          templateType={letterData.templateType}
-          name={letterData.sender}
-          content={letterData.content}
-          images={letterData.images}
-          isImage={isImage}
-          date={letterData.date}
-          nextLetterId={letterData.next_letter?.letter_id}
-        />
+        <LetterWrapper>
+          <Letter
+            showType="receive"
+            key={key}
+            pageType="space"
+            id={letterId}
+            templateType={letterData.templateType}
+            name={letterData.sender}
+            content={letterData.content}
+            images={letterData.images}
+            isImage={isImage}
+            date={letterData.date}
+            nextLetterId={letterData.next_letter?.letter_id}
+          />
+        </LetterWrapper>
         {letterData.images.length > 0 && letterData.content.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
@@ -218,6 +220,12 @@ const MainWrapper = styled.div`
     background: ${(props: any) => props.theme.colors.gray600};
     border-radius: 10px; /* Rounded corners */
   }
+
+   //반응형
+   @media (max-width: 375px) {
+    justify-content: start;
+    padding: 0;
+  }
 `;
 
 const Header = styled.div`
@@ -226,6 +234,22 @@ const Header = styled.div`
   padding: 15px 0px;
   width: 100%;
   padding-top: 30px;
+  //반응형
+  @media (max-width: 375px) {
+    padding-top: 0;
+    padding: 0 20px;
+  }
+`;
+
+const LetterWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    //반응형
+    @media (max-width: 375px) {
+    padding: 10px 40px;
+    }
 `;
 
 const LetterCount = styled.div`
@@ -247,6 +271,14 @@ const HeaderTitle = styled.div`
   span {
     ${(props) => props.theme.fonts.heading02};
     white-space: nowrap;
+  }
+  @media (max-width: 375px) {
+    font-size: 16px;
+    line-height: 22px;
+    span {
+        font-size: 16px;
+        line-height: 22px;
+    }
   }
 `;
 
@@ -302,6 +334,11 @@ const ChangeButtonWrapper = styled.div`
     height: 20px;
     flex-shrink: 0;
   }
+
+  @media (max-width: 375px) {
+   padding-top: 10px;
+   flex-direction: row;
+  }
 `;
 
 const PaginationWrapper = styled.div`
@@ -315,6 +352,15 @@ const PaginationWrapper = styled.div`
   ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray500};
   gap: 24px;
+
+  @media (max-width: 375px) {
+    padding: 10px 4px;
+    font-size: 12px;
+    gap: 16px;
+    line-height: 17px;
+    text-align: center;
+  }
+  
 `;
 
 const Page = styled.div<{ type: "left" | "center" | "right" }>`
@@ -323,6 +369,7 @@ const Page = styled.div<{ type: "left" | "center" | "right" }>`
   flex-direction: row;
   cursor: pointer;
   text-align: ${(props) => props.type};
+  align-items: center;
 `;
 
 const Text = styled.div`
@@ -345,6 +392,10 @@ const CurrentPage = styled.div`
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.gray800};
   white-space: nowrap;
+  @media (max-width: 375px) {
+    font-size: 12px;
+    padding: 2px 14px;
+  }
 `;
 
 const WhiteSpace = styled.div`

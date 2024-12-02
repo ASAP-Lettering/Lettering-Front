@@ -198,6 +198,10 @@ const StyledTextarea = styled.textarea<{
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+  //반응형
+  @media (max-width: 375px) {
+    max-height: 113px;
+  }
 `;
 
 const ValidationMessage = styled.div`
