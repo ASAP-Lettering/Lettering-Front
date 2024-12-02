@@ -159,7 +159,7 @@ const Essential = styled.div`
   ${(props) => props.theme.fonts.caption03};
   margin-bottom: 17px;
 
-  @media (max-height: 570px) {
+  @media (max-height: 780px) {
     display: none;
   }
 `;
