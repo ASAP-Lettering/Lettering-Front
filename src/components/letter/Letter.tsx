@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Pagination from "./Pagination";
 import SwipeableContent from "./Content";
 import { theme } from "@/styles/theme";
@@ -177,6 +177,7 @@ const Letter = (props: LetterProps) => {
       $width={width}
       $height={height}
       $padding={padding}
+      $showType={showType}
       className={flip ? "flip" : ""}
     >
       {isDelete && (
@@ -255,6 +256,7 @@ const Container = styled.div<{
   $width?: string;
   $height?: string;
   $padding?: string;
+  $showType: "previewSend" | "previewReceive" | "receive" | "send" | "url";
 }>`
   display: flex;
   flex-direction: column;
@@ -277,21 +279,63 @@ const Container = styled.div<{
   border-radius: 12px;
   border: 1px solid ${theme.colors.gray700};
 
-  //반응형
-  @media (max-width: 375px) {
-    gap: 5px;
-    padding: 20px;
-    justify-content: start;
-    max-width: 300px;
-    max-height: ${({ $height }) => ($height ? $height : "300px")};
-    min-height: 270px;
-  }
-
   &.flip {
     animation: ${flipAnimation} 0.8s ease-in-out;
     transform-style: preserve-3d;
     perspective: 1000px;
   }
+
+  /* showType별 반응형 */
+  ${({ $showType }) =>
+    ($showType === "previewSend" || $showType === "previewReceive") &&
+    css`
+      @media (max-height: 735px) {
+        max-width: 280px;
+        max-height: 280px;
+        min-height: 280px;
+        padding: 34px;
+      }
+
+      @media (max-height: 650px) {
+        max-width: 220px;
+        max-height: 220px;
+        min-height: 220px;
+        padding: 30px 20px;
+      }
+
+      @media (max-height: 570px) {
+        max-width: 178px;
+        max-height: 182px;
+        min-height: 182px;
+        padding: 30px 20px;
+      }
+    `}
+
+  ${({ $showType }) =>
+    ($showType === "receive" || $showType === "send") &&
+    css`
+      @media (max-width: 768px) {
+        max-width: 350px;
+        max-height: 350px;
+      }
+      @media (max-width: 480px) {
+        max-width: 300px;
+        max-height: 300px;
+      }
+    `}
+
+  ${({ $showType }) =>
+    $showType === "url" &&
+    css`
+      @media (max-width: 768px) {
+        max-width: 340px;
+        max-height: 340px;
+      }
+      @media (max-width: 480px) {
+        max-width: 290px;
+        max-height: 290px;
+      }
+    `}
 `;
 
 const TopContainer = styled.div<{
@@ -309,6 +353,10 @@ const TopContainer = styled.div<{
 const TopPreviewContainer = styled(TopContainer)`
   margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
+
+  @media (max-height: 735px) {
+    margin-top: 0;
+  }
 `;
 
 const Name = styled.div<{ $showType: string; $contentType: string }>`
@@ -316,11 +364,21 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
   align-items: center;
   text-align: center;
   ${(props) =>
-    props.$showType === "preview" && props.$contentType === "one"
+    (props.$showType === "previewSend" ||
+      props.$showType === "previewReceive") &&
+    props.$contentType === "one"
       ? props.theme.fonts.caption01
       : props.theme.fonts.title01};
-  @media (max-width: 375px) {
-    font-size: 12px;
+
+  @media (max-height: 735px) {
+    ${(props) =>
+      (props.$showType === "previewSend" ||
+        props.$showType === "previewReceive") &&
+      props.$contentType === "one"
+        ? props.theme.fonts.caption01
+        : props.theme.fonts.body10};
+    /* @media (max-width: 375px) {
+    font-size: 12px; */
   }
 `;
 
@@ -333,7 +391,7 @@ const Date = styled.div<{ $showType: string }>`
 const Content = styled.div<{ $showType: string; $contentType: string }>`
   width: 100%;
   ${(props) =>
-    props.$showType === "preview"
+    props.$showType === "previewSend" || props.$showType === "previewReceive"
       ? `flex: 1; height: calc(100% - 80px);`
       : `height: 90%;`}
   display: flex;
@@ -344,7 +402,9 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   border-radius: 10px;
   padding: 10px 0;
   ${(props) =>
-    props.$showType === "preview" && props.$contentType === "one"
+    (props.$showType === "previewSend" ||
+      props.$showType === "previewReceive") &&
+    props.$contentType === "one"
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
   overflow: hidden;
@@ -352,9 +412,17 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  //반응형
-  @media (max-width: 375px) {
-    font-size: 11px;
+
+  @media (max-height: 735px) {
+    ${(props) =>
+      (props.$showType === "previewSend" ||
+        props.$showType === "previewReceive") &&
+      props.$contentType === "one"
+        ? props.theme.fonts.caption09
+        : props.theme.fonts.caption05};
+    //반응형
+    /* @media (max-width: 375px) {
+    font-size: 11px; */
   }
 `;
 

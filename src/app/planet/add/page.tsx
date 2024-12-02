@@ -93,6 +93,10 @@ const Layout = styled.div`
   padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  @media (max-height: 570px) {
+    padding-top: 0px;
+  }
 `;
 
 const Container = styled.div`
@@ -107,15 +111,36 @@ const Essential = styled.div`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.caption03};
   margin-bottom: 17px;
+
+  @media (max-height: 735px) {
+    margin: 0;
+    position: absolute;
+    right: 24px;
+  }
 `;
 
 const Column = styled.div`
   margin-bottom: 40px;
+
+  @media (max-height: 570px) {
+    margin-bottom: 27px;
+  }
 `;
+
 const Label = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.subtitle};
   margin-bottom: 20px;
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body6}
+    margin-bottom: 12px;
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.body10}
+    margin-bottom: 8px;
+  }
 `;
 
 const Add = styled.div`
@@ -123,7 +148,7 @@ const Add = styled.div`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.caption04};
   margin-top: 8px;
-  margin-left: 25px;
+  margin-left: 20px;
 `;
 
 const PlanetWrapper = styled.div`

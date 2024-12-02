@@ -33,8 +33,7 @@ const NavigatorBar = (props: NavigatorBarProps) => {
       <LeftIcon>
         <Image
           src="/assets/icons/ic_chevron_left.svg"
-          width={24}
-          height={24}
+          fill
           alt="back"
           onClick={handleChangePage}
         />
@@ -44,8 +43,7 @@ const NavigatorBar = (props: NavigatorBarProps) => {
         <RightIcon>
           <Image
             src="/assets/icons/ic_cancel.svg"
-            width={24}
-            height={24}
+            fill
             alt="cancel"
             onClick={handleCancelPage}
           />
@@ -71,15 +69,31 @@ const Container = styled.div`
 `;
 
 const LeftIcon = styled.div`
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
+  position: relative;
+
+  @media (max-height: 735px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const RightIcon = styled.div`
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
+  position: relative;
+
+  @media (max-height: 735px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const WhiteSpace = styled.div`
-    width: 24px;
+  width: 24px;
 `;
 
 const Title = styled.div`
@@ -87,6 +101,18 @@ const Title = styled.div`
   text-align: center;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.body04};
+
+  @media (max-height: 735px) {
+    ${theme.fonts.body04}
+  }
+
+  @media (max-height: 650px) {
+    ${theme.fonts.body08};
+  }
+
+  @media (max-height: 570px) {
+    ${theme.fonts.body12}
+  }
 `;
 
 const NextLabel = styled.div`

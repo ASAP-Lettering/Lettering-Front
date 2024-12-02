@@ -93,4 +93,10 @@ const StyledButton = styled.button<{
     opacity: 0.8;
     transition: opacity 500ms;
   }
+
+  @media (max-height: 735px) {
+    ${theme.fonts.button02};
+    height: 45px;
+    border-radius: 9px;
+  }
 `;

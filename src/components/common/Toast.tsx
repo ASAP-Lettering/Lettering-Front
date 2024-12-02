@@ -139,6 +139,11 @@ const ToastContainer = styled.div<{
       : css`
           ${fadeOut} 0.5s ease-in-out
         `};
+
+  @media (max-height: 735px) {
+    height: 44px;
+    ${theme.fonts.caption01}
+  }
 `;
 
 const Message = styled.div`
