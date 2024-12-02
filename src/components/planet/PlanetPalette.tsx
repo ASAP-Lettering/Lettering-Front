@@ -37,9 +37,17 @@ export default PlanetPalette;
 
 const Container = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
   border-radius: 8px;
   background: ${theme.colors.gray800};
+
+  @media (max-height: 650px) {
+    height: 51px;
+    padding: 0 17px;
+  }
 `;
 
 const Palettes = styled.div`
@@ -50,11 +58,16 @@ const Palettes = styled.div`
   overflow-x: auto;
   padding: 5px 0;
   gap: 12px;
+
+  @media (max-height: 650px) {
+    justify-content: space-between;
+  }
 `;
 
 const Palette = styled.div<{ $color: string; $selected: boolean }>`
   width: 41px;
   height: 41px;
+  aspect-ratio: 1;
   border-radius: 50%;
   background: ${({ $color }) => $color};
 
@@ -65,13 +78,8 @@ const Palette = styled.div<{ $color: string; $selected: boolean }>`
       filter: drop-shadow(0px 0px 3px rgba(224, 222, 222, 0.377));
     `}
 
-  @media (max-width: 330px) {
-    width: 35px;
-    height: 35px;
-  }
-
-  @media (max-width: 300px) {
-    width: 30px;
-    height: 30px;
+  @media (max-height: 650px) {
+    width: 33px;
+    height: 33px;
   }
 `;
