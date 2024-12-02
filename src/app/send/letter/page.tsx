@@ -314,6 +314,7 @@ const SendLetterPage = () => {
         images: response.data.images,
         previewImages: response.data.images,
         templateType: 0,
+        letterId: null,
       });
 
       // 각 input 상태 업데이트
