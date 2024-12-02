@@ -38,6 +38,7 @@ const DraftList = (props: DraftListProps) => {
           images: response.data.images,
           previewImages: response.data.images, // 미리보기로 이미지 불러오기
           templateType: 0,
+          letterId: null,
         });
 
         onClose();
