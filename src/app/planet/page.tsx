@@ -80,6 +80,7 @@ const PlanetPage = () => {
       images: [] as string[],
       previewImages: [] as string[],
       templateType: 0,
+      letterId: null,
     });
   }, []);
 
