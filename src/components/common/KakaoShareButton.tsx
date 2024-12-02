@@ -6,16 +6,18 @@ import { useRecoilValue } from "recoil";
 import { userState } from "@/recoil/userStore";
 import useKakaoSDK from "@/hooks/useKakaoSDK";
 
-type buttonType = "default" | "small";
+type buttonType = "default" | "small" | "reshare";
 
 interface KakaoShareButtonProps {
   type?: buttonType;
   letterId: string;
+  width?: string;
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   type = "default",
   letterId,
+  width,
 }) => {
   const isKakaoLoaded = useKakaoSDK();
   const { name } = useRecoilValue(userState);
@@ -64,11 +66,18 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
         alt="카카오"
       />
     </Button>
-  ) : (
+  ) : type === "small" ? (
     <ReShareBtnWrapper onClick={shareToKakao}>
       <img src="/assets/icons/ic_kakao_talk.svg" />
       편지 다시 보내기
     </ReShareBtnWrapper>
+  ) : (
+    <Button
+      buttonType="secondary"
+      text="재공유"
+      width={width}
+      onClick={shareToKakao}
+    />
   );
 };
 

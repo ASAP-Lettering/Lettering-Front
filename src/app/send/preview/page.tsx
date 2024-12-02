@@ -8,7 +8,7 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Letter from "@/components/letter/Letter";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { postSendLtter } from "@/api/send/send";
 import { sendLetterState } from "@/recoil/letterStore";
 import useKakaoSDK from "@/hooks/useKakaoSDK";
@@ -16,11 +16,11 @@ import { userState } from "@/recoil/userStore";
 
 const SendPreviewPage = () => {
   const router = useRouter();
-  const { draftId, receiverName, content, images, templateType } =
+  const [letterState, setLetterState] = useRecoilState(sendLetterState);
+  const { draftId, receiverName, content, images, templateType, letterId } =
     useRecoilValue(sendLetterState);
   const { name } = useRecoilValue(userState);
   const [isImage, setIsImage] = useState<boolean>(false);
-  const [letterId, setLetterId] = useState<string | null>(null);
 
   const isKakaoLoaded = useKakaoSDK();
 
@@ -45,7 +45,10 @@ const SendPreviewPage = () => {
           templateType,
         });
         console.log("편지 쓰기 성공");
-        setLetterId(response.data.letterCode);
+        setLetterState((prevState) => ({
+          ...prevState,
+          letterId: response.data.letterCode,
+        }));
 
         // 2. 카카오 공유 로직 실행
         if (isKakaoLoaded && response.data.letterCode) {
