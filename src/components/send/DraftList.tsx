@@ -100,6 +100,10 @@ const Container = styled.div`
   background: ${theme.colors.gray800};
   position: relative;
   overflow: visible;
+
+  @media (max-height: 650px) {
+    height: 60px;
+  }
 `;
 
 const Top = styled.div`
@@ -112,6 +116,10 @@ const Top = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  @media (max-height: 650px) {
+    ${(props) => props.theme.fonts.body13};
+  }
 `;
 
 const Name = styled.span`
@@ -135,6 +143,10 @@ const TimeStamp = styled.div`
   color: ${theme.colors.gray300};
   ${theme.fonts.caption04};
   text-align: left;
+
+  @media (max-height: 650px) {
+    ${(props) => props.theme.fonts.caption05};
+  }
 `;
 
 const DeleteIcon = styled(Image)`

@@ -158,6 +158,7 @@ const Top = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 4px;
+  margin-bottom: 22px;
 `;
 
 const Title = styled.div`
@@ -166,17 +167,30 @@ const Title = styled.div`
   gap: 12px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.body04};
-  margin-bottom: 22px;
+
+  @media (max-height: 650px) {
+    ${(props) => props.theme.fonts.caption01};
+  }
 `;
 
 const Span = styled.span`
+  display: flex;
+  align-items: center;
   color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.caption02};
+
+  @media (max-height: 650px) {
+    ${(props) => props.theme.fonts.body13};
+  }
 `;
 
 const EditButton = styled.button`
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.body09};
+
+  @media (max-height: 650px) {
+    ${(props) => props.theme.fonts.body13};
+  }
 `;
 
 const DraftListContainer = styled.div`
@@ -205,6 +219,10 @@ const DraftListWrapper = styled.div`
   align-items: center;
   justify-content: flex-end;
   flex-shrink: 0;
+
+  @media (max-height: 650px) {
+    height: 60px;
+  }
 `;
 
 const NoData = styled.div`
