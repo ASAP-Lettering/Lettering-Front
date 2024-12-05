@@ -29,6 +29,24 @@ export const clearTokens = () => {
   removeCookie("lettering-refresh");
 };
 
+/* 온보딩 여부 */
+export const setOnboarding = (onboarding: string) => {
+  if (typeof window !== "undefined") {
+    setCookie("lettering-onboarding", onboarding, 1);
+  }
+};
+
+export const getOnboarding = () => {
+  if (typeof window !== "undefined") {
+    return getCookie("lettering-onboarding");
+  }
+  return null;
+};
+
+export const clearOnboarding = () => {
+  removeCookie("lettering-onboarding")
+}
+
 /* letter URL */
 export const setLetterUrl = (url: string) => {
   if (typeof window !== "undefined") {

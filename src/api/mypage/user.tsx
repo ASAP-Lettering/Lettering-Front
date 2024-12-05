@@ -12,29 +12,29 @@ export const deleteUser = async () => {
   return await authClient.delete(`/api/v1/users`);
 };
 
-//화원 정보 조회
+// 회원 정보 조회
 export const getUserInfo = async () => {
   return await authClient.get(`/api/v1/users/info/me`);
 };
 
-//생일 수정
+// 생일 수정
 export const putUserBirthday = async (birthday: string) => {
   return await authClient.put(`/api/v1/users/info/me/birthday`, {
     birthday: birthday,
   });
 };
 
-//보낸 편지함 목록
+// 보낸 편지함 목록
 export const getSentLetter = async () => {
   return await authClient.get(`/api/v1/letters/send`);
 };
 
-//보낸 편지함 상세
+// 보낸 편지함 상세
 export const getSentLetterDetail = async (letterId: string) => {
   return await authClient.get(`/api/v1/letters/send/${letterId}`);
 };
 
-//보낸 편지 삭제 (1개 이상)
+// 보낸 편지 삭제 (1개 이상)
 export const deleteSentLetters = async (letterIds: string[]) => {
   return await authClient.delete(`/api/v1/letters/send`, {
     data: {
@@ -43,7 +43,12 @@ export const deleteSentLetters = async (letterIds: string[]) => {
   });
 };
 
-//보낸 편지 삭제 (1개)
+// 보낸 편지 삭제 (1개)
 export const deleteSentLetter = async (letterId: string) => {
   return await authClient.delete(`/api/v1/letters/send/${letterId}`);
+};
+
+// 온보딩
+export const putOnboarding = async () => {
+  return await authClient.put(`/api/v1/users/info/onboarding`, {});
 };

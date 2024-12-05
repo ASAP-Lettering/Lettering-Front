@@ -25,6 +25,7 @@ import {
   getAccessToken,
   getCookie,
   getInitUserToast,
+  getOnboarding,
   setCookie,
   setInitUserToast,
 } from "@/utils/storage";
@@ -241,14 +242,10 @@ const PlanetPage = () => {
     }
   };
 
-  /* 토스트 메세지 */
-  /* 편지 등록 개수 3개 미만일 경우*/
+  /* 온보딩 여부 조회 */
   useEffect(() => {
-    if (countLetter < 1) {
-      if (getCookie("letter-onboard") === null) {
-        setCookie("letter-onboard", "exist", 30);
-        router.push("/onboarding");
-      }
+    if (getOnboarding() === "false") {
+      router.push("/onboarding");
     }
   }, []);
 

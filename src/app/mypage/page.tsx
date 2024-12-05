@@ -5,7 +5,7 @@ import { getUserInfo, logout } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { clearTokens, getRefreshToken } from "@/utils/storage";
+import { clearOnboarding, clearTokens, getRefreshToken } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -45,6 +45,7 @@ const MyPage = () => {
         .then((res) => {
           console.log(res.data);
           clearTokens();
+          clearOnboarding();
           router.push("/login");
         })
         .catch((err) => console.log(err));
@@ -176,148 +177,148 @@ export default function MyPagePaging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    //justify-content: space-between;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  //justify-content: space-between;
+  color: white;
+  background: ${(props) => props.theme.colors.bg};
 `;
 
 const MainContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px;
-    overflow-y: auto;
-    box-sizing: border-box;
-    width: 100%;
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  width: 100%;
+  &::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar */
+  }
 
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
+  }
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: column;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
 `;
 
 const ProfileHeader = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const ProfileInfo = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
 
 const ProfileName = styled.div`
-    ${(props: any) => props.theme.fonts.title01};
-    color: ${(props: any) => props.theme.colors.white};
+  ${(props: any) => props.theme.fonts.title01};
+  color: ${(props: any) => props.theme.colors.white};
 `;
 
 const ProfileEmail = styled.div`
-    ${(props: any) => props.theme.fonts.body09};
-    color: ${(props: any) => props.theme.colors.gray400};
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 7px;
+  ${(props: any) => props.theme.fonts.body09};
+  color: ${(props: any) => props.theme.colors.gray400};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 7px;
 `;
 
 const ProfileBtn = styled.img`
-    width: 24px;
-    height: auto;
-    cursor: pointer;
+  width: 24px;
+  height: auto;
+  cursor: pointer;
 `;
 
 const CountContainer = styled.div`
-    border-radius: 8px;
-    background-color: ${(props: any) => props.theme.colors.gray900};
-    display: flex;
-    flex-direction: column;
-    padding: 14px 20px;
-    gap: 10px;
-    margin-top: 24px;
-    margin-bottom: 12px;
+  border-radius: 8px;
+  background-color: ${(props: any) => props.theme.colors.gray900};
+  display: flex;
+  flex-direction: column;
+  padding: 14px 20px;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 12px;
 `;
 
 const CountRaw = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const CountTitle = styled.div`
-    ${(props: any) => props.theme.fonts.body09};
-    color: ${(props: any) => props.theme.colors.gray300};
+  ${(props: any) => props.theme.fonts.body09};
+  color: ${(props: any) => props.theme.colors.gray300};
 `;
 
 const CountValue = styled.div`
-    ${(props: any) => props.theme.fonts.body08};
-    color: ${(props: any) => props.theme.colors.white};
+  ${(props: any) => props.theme.fonts.body08};
+  color: ${(props: any) => props.theme.colors.white};
 `;
 
 const Line = styled.hr`
-    height: 2px;
-    background-color: ${(props) => props.theme.colors.gray800};
-    border: none;
-    margin: 0;
-    margin-top : 11px;
+  height: 2px;
+  background-color: ${(props) => props.theme.colors.gray800};
+  border: none;
+  margin: 0;
+  margin-top: 11px;
 `;
 
 const SettingWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 const SettingTitle = styled.div`
-    ${(props: any) => props.theme.fonts.body07};
-    color: ${(props: any) => props.theme.colors.gray100};
-    margin-bottom: 10px;
+  ${(props: any) => props.theme.fonts.body07};
+  color: ${(props: any) => props.theme.colors.gray100};
+  margin-bottom: 10px;
 `;
 
 const MenuTitle = styled.div`
-    ${(props: any) => props.theme.fonts.body06};
-    color: ${(props: any) => props.theme.colors.white};
+  ${(props: any) => props.theme.fonts.body06};
+  color: ${(props: any) => props.theme.colors.white};
 `;
 
 const MenuSubTitle = styled.div`
-    ${(props: any) => props.theme.fonts.caption04};
-    color: ${(props: any) => props.theme.colors.gray500};
+  ${(props: any) => props.theme.fonts.caption04};
+  color: ${(props: any) => props.theme.colors.gray500};
 `;
 
 const MenuWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 10px 0;
-    cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 0;
+  cursor: pointer;
 `;
 
 const SettingContainer = styled.div`
-    padding: 10px 0;
+  padding: 10px 0;
 `;
 
 const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;
