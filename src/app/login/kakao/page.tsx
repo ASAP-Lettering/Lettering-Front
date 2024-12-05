@@ -3,7 +3,12 @@
 import { login } from "@/api/login/user";
 import Loader from "@/components/common/Loader";
 import { signupState } from "@/recoil/signupStore";
-import { clearLetterUrl, getLetterUrl, setTokens } from "@/utils/storage";
+import {
+  clearLetterUrl,
+  getLetterUrl,
+  setOnboarding,
+  setTokens,
+} from "@/utils/storage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -55,6 +60,8 @@ const Auth = () => {
             .then((res) => {
               console.log("accessToken", res.data.accessToken);
               setTokens(res.data.accessToken, res.data.refreshToken);
+              /* 온보딩 여부 저장 */
+              setOnboarding(res.data.isProcessedOnboarding);
               if (storeUrl) {
                 router.push(`/verify/letter?url=${storeUrl}`);
                 clearLetterUrl();

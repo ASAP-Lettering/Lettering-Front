@@ -16,7 +16,7 @@ const Signup = () => {
     if (url) {
       router.push(`/verify/letter?url=${url}`);
     } else {
-      router.push("/planet");
+      router.push("/onboarding");
     }
   };
   return (
@@ -85,17 +85,17 @@ const MainWrapper = styled.div`
   padding: 0 24px;
   padding-top: 20px;
   &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+    width: 5px; /* Width of the scrollbar */
+  }
 
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px; /* Rounded corners */
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px; /* Rounded corners */
   }
 `;
 
@@ -136,7 +136,7 @@ const Image = styled.img`
 `;
 
 const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+  display: flex;
+  width: 100%;
+  padding: 24px;
 `;

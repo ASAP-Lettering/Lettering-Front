@@ -1,5 +1,6 @@
 "use client";
 
+import { putOnboarding } from "@/api/mypage/user";
 import Bottom from "@/components/common/Bottom";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
@@ -8,6 +9,7 @@ import Tag from "@/components/common/Tag";
 import Pagination from "@/components/letter/Pagination";
 import { Orbit } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
+import { setOnboarding } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -61,6 +63,10 @@ const Onboarding = () => {
           senderName: "규리",
         },
       ]);
+    }
+    if (step === 4) {
+      putOnboarding();
+      setOnboarding("true");
     }
   }, [step]);
 

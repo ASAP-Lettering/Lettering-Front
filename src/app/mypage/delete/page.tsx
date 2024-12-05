@@ -7,7 +7,12 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
-import { clearTokens, getRefreshToken, removeCookie } from "@/utils/storage";
+import {
+  clearOnboarding,
+  clearTokens,
+  getRefreshToken,
+  removeCookie,
+} from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -49,7 +54,7 @@ const DeleteAccount = () => {
       .then((res) => {
         console.log(res.data);
         clearTokens();
-        removeCookie("letter-onboard");
+        clearOnboarding();
         router.push("/login");
       })
       .catch((err) => {
