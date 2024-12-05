@@ -165,7 +165,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     padding-top: 0px;
   }
 `;
@@ -199,7 +199,7 @@ const Label = styled.div`
   margin-top: 49px;
   margin-bottom: 28px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin-top: 10px;
     margin-bottom: 20px;
     ${theme.fonts.body14};
@@ -214,7 +214,7 @@ const LetterWrapper = styled.div`
   align-items: center;
   gap: 49px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     gap: 20px;
   }
 `;
@@ -229,14 +229,14 @@ const ChangeButton = styled.button`
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 100px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;
     ${theme.fonts.body12};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;

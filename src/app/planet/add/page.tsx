@@ -57,16 +57,18 @@ const PlanetAddPage = () => {
           />
           <Add>내 스페이스에 {planet} 행성이 추가돼요</Add>
         </Column>
-        <Label>원하는 행성의 종류를 선택해주세요 *</Label>
-        <PlanetWrapper>
-          <PlanetImage
-            src={`/assets/images/planet/planet${templateType}.png`}
-            width={200}
-            height={200}
-            alt="planet"
-          />
-        </PlanetWrapper>
-        <PlanetPalette id={templateType} onClick={handleChangeType} />
+        <Column>
+          <Label>원하는 행성의 종류를 선택해주세요 *</Label>
+          <PlanetWrapper>
+            <PlanetImage
+              src={`/assets/images/planet/planet${templateType}.png`}
+              width={200}
+              height={200}
+              alt="planet"
+            />
+          </PlanetWrapper>
+          <PlanetPalette id={templateType} onClick={handleChangeType} />
+        </Column>
         <ButtonWrapper>
           <Button
             buttonType="primary"
@@ -85,7 +87,7 @@ export default PlanetAddPage;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -94,7 +96,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     padding-top: 0px;
   }
 `;
@@ -104,6 +106,11 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Essential = styled.div`
@@ -112,7 +119,7 @@ const Essential = styled.div`
   ${(props) => props.theme.fonts.caption03};
   margin-bottom: 17px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin: 0;
     position: absolute;
     right: 24px;
@@ -122,7 +129,7 @@ const Essential = styled.div`
 const Column = styled.div`
   margin-bottom: 40px;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     margin-bottom: 27px;
   }
 `;
@@ -132,12 +139,12 @@ const Label = styled.div`
   ${(props) => props.theme.fonts.subtitle};
   margin-bottom: 20px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body10}
     margin-bottom: 8px;
   }
@@ -173,8 +180,7 @@ const PlanetImage = styled(Image)`
 
 const ButtonWrapper = styled.div`
   width: 100%;
-  position: absolute;
-  padding: 0 20px;
-  bottom: 40px;
+  position: sticky;
+  bottom: 0;
   left: 0;
 `;

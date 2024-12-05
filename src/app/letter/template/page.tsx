@@ -136,7 +136,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     padding-top: 0px;
   }
 `;
@@ -175,15 +175,15 @@ const Label = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.title01};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.subtitle};
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     ${theme.fonts.body14};
   }
 `;
@@ -193,11 +193,11 @@ const SmallText = styled.div`
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 33px;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body09};
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     ${theme.fonts.body13};
     margin-bottom: 24px;
   }
@@ -226,7 +226,7 @@ const TemplatesList = styled.div`
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin-top: 18px;
     margin-bottom: 5px;
     ${theme.fonts.body14};
@@ -246,7 +246,7 @@ const TemplateImage = styled(Image)<{ $selected: boolean }>`
       box-shadow: 0 0 0 4px ${theme.colors.sub03};
     `}
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 50px;
     height: 50px;
     border-radius: 4px;
@@ -270,7 +270,7 @@ const Current = styled.span`
   color: ${theme.colors.white};
   margin-bottom: 100px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin-bottom: 50px;
   }
 `;

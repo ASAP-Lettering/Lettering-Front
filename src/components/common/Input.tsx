@@ -167,7 +167,7 @@ const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
       border-bottom: 1px solid ${theme.colors.red};
     `}
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     height: 39px;
     ${theme.fonts.caption04}
     &::placeholder {
@@ -207,7 +207,7 @@ const StyledTextarea = styled.textarea<{
     background: transparent;
   }
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     height: 171px;
     ${theme.fonts.caption04}
     &::placeholder {

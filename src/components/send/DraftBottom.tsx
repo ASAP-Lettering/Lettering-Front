@@ -168,7 +168,7 @@ const Title = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.body04};
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${(props) => props.theme.fonts.caption01};
   }
 `;
@@ -179,7 +179,7 @@ const Span = styled.span`
   color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.caption02};
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${(props) => props.theme.fonts.body13};
   }
 `;
@@ -188,7 +188,7 @@ const EditButton = styled.button`
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.body09};
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${(props) => props.theme.fonts.body13};
   }
 `;
@@ -220,7 +220,7 @@ const DraftListWrapper = styled.div`
   justify-content: flex-end;
   flex-shrink: 0;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     height: 60px;
   }
 `;

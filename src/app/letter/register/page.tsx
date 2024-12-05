@@ -303,11 +303,11 @@ const Layout = styled.div`
   flex-direction: column;
   overflow-x: hidden;
   gap: 7px;
-  padding: 20px 20px 20px 20px;
+  padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     padding-top: 0px;
   }
 `;
@@ -331,7 +331,7 @@ const Essential = styled.div`
   margin-top: 25px;
   margin-bottom: 17px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin: 0;
     position: absolute;
     right: 24px;
@@ -341,7 +341,7 @@ const Essential = styled.div`
 const Column = styled.div`
   margin-bottom: 40px;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     margin-bottom: 20px;
   }
 `;
@@ -354,12 +354,12 @@ const Label = styled.div`
   ${(props) => props.theme.fonts.subtitle};
   margin-bottom: 20px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body10}
     margin-bottom: 8px;
   }
@@ -370,7 +370,7 @@ const Count = styled.div`
   color: ${theme.colors.gray400};
   ${theme.fonts.body09};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.body11};
   }
 `;
@@ -396,7 +396,7 @@ const AddImageLabel = styled.label`
   ${theme.fonts.body08}
   margin-top: 16px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     height: 42px;
     ${theme.fonts.caption04}
   }
@@ -416,7 +416,7 @@ const AddImagesLabel = styled.label`
   ${(props) => props.theme.fonts.body08};
   text-align: center;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 39px;
     height: 39px;
     ${theme.fonts.body12};
@@ -444,7 +444,7 @@ const ImageDiv = styled.div`
   height: 52px;
   position: relative;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 39px;
     height: 39px;
   }
@@ -457,7 +457,7 @@ const DeleteIcon = styled.button`
   top: -5px;
   right: -5px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 13px;
     height: 13px;
   }
@@ -465,8 +465,7 @@ const DeleteIcon = styled.button`
 
 const ButtonWrapper = styled.div`
   width: 100%;
-  position: absolute;
-  padding: 0px 20px;
-  bottom: 40px;
+  position: sticky;
+  bottom: 0;
   left: 0;
 `;

@@ -471,7 +471,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     padding-top: 0px;
   }
 `;
@@ -498,7 +498,7 @@ const ButtonDiv = styled.div`
   top: 6.5px;
   right: 0px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 80px;
     height: 28px;
     ${theme.fonts.caption03};
@@ -506,7 +506,7 @@ const ButtonDiv = styled.div`
     top: 7px;
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     width: 65px;
     height: 20px;
     ${theme.fonts.body15};
@@ -525,11 +525,11 @@ const DraftButton = styled.button`
     transition: opacity 0.5s;
   }
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.caption03};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body15};
   }
 `;
@@ -538,11 +538,11 @@ const ListButton = styled.button`
   color: ${theme.colors.gray200};
   ${theme.fonts.caption03};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.caption03};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body15};
   }
 `;
@@ -576,11 +576,11 @@ const Essential = styled.div`
 const Column = styled.div`
   margin-bottom: 40px;
 
-  /* @media (max-height: 735px) {
+  /* @media (max-height: 628px) {
     margin-bottom: 20px;
   } */
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     margin-bottom: 20px;
   }
 `;
@@ -593,17 +593,17 @@ const Label = styled.div<{ $show?: boolean }>`
   ${(props) => props.theme.fonts.subtitle};
   margin-bottom: 12px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body10}
     margin-bottom: 8px;
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     ${({ $show }) =>
       $show === false &&
       css`
@@ -618,7 +618,7 @@ const Count = styled.div`
   color: ${theme.colors.gray400};
   ${theme.fonts.body09};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.body11};
   }
 `;
@@ -649,7 +649,7 @@ const AddImageLabel = styled.label`
   font-weight: 500;
   ${theme.fonts.body08}
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     height: 42px;
     ${theme.fonts.caption04}
   }
@@ -661,7 +661,7 @@ const SmallText = styled.div`
   text-align: center;
   margin-bottom: 100px;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     display: none;
   }
 `;
@@ -680,7 +680,7 @@ const AddImagesLabel = styled.label`
   ${(props) => props.theme.fonts.body08};
   text-align: center;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 39px;
     height: 39px;
     ${theme.fonts.body12};
@@ -695,7 +695,7 @@ const ImagesList = styled.div`
   margin-top: 16px;
   margin-bottom: 100px;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     margin-top: 0px;
   }
 `;
@@ -712,7 +712,7 @@ const ImageDiv = styled.div`
   height: 52px;
   position: relative;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 39px;
     height: 39px;
   }
@@ -725,7 +725,7 @@ const DeleteIcon = styled.button`
   top: -5px;
   right: -5px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 13px;
     height: 13px;
   }

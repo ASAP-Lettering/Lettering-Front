@@ -102,7 +102,7 @@ const Container = styled.div`
   position: relative;
   overflow: visible;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     height: 60px;
   }
 `;
@@ -118,7 +118,7 @@ const Top = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${(props) => props.theme.fonts.body13};
   }
 `;
@@ -145,7 +145,7 @@ const TimeStamp = styled.div`
   ${theme.fonts.caption04};
   text-align: left;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${(props) => props.theme.fonts.caption05};
   }
 `;

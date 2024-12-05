@@ -44,7 +44,7 @@ const Container = styled.div`
   border-radius: 8px;
   background: ${theme.colors.gray800};
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     height: 51px;
     padding: 0 17px;
   }
@@ -59,7 +59,7 @@ const Palettes = styled.div`
   padding: 5px 0;
   gap: 12px;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     justify-content: space-between;
   }
 `;
@@ -78,7 +78,7 @@ const Palette = styled.div<{ $color: string; $selected: boolean }>`
       filter: drop-shadow(0px 0px 3px rgba(224, 222, 222, 0.377));
     `}
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     width: 33px;
     height: 33px;
   }

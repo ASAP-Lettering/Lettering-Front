@@ -289,21 +289,21 @@ const Container = styled.div<{
   ${({ $showType }) =>
     ($showType === "previewSend" || $showType === "previewReceive") &&
     css`
-      @media (max-height: 735px) {
+      @media (max-height: 628px) {
         max-width: 280px;
         max-height: 280px;
         min-height: 280px;
         padding: 34px;
       }
 
-      @media (max-height: 650px) {
+      @media (max-height: 580px) {
         max-width: 220px;
         max-height: 220px;
         min-height: 220px;
         padding: 30px 20px;
       }
 
-      @media (max-height: 570px) {
+      @media (max-height: 550px) {
         max-width: 178px;
         max-height: 182px;
         min-height: 182px;
@@ -354,7 +354,7 @@ const TopPreviewContainer = styled(TopContainer)`
   margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin-top: 0;
   }
 `;
@@ -370,7 +370,7 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
       ? props.theme.fonts.caption01
       : props.theme.fonts.title01};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${(props) =>
       (props.$showType === "previewSend" ||
         props.$showType === "previewReceive") &&
@@ -413,7 +413,7 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   -ms-user-select: none;
   user-select: none;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${(props) =>
       (props.$showType === "previewSend" ||
         props.$showType === "previewReceive") &&

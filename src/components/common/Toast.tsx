@@ -140,7 +140,7 @@ const ToastContainer = styled.div<{
           ${fadeOut} 0.5s ease-in-out
         `};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     height: 44px;
     ${theme.fonts.caption01}
   }
