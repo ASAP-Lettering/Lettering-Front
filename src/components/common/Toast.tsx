@@ -83,7 +83,7 @@ const Toast = (props: ToastProps) => {
           alt={iconType === "info" ? "info" : "message"}
         />
       )}
-      <Message>
+      <Message $close={close}>
         {message}
         {close && (
           <CloseButton onClick={handleClose}>
@@ -139,15 +139,14 @@ const ToastContainer = styled.div<{
       : css`
           ${fadeOut} 0.5s ease-in-out
         `};
-
-  @media (max-height: 628px) {
-    height: 44px;
-    ${theme.fonts.caption01}
-  }
 `;
 
-const Message = styled.div`
-  width: 100%;
+const Message = styled.div<{ $close?: boolean }>`
+  ${({ $close }) =>
+    $close &&
+    css`
+      width: 100%;
+    `}
   display: flex;
   justify-content: space-between;
   align-items: center;
