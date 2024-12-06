@@ -1,13 +1,12 @@
 "use client";
 
-import { getLetter, getSpaceLetter } from "@/api/letter/letter";
+import { getSpaceLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
-import { LETTER_DETAIL_DATA } from "@/constants/letter";
+import { theme } from "@/styles/theme";
 import { LetterDetailType } from "@/types/letter";
-import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -17,10 +16,8 @@ const LetterPage = () => {
   const { id } = useParams();
   const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
-  // const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
-  const accessToken = getAccessToken();
 
   const handleButtonClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -83,9 +80,9 @@ const LetterPage = () => {
 
   return letterData ? (
     <Container>
-      <Wrapper>
+      <NavigatorBarWrapper>
         <NavigatorBar cancel={false} url="/planet" />
-      </Wrapper>
+      </NavigatorBarWrapper>
       <MainWrapper>
         <Header>
           <HeaderTitle>
@@ -94,7 +91,7 @@ const LetterPage = () => {
           </HeaderTitle>
           <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
         </Header>
-        <LetterWrapper>
+        <LetterContainer>
           <Letter
             showType="receive"
             key={key}
@@ -107,8 +104,10 @@ const LetterPage = () => {
             isImage={isImage}
             date={letterData.date}
             nextLetterId={letterData.next_letter?.letter_id}
+            width="100%"
+            height="100%"
           />
-        </LetterWrapper>
+        </LetterContainer>
         {letterData.images.length > 0 && letterData.content.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
@@ -184,72 +183,112 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  width: 100%;
   height: 100%;
-  min-height: 100%;
-  max-height: 100%;
-  color: white;
-  overflow-x: hidden;
+  color: ${theme.colors.white};
+  /* overflow-y: auto;
+  overflow-x: hidden; */
   background: ${(props) => props.theme.colors.bg};
-  /* background-image: url('/assets/signup/verify_image.png'); 
-    background-size: 550px auto; 
-    background-position: bottom 80px center;
-    background-repeat: no-repeat; */
+  position: relative;
+`;
+
+const NavigatorBarWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 18px 18px 9px 18px;
 `;
 
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   height: 100%;
-  padding: 0 19px 0 24px;
+  padding: 0 18px;
   overflow-y: auto;
   overflow-x: hidden;
-  box-sizing: border-box;
-  &::-webkit-scrollbar {
-    width: 5px; /* Width of the scrollbar */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${(props: any) => props.theme.colors.gray800};
-    border-radius: 10px; /* Rounded corners */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${(props: any) => props.theme.colors.gray600};
-    border-radius: 10px; /* Rounded corners */
-  }
-
-   //반응형
-   @media (max-width: 375px) {
-    justify-content: start;
-    padding: 0;
-  }
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 15px 0px;
+  padding-bottom: 15px;
   width: 100%;
-  padding-top: 30px;
-  //반응형
-  @media (max-width: 375px) {
-    padding-top: 0;
-    padding: 0 20px;
+`;
+
+const HeaderTitle = styled.div`
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
+  flex: 2;
+  span {
+    ${(props) => props.theme.fonts.heading02};
+    white-space: nowrap;
+  }
+
+  @media (max-height: 780px) {
+    ${theme.fonts.title01};
+    span {
+      ${(props) => props.theme.fonts.body03};
+    }
+  }
+
+  @media (max-height: 628px) {
+    ${theme.fonts.subtitle};
+    span {
+      ${(props) => props.theme.fonts.body07};
+    }
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.subtitle};
+    span {
+      ${(props) => props.theme.fonts.body07};
+    }
   }
 `;
 
-const LetterWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: center;
-    //반응형
-    @media (max-width: 375px) {
-    padding: 10px 40px;
-    }
+const LetterContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 345px;
+  min-height: 398px;
+  max-height: 398px;
+
+  @media (max-height: 824px) {
+    max-width: 320px;
+    min-height: 350px;
+  }
+
+  @media (max-height: 780px) {
+    max-width: 280px;
+    min-height: 320px;
+    max-height: 320px;
+  }
+
+  @media (max-height: 700px) {
+    min-height: 300px;
+    max-height: 300px;
+  }
+
+  @media (max-height: 680px) {
+    max-width: 250px;
+    min-height: 280px;
+    max-height: 280px;
+  }
+
+  @media (max-height: 580px) {
+    max-width: 250px;
+    min-height: 250px;
+    max-height: 250px;
+  }
+
+  @media (max-height: 550px) {
+    max-width: 220px;
+    min-height: 220px;
+    max-height: 220px;
+  }
 `;
 
 const LetterCount = styled.div`
@@ -263,38 +302,13 @@ const LetterCount = styled.div`
   padding: 5px;
 `;
 
-const HeaderTitle = styled.div`
-  width: 100%;
-  ${(props) => props.theme.fonts.heading01};
-  margin-top: 1rem;
-  flex: 2;
-  span {
-    ${(props) => props.theme.fonts.heading02};
-    white-space: nowrap;
-  }
-  @media (max-width: 375px) {
-    font-size: 16px;
-    line-height: 22px;
-    span {
-        font-size: 16px;
-        line-height: 22px;
-    }
-  }
-`;
-
-// const HeaderSubTitle = styled.div`
-//   width: 100%;
-//   ${(props) => props.theme.fonts.regular16};
-//   color: ${(props) => props.theme.colors.gray300};
-//   padding-top: 10px;
-// `;
-
 const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
   width: 100%;
-  gap: 12px;
-  padding: 24px;
+  position: absolute;
+  padding: 0 20px;
+  bottom: 40px;
+  left: 0;
+  z-index: 1000;
 `;
 
 const LoaderContainer = styled.div`
@@ -335,9 +349,16 @@ const ChangeButtonWrapper = styled.div`
     flex-shrink: 0;
   }
 
-  @media (max-width: 375px) {
-   padding-top: 10px;
-   flex-direction: row;
+  @media (max-height: 730px) {
+    flex-direction: row;
+    gap: 10px;
+    padding-top: 15px;
+  }
+
+  @media (max-height: 628px) {
+    flex-direction: row;
+    gap: 6px;
+    ${theme.fonts.body12};
   }
 `;
 
@@ -352,15 +373,15 @@ const PaginationWrapper = styled.div`
   ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray500};
   gap: 24px;
+  margin-bottom: 100px;
 
-  @media (max-width: 375px) {
-    padding: 10px 4px;
-    font-size: 12px;
-    gap: 16px;
-    line-height: 17px;
-    text-align: center;
+  @media (max-height: 730px) {
+    padding: 20px 4px;
   }
-  
+
+  @media (max-height: 628px) {
+    padding: 10px 4px;
+  }
 `;
 
 const Page = styled.div<{ type: "left" | "center" | "right" }>`
@@ -392,18 +413,8 @@ const CurrentPage = styled.div`
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.gray800};
   white-space: nowrap;
-  @media (max-width: 375px) {
-    font-size: 12px;
-    padding: 2px 14px;
-  }
 `;
 
 const WhiteSpace = styled.div`
   height: 44px;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 24px;
 `;

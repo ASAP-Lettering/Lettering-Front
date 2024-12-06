@@ -274,7 +274,7 @@ const Container = styled.div<{
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: white;
+  color: ${theme.colors.white};
   position: relative;
   border-radius: 12px;
   border: 1px solid ${theme.colors.gray700};
@@ -284,58 +284,6 @@ const Container = styled.div<{
     transform-style: preserve-3d;
     perspective: 1000px;
   }
-
-  /* showType별 반응형 */
-  ${({ $showType }) =>
-    ($showType === "previewSend" || $showType === "previewReceive") &&
-    css`
-      /* @media (max-height: 628px) {
-        max-width: 280px;
-        max-height: 280px;
-        min-height: 280px;
-        padding: 34px;
-      }
-
-      @media (max-height: 580px) {
-        max-width: 220px;
-        max-height: 220px;
-        min-height: 220px;
-        padding: 30px 20px;
-      }
-
-      @media (max-height: 550px) {
-        max-width: 178px;
-        max-height: 182px;
-        min-height: 182px;
-        padding: 30px 20px;
-      } */
-    `}
-
-  ${({ $showType }) =>
-    ($showType === "receive" || $showType === "send") &&
-    css`
-      /* @media (max-width: 768px) {
-        max-width: 350px;
-        max-height: 350px;
-      }
-      @media (max-width: 480px) {
-        max-width: 300px;
-        max-height: 300px;
-      } */
-    `}
-
-  ${({ $showType }) =>
-    $showType === "url" &&
-    css`
-      /* @media (max-width: 768px) {
-        max-width: 340px;
-        max-height: 340px;
-      }
-      @media (max-width: 480px) {
-        max-width: 290px;
-        max-height: 290px;
-      } */
-    `}
 `;
 
 const TopContainer = styled.div<{
@@ -346,7 +294,7 @@ const TopContainer = styled.div<{
   width: 100%;
   justify-content: space-between;
   button {
-    color: white;
+    color: ${theme.colors.white};
   }
 `;
 
@@ -426,19 +374,17 @@ const PopupContainer = styled.div`
   z-index: 1;
   padding: 12px;
   box-sizing: border-box;
-`;
 
-const EditBtn = styled.button`
-  ${(props: any) => props.theme.fonts.button01};
-  color: ${(props: any) => props.theme.colors.white};
-  padding: 10px;
-  border-bottom: 1px solid #5b5f70;
-`;
+  @media (max-height: 628px) {
+    width: 78px;
+    height: 110px;
+  }
 
-const DeleteBtn = styled.button`
-  ${(props: any) => props.theme.fonts.button01};
-  color: ${(props: any) => props.theme.colors.white};
-  padding: 10px;
+  @media (max-height: 580px) {
+    width: 76px;
+    height: 95px;
+    padding: 10px;
+  }
 `;
 
 const ModalDate = styled.div`
@@ -450,6 +396,44 @@ const ModalDate = styled.div`
   width: 100%;
   justify-content: center;
   padding-top: 8px;
+
+  @media (max-height: 628px) {
+    padding-top: 5px;
+  }
+
+  @media (max-height: 580px) {
+    padding-top: 0px;
+    ${theme.fonts.caption05}
+  }
+`;
+
+const EditBtn = styled.button`
+  ${(props: any) => props.theme.fonts.button01};
+  color: ${(props: any) => props.theme.colors.white};
+  padding: 10px;
+  border-bottom: 1px solid #5b5f70;
+
+  @media (max-height: 628px) {
+    padding: 5px;
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.button03};
+  }
+`;
+
+const DeleteBtn = styled.button`
+  ${(props: any) => props.theme.fonts.button01};
+  color: ${(props: any) => props.theme.colors.white};
+  padding: 10px;
+
+  @media (max-height: 628px) {
+    padding: 5px;
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.button03};
+  }
 `;
 
 const UrlWrapper = styled.div`
