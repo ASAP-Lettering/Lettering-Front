@@ -31,6 +31,7 @@ interface LetterProps {
   padding?: string;
   readOnly?: boolean;
   nextLetterId?: string;
+  maxLineWidth?: number;
 }
 
 const Letter = (props: LetterProps) => {
@@ -50,6 +51,7 @@ const Letter = (props: LetterProps) => {
     padding,
     readOnly = false,
     nextLetterId,
+    maxLineWidth,
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -86,7 +88,7 @@ const Letter = (props: LetterProps) => {
 
       if (context) {
         context.font = "16px Pretendard";
-        const maxWidth = contentType === "one" ? 200 : 280;
+        const maxWidth = contentType === "one" ? 180 : 230;
         let currentLine = "";
         let lines: string[] = [];
 
