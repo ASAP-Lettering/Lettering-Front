@@ -89,7 +89,7 @@ const SendPreviewPage = () => {
                 content={content}
                 images={images}
                 isImage={isImage}
-                width="345px"
+                width="100%"
                 height="100%"
                 padding="25px 35px 20px 35px"
               />
@@ -216,12 +216,13 @@ const LetterWrapper = styled.div`
 const LetterContainer = styled.div`
   display: flex;
   justify-content: center;
-  width: 345px;
+  width: 100%;
+  max-width: 345px;
   min-height: 398px;
   max-height: 398px;
 
   @media (max-height: 660px) {
-    max-width: 280px;
+    max-width: 320px;
     min-height: 350px;
   }
 

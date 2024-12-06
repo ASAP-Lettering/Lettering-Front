@@ -586,20 +586,17 @@ const Label = styled.div<{ $show?: boolean }>`
   @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body10}
-    margin-bottom: 8px;
-  }
-
-  @media (max-height: 550px) {
     ${({ $show }) =>
       $show === false &&
       css`
         display: none;
         margin-bottom: 0px;
       `}
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.body10}
+    margin-bottom: 8px;
   }
 `;
 
@@ -696,7 +693,7 @@ const ImagesList = styled.div`
   margin-top: 16px;
   margin-bottom: 100px;
 
-  @media (max-height: 550px) {
+  @media (max-height: 628px) {
     margin-top: 0px;
   }
 `;
