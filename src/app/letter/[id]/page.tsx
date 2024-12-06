@@ -95,6 +95,7 @@ const LetterPage = () => {
           <Letter
             showType="receive"
             key={key}
+            contentType="all"
             pageType="space"
             id={letterId}
             templateType={letterData.templateType}
@@ -186,8 +187,6 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   color: ${theme.colors.white};
-  /* overflow-y: auto;
-  overflow-x: hidden; */
   background: ${(props) => props.theme.colors.bg};
   position: relative;
 `;
@@ -262,20 +261,15 @@ const LetterContainer = styled.div`
   }
 
   @media (max-height: 780px) {
-    max-width: 280px;
-    min-height: 320px;
-    max-height: 320px;
-  }
-
-  @media (max-height: 700px) {
-    min-height: 300px;
-    max-height: 300px;
+    max-width: 300px;
+    min-height: 330px;
+    max-height: 330px;
   }
 
   @media (max-height: 680px) {
-    max-width: 250px;
-    min-height: 280px;
-    max-height: 280px;
+    max-width: 300px;
+    min-height: 330px;
+    max-height: 330px;
   }
 
   @media (max-height: 580px) {
@@ -285,9 +279,9 @@ const LetterContainer = styled.div`
   }
 
   @media (max-height: 550px) {
-    max-width: 220px;
-    min-height: 220px;
-    max-height: 220px;
+    max-width: 250px;
+    min-height: 250px;
+    max-height: 250px;
   }
 `;
 
@@ -373,7 +367,7 @@ const PaginationWrapper = styled.div`
   ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray500};
   gap: 24px;
-  margin-bottom: 100px;
+  margin-bottom: 120px;
 
   @media (max-height: 730px) {
     padding: 20px 4px;
