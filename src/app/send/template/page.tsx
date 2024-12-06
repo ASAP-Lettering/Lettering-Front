@@ -51,18 +51,20 @@ const SendTemplatePage = () => {
           <Label>편지지를 골라볼까요? *</Label>
           <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
           <LetterWrapper>
-            <Letter
-              showType="previewSend"
-              contentType="one"
-              id={"0"}
-              templateType={template}
-              name={receiverName}
-              content={content}
-              images={images}
-              isImage={!(content.length > 0)}
-              width="276px"
-              height="283px"
-            />
+            <LetterContainer>
+              <Letter
+                showType="previewSend"
+                contentType="one"
+                id={"0"}
+                templateType={template}
+                name={receiverName}
+                content={content}
+                images={images}
+                isImage={!(content.length > 0)}
+                width="100%"
+                height="100%"
+              />
+            </LetterContainer>
           </LetterWrapper>
           <TemplatesList>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
@@ -109,7 +111,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     padding-top: 0px;
   }
 `;
@@ -148,15 +150,15 @@ const Label = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.title01};
 
-  @media (max-height: 735px) {
-    ${theme.fonts.title01};
+  @media (max-height: 628px) {
+    ${theme.fonts.title02};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.subtitle};
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     ${theme.fonts.body14};
   }
 `;
@@ -166,11 +168,15 @@ const SmallText = styled.div`
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 33px;
 
-  @media (max-height: 650px) {
+  @media (max-height: 680px) {
+    margin-bottom: 10px;
+  }
+
+  @media (max-height: 580px) {
     ${theme.fonts.body09};
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     ${theme.fonts.body13};
     margin-bottom: 24px;
   }
@@ -180,6 +186,33 @@ const LetterWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+`;
+
+const LetterContainer = styled.div`
+  width: 100px;
+  min-width: 276px;
+  max-height: 283px;
+
+  @media (max-height: 628px) {
+    max-width: 250px;
+    min-width: 250px;
+    max-height: 260px;
+    min-height: 260px;
+  }
+
+  @media (max-height: 580px) {
+    max-width: 220px;
+    min-width: 220px;
+    max-height: 220px;
+    min-height: 220px;
+  }
+
+  @media (max-height: 550px) {
+    max-width: 178px;
+    min-width: 178px;
+    max-height: 182px;
+    min-height: 182px;
+  }
 `;
 
 const TemplatesList = styled.div`
@@ -199,8 +232,22 @@ const TemplatesList = styled.div`
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
 
-  @media (max-height: 735px) {
-    margin-top: 18px;
+  @media (max-height: 740px) {
+    margin-top: 30px;
+    margin-bottom: 5px;
+    ${theme.fonts.body14};
+    gap: 11px;
+  }
+
+  @media (max-height: 680px) {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    ${theme.fonts.body14};
+    gap: 11px;
+  }
+
+  @media (max-height: 628px) {
+    margin-top: 12px;
     margin-bottom: 5px;
     ${theme.fonts.body14};
     gap: 11px;
@@ -219,7 +266,7 @@ const TemplateImage = styled(Image)<{ $selected: boolean }>`
       box-shadow: 0 0 0 4px ${theme.colors.sub03};
     `}
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 50px;
     height: 50px;
     border-radius: 4px;
@@ -243,7 +290,7 @@ const Current = styled.span`
   color: ${theme.colors.white};
   margin-bottom: 100px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin-bottom: 50px;
   }
 `;

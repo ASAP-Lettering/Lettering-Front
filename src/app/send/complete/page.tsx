@@ -98,13 +98,13 @@ const ImageWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     width: 350px;
     height: 340px;
     top: 55%;
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     width: 300px;
     height: 290px;
     top: 55%;

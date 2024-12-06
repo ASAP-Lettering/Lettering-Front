@@ -27,14 +27,6 @@ const LetterPreviewPage = () => {
 
   const [isImage, setIsImage] = useState<boolean>(false);
   const resetLetterState = useResetRecoilState(registerLetterState);
-  // const content =
-  //   "오래전에 함께 듣던 노래가 발걸음을 다시 멈춰서게 해\n이 거리에서 너를 느낄 수 있어\n널 이곳에서 꼭 다시 만날 것 같아\n너일까봐 한 번 더 바라보고\n너일까봐 자꾸 돌아보게 돼\n어디선가 같은 노래를 듣고\n날 생각하며 너 역시 멈춰있을까\n오래전에 함께 듣던 노래가\n거리에서 내게 우연히 들려온 것처럼\n살아가다 한 번 쯤 우연히 만날 것 같아\n사랑했던 그 모습 그대로\n오래전에 함께 듣던 노래가 발걸음을 다시 멈춰서게 해\n이 거리에서 너를 느낄 수 있어\n널 이곳에서 꼭 다시 만날 것 같아\n너일까봐 한 번 더 바라보고\n너일까봐 자꾸 돌아보게 돼\n어디선가 같은 노래를 듣고\n날 생각하며 너 역시 멈춰있을까\n오래전에 함께 듣던 노래가\n거리에서 내게 우연히 들려온 것처럼\n살아가다 한 번 쯤 우연히 만날 것 같아\n사랑했던 그 모습 그대로\n";
-
-  // const imageData = [
-  //   "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
-  //   "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
-  //   "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
-  // ];
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -101,19 +93,21 @@ const LetterPreviewPage = () => {
         <Column>
           <Label>이렇게 편지를 {letterId ? "수정" : "등록"}할까요?</Label>
           <LetterWrapper>
-            <Letter
-              showType="previewReceive"
-              contentType="all"
-              id={"0"}
-              templateType={templateType}
-              name={senderName}
-              content={content}
-              images={images}
-              isImage={isImage}
-              width="345px"
-              height="398px"
-              padding="25px 35px 20px 35px"
-            />
+            <LetterContainer>
+              <Letter
+                showType="previewReceive"
+                contentType="all"
+                id={"0"}
+                templateType={templateType}
+                name={senderName}
+                content={content}
+                images={images}
+                isImage={isImage}
+                width="100%"
+                height="100%"
+                padding="25px 35px 20px 35px"
+              />
+            </LetterContainer>
             {content.length > 0 && images.length > 0 && (
               <ChangeButton onClick={handleFlipLetter}>
                 <Image
@@ -165,7 +159,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 628px) {
     padding-top: 0px;
   }
 `;
@@ -199,8 +193,19 @@ const Label = styled.div`
   margin-top: 49px;
   margin-bottom: 28px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 820px) {
     margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-height: 690px) {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    ${theme.fonts.subtitle};
+  }
+
+  @media (max-height: 628px) {
+    margin-top: 20px;
     margin-bottom: 20px;
     ${theme.fonts.body14};
   }
@@ -214,8 +219,48 @@ const LetterWrapper = styled.div`
   align-items: center;
   gap: 49px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 780px) {
     gap: 20px;
+  }
+
+  @media (max-height: 628px) {
+    gap: 20px;
+  }
+
+  @media (max-height: 580px) {
+    gap: 30px;
+  }
+`;
+
+const LetterContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 345px;
+  min-height: 398px;
+  max-height: 398px;
+
+  @media (max-height: 660px) {
+    max-width: 320px;
+    min-height: 350px;
+  }
+
+  @media (max-height: 628px) {
+    max-width: 280px;
+    min-height: 320px;
+    max-height: 320px;
+  }
+
+  @media (max-height: 580px) {
+    max-width: 250px;
+    min-height: 250px;
+    max-height: 250px;
+  }
+
+  @media (max-height: 550px) {
+    max-width: 220px;
+    min-height: 220px;
+    max-height: 220px;
   }
 `;
 
@@ -229,14 +274,20 @@ const ChangeButton = styled.button`
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 100px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 730px) {
+    flex-direction: row;
+    margin-bottom: 50px;
+    gap: 10px;
+  }
+
+  @media (max-height: 628px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;
     ${theme.fonts.body12};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;

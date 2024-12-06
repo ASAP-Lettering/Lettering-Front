@@ -69,18 +69,17 @@ const PlanetMovePage = () => {
           showToast(
             `${senderName} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
             {
-              icon: true,
-              iconType: "info",
+              icon: false,
               close: false,
               bottom: "230px",
+              padding: "11px 20px",
             }
           );
         } else {
           showToast(
             `${senderName} 님의 편지가 ${checkePlanetName} 궤도로 이동했어요`,
             {
-              icon: true,
-              iconType: "info",
+              icon: false,
               close: false,
               bottom: "230px",
             }

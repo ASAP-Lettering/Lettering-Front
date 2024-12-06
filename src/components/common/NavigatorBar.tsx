@@ -74,7 +74,7 @@ const LeftIcon = styled.div`
   flex-shrink: 0;
   position: relative;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 20px;
     height: 20px;
   }
@@ -86,7 +86,7 @@ const RightIcon = styled.div`
   flex-shrink: 0;
   position: relative;
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     width: 20px;
     height: 20px;
   }
@@ -102,15 +102,15 @@ const Title = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.body04};
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.body04}
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     ${theme.fonts.body08};
   }
 
-  @media (max-height: 570px) {
+  @media (max-height: 550px) {
     ${theme.fonts.body12}
   }
 `;

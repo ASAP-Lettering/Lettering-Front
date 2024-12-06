@@ -95,7 +95,7 @@ const StyledButton = styled.button<{
     transition: opacity 500ms;
   }
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     ${theme.fonts.button02};
     height: 45px;
     border-radius: 9px;

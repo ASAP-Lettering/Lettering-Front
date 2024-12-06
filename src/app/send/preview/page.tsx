@@ -80,18 +80,20 @@ const SendPreviewPage = () => {
         <Column>
           <Label>이렇게 편지를 보낼까요?</Label>
           <LetterWrapper>
-            <Letter
-              showType="previewSend"
-              id={"0"}
-              templateType={templateType}
-              name={receiverName}
-              content={content}
-              images={images}
-              isImage={isImage}
-              width="345px"
-              height="398px"
-              padding="25px 35px 20px 35px"
-            />
+            <LetterContainer>
+              <Letter
+                showType="previewSend"
+                id={"0"}
+                templateType={templateType}
+                name={receiverName}
+                content={content}
+                images={images}
+                isImage={isImage}
+                width="100%"
+                height="100%"
+                padding="25px 35px 20px 35px"
+              />
+            </LetterContainer>
             {content.length > 0 && images.length > 0 && (
               <ChangeButton onClick={handleFlipLetter}>
                 <Image
@@ -138,7 +140,7 @@ const Layout = styled.div`
   background-color: ${theme.colors.bg};
   position: relative;
 
-  @media (max-height: 570px) {
+  @media (max-height: 628px) {
     padding-top: 0px;
   }
 `;
@@ -172,8 +174,19 @@ const Label = styled.div`
   margin-top: 49px;
   margin-bottom: 28px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 820px) {
     margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-height: 690px) {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    ${theme.fonts.subtitle};
+  }
+
+  @media (max-height: 628px) {
+    margin-top: 20px;
     margin-bottom: 20px;
     ${theme.fonts.body14};
   }
@@ -187,8 +200,48 @@ const LetterWrapper = styled.div`
   align-items: center;
   gap: 49px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 780px) {
     gap: 20px;
+  }
+
+  @media (max-height: 628px) {
+    gap: 20px;
+  }
+
+  @media (max-height: 580px) {
+    gap: 30px;
+  }
+`;
+
+const LetterContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 345px;
+  min-height: 398px;
+  max-height: 398px;
+
+  @media (max-height: 660px) {
+    max-width: 320px;
+    min-height: 350px;
+  }
+
+  @media (max-height: 628px) {
+    max-width: 280px;
+    min-height: 320px;
+    max-height: 320px;
+  }
+
+  @media (max-height: 580px) {
+    max-width: 250px;
+    min-height: 250px;
+    max-height: 250px;
+  }
+
+  @media (max-height: 550px) {
+    max-width: 220px;
+    min-height: 220px;
+    max-height: 220px;
   }
 `;
 
@@ -202,14 +255,20 @@ const ChangeButton = styled.button`
   ${(props) => props.theme.fonts.caption02};
   margin-bottom: 100px;
 
-  @media (max-height: 735px) {
+  @media (max-height: 730px) {
+    flex-direction: row;
+    margin-bottom: 50px;
+    gap: 10px;
+  }
+
+  @media (max-height: 628px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;
     ${theme.fonts.body12};
   }
 
-  @media (max-height: 650px) {
+  @media (max-height: 580px) {
     flex-direction: row;
     margin-bottom: 50px;
     gap: 6px;

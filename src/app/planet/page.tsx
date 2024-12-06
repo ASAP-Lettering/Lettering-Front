@@ -648,7 +648,7 @@ const MainWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 650px;
+  height: 580px;
   position: relative;
 `;
 

@@ -289,52 +289,52 @@ const Container = styled.div<{
   ${({ $showType }) =>
     ($showType === "previewSend" || $showType === "previewReceive") &&
     css`
-      @media (max-height: 735px) {
+      /* @media (max-height: 628px) {
         max-width: 280px;
         max-height: 280px;
         min-height: 280px;
         padding: 34px;
       }
 
-      @media (max-height: 650px) {
+      @media (max-height: 580px) {
         max-width: 220px;
         max-height: 220px;
         min-height: 220px;
         padding: 30px 20px;
       }
 
-      @media (max-height: 570px) {
+      @media (max-height: 550px) {
         max-width: 178px;
         max-height: 182px;
         min-height: 182px;
         padding: 30px 20px;
-      }
+      } */
     `}
 
   ${({ $showType }) =>
     ($showType === "receive" || $showType === "send") &&
     css`
-      @media (max-width: 768px) {
+      /* @media (max-width: 768px) {
         max-width: 350px;
         max-height: 350px;
       }
       @media (max-width: 480px) {
         max-width: 300px;
         max-height: 300px;
-      }
+      } */
     `}
 
   ${({ $showType }) =>
     $showType === "url" &&
     css`
-      @media (max-width: 768px) {
+      /* @media (max-width: 768px) {
         max-width: 340px;
         max-height: 340px;
       }
       @media (max-width: 480px) {
         max-width: 290px;
         max-height: 290px;
-      }
+      } */
     `}
 `;
 
@@ -354,7 +354,7 @@ const TopPreviewContainer = styled(TopContainer)`
   margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
 
-  @media (max-height: 735px) {
+  @media (max-height: 628px) {
     margin-top: 0;
   }
 `;
@@ -363,22 +363,14 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
   display: flex;
   align-items: center;
   text-align: center;
-  ${(props) =>
-    (props.$showType === "previewSend" ||
-      props.$showType === "previewReceive") &&
-    props.$contentType === "one"
-      ? props.theme.fonts.caption01
-      : props.theme.fonts.title01};
+  ${(props) => props.theme.fonts.title01};
 
-  @media (max-height: 735px) {
-    ${(props) =>
-      (props.$showType === "previewSend" ||
-        props.$showType === "previewReceive") &&
-      props.$contentType === "one"
-        ? props.theme.fonts.caption01
-        : props.theme.fonts.body10};
-    /* @media (max-width: 375px) {
-    font-size: 12px; */
+  @media (max-height: 628px) {
+    ${(props) => props.theme.fonts.body7};
+  }
+
+  @media (max-height: 580px) {
+    ${(props) => props.theme.fonts.body10};
   }
 `;
 
@@ -413,16 +405,8 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   -ms-user-select: none;
   user-select: none;
 
-  @media (max-height: 735px) {
-    ${(props) =>
-      (props.$showType === "previewSend" ||
-        props.$showType === "previewReceive") &&
-      props.$contentType === "one"
-        ? props.theme.fonts.caption09
-        : props.theme.fonts.caption05};
-    //반응형
-    /* @media (max-width: 375px) {
-    font-size: 11px; */
+  @media (max-height: 580px) {
+    ${(props) => props.theme.fonts.body12};
   }
 `;
 
