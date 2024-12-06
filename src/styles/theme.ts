@@ -124,6 +124,14 @@ const fonts = {
     weight: 400,
     size: 15,
   }),
+  body17: FONT({  // 반응형 추가
+    weight: 400,
+    size: 13,
+  }),
+  body18: FONT({  // 반응형 추가
+    weight: 500,
+    size: 13,
+  }),
 
   button01: FONT({
     weight: 600,
