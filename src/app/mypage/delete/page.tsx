@@ -7,6 +7,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { theme } from "@/styles/theme";
 import {
   clearOnboarding,
   clearTokens,
@@ -89,9 +90,9 @@ const DeleteAccount = () => {
 
   return (
     <Container>
-      <Wrapper>
+      <NavigatorBarWrapper>
         <NavigatorBar title="회원 탈퇴" cancel={false} />
-      </Wrapper>
+      </NavigatorBarWrapper>
       <MainWrapper>
         <MainTitle>정말 레터링을 탈퇴하시겠어요?</MainTitle>
         <SubTitle>
@@ -113,13 +114,14 @@ const DeleteAccount = () => {
             더 나은 서비스를 위해 의견을 남겨주세요
             <span>{textarea.length + " / 500"}</span>
           </QuestionText>
-          <Input
-            inputType="boxTextArea"
-            value={textarea}
-            onChange={setTextarea}
-            //placeholder="BoxTexarea Input (height=150px)"
-            height="150px"
-          />
+          <InputWrapper>
+            <Input
+              inputType="boxTextArea"
+              value={textarea}
+              onChange={setTextarea}
+              height="100%"
+            />
+          </InputWrapper>
         </QuestionWrapper>
         <Check
           checkType="box"
@@ -129,7 +131,7 @@ const DeleteAccount = () => {
           onChange={handleBoxChange}
         />
       </MainWrapper>
-      <Wrapper>
+      <ButtonWrapper>
         <Button
           buttonType="primary"
           size="large"
@@ -137,7 +139,7 @@ const DeleteAccount = () => {
           disabled={!isAbled}
           onClick={handleDeleteUser}
         />
-      </Wrapper>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -163,8 +165,19 @@ const Container = styled.div`
   min-height: 100%;
   max-height: 100%;
   justify-content: space-between;
-  color: white;
+  color: ${theme.colors.white};
   background: ${(props) => props.theme.colors.bg};
+  position: relative;
+`;
+
+const NavigatorBarWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 24px;
+
+  @media (max-height: 720px) {
+    padding: 24px 24px 0 24px;
+  }
 `;
 
 const MainWrapper = styled.div`
@@ -175,30 +188,36 @@ const MainWrapper = styled.div`
   overflow-y: auto;
   box-sizing: border-box;
   &::-webkit-scrollbar {
-    width: 5px; /* Width of the scrollbar */
+    width: 5px;
   }
 
   &::-webkit-scrollbar-track {
     background: ${(props: any) => props.theme.colors.gray800};
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: ${(props: any) => props.theme.colors.gray600};
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
   }
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 24px;
 `;
 
 const MainTitle = styled.div`
   ${(props: any) => props.theme.fonts.title01};
   color: ${(props: any) => props.theme.colors.white};
   padding: 9px 0;
+
+  @media (max-height: 720px) {
+    ${theme.fonts.title02};
+  }
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body14};
+  }
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body14};
+  }
 `;
 
 const SubTitle = styled.div`
@@ -206,9 +225,18 @@ const SubTitle = styled.div`
   color: ${(props: any) => props.theme.colors.white};
   margin-bottom: 35px;
 
-  //반응형
-  @media (max-width: 375px) {
-    margin-bottom: 5px;
+  @media (max-height: 720px) {
+    margin-bottom: 18px;
+  }
+
+  @media (max-height: 700px) {
+    color: ${theme.colors.gray300};
+    ${theme.fonts.body09};
+  }
+
+  @media (max-height: 628px) {
+    color: ${theme.colors.gray300};
+    ${theme.fonts.body13};
   }
 `;
 
@@ -226,6 +254,11 @@ const QuestionText = styled.div`
     ${(props: any) => props.theme.fonts.caption03};
     color: ${(props: any) => props.theme.colors.white};
   }
+
+  @media (max-width: 330px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const QuestionWrapper = styled.div`
@@ -234,4 +267,37 @@ const QuestionWrapper = styled.div`
   flex-direction: column;
   gap: 12px;
   padding: 20px 0;
+
+  @media (max-height: 700px) {
+    padding: 0 0 30px 0;
+  }
+
+  @media (max-height: 628px) {
+    padding: 0 0 20px 0;
+  }
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  height: 150px;
+
+  @media (max-height: 670px) {
+    height: 130px;
+  }
+
+  @media (max-height: 628px) {
+    height: 110px;
+  }
+
+  @media (max-height: 550px) {
+    height: 90px;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  position: absolute;
+  padding: 0 20px;
+  bottom: 40px;
+  left: 0;
 `;

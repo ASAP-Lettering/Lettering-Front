@@ -93,6 +93,11 @@ const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
       : "transparent"};
   position: relative;
   display: flex;
+
+  @media (max-height: 628px) {
+    width: ${({ $checkType }) => ($checkType !== "large" ? "22px" : "25px")};
+    height: ${({ $checkType }) => ($checkType !== "large" ? "22px" : "25px")};
+  }
 `;
 
 const StyledImage = styled(Image)<{ $checkType: checkType }>`
@@ -101,6 +106,11 @@ const StyledImage = styled(Image)<{ $checkType: checkType }>`
   left: ${({ $checkType }) => ($checkType !== "large" ? "2px" : "6px")};
   pointer-events: none;
   z-index: 10;
+
+  @media (max-height: 628px) {
+    top: ${({ $checkType }) => ($checkType !== "large" ? "1px" : "3px")};
+    left: ${({ $checkType }) => ($checkType !== "large" ? "1px" : "3px")};
+  }
 `;
 
 const LabelText = styled.span<{ $labelFont: string }>`

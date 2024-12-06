@@ -5,6 +5,7 @@ import { getUserInfo, logout } from "@/api/mypage/user";
 import Button from "@/components/common/Button";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { theme } from "@/styles/theme";
 import { clearOnboarding, clearTokens, getRefreshToken } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -89,9 +90,9 @@ const MyPage = () => {
         </LoaderContainer>
       ) : (
         <>
-          <Wrapper>
+          <NavigatorBarWrapper>
             <NavigatorBar title="마이페이지" cancel={false} url="/planet" />
-          </Wrapper>
+          </NavigatorBarWrapper>
           <MainContainer>
             <MainWrapper>
               <ProfileHeader>
@@ -182,9 +183,14 @@ const Container = styled.div`
   height: 100%;
   min-height: 100%;
   max-height: 100%;
-  //justify-content: space-between;
   color: white;
   background: ${(props) => props.theme.colors.bg};
+`;
+
+const NavigatorBarWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 24px 24px 0 24px;
 `;
 
 const MainContainer = styled.div`
@@ -196,17 +202,17 @@ const MainContainer = styled.div`
   box-sizing: border-box;
   width: 100%;
   &::-webkit-scrollbar {
-    width: 5px; /* Width of the scrollbar */
+    width: 5px;
   }
 
   &::-webkit-scrollbar-track {
     background: ${(props: any) => props.theme.colors.gray800};
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: ${(props: any) => props.theme.colors.gray600};
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
   }
 `;
 
@@ -231,6 +237,10 @@ const ProfileInfo = styled.div`
 const ProfileName = styled.div`
   ${(props: any) => props.theme.fonts.title01};
   color: ${(props: any) => props.theme.colors.white};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.title02};
+  }
 `;
 
 const ProfileEmail = styled.div`
@@ -246,6 +256,10 @@ const ProfileBtn = styled.img`
   width: 24px;
   height: auto;
   cursor: pointer;
+
+  @media (max-height: 628px) {
+    width: 20px;
+  }
 `;
 
 const CountContainer = styled.div`
@@ -268,11 +282,19 @@ const CountRaw = styled.div`
 const CountTitle = styled.div`
   ${(props: any) => props.theme.fonts.body09};
   color: ${(props: any) => props.theme.colors.gray300};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body17};
+  }
 `;
 
 const CountValue = styled.div`
   ${(props: any) => props.theme.fonts.body08};
   color: ${(props: any) => props.theme.colors.white};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body18};
+  }
 `;
 
 const Line = styled.hr`
@@ -293,16 +315,28 @@ const SettingTitle = styled.div`
   ${(props: any) => props.theme.fonts.body07};
   color: ${(props: any) => props.theme.colors.gray100};
   margin-bottom: 10px;
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body16};
+  }
 `;
 
 const MenuTitle = styled.div`
   ${(props: any) => props.theme.fonts.body06};
   color: ${(props: any) => props.theme.colors.white};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body16};
+  }
 `;
 
 const MenuSubTitle = styled.div`
   ${(props: any) => props.theme.fonts.caption04};
   color: ${(props: any) => props.theme.colors.gray500};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body13};
+  }
 `;
 
 const MenuWrapper = styled.div`
@@ -315,10 +349,4 @@ const MenuWrapper = styled.div`
 
 const SettingContainer = styled.div`
   padding: 10px 0;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 24px;
 `;

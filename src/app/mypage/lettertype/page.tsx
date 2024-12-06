@@ -4,6 +4,7 @@ import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
+import { theme } from "@/styles/theme";
 import { getCookie, setCookie } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -56,9 +57,9 @@ const LetterType = () => {
 
   return (
     <Container>
-      <Wrapper>
+      <NavigatorBarWrapper>
         <NavigatorBar title="편지 날짜 보기" cancel={false} />
-      </Wrapper>
+      </NavigatorBarWrapper>
       <MainWrapper>
         <MainText>해당 날짜는 스페이스에 등록된 날짜예요</MainText>
         <SelectWrapper>
@@ -82,7 +83,7 @@ const LetterType = () => {
           </Select>
         </SelectWrapper>
       </MainWrapper>
-      <Wrapper>
+      <ButtonWrapper>
         <Button
           buttonType="primary"
           size="large"
@@ -90,7 +91,7 @@ const LetterType = () => {
           disabled={!isAbled}
           onClick={handleSumbit}
         />
-      </Wrapper>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -110,77 +111,111 @@ export default function LetterTypePaging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    justify-content: space-between;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  justify-content: flex-start;
+  color: ${theme.colors.white};
+  background: ${(props) => props.theme.colors.bg};
+  position: relative;
+`;
+
+const NavigatorBarWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 24px 24px 0 24px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px;
-    overflow-y: auto;
-    box-sizing: border-box;
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
 
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px;
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px;
+  }
 `;
 
 const MainText = styled.div`
-    ${(props: any) => props.theme.fonts.body07};
-    color: ${(props: any) => props.theme.colors.gray300};
+  ${(props: any) => props.theme.fonts.body07};
+  color: ${(props: any) => props.theme.colors.gray300};
+
+  @media (max-height: 580px) {
+    ${theme.fonts.body16};
+  }
 `;
 
 const SelectWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 20px;
-    margin: 42px 0;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  margin: 42px 0;
+
+  @media (max-height: 628px) {
+    margin: 22px 0;
+  }
 `;
 
 const Select = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: column;
-    width: 50%;
-    gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  width: 50%;
+  gap: 20px;
+
+  @media (max-height: 700px) {
+    gap: 10px;
+  }
 `;
 
 const SelectTitle = styled.div`
-    width: 100%;
-    text-align: center;
-    ${(props: any) => props.theme.fonts.body08};
-    color: ${(props: any) => props.theme.colors.white};
+  width: 100%;
+  text-align: center;
+  ${(props: any) => props.theme.fonts.body08};
+  color: ${(props: any) => props.theme.colors.white};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body11};
+  }
 `;
 
 const SampleImg = styled.img`
-    width: 100%;
-    height: auto;
-    @media (max-width: 400px) {
-        width: 100px;
-    }
+  width: 100%;
+  height: auto;
+
+  @media (max-height: 760px) {
+    width: 130px;
+  }
+
+  @media (max-height: 700px) {
+    width: 110px;
+  }
+
+  @media (max-height: 628px) {
+    width: 100px;
+  }
 `;
 
-const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+const ButtonWrapper = styled.div`
+  width: 100%;
+  position: absolute;
+  padding: 0 20px;
+  bottom: 40px;
+  left: 0;
 `;
