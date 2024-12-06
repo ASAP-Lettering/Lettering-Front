@@ -8,7 +8,7 @@ export default function Login() {
   return (
     <Container>
       <ImageWrapper>
-        <LogoTitle src="/assets/login/login_text.png" />
+        <LogoTitle data="/assets/login/login_text.svg" />
         <LogoText>편지로 수놓는 나의 스페이스</LogoText>
         <LogoImage src="/assets/login/login_logo.png" />
         <SocialKakaoWrapper>
@@ -34,7 +34,7 @@ const Container = styled.div`
   }
 `;
 
-const LogoTitle = styled.img`
+const LogoTitle = styled.object`
   display: flex;
   box-sizing: border-box;
   width: 70%;
