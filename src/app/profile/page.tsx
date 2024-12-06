@@ -6,6 +6,7 @@ import Input from "@/components/common/Input";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Modal from "@/components/profile/DateModal";
+import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -121,15 +122,19 @@ const Profile = () => {
           initialDate={selectedDate}
         />
       )}
-      <Wrapper>
+      <NavigatorBarWrapper>
         <NavigatorBar title="내 프로필" cancel={false} />
-      </Wrapper>
+      </NavigatorBarWrapper>
       <MainWrapper>
         <ProfileImage src="/assets/profile/img_profile_letter.png" />
         <InfoWrapper>
           <InfoName>
-            <img src="/assets/icons/ic_kakao_profile.svg" />
             연동된 계정
+            <img
+              src="/assets/icons/ic_kakao_profile.svg"
+              width={16}
+              height={16}
+            />
           </InfoName>
           <Input
             inputType="boxText"
@@ -152,7 +157,7 @@ const Profile = () => {
           />
         </InfoWrapper>
       </MainWrapper>
-      <Wrapper>
+      <ButtonWrapper>
         <Button
           buttonType="primary"
           size="large"
@@ -160,7 +165,7 @@ const Profile = () => {
           disabled={!isAbled}
           onClick={handleSubmit}
         />
-      </Wrapper>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -180,66 +185,81 @@ export default function ProfilePaging() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    justify-content: space-between;
-    color: white;
-    background:${(props) => props.theme.colors.bg}; 
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  justify-content: space-between;
+  color: ${theme.colors.white};
+  background: ${(props) => props.theme.colors.bg};
+  position: relative;
+`;
+
+const NavigatorBarWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 24px 24px 0 24px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 5px 24px;
-    align-items: center;
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    &::-webkit-scrollbar {
-        width: 5px; /* Width of the scrollbar */
-    }
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 5px 24px;
+  align-items: center;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
 
-    &::-webkit-scrollbar-track {
-        background: ${(props: any) => props.theme.colors.gray800};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-track {
+    background: ${(props: any) => props.theme.colors.gray800};
+    border-radius: 10px;
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: ${(props: any) => props.theme.colors.gray600};
-        border-radius: 10px; /* Rounded corners */
-    }
+  &::-webkit-scrollbar-thumb {
+    background: ${(props: any) => props.theme.colors.gray600};
+    border-radius: 10px;
+  }
 `;
 
 const InfoWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 30px;
-    width: 100%;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  width: 100%;
+  gap: 12px;
 `;
 
 const InfoName = styled.div`
-    display: flex;
-    gap: 5px;
-    ${(props: any) => props.theme.fonts.body06};
-    color: ${(props: any) => props.theme.colors.white};
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  ${(props: any) => props.theme.fonts.body06};
+  color: ${(props: any) => props.theme.colors.white};
 `;
 
 const ProfileImage = styled.img`
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 
-    @media (max-width: 375px) {
-        width: 200px;
-    }
+  @media (max-height: 760px) {
+    width: 200px;
+  }
+
+  @media (max-height: 580px) {
+    width: 150px;
+    height: 150px;
+  }
 `;
 
-const Wrapper = styled.div`
-    display: flex;
-    width: 100%;
-    padding: 24px;
+const ButtonWrapper = styled.div`
+  width: 100%;
+  position: absolute;
+  padding: 0 20px;
+  bottom: 40px;
+  left: 0;
 `;
