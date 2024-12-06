@@ -74,7 +74,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   ) : (
     <Button
       buttonType="secondary"
-      text="재공유"
+      text="재전송"
       width={width}
       onClick={shareToKakao}
     />

@@ -499,19 +499,13 @@ const ButtonDiv = styled.div`
   right: 0px;
 
   @media (max-height: 628px) {
-    width: 80px;
-    height: 28px;
     ${theme.fonts.caption03};
-    gap: 5px;
-    top: 7px;
+    top: 6px;
   }
 
   @media (max-height: 580px) {
-    width: 65px;
-    height: 20px;
     ${theme.fonts.body15};
-    gap: 5px;
-    top: 10px;
+    top: 7px;
   }
 `;
 
@@ -576,11 +570,7 @@ const Essential = styled.div`
 const Column = styled.div`
   margin-bottom: 40px;
 
-  /* @media (max-height: 628px) {
-    margin-bottom: 20px;
-  } */
-
-  @media (max-height: 550px) {
+  @media (max-height: 710px) {
     margin-bottom: 20px;
   }
 `;
@@ -650,6 +640,11 @@ const AddImageLabel = styled.label`
   ${theme.fonts.body08}
 
   @media (max-height: 628px) {
+    height: 48px;
+    ${theme.fonts.body12};
+  }
+
+  @media (max-height: 580px) {
     height: 42px;
     ${theme.fonts.caption04}
   }
@@ -681,6 +676,12 @@ const AddImagesLabel = styled.label`
   text-align: center;
 
   @media (max-height: 628px) {
+    width: 45px;
+    height: 45px;
+    ${theme.fonts.body12};
+  }
+
+  @media (max-height: 580px) {
     width: 39px;
     height: 39px;
     ${theme.fonts.body12};
@@ -713,6 +714,11 @@ const ImageDiv = styled.div`
   position: relative;
 
   @media (max-height: 628px) {
+    width: 45px;
+    height: 45px;
+  }
+
+  @media (max-height: 580px) {
     width: 39px;
     height: 39px;
   }
@@ -726,6 +732,11 @@ const DeleteIcon = styled.button`
   right: -5px;
 
   @media (max-height: 628px) {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media (max-height: 580px) {
     width: 13px;
     height: 13px;
   }
