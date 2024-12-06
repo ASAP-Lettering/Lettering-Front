@@ -202,7 +202,7 @@ const LetterRegisterPage = () => {
         </Column>
         <Column>
           <Label>
-            편지 내용을 작성해주세요 *
+            편지 내용을 작성해주세요
             <Count>
               <Span>{content.length}</Span>
               /1000
