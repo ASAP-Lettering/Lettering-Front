@@ -72,7 +72,7 @@ const Input = (props: InputProps) => {
   const isTextarea = inputType === "boxTextArea";
 
   return (
-    <Container>
+    <Container $height={height || "auto"}>
       {label && <Label>{label}</Label>}
       {isTextarea ? (
         <StyledTextarea
@@ -110,10 +110,11 @@ const Input = (props: InputProps) => {
 
 export default Input;
 
-const Container = styled.div`
+const Container = styled.div<{ $height: string }>`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  height: ${({ $height }) => $height};
 `;
 
 const Label = styled.label`

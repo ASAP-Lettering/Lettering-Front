@@ -95,8 +95,8 @@ const CheckInput = styled.input<{ $checkType: checkType; $label: boolean }>`
   display: flex;
 
   @media (max-height: 628px) {
-    width: ${({ $checkType }) => ($checkType !== "large" ? "15px" : "25px")};
-    height: ${({ $checkType }) => ($checkType !== "large" ? "15px" : "25px")};
+    width: ${({ $checkType }) => ($checkType !== "large" ? "22px" : "25px")};
+    height: ${({ $checkType }) => ($checkType !== "large" ? "22px" : "25px")};
   }
 `;
 
@@ -108,8 +108,8 @@ const StyledImage = styled(Image)<{ $checkType: checkType }>`
   z-index: 10;
 
   @media (max-height: 628px) {
-    top: ${({ $checkType }) => ($checkType !== "large" ? "0px" : "3px")};
-    left: ${({ $checkType }) => ($checkType !== "large" ? "0px" : "3px")};
+    top: ${({ $checkType }) => ($checkType !== "large" ? "1px" : "3px")};
+    left: ${({ $checkType }) => ($checkType !== "large" ? "1px" : "3px")};
   }
 `;
 
