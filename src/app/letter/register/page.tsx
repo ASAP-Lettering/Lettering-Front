@@ -110,7 +110,7 @@ const LetterRegisterPage = () => {
       const imageUrls: string[] = [];
       for (const file of validImages) {
         const compressedFile = await imageCompression(file, {
-          maxSizeMB: 0.1,
+          maxSizeMB: 500,
           maxWidthOrHeight: 512,
           useWebWorker: true,
         });
