@@ -16,8 +16,12 @@ import {
   putSpacesOrder,
 } from "@/api/planet/space/space";
 import { useToast } from "@/hooks/useToast";
+import { spaceState } from "@/recoil/spaceStore";
+import { useSetRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
 
 const PlanetManagePage = () => {
+  const router = useRouter();
   const { showToast } = useToast();
   const [count, setCount] = useState<number>(0);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
@@ -26,6 +30,8 @@ const PlanetManagePage = () => {
   const [changedOrder, setChangedOrder] = useState<string[]>([]);
 
   const [planets, setPlanets] = useState<Planet[]>();
+
+  const setViewSpaceId = useSetRecoilState(spaceState);
 
   const fetchSpaceList = async () => {
     try {
@@ -57,10 +63,18 @@ const PlanetManagePage = () => {
   };
 
   const handleChangeChecked = (id: string) => {
-    if (checkedPlanets.includes(id)) {
-      setCheckedPlanets(checkedPlanets.filter((planetId) => planetId !== id));
+    if (deleteMode) {
+      if (checkedPlanets.includes(id)) {
+        setCheckedPlanets(checkedPlanets.filter((planetId) => planetId !== id));
+      } else {
+        setCheckedPlanets([...checkedPlanets, id]);
+      }
     } else {
-      setCheckedPlanets([...checkedPlanets, id]);
+      /* 선택 행성 조회 모드 */
+      if (id) {
+        setViewSpaceId(id);
+        router.push("/planet");
+      }
     }
   };
 
