@@ -216,7 +216,7 @@ const LetterRegisterPage = () => {
             height="193px"
           />
         </Column>
-        <Column>
+        <Column $position={true}>
           <Label $show={false}>사진을 추가해주세요</Label>
           {(previewImages || []).length === 0 ? (
             <AddImageWrapper>
@@ -270,20 +270,20 @@ const LetterRegisterPage = () => {
             </ImagesList>
           )}
         </Column>
-        <ButtonWrapper>
-          <Button
-            buttonType="primary"
-            size="large"
-            text={isImageUploadLoading ? "Loading..." : "다음"}
-            disabled={
-              !sender ||
-              (!content && previewImages?.length === 0) ||
-              isImageUploadLoading
-            }
-            onClick={handleAddNext}
-          />
-        </ButtonWrapper>
       </Container>
+      <ButtonWrapper>
+        <Button
+          buttonType="primary"
+          size="large"
+          text={isImageUploadLoading ? "Loading..." : "다음"}
+          disabled={
+            !sender ||
+            (!content && previewImages?.length === 0) ||
+            isImageUploadLoading
+          }
+          onClick={handleAddNext}
+        />
+      </ButtonWrapper>
     </Layout>
   );
 };
@@ -328,6 +328,10 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (max-height: 628px) {
+    position: relative;
+  }
 `;
 
 const Essential = styled.div`
@@ -344,11 +348,31 @@ const Essential = styled.div`
   }
 `;
 
-const Column = styled.div`
+const Column = styled.div<{ $position?: boolean }>`
   margin-bottom: 40px;
 
   @media (max-height: 710px) {
     margin-bottom: 20px;
+  }
+
+  @media (max-height: 628px) {
+    ${({ $position }) =>
+      $position &&
+      css`
+        width: 100%;
+        position: absolute;
+        top: 300px;
+      `}
+  }
+
+  @media (max-height: 580px) {
+    ${({ $position }) =>
+      $position &&
+      css`
+        width: 100%;
+        position: absolute;
+        top: 280px;
+      `}
   }
 `;
 
