@@ -83,6 +83,7 @@ const Box = styled.div`
   gap: 10px;
   border-radius: 8px;
   background: transparent;
+  cursor: pointer;
 `;
 
 const ContentWrapper = styled.div`

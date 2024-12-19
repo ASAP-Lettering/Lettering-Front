@@ -1,12 +1,15 @@
-import client, { authClient } from "@/api/client";
-import { getAccessToken } from "@/utils/storage";
+import { authClient } from "@/api/client";
 
 // 메인 스페이스 아이디 조회
 export const getMainId = async () => {
-  const accessToken = getAccessToken();
-
   const response = await authClient.get(`/api/v1/spaces/main`);
 
+  return response;
+};
+
+// 특정 스페이스 조회
+export const getSpaceInfo = async (spaceId: string) => {
+  const response = await authClient.get(`/api/v1/spaces/${spaceId}`);
   return response;
 };
 

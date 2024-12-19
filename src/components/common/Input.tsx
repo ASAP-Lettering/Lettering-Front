@@ -144,10 +144,17 @@ const sharedStyles = `
   }
 `;
 
-const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
+const StyledInput = styled.input<{
+  $inputType: inputType;
+  $isVaild: boolean;
+}>`
   ${sharedStyles}
   height: 52px;
   padding: 12px 20px;
+
+  font-size: 16px; // Safari 확대 방지
+  transform-origin: left top;
+
   ${({ $inputType }) =>
     ($inputType === "underline" || $inputType === "signup") &&
     css`
@@ -169,10 +176,19 @@ const StyledInput = styled.input<{ $inputType: inputType; $isVaild: boolean }>`
     `}
 
   @media (max-height: 628px) {
+    width: 100%;
     height: 39px;
-    ${theme.fonts.caption04}
+    font-weight: 400;
+    transform: scale(0.875);
+    transform-origin: left top;
+    margin-bottom: -3px;
+    margin-right: -11.25%;
+    width: 114%;
+
     &::placeholder {
-      ${theme.fonts.caption04}
+      font-weight: 400;
+      transform: scale(0.875);
+      transform-origin: left top;
     }
   }
 `;
@@ -182,6 +198,10 @@ const StyledTextarea = styled.textarea<{
   $height: string;
 }>`
   ${sharedStyles}
+
+  font-size: 16px; // Safari 확대 방지
+  transform-origin: left top;
+
   height: ${({ $height }) => $height};
   ${(props: any) => props.theme.fonts.body07};
 
@@ -208,11 +228,27 @@ const StyledTextarea = styled.textarea<{
     background: transparent;
   }
 
-  @media (max-height: 628px) {
+  /* @media (max-height: 628px) {
     height: 171px;
     ${theme.fonts.caption04}
     &::placeholder {
       ${theme.fonts.caption04}
+    }
+  } */
+  @media (max-height: 628px) {
+    height: 171px;
+    font-weight: 400;
+    transform: scale(0.875);
+    transform-origin: left top;
+
+    margin-bottom: -18px;
+    margin-right: -11.25%;
+    width: 114%;
+
+    &::placeholder {
+      font-weight: 400;
+      transform: scale(0.875);
+      transform-origin: left top;
     }
   }
 `;

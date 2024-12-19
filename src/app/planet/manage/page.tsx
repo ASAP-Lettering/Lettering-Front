@@ -16,8 +16,12 @@ import {
   putSpacesOrder,
 } from "@/api/planet/space/space";
 import { useToast } from "@/hooks/useToast";
+import { spaceState } from "@/recoil/spaceStore";
+import { useSetRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
 
 const PlanetManagePage = () => {
+  const router = useRouter();
   const { showToast } = useToast();
   const [count, setCount] = useState<number>(0);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
@@ -26,6 +30,8 @@ const PlanetManagePage = () => {
   const [changedOrder, setChangedOrder] = useState<string[]>([]);
 
   const [planets, setPlanets] = useState<Planet[]>();
+
+  const setViewSpaceId = useSetRecoilState(spaceState);
 
   const fetchSpaceList = async () => {
     try {
@@ -57,10 +63,18 @@ const PlanetManagePage = () => {
   };
 
   const handleChangeChecked = (id: string) => {
-    if (checkedPlanets.includes(id)) {
-      setCheckedPlanets(checkedPlanets.filter((planetId) => planetId !== id));
+    if (deleteMode) {
+      if (checkedPlanets.includes(id)) {
+        setCheckedPlanets(checkedPlanets.filter((planetId) => planetId !== id));
+      } else {
+        setCheckedPlanets([...checkedPlanets, id]);
+      }
     } else {
-      setCheckedPlanets([...checkedPlanets, id]);
+      /* 선택 행성 조회 모드 */
+      if (id) {
+        setViewSpaceId(id);
+        router.push("/planet");
+      }
     }
   };
 
@@ -241,7 +255,8 @@ export default PlanetManagePage;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -249,6 +264,12 @@ const Layout = styled.div`
   padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Container = styled.div`
@@ -296,6 +317,7 @@ const Divider = styled.div`
 const PlanetBoxList = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 `;
 
 const ButtonWrapper = styled.div`

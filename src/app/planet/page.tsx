@@ -11,7 +11,7 @@ import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import { useRouter } from "next/navigation";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { getMainId, putSpace } from "@/api/planet/space/space";
+import { getMainId, getSpaceInfo, putSpace } from "@/api/planet/space/space";
 import {
   getOrbitLetter,
   getPlanetLetterList,
@@ -39,6 +39,7 @@ import {
 import { useToast } from "@/hooks/useToast";
 import Tooltip from "@/components/common/Tooltip";
 import { userState } from "@/recoil/userStore";
+import { spaceState } from "@/recoil/spaceStore";
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -63,6 +64,8 @@ const PlanetPage = () => {
 
   const [registerState, setRegisterState] = useRecoilState(registerLetterState);
   const [sendState, setSendState] = useRecoilState(sendLetterState);
+
+  const viewSpaceId = useRecoilValue(spaceState);
 
   /* 홈에서 편지 등록 및 쓰기 store 초기화 */
   useEffect(() => {
@@ -107,7 +110,7 @@ const PlanetPage = () => {
   ) => {
     try {
       const response = await getPlanetLetterList({
-        spaceId: spaceId,
+        spaceId: viewSpaceId || spaceId,
         page: page - 1,
         size: size,
       });
@@ -136,14 +139,31 @@ const PlanetPage = () => {
   };
 
   const fetchMainId = async () => {
+    if (viewSpaceId) {
+      try {
+        const response = await getSpaceInfo(viewSpaceId);
+        console.log("선택한 스페이스 정보 조회 성공:", response.data);
+        setSpaceInfo({
+          spaceId: viewSpaceId,
+          spaceName: response.data.spaceName,
+          templateType: response.data.templateType,
+        });
+        fetchPlanetLetterList(viewSpaceId, currentPage, itemsPerPage);
+      } catch (error) {
+        console.error("선택한 스페이스 정보 조회 실패:", error);
+        setSpaceInfo(null);
+      }
+    }
     try {
       const response = await getMainId();
       console.log("메인 ID 조회 성공:", response.data);
-      setSpaceInfo({
-        spaceId: response.data.spaceId,
-        spaceName: response.data.spaceName,
-        templateType: response.data.templateType,
-      });
+      if (!viewSpaceId) {
+        setSpaceInfo({
+          spaceId: response.data.spaceId,
+          spaceName: response.data.spaceName,
+          templateType: response.data.templateType,
+        });
+      }
       setUser((prevState) => ({
         ...prevState,
         name: response.data.username,

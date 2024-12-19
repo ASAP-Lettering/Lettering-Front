@@ -6,7 +6,7 @@ export const metadata = {
   description:
     "다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.",
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon_16.png",
   },
   openGraph: {
     site_name: "레터링",
@@ -34,6 +34,8 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximumScale=1, user-scalable=no"
         />
+        <link rel="apple-touch-icon" href="/favicon_114.png"></link>
+        <link rel="shortcut icon" href="/favicon_72.png"></link>
       </head>
       <body>
         <script
