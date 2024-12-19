@@ -255,7 +255,8 @@ export default PlanetManagePage;
 
 const Layout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -263,6 +264,12 @@ const Layout = styled.div`
   padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Container = styled.div`
@@ -310,6 +317,7 @@ const Divider = styled.div`
 const PlanetBoxList = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 `;
 
 const ButtonWrapper = styled.div`
