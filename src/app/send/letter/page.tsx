@@ -167,7 +167,7 @@ const SendLetterPage = () => {
       const imageUrls: string[] = [];
       for (const file of validImages) {
         const compressedFile = await imageCompression(file, {
-          maxSizeMB: 0.1,
+          maxSizeMB: 500,
           maxWidthOrHeight: 512,
           useWebWorker: true,
         });
@@ -373,7 +373,7 @@ const SendLetterPage = () => {
             height="193px"
           />
         </Column>
-        <Column>
+        <Column $position={true}>
           <Label $show={false}>사진을 추가해주세요</Label>
           {(previewImages || []).length === 0 ? (
             <AddImageWrapper>
@@ -427,16 +427,16 @@ const SendLetterPage = () => {
             </ImagesList>
           )}
         </Column>
-        <ButtonWrapper>
-          <Button
-            buttonType="primary"
-            size="large"
-            text={isImageUploadLoading ? "Loading..." : "다음"}
-            disabled={!receiver || !content || isImageUploadLoading}
-            onClick={handleAddNext}
-          />
-        </ButtonWrapper>
       </Container>
+      <ButtonWrapper>
+        <Button
+          buttonType="primary"
+          size="large"
+          text={isImageUploadLoading ? "Loading..." : "다음"}
+          disabled={!receiver || !content || isImageUploadLoading}
+          onClick={handleAddNext}
+        />
+      </ButtonWrapper>
       {isDraftBottom && (
         <BottomWrapper>
           <DraftBottom
@@ -551,6 +551,10 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (max-height: 628px) {
+    position: relative;
+  }
 `;
 
 const Essential = styled.div`
@@ -567,11 +571,31 @@ const Essential = styled.div`
   }
 `;
 
-const Column = styled.div`
+const Column = styled.div<{ $position?: boolean }>`
   margin-bottom: 40px;
 
   @media (max-height: 710px) {
     margin-bottom: 20px;
+  }
+
+  @media (max-height: 628px) {
+    ${({ $position }) =>
+      $position &&
+      css`
+        width: 100%;
+        position: absolute;
+        top: 300px;
+      `}
+  }
+
+  @media (max-height: 580px) {
+    ${({ $position }) =>
+      $position &&
+      css`
+        width: 100%;
+        position: absolute;
+        top: 280px;
+      `}
   }
 `;
 

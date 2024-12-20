@@ -35,7 +35,7 @@ const Bottom = (props: BottomProps) => {
     <Container>
       <Top>
         <Title>
-          나의 궤도 메세지
+          새 편지함
           {orbitMessages && orbitMessages?.length > 0 && (
             <Span>{orbitMessages?.length}개</Span>
           )}
