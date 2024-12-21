@@ -11,6 +11,7 @@ interface ButtonProps {
   width?: string;
   height?: string;
   text?: string;
+  backgroundColor?: string;
   children?: React.ReactNode;
   icon?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -24,6 +25,7 @@ const Button = (props: ButtonProps) => {
     width,
     height,
     text,
+    backgroundColor,
     children,
     onClick,
     icon = false,
@@ -38,6 +40,7 @@ const Button = (props: ButtonProps) => {
       disabled={disabled}
       $width={width}
       $height={height}
+      $backgroundColor={backgroundColor}
     >
       {icon && <img src="/assets/icons/ic_letter.svg" />}
       {children}
@@ -53,6 +56,7 @@ const StyledButton = styled.button<{
   $size: sizeType;
   $width?: string;
   $height?: string;
+  $backgroundColor?: string;
 }>`
   display: flex;
   justify-content: center;
@@ -87,8 +91,12 @@ const StyledButton = styled.button<{
   }
 
   /*buttonType*/
-  background-color: ${({ $buttonType }) =>
-    $buttonType === "primary" ? theme.colors.main01 : theme.colors.gray500};
+  background-color: ${({ $buttonType, $backgroundColor }) =>
+    $backgroundColor
+      ? $backgroundColor
+      : $buttonType === "primary"
+      ? theme.colors.main01
+      : theme.colors.gray600};
 
   &:active {
     opacity: 0.8;

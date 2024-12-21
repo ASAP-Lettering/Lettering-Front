@@ -186,13 +186,13 @@ const LetterRegisterPage = () => {
   return (
     <Layout>
       <NavigatorBar
-        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
         cancel={false}
       />
       <Container>
         <Essential>* 필수</Essential>
         <Column>
-          <Label>편지를 보낸 사람은 누구인가요? *</Label>
+          <Label>나에게 편지를 보낸 사람은 누구인가요? *</Label>
           <Input
             inputType="boxText"
             value={sender}

@@ -65,7 +65,7 @@ const Bottom = (props: BottomProps) => {
           ))}
         </Orbits>
       ) : (
-        <NoOrbit>등록된 편지가 없습니다. 편지를 등록해볼까요?</NoOrbit>
+        <NoOrbit>보관된 편지가 없습니다.</NoOrbit>
       )}
       <Divider />
       <ButtonRow>

@@ -6,7 +6,6 @@ import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -14,6 +13,8 @@ import {
   useSsrComplectedState,
 } from "@/recoil/letterStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import LetterTemplateList from "@/components/letter/LetterTemplateList";
+import { ALL_TEMPLATES } from "@/constants/templates";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -24,7 +25,9 @@ const LetterTemplatePage = () => {
     useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
 
-  const [template, setTemplateType] = useState<number>(templateType || 0);
+  const [template, setTemplateType] = useState<number>(
+    templateType || ALL_TEMPLATES[0]
+  );
   const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
@@ -58,14 +61,14 @@ const LetterTemplatePage = () => {
   return (
     <Layout>
       <NavigatorBar
-        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
         cancel={false}
       />
       <Container>
         <Essential>* 필수</Essential>
         <Column>
           <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
+          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -82,22 +85,11 @@ const LetterTemplatePage = () => {
               />
             </LetterContainer>
           </LetterWrapper>
-          <TemplatesList>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-              <TemplateImage
-                key={item}
-                src={`/assets/letter/background_${item}.png`}
-                width={70}
-                height={70}
-                alt="편지지"
-                $selected={template === item}
-                onClick={() => hanleChangeTemplate(item)}
-              />
-            ))}
-          </TemplatesList>
-          <Page>
-            <Current>{template + 1}</Current>/{totalPage}
-          </Page>
+          <LetterTemplateList
+            selectedTemplate={template}
+            onChangeTemplate={hanleChangeTemplate}
+            templates={ALL_TEMPLATES}
+          />
         </Column>
         <ButtonWrapper>
           <Button
@@ -241,87 +233,6 @@ const LetterContainer = styled.div`
     min-height: 182px;
   }
 `;
-
-const TemplatesList = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  height: 78px;
-  padding-left: 4px;
-  margin-top: 69px;
-  margin-bottom: 14px;
-  overflow-x: scroll;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-
-  @media (max-height: 740px) {
-    margin-top: 30px;
-    margin-bottom: 5px;
-    ${theme.fonts.body14};
-    gap: 11px;
-  }
-
-  @media (max-height: 680px) {
-    margin-top: 15px;
-    margin-bottom: 5px;
-    ${theme.fonts.body14};
-    gap: 11px;
-  }
-
-  @media (max-height: 628px) {
-    margin-top: 12px;
-    margin-bottom: 5px;
-    ${theme.fonts.body14};
-    gap: 11px;
-  }
-`;
-
-const TemplateImage = styled(Image)<{ $selected: boolean }>`
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
-  box-sizing: content-box;
-
-  ${({ $selected, theme }) =>
-    $selected &&
-    css`
-      box-shadow: 0 0 0 4px ${theme.colors.sub03};
-    `}
-
-  @media (max-height: 628px) {
-    width: 50px;
-    height: 50px;
-    border-radius: 4px;
-    ${({ $selected, theme }) =>
-      $selected &&
-      css`
-        box-shadow: 0 0 0 2px ${theme.colors.sub03};
-      `}
-  }
-`;
-
-const Page = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption03};
-`;
-
-const Current = styled.span`
-  color: ${theme.colors.white};
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-bottom: 50px;
-  }
-`;
-
 const ButtonWrapper = styled.div`
   width: 100%;
   position: absolute;

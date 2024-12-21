@@ -77,7 +77,7 @@ const Onboarding = () => {
       step === 1 ? "99px" : step === 2 ? "133px" : step === 3 ? "133px" : "",
     left:
       step === 1
-        ? "136px"
+        ? "132px"
         : step === 2
         ? "105px"
         : step === 3
@@ -91,7 +91,7 @@ const Onboarding = () => {
       step === 1 ? "141px" : step === 2 ? "122px" : step === 3 ? "122px" : "",
     left:
       step === 1
-        ? "71px"
+        ? "68px"
         : step === 2
         ? "159px"
         : step === 3
@@ -124,11 +124,15 @@ const Onboarding = () => {
           <TotalStep> / 4</TotalStep>
         </OverlayClose>
         {step === 1 && (
-          <OverlayBtnWrapper left="24px" bottom="28px" width="65%">
+          <OverlayBtnWrapper
+            left="24px"
+            bottom="28px"
+            width="calc(100% - 167px)"
+          >
             <Button
               buttonType="primary"
               size="large"
-              text="새 편지 등록하기"
+              text="받은 편지 보관하기"
               height="60px"
             />
           </OverlayBtnWrapper>
@@ -166,25 +170,19 @@ const Onboarding = () => {
               src="/assets/onboarding/onboardingline5.svg"
               alt="Overlay Line 5"
               bottom="110px"
-              left="85%"
+              right="80px"
             />
-            <OverlayText bottom="149px" left="263px" textAlign="center">
+            <OverlayText bottom="150px" right="30px" textAlign="center">
               {overlayTexts[4]}
             </OverlayText>
             <OverlayBtnWrapper right="24px" bottom="28px">
               <Button
                 buttonType="secondary"
                 size="large"
-                width="100%"
+                width="131px"
                 height="60px"
-              >
-                <img
-                  src="/assets/icons/ic_rocket.svg"
-                  width={40}
-                  height={40}
-                  alt="rocket"
-                />
-              </Button>
+                text="편지 보내기"
+              />
             </OverlayBtnWrapper>
           </>
         )}

@@ -10,6 +10,8 @@ import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { sendLetterState, useSsrComplectedState } from "@/recoil/letterStore";
+import LetterTemplateList from "@/components/letter/LetterTemplateList";
+import { ALL_TEMPLATES } from "@/constants/templates";
 
 const SendTemplatePage = () => {
   const router = useRouter();
@@ -17,7 +19,9 @@ const SendTemplatePage = () => {
     useRecoilValue(sendLetterState);
   const setSendLetterState = useSetRecoilState(sendLetterState);
 
-  const [template, setTemplate] = useState<number>(templateType || 0);
+  const [template, setTemplate] = useState<number>(
+    templateType || ALL_TEMPLATES[0]
+  );
   const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
@@ -49,7 +53,7 @@ const SendTemplatePage = () => {
         <Essential>* 필수</Essential>
         <Column>
           <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
+          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -66,23 +70,11 @@ const SendTemplatePage = () => {
               />
             </LetterContainer>
           </LetterWrapper>
-          <TemplatesList>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-              <TemplateImage
-                key={item}
-                src={`/assets/letter/background_${item}.png`}
-                width={70}
-                height={70}
-                alt="편지지"
-                style={{ borderRadius: "8px" }}
-                $selected={template === item}
-                onClick={() => hanleChangeTemplate(item)}
-              />
-            ))}
-          </TemplatesList>
-          <Page>
-            <Current>{template + 1}</Current>/{totalPage}
-          </Page>
+          <LetterTemplateList
+            selectedTemplate={template}
+            onChangeTemplate={hanleChangeTemplate}
+            templates={ALL_TEMPLATES}
+          />
         </Column>
         <ButtonWrapper>
           <Button
