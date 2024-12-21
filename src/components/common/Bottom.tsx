@@ -72,7 +72,7 @@ const Bottom = (props: BottomProps) => {
         <Button
           buttonType="primary"
           size="large"
-          text="새 편지 등록하기"
+          text="받은 편지 보관하기"
           height="60px"
           onClick={() => {
             router.push("/letter/register");
@@ -81,17 +81,11 @@ const Bottom = (props: BottomProps) => {
         <Button
           buttonType="secondary"
           size="large"
-          width="96px"
+          width="131px"
           height="60px"
+          text="편지 보내기"
           onClick={() => router.push("/send/letter")}
-        >
-          <Image
-            src="/assets/icons/ic_rocket.svg"
-            width={40}
-            height={40}
-            alt="rocket"
-          />
-        </Button>
+        />
       </ButtonRow>
     </Container>
   );
