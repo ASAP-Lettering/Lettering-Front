@@ -156,6 +156,8 @@ const MyPage = () => {
                 </MenuWrapper>
               </SettingContainer>
             </SettingWrapper>
+            <img src="/assets/icons/ic_version.svg" />
+            <VersionText>Version 1.0</VersionText>
           </MainContainer>
         </>
       )}
@@ -349,4 +351,14 @@ const MenuWrapper = styled.div`
 
 const SettingContainer = styled.div`
   padding: 10px 0;
+`;
+
+const VersionText = styled.div`
+  margin-top: 4px;
+  color: var(--gray-700, #2E3040);
+  font-family: Pretendard;
+  font-size: 11.844px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 `;

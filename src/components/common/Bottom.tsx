@@ -81,9 +81,9 @@ const Bottom = (props: BottomProps) => {
         <Button
           buttonType="secondary"
           size="large"
-          text="편지 보내기"
           width="131px"
           height="60px"
+          text="편지 보내기"
           onClick={() => router.push("/send/letter")}
         />
       </ButtonRow>
