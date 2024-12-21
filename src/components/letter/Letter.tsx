@@ -80,15 +80,22 @@ const Letter = (props: LetterProps) => {
 
   useEffect(() => {}, [isChangeImage]);
 
-  // 페이지 내용 분할 처리
+  /* 페이지 내용 분할 처리 */
   useEffect(() => {
     if (!isImage && content) {
+      const container = document.querySelector(".ContentContainer"); // content 부모 컨테이너
+      if (!container) return;
+
+      const maxLinesPerPage = 7;
+
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
 
       if (context) {
+        canvas.width = container.clientWidth; // 부모 컨테이너의 width 기준
         context.font = "16px Pretendard";
-        const maxWidth = contentType === "one" ? 180 : 230;
+        const maxWidth = container.clientWidth;
+
         let currentLine = "";
         let lines: string[] = [];
 
@@ -110,7 +117,6 @@ const Letter = (props: LetterProps) => {
         }
         if (currentLine) lines.push(currentLine.trim());
 
-        const maxLinesPerPage = 7;
         const paginated = [];
         for (let i = 0; i < lines.length; i += maxLinesPerPage) {
           paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
@@ -225,7 +231,11 @@ const Letter = (props: LetterProps) => {
           </TopPreviewContainer>
         </>
       )}
-      <Content $showType={showType} $contentType={contentType}>
+      <Content
+        $showType={showType}
+        $contentType={contentType}
+        className="ContentContainer"
+      >
         <SwipeableContent
           contentType={contentType}
           content={isChangeImage ? images ?? [] : paginatedContent}

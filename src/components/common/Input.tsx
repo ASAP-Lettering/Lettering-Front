@@ -182,7 +182,7 @@ const StyledInput = styled.input<{
     transform: scale(0.875);
     transform-origin: left top;
     margin-bottom: -3px;
-    margin-right: -11.25%;
+    margin-right: -16%;
     width: 114%;
 
     &::placeholder {
@@ -228,13 +228,6 @@ const StyledTextarea = styled.textarea<{
     background: transparent;
   }
 
-  /* @media (max-height: 628px) {
-    height: 171px;
-    ${theme.fonts.caption04}
-    &::placeholder {
-      ${theme.fonts.caption04}
-    }
-  } */
   @media (max-height: 628px) {
     height: 171px;
     font-weight: 400;
