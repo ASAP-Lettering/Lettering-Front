@@ -123,37 +123,37 @@ const PlanetMovePage = () => {
             />
           ))}
         </PlanetBoxList>
-        <SendOrbitAreaWrapper>
-          <SendOrbitArea onClick={handleMoveOrbit}>
-            <Top>
-              {checkedIndep && (
-                <Image
-                  src={`/assets/icons/ic_check.svg`}
-                  width={20}
-                  height={20}
-                  alt="check"
-                />
-              )}
-              행성 궤도로 보내기
-            </Top>
-            <Small>
-              궤도로 옮겨질 시, 홈에서 끌어당겨 언제든 추가할 수 있어요
-            </Small>
-          </SendOrbitArea>
-        </SendOrbitAreaWrapper>
-        <ButtonWrapper>
-          <Button
-            buttonType="primary"
-            size="large"
-            text="이동하기"
-            disabled={
-              (checkedPlanet === "" && checkedIndep === false) ||
-              checkedPlanet === planets?.[0]?.spaceId
-            }
-            onClick={handleMovePlanet}
-          />
-        </ButtonWrapper>
       </Container>
+      <SendOrbitAreaWrapper>
+        <SendOrbitArea onClick={handleMoveOrbit}>
+          <Top>
+            {checkedIndep && (
+              <Image
+                src={`/assets/icons/ic_check.svg`}
+                width={20}
+                height={20}
+                alt="check"
+              />
+            )}
+            행성 궤도로 보내기
+          </Top>
+          <Small>
+            궤도로 옮겨질 시, 홈에서 끌어당겨 언제든 추가할 수 있어요
+          </Small>
+        </SendOrbitArea>
+      </SendOrbitAreaWrapper>
+      <ButtonWrapper>
+        <Button
+          buttonType="primary"
+          size="large"
+          text="이동하기"
+          disabled={
+            (checkedPlanet === "" && checkedIndep === false) ||
+            checkedPlanet === planets?.[0]?.spaceId
+          }
+          onClick={handleMovePlanet}
+        />
+      </ButtonWrapper>
     </Layout>
   );
 };
@@ -174,7 +174,8 @@ export default function PlanetMovePaging() {
 
 const Layout = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -182,6 +183,12 @@ const Layout = styled.div`
   padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Container = styled.div`
@@ -209,14 +216,18 @@ const PlanetBoxList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 200px;
 `;
 
 const SendOrbitAreaWrapper = styled.div`
   width: 100%;
-  position: absolute;
+  max-width: 393px;
+  position: fixed;
   padding: 0 20px;
   bottom: 110px;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 `;
 
 const SendOrbitArea = styled.div`
@@ -248,8 +259,10 @@ const Small = styled.div`
 
 const ButtonWrapper = styled.div`
   width: 100%;
-  position: absolute;
+  max-width: 393px;
+  position: fixed;
   padding: 0 20px;
   bottom: 40px;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
 `;
