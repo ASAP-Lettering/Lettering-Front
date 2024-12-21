@@ -10,6 +10,8 @@ import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { sendLetterState, useSsrComplectedState } from "@/recoil/letterStore";
+import LetterTemplateList from "@/components/letter/LetterTemplateList";
+import { ALL_TEMPLATES } from "@/constants/templates";
 
 const SendTemplatePage = () => {
   const router = useRouter();
@@ -66,20 +68,11 @@ const SendTemplatePage = () => {
               />
             </LetterContainer>
           </LetterWrapper>
-          <TemplatesList>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-              <TemplateImage
-                key={item}
-                src={`/assets/letter/background_${item}.png`}
-                width={70}
-                height={70}
-                alt="편지지"
-                style={{ borderRadius: "8px" }}
-                $selected={template === item}
-                onClick={() => hanleChangeTemplate(item)}
-              />
-            ))}
-          </TemplatesList>
+          <LetterTemplateList
+            selectedTemplate={template}
+            onChangeTemplate={hanleChangeTemplate}
+            templates={ALL_TEMPLATES}
+          />
           <Page>
             <Current>{template + 1}</Current>/{totalPage}
           </Page>
