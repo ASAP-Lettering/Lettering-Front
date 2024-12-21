@@ -128,7 +128,7 @@ const Onboarding = () => {
             <Button
               buttonType="primary"
               size="large"
-              text="새 편지 등록하기"
+              text="받은 편지 보관하기"
               height="60px"
             />
           </OverlayBtnWrapper>

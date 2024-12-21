@@ -58,14 +58,14 @@ const LetterTemplatePage = () => {
   return (
     <Layout>
       <NavigatorBar
-        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
         cancel={false}
       />
       <Container>
         <Essential>* 필수</Essential>
         <Column>
           <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
+          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
           <LetterWrapper>
             <LetterContainer>
               <Letter

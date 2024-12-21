@@ -49,7 +49,7 @@ const SendTemplatePage = () => {
         <Essential>* 필수</Essential>
         <Column>
           <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 저장할 수 있어요</SmallText>
+          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
           <LetterWrapper>
             <LetterContainer>
               <Letter

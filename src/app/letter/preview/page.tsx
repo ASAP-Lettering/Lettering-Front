@@ -86,7 +86,7 @@ const LetterPreviewPage = () => {
   return (
     <Layout>
       <NavigatorBar
-        title={letterId ? "편지 수정하기" : "새 편지 등록하기"}
+        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
         cancel={false}
       />
       <Container>
