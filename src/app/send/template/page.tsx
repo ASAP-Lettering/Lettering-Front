@@ -19,7 +19,9 @@ const SendTemplatePage = () => {
     useRecoilValue(sendLetterState);
   const setSendLetterState = useSetRecoilState(sendLetterState);
 
-  const [template, setTemplate] = useState<number>(templateType || 0);
+  const [template, setTemplate] = useState<number>(
+    templateType || ALL_TEMPLATES[0]
+  );
   const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
@@ -73,9 +75,6 @@ const SendTemplatePage = () => {
             onChangeTemplate={hanleChangeTemplate}
             templates={ALL_TEMPLATES}
           />
-          <Page>
-            <Current>{template + 1}</Current>/{totalPage}
-          </Page>
         </Column>
         <ButtonWrapper>
           <Button

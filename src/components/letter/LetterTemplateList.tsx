@@ -11,20 +11,29 @@ interface LetterTemplateListProps {
 const LetterTemplateList = (props: LetterTemplateListProps) => {
   const { selectedTemplate, onChangeTemplate, templates } = props;
 
+  const currentIndex = templates.findIndex(
+    (template) => template === selectedTemplate
+  );
+
   return (
-    <TemplatesList>
-      {templates.map((item) => (
-        <TemplateImage
-          key={item}
-          src={`/assets/letter/background_${item}.png`}
-          width={70}
-          height={70}
-          alt="편지지"
-          $selected={selectedTemplate === item}
-          onClick={() => onChangeTemplate(item)}
-        />
-      ))}
-    </TemplatesList>
+    <>
+      <TemplatesList>
+        {templates.map((item) => (
+          <TemplateImage
+            key={item}
+            src={`/assets/letter/background_${item}.png`}
+            width={70}
+            height={70}
+            alt="편지지"
+            $selected={selectedTemplate === item}
+            onClick={() => onChangeTemplate(item)}
+          />
+        ))}
+      </TemplatesList>
+      <Page>
+        <Current>{currentIndex + 1}</Current>/{templates.length}
+      </Page>
+    </>
   );
 };
 
@@ -90,5 +99,22 @@ const TemplateImage = styled(Image)<{ $selected: boolean }>`
       css`
         box-shadow: 0 0 0 2px ${theme.colors.sub03};
       `}
+  }
+`;
+
+const Page = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  color: ${theme.colors.gray500};
+  ${theme.fonts.caption03};
+`;
+
+const Current = styled.span`
+  color: ${theme.colors.white};
+  margin-bottom: 100px;
+
+  @media (max-height: 628px) {
+    margin-bottom: 50px;
   }
 `;

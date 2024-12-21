@@ -25,7 +25,9 @@ const LetterTemplatePage = () => {
     useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
 
-  const [template, setTemplateType] = useState<number>(templateType || 0);
+  const [template, setTemplateType] = useState<number>(
+    templateType || ALL_TEMPLATES[0]
+  );
   const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
@@ -88,9 +90,6 @@ const LetterTemplatePage = () => {
             onChangeTemplate={hanleChangeTemplate}
             templates={ALL_TEMPLATES}
           />
-          <Page>
-            <Current>{template + 1}</Current>/{totalPage}
-          </Page>
         </Column>
         <ButtonWrapper>
           <Button
@@ -234,24 +233,6 @@ const LetterContainer = styled.div`
     min-height: 182px;
   }
 `;
-
-const Page = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption03};
-`;
-
-const Current = styled.span`
-  color: ${theme.colors.white};
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-bottom: 50px;
-  }
-`;
-
 const ButtonWrapper = styled.div`
   width: 100%;
   position: absolute;
