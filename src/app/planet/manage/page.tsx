@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
@@ -19,15 +19,17 @@ import { useToast } from "@/hooks/useToast";
 import { spaceState } from "@/recoil/spaceStore";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
+import Loader, { LoaderContainer } from "@/components/common/Loader";
 
 const PlanetManagePage = () => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number | null>(null);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [checkedPlanets, setCheckedPlanets] = useState<string[]>([]);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
   const [changedOrder, setChangedOrder] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [planets, setPlanets] = useState<Planet[]>();
 
@@ -35,12 +37,15 @@ const PlanetManagePage = () => {
 
   const fetchSpaceList = async () => {
     try {
+      setIsLoading(true);
       const response = await getSpaceList();
       console.log("전체 스페이스 목록 조회 성공:", response.data);
       setPlanets(response.data.spaces);
       setCount(response.data.spaces.length);
     } catch (error) {
       console.error("전체 스페이스 목록 조회 실패:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -165,7 +170,7 @@ const PlanetManagePage = () => {
       <NavigatorBar title="나의 행성 관리" cancel={false} />
       <Container>
         <Top>
-          <Label>총 {count}개</Label>
+          <Label>총 {count === null || isLoading ? "..." : count}개</Label>
           {deleteMode ? (
             <CheckAllButton onClick={handleClickCheckAll}>
               <Image
@@ -183,62 +188,69 @@ const PlanetManagePage = () => {
           )}
         </Top>
         <Divider />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="planet">
-            {(provided) => (
-              <PlanetBoxList
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {planets?.map((planet, index) => (
-                  <Draggable
-                    key={planet.spaceId + "-button"}
-                    draggableId={planet.spaceId}
-                    index={index}
-                    disableInteractiveElementBlocking
-                  >
-                    {(provided) => (
-                      <PlanetList
-                        id={planet.spaceId}
-                        planetName={planet.spaceName}
-                        count={planet.letterCount}
-                        checked={checkedPlanets}
-                        deleteMode={deleteMode}
-                        onClick={() => {
-                          handleChangeChecked(planet.spaceId);
-                        }}
-                        isMain={index === 0}
-                        innerRef={provided.innerRef}
-                        dragHandleProps={provided.dragHandleProps}
-                        draggableProps={provided.draggableProps}
-                        modify={true}
-                      />
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </PlanetBoxList>
-            )}
-          </Droppable>
-        </DragDropContext>
-        {deleteMode && (
-          <ButtonWrapper>
-            <Button
-              buttonType="secondary"
-              text="취소"
-              width="90px"
-              onClick={handleClickDeleteMode}
-            />
-            <Button
-              buttonType="primary"
-              size="large"
-              text="삭제하기"
-              disabled={checkedPlanets?.length === 0}
-              onClick={handleDeletePlanet}
-            />
-          </ButtonWrapper>
+        {isLoading ? (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        ) : (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="planet">
+              {(provided) => (
+                <PlanetBoxList
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  $marginBottom={deleteMode}
+                >
+                  {planets?.map((planet, index) => (
+                    <Draggable
+                      key={planet.spaceId + "-button"}
+                      draggableId={planet.spaceId}
+                      index={index}
+                      disableInteractiveElementBlocking
+                    >
+                      {(provided) => (
+                        <PlanetList
+                          id={planet.spaceId}
+                          planetName={planet.spaceName}
+                          count={planet.letterCount}
+                          checked={checkedPlanets}
+                          deleteMode={deleteMode}
+                          onClick={() => {
+                            handleChangeChecked(planet.spaceId);
+                          }}
+                          isMain={index === 0}
+                          innerRef={provided.innerRef}
+                          dragHandleProps={provided.dragHandleProps}
+                          draggableProps={provided.draggableProps}
+                          modify={true}
+                        />
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </PlanetBoxList>
+              )}
+            </Droppable>
+          </DragDropContext>
         )}
       </Container>
+      {deleteMode && (
+        <ButtonWrapper>
+          <Button
+            buttonType="secondary"
+            text="취소"
+            width="90px"
+            onClick={handleClickDeleteMode}
+          />
+          <Button
+            buttonType="primary"
+            size="large"
+            text="삭제하기"
+            disabled={checkedPlanets?.length === 0}
+            onClick={handleDeletePlanet}
+          />
+        </ButtonWrapper>
+      )}
       {confirmDeleteModal && (
         <ConfirmModal
           title="해당 행성을 정말 삭제할까요?"
@@ -314,18 +326,27 @@ const Divider = styled.div`
   margin-bottom: 22px;
 `;
 
-const PlanetBoxList = styled.div`
+const PlanetBoxList = styled.div<{ $marginBottom: boolean }>`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+
+  ${({ $marginBottom }) =>
+    $marginBottom &&
+    css`
+      margin-bottom: 100px;
+    `}
 `;
 
 const ButtonWrapper = styled.div`
   width: 100%;
+  max-width: 393px;
   display: flex;
   gap: 15px;
-  position: absolute;
+  position: fixed;
   padding: 0 20px;
   bottom: 40px;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 `;
