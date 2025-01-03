@@ -36,6 +36,32 @@ export default function RootLayout({
         />
         <link rel="apple-touch-icon" href="/favicon_114.png"></link>
         <link rel="shortcut icon" href="/favicon_72.png"></link>
+        {/* Maze Snippet */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function (m, a, z, e) {
+                var s, t;
+                try {
+                  t = m.sessionStorage.getItem('maze-us');
+                } catch (err) {}
+
+                if (!t) {
+                  t = new Date().getTime();
+                  try {
+                    m.sessionStorage.setItem('maze-us', t);
+                  } catch (err) {}
+                }
+
+                s = a.createElement('script');
+                s.src = z + '?apiKey=' + e;
+                s.async = true;
+                a.getElementsByTagName('head')[0].appendChild(s);
+                m.mazeUniversalSnippetApiKey = e;
+              })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '697c563b-a019-4f27-8185-5f33599d9c4d');
+            `,
+          }}
+        />
       </head>
       <body>
         <script
