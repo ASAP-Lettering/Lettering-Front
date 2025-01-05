@@ -29,7 +29,9 @@ const SendedLetter = () => {
   }, []);
 
   const selectAllItem = () => {
-    if (senderArray) {
+    if (selectedId.length === senderArray?.length) {
+      setSelectedId([]);
+    } else if (senderArray) {
       const allIds = senderArray.map((sender) => sender.letterId);
       setSelectedId(allIds);
     }
@@ -109,9 +111,9 @@ const SendedLetter = () => {
           onCancel={cancelItems}
         />
       )}
-      <Wrapper>
+      <NavigatorBarWrapper>
         <NavigatorBar title="보낸 편지함" cancel={false} />
-      </Wrapper>
+      </NavigatorBarWrapper>
       <MainWrapper>
         <Header>
           {!isSelecting ? (
@@ -141,28 +143,26 @@ const SendedLetter = () => {
           ))}
         </LetterGrid>
       </MainWrapper>
-      <ButtonWrapper>
-        {isSelecting && (
-          <>
-            <Button
-              buttonType="secondary"
-              size="default"
-              text="취소"
-              onClick={cancelItems}
-            />
-            <Button
-              buttonType="primary"
-              size="large"
-              text="삭제하기"
-              onClick={() => {
-                if (selectedId.length > 0) {
-                  setIsPopup(true);
-                }
-              }}
-            />
-          </>
-        )}
-      </ButtonWrapper>
+      {isSelecting && (
+        <ButtonWrapper>
+          <Button
+            buttonType="secondary"
+            size="default"
+            text="취소"
+            onClick={cancelItems}
+          />
+          <Button
+            buttonType="primary"
+            size="large"
+            text="삭제하기"
+            onClick={() => {
+              if (selectedId.length > 0) {
+                setIsPopup(true);
+              }
+            }}
+          />
+        </ButtonWrapper>
+      )}
     </Container>
   );
 };
@@ -250,10 +250,10 @@ const LetterGrid = styled.div`
   place-items: center;
 `;
 
-const Wrapper = styled.div`
+const NavigatorBarWrapper = styled.div`
   display: flex;
   width: 100%;
-  padding: 24px;
+  padding: 18px 18px 9px 18px;
 `;
 
 const ButtonWrapper = styled.div`
