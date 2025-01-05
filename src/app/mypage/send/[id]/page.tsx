@@ -6,6 +6,7 @@ import KakaoShareButton from "@/components/common/KakaoShareButton";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
+import { theme } from "@/styles/theme";
 import { SentDetailLetterType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useParams, useRouter } from "next/navigation";
@@ -17,7 +18,6 @@ const SendDetailPage = () => {
   const { id } = useParams();
   const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
-  //const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<SentDetailLetterType>();
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
@@ -57,19 +57,7 @@ const SendDetailPage = () => {
               ` · 사진 ${letterData.images.length}장`}
           </LetterCount>
         </Header>
-        {isImage ? (
-          <Letter
-            showType="send"
-            key={key}
-            id={letterId}
-            templateType={letterData.templateType}
-            name={letterData.receiverName}
-            images={letterData.images}
-            date={letterData.sendDate}
-            readOnly={true}
-            isImage={true}
-          />
-        ) : (
+        <LetterContainer>
           <Letter
             showType="send"
             key={key}
@@ -77,11 +65,14 @@ const SendDetailPage = () => {
             templateType={letterData.templateType}
             name={letterData.receiverName}
             content={letterData.content}
+            images={letterData.images}
             date={letterData.sendDate}
             readOnly={true}
-            isImage={false}
+            isImage={isImage}
+            width="100%"
+            height="100%"
           />
-        )}
+        </LetterContainer>
         <WhiteSpace />
         {letterData.images.length > 0 ? (
           <ChangeButtonWrapper onClick={changeImageorContent}>
@@ -125,7 +116,7 @@ const Container = styled.div`
   min-height: 100%;
   max-height: 100%;
   justify-content: space-between;
-  color: white;
+  color: ${theme.colors.white};
   background: ${(props) => props.theme.colors.bg};
 `;
 
@@ -155,8 +146,52 @@ const MainWrapper = styled.div`
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding-bottom: 15px;
   width: 100%;
+`;
+
+const LetterContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 345px;
+  min-height: 398px;
+  max-height: 398px;
+
+  @media (max-height: 824px) {
+    max-width: 320px;
+    min-height: 350px;
+  }
+
+  @media (max-height: 780px) {
+    max-width: 300px;
+    min-height: 330px;
+    max-height: 330px;
+  }
+
+  @media (max-height: 680px) {
+    max-width: 300px;
+    min-height: 330px;
+    max-height: 330px;
+  }
+
+  @media (max-height: 630px) {
+    max-width: 300px;
+    min-height: 280px;
+    max-height: 280px;
+  }
+
+  @media (max-height: 580px) {
+    max-width: 250px;
+    min-height: 250px;
+    max-height: 250px;
+  }
+
+  @media (max-height: 550px) {
+    max-width: 250px;
+    min-height: 250px;
+    max-height: 250px;
+  }
 `;
 
 const LetterCount = styled.div`
@@ -202,10 +237,23 @@ const ChangeButtonWrapper = styled.div`
   color: ${(props) => props.theme.colors.gray400};
   gap: 4px;
   padding: 16px;
+  white-space: nowrap;
   img {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+  }
+
+  @media (max-height: 730px) {
+    flex-direction: row;
+    gap: 10px;
+    padding-top: 15px;
+  }
+
+  @media (max-height: 628px) {
+    flex-direction: row;
+    gap: 6px;
+    ${theme.fonts.body12};
   }
 `;
 
@@ -217,20 +265,4 @@ const Wrapper = styled.div`
   display: flex;
   width: 100%;
   padding: 24px;
-`;
-
-const ReShareBtnWrapper = styled.button`
-  display: flex;
-  width: 45%;
-  box-sizing: border-box;
-  padding: 12px;
-  gap: 10px;
-  border-radius: 20px;
-  text-align: center;
-  justify-content: center;
-  min-width: 151px;
-  flex-direction: row;
-  color: ${(props) => props.theme.colors.gray100};
-  background-color: ${(props) => props.theme.colors.gray800};
-  ${(props) => props.theme.fonts.caption01};
 `;
