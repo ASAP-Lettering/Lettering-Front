@@ -7,13 +7,13 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
 const SendCompletePage = () => {
   const router = useRouter();
 
-  const { receiverName, letterId } = useRecoilValue(sendLetterState);
+  const { receiverName } = useRecoilValue(sendLetterState);
 
   return (
     <Layout>
@@ -35,11 +35,6 @@ const SendCompletePage = () => {
           onClick={() => {
             router.push("/planet");
           }}
-        />
-        <KakaoShareButton
-          type="reshare"
-          letterId={letterId || ""}
-          width="90px"
         />
       </ButtonWrapper>
     </Layout>

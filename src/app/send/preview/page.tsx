@@ -13,6 +13,7 @@ import { postSendLtter } from "@/api/send/send";
 import { sendLetterState } from "@/recoil/letterStore";
 import useKakaoSDK from "@/hooks/useKakaoSDK";
 import { userState } from "@/recoil/userStore";
+import { getLetterShareStatus } from "@/api/letter/share";
 
 const SendPreviewPage = () => {
   const router = useRouter();
@@ -61,17 +62,38 @@ const SendPreviewPage = () => {
                 senderName: name,
                 id: response.data.letterCode,
               },
+              serverCallbackArgs: {
+                requestType: "SHARE",
+                requestId: response.data.letterCode,
+              },
             });
           }, 1000);
-          setTimeout(() => {
-            router.push("/send/complete");
-          }, 8000);
         }
       }
     } catch (error) {
       console.log("편지 전송 또는 카카오 공유 실패:", error);
     }
   };
+
+  // 3. 공유 완료 상태 폴링
+  useEffect(() => {
+    if (letterState.letterId && letterState.letterId?.length > 0) {
+      const interval = setInterval(async () => {
+        try {
+          const status = await getLetterShareStatus(letterState.letterId || "");
+          console.log(status);
+          if (status.isShared) {
+            router.push("/send/complete");
+            clearInterval(interval); // 폴링 중단
+          }
+        } catch (error) {
+          console.error("공유 상태 조회 실패:", error);
+        }
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }
+  }, [letterState.letterId]);
 
   return (
     <Layout>
