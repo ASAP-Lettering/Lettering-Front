@@ -7,7 +7,6 @@ import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PlanetBox from "@/components/planet/PlanetBox";
-import { Planet } from "@/constants/planet";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import {
   putLetterToIndep,
@@ -16,6 +15,7 @@ import {
 import Image from "next/image";
 import { getSpaceList } from "@/api/planet/space/space";
 import { useToast } from "@/hooks/useToast";
+import { Planet } from "@/types/planet";
 
 const PlanetMovePage = () => {
   const router = useRouter();

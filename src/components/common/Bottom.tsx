@@ -3,9 +3,8 @@ import styled from "styled-components";
 import Tag from "./Tag";
 import Button from "./Button";
 import { theme } from "@/styles/theme";
-import { Orbit } from "@/constants/orbit";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Orbit } from "@/types/orbit";
 
 interface BottomProps {
   orbitMessages: Orbit[] | null;

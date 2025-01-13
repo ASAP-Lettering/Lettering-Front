@@ -79,7 +79,7 @@ const IndependentLetterPage = () => {
             showType="receive"
             key={key}
             contentType="all"
-            id={letterId}
+            id={letterId || ""}
             templateType={letterData.templateType}
             name={letterData.senderName}
             content={letterData.content}

@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/components/common/Button";
-import KakaoShareButton from "@/components/common/KakaoShareButton";
 import { sendLetterState } from "@/recoil/letterStore";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
