@@ -1,4 +1,5 @@
 import Providers from "./providers";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 export const metadata = {
   title: "레터링 | 온라인 편지 아카이빙 플랫폼",
@@ -76,6 +77,8 @@ export default function RootLayout({
           }}
         />
         <Providers>{children}</Providers>
+        <GoogleTagManager gtmId="GTM-K4JD5J82" />
+        <GoogleAnalytics gaId="G-RT86Q6W1PP" />
         {/* Google Tag Manager Noscript */}
         <noscript>
           <iframe
