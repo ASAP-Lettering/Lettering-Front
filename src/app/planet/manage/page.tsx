@@ -5,7 +5,6 @@ import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
-import { Planet, PLANETS } from "@/constants/planet";
 import PlanetList from "@/components/planet/PlanetList";
 import Image from "next/image";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -20,6 +19,7 @@ import { spaceState } from "@/recoil/spaceStore";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import { Planet } from "@/types/planet";
 
 const PlanetManagePage = () => {
   const router = useRouter();

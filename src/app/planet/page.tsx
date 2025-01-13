@@ -4,9 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Bottom from "@/components/common/Bottom";
-import Planet from "@/components/common/Planet";
 import Tag from "@/components/common/Tag";
-import { Orbit } from "@/constants/orbit";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import { useRouter } from "next/navigation";
@@ -40,6 +38,7 @@ import { useToast } from "@/hooks/useToast";
 import Tooltip from "@/components/common/Tooltip";
 import { userState } from "@/recoil/userStore";
 import { spaceState } from "@/recoil/spaceStore";
+import { Orbit } from "@/types/orbit";
 
 const PlanetPage = () => {
   const router = useRouter();

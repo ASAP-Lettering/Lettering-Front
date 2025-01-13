@@ -97,7 +97,7 @@ const LetterPage = () => {
             key={key}
             contentType="all"
             pageType="space"
-            id={letterId}
+            id={letterId || ""}
             templateType={letterData.templateType}
             name={letterData.sender}
             content={letterData.content}

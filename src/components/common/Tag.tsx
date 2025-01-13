@@ -1,8 +1,7 @@
 import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
-import { Orbit } from "@/constants/orbit";
 import { planetRefState } from "@/recoil/RefStore";
 import { theme } from "@/styles/theme";
-import { motion } from "framer-motion";
+import { Orbit } from "@/types/orbit";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -380,9 +379,8 @@ const Box = styled.div<{
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
       display: flex;
-      ${
-        $hasEditIcon &&
-        css`
+      ${$hasEditIcon &&
+      css`
         height: 47px;
         padding: 9px 18px;
         border-radius: 200px;
@@ -390,19 +388,16 @@ const Box = styled.div<{
         backdrop-filter: blur(2px);
         ${(props) => props.theme.fonts.title01};
         gap: 4px;
-      `
-      }
-      ${
-        $hasName === false &&
-        css`
+      `}
+      ${$hasName === false &&
+      css`
         padding: 7.5px 13px 7.5px 13px;
-      `
-      }
+      `}
     `}
   
     ${({ $tagType, $orbitType }) =>
-      $tagType === "letter" &&
-      css`
+    $tagType === "letter" &&
+    css`
       display: block;
       max-width: 90px;
       padding: ${$orbitType === "2" ? "7.5px 15px" : "11px 15px"};
