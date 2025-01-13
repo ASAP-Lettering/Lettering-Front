@@ -1,7 +1,6 @@
 "use client";
 
 import { getSentLetterDetail } from "@/api/mypage/user";
-import Button from "@/components/common/Button";
 import KakaoShareButton from "@/components/common/KakaoShareButton";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
@@ -9,12 +8,11 @@ import Letter from "@/components/letter/Letter";
 import { theme } from "@/styles/theme";
 import { SentDetailLetterType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const SendDetailPage = () => {
-  const router = useRouter();
   const { id } = useParams();
   const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
@@ -61,7 +59,7 @@ const SendDetailPage = () => {
           <Letter
             showType="send"
             key={key}
-            id={letterId}
+            id={letterId || ""}
             templateType={letterData.templateType}
             name={letterData.receiverName}
             content={letterData.content}

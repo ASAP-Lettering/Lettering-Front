@@ -1,10 +1,9 @@
-import { theme } from "@/styles/theme";
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { SpaceInfo } from "@/types/space";
-import { Orbit } from "@/constants/orbit";
 import Planet from "../common/Planet";
+import { Orbit } from "@/types/orbit";
 
 interface PlanetSlideProps {
   idx: number;

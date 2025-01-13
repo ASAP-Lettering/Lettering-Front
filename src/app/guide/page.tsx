@@ -1,7 +1,6 @@
 "use client";
 
 import BlinkTag from "@/components/common/BlinkingTag";
-// import BottomSheet from "@/components/common/BottomSheet";
 import Button from "@/components/common/Button";
 import Check from "@/components/common/Check";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -13,7 +12,7 @@ import Tag from "@/components/common/Tag";
 import Toast from "@/components/common/Toast";
 import Letter from "@/components/letter/Letter";
 import NewItemPicker from "@/components/signup/NewItemPicker";
-import { LETTER_DATA } from "@/constants/letter";
+import { LETTER_DUMMY } from "@/constants/letterDummy";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -72,7 +71,7 @@ const GuidePage = () => {
   };
 
   //Letter
-  const letterData = LETTER_DATA[0];
+  const letterData = LETTER_DUMMY[0];
   const imageData = [
     "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
     "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",

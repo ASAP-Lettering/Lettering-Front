@@ -9,7 +9,6 @@ import { getMainId } from "@/api/planet/space/space";
 import Button from "@/components/common/Button";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import Letter from "@/components/letter/Letter";
-import { LETTER_DATA } from "@/constants/letter";
 import { LetterType } from "@/types/letter";
 import { getAccessToken } from "@/utils/storage";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -109,33 +108,6 @@ const VerifyLetter = () => {
     };
 
     checkMainIdAndVerify();
-    //accessToken이 없는 상황이라면 로그인으로
-
-    //letterCode가 있다면 검증 진행
-    // if (url) {
-    //   verifyLetter(url)
-    //     .then((res) => {
-    //       if (res.data.letterId) {
-    //         //검증 성공하면 letterData를 받아온다
-    //         setletterId(res.data.letterId);
-    //         fetchLetterData(res.data.letterId);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       //검증 실패시 조회할 수 없는 편지 에러 페이지로 이동
-    //       console.log(error);
-    //       router.push(url ? `/error/letter?url=${url}` : `/error/letter`);
-    //     });
-    // }
-
-    // if (letterData === null) {
-    //   //LetterData 받아오는 로직
-    //   for (let i = 0; i < LETTER_DATA.length; i++) {
-    //     if (LETTER_DATA[i].url === url) {
-    //       setLetterData(LETTER_DATA[i]);
-    //     }
-    //   }
-    // }
     setIsLoading(false);
   }, []);
 
@@ -155,7 +127,7 @@ const VerifyLetter = () => {
           <Letter
             showType="url"
             key={key}
-            id={letterId}
+            id={letterId || ""}
             templateType={letterData.templateType}
             name={letterData.sender}
             images={letterData.images}
@@ -167,7 +139,7 @@ const VerifyLetter = () => {
           <Letter
             showType="url"
             key={key}
-            id={letterId}
+            id={letterId || ""}
             templateType={letterData.templateType}
             name={letterData.sender}
             content={letterData.content}
@@ -234,10 +206,6 @@ const Container = styled.div`
   overflow-x: hidden;
   padding: 40px 0;
   background: ${(props) => props.theme.colors.bg};
-  /* background-image: url('/assets/signup/verify_image.png'); 
-    background-size: 550px auto; 
-    background-position: bottom 80px center;
-    background-repeat: no-repeat; */
 `;
 
 const MainWrapper = styled.div`
