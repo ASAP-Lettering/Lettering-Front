@@ -81,11 +81,10 @@ const SendPreviewPage = () => {
         // 카카오톡 미설치 시 카카오톡 설치 경로이동
         installTalk: true,
       });
-    } catch (error) {
-      console.log("편지 전송 또는 카카오 공유 실패:", error);
-    } finally {
       setIsLoading(false);
       setIsSharing(false);
+    } catch (error) {
+      console.log("편지 전송 또는 카카오 공유 실패:", error);
     }
   };
 
@@ -149,7 +148,7 @@ const SendPreviewPage = () => {
         <ButtonWrapper>
           <Button
             buttonType="primary"
-            text={isLoading ? "잠시만 기다려주세요..." : "카카오로 편지 보내기"}
+            text="카카오로 편지 보내기"
             onClick={handleSendLetterAndShare}
             disabled={!receiverName || !content || isLoading}
           >
