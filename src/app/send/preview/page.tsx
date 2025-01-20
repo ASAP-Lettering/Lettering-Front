@@ -25,6 +25,7 @@ const SendPreviewPage = () => {
   const [isImage, setIsImage] = useState<boolean>(false);
   const [letterCode, setLetterCode] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSharing, setIsSharing] = useState<boolean>(false);
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -34,12 +35,11 @@ const SendPreviewPage = () => {
     setIsImage(!isImage);
   };
 
-  useEffect(() => {
-    console.log("letterCodeㅜ", letterCode);
-  }, [letterCode]);
-
   const handleSendLetterAndShare = async () => {
     /* 편지 전송 및 카카오 공유 */
+    if (isSharing) return; // 중복 실행 방지
+
+    setIsSharing(true);
     setIsLoading(true);
 
     const { Kakao, location } = window;
@@ -67,26 +67,25 @@ const SendPreviewPage = () => {
       console.log(response.data.letterCode);
 
       // 2. 카카오 공유 로직 실행 (letterId 상태와 무관하게 항상 실행)
-      setTimeout(() => {
-        Kakao.Share.sendScrap({
-          requestUrl: location.origin + location.pathname,
-          templateId: 112798,
-          templateArgs: {
-            senderName: name,
-            id: response.data.letterCode,
-          },
-          serverCallbackArgs: {
-            requestType: "SHARE",
-            requestId: response.data.letterCode,
-          },
-          // 카카오톡 미설치 시 카카오톡 설치 경로이동
-          installTalk: true,
-        });
-        setIsLoading(false);
-      }, 4000);
+      Kakao.Share.sendScrap({
+        requestUrl: location.origin + location.pathname,
+        templateId: 112798,
+        templateArgs: {
+          senderName: name,
+          id: response.data.letterCode,
+        },
+        serverCallbackArgs: {
+          requestType: "SHARE",
+          requestId: response.data.letterCode,
+        },
+        // 카카오톡 미설치 시 카카오톡 설치 경로이동
+        installTalk: true,
+      });
     } catch (error) {
       console.log("편지 전송 또는 카카오 공유 실패:", error);
+    } finally {
       setIsLoading(false);
+      setIsSharing(false);
     }
   };
 

@@ -30,19 +30,6 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
       return;
     }
 
-    // Kakao.Share.sendDefault({
-    //   objectType: "feed",
-    //   content: {
-    //     title: "나만의 디지털 편지 아카이브, 레터링",
-    //     description: `${senderName} 님으로부터 한 통의 편지가 도착했습니다! 소중한 편지를 손쉽게 보관하고 나의 스페이스에 수놓아보세요!`,
-    //     imageUrl: imageAsset,
-    //     link: {
-    //       mobileWebUrl: location.href,
-    //       webUrl: location.href,
-    //     },
-    //   },
-    // });
-
     Kakao.Share.sendScrap({
       requestUrl: location.origin + location.pathname,
       templateId: 112798,
