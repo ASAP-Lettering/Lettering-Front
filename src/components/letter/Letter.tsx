@@ -233,6 +233,7 @@ const Letter = (props: LetterProps) => {
       <Content
         $showType={showType}
         $contentType={contentType}
+        $isImage={isImage}
         className="ContentContainer"
       >
         <SwipeableContent
@@ -341,7 +342,11 @@ const Date = styled.div<{ $showType: string }>`
   ${(props) => (props.$showType === "send" ? props.theme.fonts.caption03 : "")};
 `;
 
-const Content = styled.div<{ $showType: string; $contentType: string }>`
+const Content = styled.div<{
+  $showType: string;
+  $contentType: string;
+  $isImage: boolean;
+}>`
   width: 100%;
   ${(props) =>
     props.$showType === "previewSend" || props.$showType === "previewReceive"
@@ -352,7 +357,7 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   align-items: center;
   text-align: left;
   box-sizing: border-box;
-  border-radius: 10px;
+  /* border-radius: ${($isImage) => ($isImage ? "10px" : "0px")}; */
   padding: 10px 0;
   ${(props) =>
     (props.$showType === "previewSend" ||
@@ -360,7 +365,7 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
     props.$contentType === "one"
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
-  overflow: hidden;
+  /* overflow: hidden; */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

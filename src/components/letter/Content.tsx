@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { useSwipeable } from "react-swipeable";
 import { contentType } from "./Letter";
+import Image from "next/image";
 
 interface SwipeableContentProps {
   contentType: contentType;
@@ -33,7 +34,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
     <SwipeableContainer {...handlers}>
       <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
         {contentType === "one" ? (
-          <ContentItem>
+          <ContentItem $isImage={isImage}>
             {isImage ? (
               <ImageContainer src={content[0]} />
             ) : (
@@ -41,17 +42,15 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             )}
           </ContentItem>
         ) : (
-          content.map((item, index) =>
-            isImage ? (
-              <ContentItem key={index}>
+          content.map((item, index) => (
+            <ContentItem key={index} $isImage={isImage}>
+              {isImage ? (
                 <ImageContainer src={content[index]} />
-              </ContentItem>
-            ) : (
-              <ContentItem key={index}>
+              ) : (
                 <ClampedText $contentType={contentType}>{item}</ClampedText>
-              </ContentItem>
-            )
-          )
+              )}
+            </ContentItem>
+          ))
         )}
       </ContentSlider>
     </SwipeableContainer>
@@ -65,8 +64,6 @@ const SwipeableContainer = styled.div`
   width: 100%;
   height: auto;
   box-sizing: border-box;
-  border-radius: 10px;
-
   @media (max-width: 375px) {
     max-height: 235px;
   }
@@ -77,11 +74,17 @@ const ContentSlider = styled.div`
   transition: transform 0.5s ease-out;
 `;
 
-const ContentItem = styled.div`
+const ContentItem = styled.div<{ $isImage: boolean }>`
   width: 100%;
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  ${($isImage) =>
+    $isImage &&
+    css`
+      border-radius: 10px;
+      overflow: hidden;
+    `}
   min-height: 310px;
 `;
 
@@ -89,11 +92,11 @@ const ImageContainer = styled.div<{ src: string }>`
   width: 100%;
   min-height: 310px;
   max-height: 310px;
-  border-radius: 10px;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-clip: padding-box;
 
   -webkit-user-select: none;
   -khtml-user-select: none;
