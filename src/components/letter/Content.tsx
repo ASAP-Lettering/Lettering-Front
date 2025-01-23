@@ -63,7 +63,6 @@ export default SwipeableContent;
 const SwipeableContainer = styled.div`
   overflow: hidden;
   width: 100%;
-  min-height: 200px;
   height: auto;
   box-sizing: border-box;
   border-radius: 10px;
@@ -71,7 +70,6 @@ const SwipeableContainer = styled.div`
   @media (max-width: 375px) {
     max-height: 235px;
   }
-
 `;
 
 const ContentSlider = styled.div`
@@ -84,35 +82,12 @@ const ContentItem = styled.div`
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  min-height: 200px;
-
+  min-height: 310px;
 `;
-
-// const ContentImage = styled.img`
-//     width: 100%;
-//     height: 100%;
-//     object-fit: fill;
-//     object-position: center;
-//     position: absolute;
-//     width: 100%;
-//     top: 50%;
-//     left: 50%;
-//     transform: translate(-50%, -50%);
-
-//     -webkit-user-select: none;
-//     -khtml-user-select: none;
-//     -moz-user-select: none;
-//     -o-user-select: none;
-//     user-select: none;
-//     -webkit-user-drag: none;
-//     -khtml-user-drag: none;
-//     -moz-user-drag: none;
-//     -o-user-drag: none;
-// `;
 
 const ImageContainer = styled.div<{ src: string }>`
   width: 100%;
-  min-height: 230px;
+  min-height: 310px;
   max-height: 100%;
   border-radius: 10px;
   background-image: url(${(props) => props.src});

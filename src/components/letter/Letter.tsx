@@ -51,7 +51,6 @@ const Letter = (props: LetterProps) => {
     padding,
     readOnly = false,
     nextLetterId,
-    maxLineWidth,
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -173,9 +172,9 @@ const Letter = (props: LetterProps) => {
       templateType: templateType,
     });
     if (pageType === "independent") {
-      router.push(`/letter/register?letterId=${id}&independent=true`);
+      router.push(`/letter/receiver?letterId=${id}&independent=true`);
     } else {
-      router.push(`/letter/register?letterId=${id}`);
+      router.push(`/letter/receiver?letterId=${id}`);
     }
   };
 
@@ -275,7 +274,7 @@ const Container = styled.div<{
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  gap: 10px;
+  gap: 20px;
   height: auto;
   padding: ${({ $padding }) => ($padding ? $padding : "34px")};
   max-width: ${({ $width }) => ($width ? $width : "345px")};
@@ -311,7 +310,6 @@ const TopContainer = styled.div<{
 `;
 
 const TopPreviewContainer = styled(TopContainer)`
-  margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
 
   @media (max-height: 628px) {
