@@ -28,7 +28,7 @@ const StoreLayout = ({ children }: StoreLayoutProps) => {
   return (
     <Container>
       <NavigatorBar
-        title={letterId ? "받은 편지 보관하기" : "편지 수정하기"}
+        title={!letterId ? "받은 편지 보관하기" : "편지 수정하기"}
         cancel={false}
       />
       {current && (
