@@ -74,7 +74,7 @@ const Bottom = (props: BottomProps) => {
           text="받은 편지 보관하기"
           height="60px"
           onClick={() => {
-            router.push("/letter/receiver");
+            router.push("/store/receiver");
           }}
         />
         <Button

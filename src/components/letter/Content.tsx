@@ -2,7 +2,6 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { useSwipeable } from "react-swipeable";
 import { contentType } from "./Letter";
-import Image from "next/image";
 
 interface SwipeableContentProps {
   contentType: contentType;

@@ -1,9 +1,8 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import Letter from "@/components/letter/Letter";
@@ -15,7 +14,6 @@ import {
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import LetterTemplateList from "@/components/letter/LetterTemplateList";
 import { ALL_TEMPLATES } from "@/constants/templates";
-import ProgressBar from "@/components/common/ProgressBar";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -29,7 +27,6 @@ const LetterTemplatePage = () => {
   const [template, setTemplateType] = useState<number>(
     templateType || ALL_TEMPLATES[0]
   );
-  const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
   const setSsrCompleted = useSsrComplectedState();
@@ -50,24 +47,17 @@ const LetterTemplatePage = () => {
     }));
     if (letterId) {
       if (independent === "true") {
-        router.push(`/letter/preview?letterId=${letterId}&independent=true`);
+        router.push(`/store/preview?letterId=${letterId}&independent=true`);
       } else {
-        router.push(`/letter/preview?letterId=${letterId}`);
+        router.push(`/store/preview?letterId=${letterId}`);
       }
     } else {
-      router.push("/letter/preview");
+      router.push("/store/preview");
     }
   };
 
   return (
-    <Layout>
-      <NavigatorBar
-        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
-        cancel={false}
-      />
-      <ProgressBarWrapper>
-        <ProgressBar current={3} total={3} />
-      </ProgressBarWrapper>
+    <>
       <Container>
         <Column>
           <Label>편지지 고르기</Label>
@@ -103,7 +93,7 @@ const LetterTemplatePage = () => {
           />
         </ButtonWrapper>
       </Container>
-    </Layout>
+    </>
   );
 };
 
@@ -121,27 +111,6 @@ export default function LetterTemplatePaging() {
   );
 }
 
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px 20px 20px 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 550px) {
-    padding-top: 0px;
-  }
-`;
-
-const ProgressBarWrapper = styled.div`
-  width: 100%;
-  padding: 32px 0 56px 0;
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -150,17 +119,6 @@ const Container = styled.div`
   overflow-y: auto;
 
   &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const Essential = styled.div`
-  text-align: right;
-  color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.caption03};
-  margin-bottom: 17px;
-
-  @media (max-height: 780px) {
     display: none;
   }
 `;
@@ -196,6 +154,7 @@ const LetterWrapper = styled.div`
 
 const LetterContainer = styled.div`
   width: 100%;
+  min-height: 313px;
   max-height: 313px;
 
   @media (max-height: 628px) {

@@ -84,11 +84,7 @@ const LetterPreviewPage = () => {
   };
 
   return (
-    <Layout>
-      <NavigatorBar
-        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
-        cancel={false}
-      />
+    <>
       <Container>
         <Column>
           <LetterWrapper>
@@ -129,7 +125,7 @@ const LetterPreviewPage = () => {
           />
         </ButtonWrapper>
       </Container>
-    </Layout>
+    </>
   );
 };
 
@@ -147,28 +143,13 @@ export default function LetterPreviewPaging() {
   );
 }
 
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px 20px 20px 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 628px) {
-    padding-top: 0px;
-  }
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 42px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {

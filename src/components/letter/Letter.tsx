@@ -172,9 +172,9 @@ const Letter = (props: LetterProps) => {
       templateType: templateType,
     });
     if (pageType === "independent") {
-      router.push(`/letter/receiver?letterId=${id}&independent=true`);
+      router.push(`/store/receiver?letterId=${id}&independent=true`);
     } else {
-      router.push(`/letter/receiver?letterId=${id}`);
+      router.push(`/store/receiver?letterId=${id}`);
     }
   };
 

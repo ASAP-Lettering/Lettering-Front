@@ -3,7 +3,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,7 +13,6 @@ import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
 import imageCompression from "browser-image-compression";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
-import ProgressBar from "@/components/common/ProgressBar";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -41,14 +39,6 @@ const LetterRegisterPage = () => {
       setPreviewImages(letterState.previewImages);
     }
   }, [letterState]);
-
-  const handleSenderChange = (newValue: string) => {
-    setSender(newValue);
-    setLetterState((prevState) => ({
-      ...prevState,
-      senderName: newValue,
-    }));
-  };
 
   const handleContentChange = (newValue: string) => {
     const maxLength = 1000;
@@ -168,31 +158,23 @@ const LetterRegisterPage = () => {
     /* 다음 페이지 */
     setLetterState((prevState) => ({
       ...prevState,
-      senderName: sender,
       content: content,
       images: images,
       previewImages: previewImages,
     }));
     if (letterId) {
       if (independent === "true") {
-        router.push(`/letter/template?letterId=${letterId}&independent=true`);
+        router.push(`/store/template?letterId=${letterId}&independent=true`);
       } else {
-        router.push(`/letter/template?letterId=${letterId}`);
+        router.push(`/store/template?letterId=${letterId}`);
       }
     } else {
-      router.push("/letter/template");
+      router.push("/store/template");
     }
   };
 
   return (
-    <Layout>
-      <NavigatorBar
-        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
-        cancel={false}
-      />
-      <ProgressBarWrapper>
-        <ProgressBar current={2} total={3} />
-      </ProgressBarWrapper>
+    <>
       <Container>
         <Column>
           <Label>
@@ -277,7 +259,7 @@ const LetterRegisterPage = () => {
           onClick={handleAddNext}
         />
       </ButtonWrapper>
-    </Layout>
+    </>
   );
 };
 
@@ -294,28 +276,6 @@ export default function LetterRegisterPaging() {
     </Suspense>
   );
 }
-
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 550px) {
-    padding-top: 0px;
-  }
-`;
-
-const ProgressBarWrapper = styled.div`
-  width: 100%;
-  padding: 32px 0 56px 0;
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
