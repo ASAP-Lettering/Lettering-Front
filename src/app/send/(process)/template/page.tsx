@@ -3,10 +3,8 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Letter from "@/components/letter/Letter";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { sendLetterState, useSsrComplectedState } from "@/recoil/letterStore";
@@ -22,7 +20,6 @@ const SendTemplatePage = () => {
   const [template, setTemplate] = useState<number>(
     templateType || ALL_TEMPLATES[0]
   );
-  const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
   const setSsrCompleted = useSsrComplectedState();
@@ -47,13 +44,10 @@ const SendTemplatePage = () => {
   };
 
   return (
-    <Layout>
-      <NavigatorBar title="편지 보내기" cancel={false} />
+    <>
       <Container>
-        <Essential>* 필수</Essential>
         <Column>
-          <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
+          <Label>편지지 고르기</Label>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -86,27 +80,11 @@ const SendTemplatePage = () => {
           />
         </ButtonWrapper>
       </Container>
-    </Layout>
+    </>
   );
 };
 
 export default SendTemplatePage;
-
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px 20px 20px 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 550px) {
-    padding-top: 0px;
-  }
-`;
 
 const Container = styled.div`
   width: 100%;
@@ -120,17 +98,6 @@ const Container = styled.div`
   }
 `;
 
-const Essential = styled.div`
-  text-align: right;
-  color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.caption03};
-  margin-bottom: 17px;
-
-  @media (max-height: 780px) {
-    display: none;
-  }
-`;
-
 const Column = styled.div`
   margin-bottom: 40px;
 `;
@@ -140,37 +107,17 @@ const Label = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.title01};
+  ${(props) => props.theme.fonts.subtitle};
+  margin-bottom: 12px;
 
   @media (max-height: 628px) {
-    ${theme.fonts.title02};
+    ${theme.fonts.body6}
+    margin-bottom: 12px;
   }
 
   @media (max-height: 580px) {
-    ${theme.fonts.subtitle};
-  }
-
-  @media (max-height: 550px) {
-    ${theme.fonts.body14};
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.caption02};
-  margin-bottom: 33px;
-
-  @media (max-height: 680px) {
-    margin-bottom: 10px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body09};
-  }
-
-  @media (max-height: 550px) {
-    ${theme.fonts.body13};
-    margin-bottom: 24px;
+    ${theme.fonts.body10};
+    margin-bottom: 8px;
   }
 `;
 
@@ -181,9 +128,9 @@ const LetterWrapper = styled.div`
 `;
 
 const LetterContainer = styled.div`
-  width: 100px;
-  min-width: 276px;
-  max-height: 283px;
+  width: 100%;
+  min-height: 313px;
+  max-height: 313px;
 
   @media (max-height: 628px) {
     max-width: 250px;
@@ -204,86 +151,6 @@ const LetterContainer = styled.div`
     min-width: 178px;
     max-height: 182px;
     min-height: 182px;
-  }
-`;
-
-const TemplatesList = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  height: 78px;
-  padding-left: 4px;
-  margin-top: 69px;
-  margin-bottom: 14px;
-  overflow-x: scroll;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-
-  @media (max-height: 740px) {
-    margin-top: 30px;
-    margin-bottom: 5px;
-    ${theme.fonts.body14};
-    gap: 11px;
-  }
-
-  @media (max-height: 680px) {
-    margin-top: 15px;
-    margin-bottom: 5px;
-    ${theme.fonts.body14};
-    gap: 11px;
-  }
-
-  @media (max-height: 628px) {
-    margin-top: 12px;
-    margin-bottom: 5px;
-    ${theme.fonts.body14};
-    gap: 11px;
-  }
-`;
-
-const TemplateImage = styled(Image)<{ $selected: boolean }>`
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
-  box-sizing: content-box;
-
-  ${({ $selected, theme }) =>
-    $selected &&
-    css`
-      box-shadow: 0 0 0 4px ${theme.colors.sub03};
-    `}
-
-  @media (max-height: 628px) {
-    width: 50px;
-    height: 50px;
-    border-radius: 4px;
-    ${({ $selected, theme }) =>
-      $selected &&
-      css`
-        box-shadow: 0 0 0 2px ${theme.colors.sub03};
-      `}
-  }
-`;
-
-const Page = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption03};
-`;
-
-const Current = styled.span`
-  color: ${theme.colors.white};
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-bottom: 50px;
   }
 `;
 

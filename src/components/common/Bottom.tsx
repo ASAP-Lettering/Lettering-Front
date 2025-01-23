@@ -83,7 +83,7 @@ const Bottom = (props: BottomProps) => {
           width="131px"
           height="60px"
           text="편지 보내기"
-          onClick={() => router.push("/send/letter")}
+          onClick={() => router.push("/send/receiver")}
         />
       </ButtonRow>
     </Container>
