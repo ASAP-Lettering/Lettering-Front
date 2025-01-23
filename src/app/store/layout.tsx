@@ -17,7 +17,7 @@ const StoreLayout = ({ children }: StoreLayoutProps) => {
 
   const letterId = searchParams.get("letterId");
   const current =
-    pathname === "/store/receiver"
+    pathname === "/store/sender"
       ? 1
       : pathname === "/store/content"
       ? 2

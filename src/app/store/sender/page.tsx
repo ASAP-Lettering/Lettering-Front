@@ -10,7 +10,7 @@ import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 
-const LetterReceiverPage = () => {
+const LetterSenderPage = () => {
   const router = useRouter();
   const [sender, setSender] = useState<string>("");
   const [isImageUploadLoading, setImageUploadLoading] =
@@ -87,7 +87,7 @@ export default function LetterReceiverPaging() {
         </LoaderContainer>
       }
     >
-      <LetterReceiverPage />
+      <LetterSenderPage />
     </Suspense>
   );
 }
