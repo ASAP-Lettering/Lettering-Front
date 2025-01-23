@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 
@@ -15,6 +15,9 @@ interface NavigatorBarProps {
 const NavigatorBar = (props: NavigatorBarProps) => {
   const { title, url, cancel = false, nextlabel = false, nextClick } = props;
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const letterId = searchParams.get("letterId");
 
   const handleChangePage = () => {
     url ? router.push(url) : router.back();
@@ -38,7 +41,11 @@ const NavigatorBar = (props: NavigatorBarProps) => {
           onClick={handleChangePage}
         />
       </LeftIcon>
-      {title && <Title>{title}</Title>}
+      {title && (
+        <Title>
+          {letterId && pathname.includes("/store") ? "편지 수정하기" : title}
+        </Title>
+      )}
       {cancel ? (
         <RightIcon>
           <Image

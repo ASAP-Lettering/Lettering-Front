@@ -3,7 +3,7 @@
 import NavigatorBar from "@/components/common/NavigatorBar";
 import ProgressBar from "@/components/common/ProgressBar";
 import { theme } from "@/styles/theme";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 
@@ -13,9 +13,7 @@ interface StoreLayoutProps {
 
 const StoreLayout = ({ children }: StoreLayoutProps) => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  const letterId = searchParams.get("letterId");
   const current =
     pathname === "/store/sender"
       ? 1
@@ -27,10 +25,7 @@ const StoreLayout = ({ children }: StoreLayoutProps) => {
 
   return (
     <Container>
-      <NavigatorBar
-        title={!letterId ? "받은 편지 보관하기" : "편지 수정하기"}
-        cancel={false}
-      />
+      <NavigatorBar title="받은 편지 보관하기" cancel={false} />
       {current && (
         <ProgressBarWrapper>
           <ProgressBar current={current} total={3} />
