@@ -91,7 +91,6 @@ const LetterPreviewPage = () => {
       />
       <Container>
         <Column>
-          <Label>이렇게 편지를 {letterId ? "수정" : "등록"}할까요?</Label>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -105,7 +104,7 @@ const LetterPreviewPage = () => {
                 isImage={isImage}
                 width="100%"
                 height="100%"
-                padding="25px 35px 20px 35px"
+                padding="30px 22px 52px 22px"
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (
@@ -185,32 +184,6 @@ const Column = styled.div`
   margin-bottom: 40px;
 `;
 
-const Label = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.title01};
-  margin-top: 49px;
-  margin-bottom: 28px;
-
-  @media (max-height: 820px) {
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-
-  @media (max-height: 690px) {
-    margin-top: 0px;
-    margin-bottom: 10px;
-    ${theme.fonts.subtitle};
-  }
-
-  @media (max-height: 628px) {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    ${theme.fonts.body14};
-  }
-`;
-
 const LetterWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -237,8 +210,8 @@ const LetterContainer = styled.div`
   justify-content: center;
   width: 100%;
   max-width: 345px;
-  min-height: 398px;
-  max-height: 398px;
+  min-height: 445px;
+  max-height: 445px;
 
   @media (max-height: 660px) {
     max-width: 320px;

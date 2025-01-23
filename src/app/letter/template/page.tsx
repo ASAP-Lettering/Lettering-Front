@@ -15,6 +15,7 @@ import {
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import LetterTemplateList from "@/components/letter/LetterTemplateList";
 import { ALL_TEMPLATES } from "@/constants/templates";
+import ProgressBar from "@/components/common/ProgressBar";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -64,11 +65,12 @@ const LetterTemplatePage = () => {
         title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
         cancel={false}
       />
+      <ProgressBarWrapper>
+        <ProgressBar current={3} total={3} />
+      </ProgressBarWrapper>
       <Container>
-        <Essential>* 필수</Essential>
         <Column>
-          <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
+          <Label>편지지 고르기</Label>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -135,6 +137,11 @@ const Layout = styled.div`
   }
 `;
 
+const ProgressBarWrapper = styled.div`
+  width: 100%;
+  padding: 32px 0 56px 0;
+`;
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -167,37 +174,17 @@ const Label = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.title01};
+  ${(props) => props.theme.fonts.subtitle};
+  margin-bottom: 12px;
 
   @media (max-height: 628px) {
-    ${theme.fonts.title01};
+    ${theme.fonts.body6}
+    margin-bottom: 12px;
   }
 
   @media (max-height: 580px) {
-    ${theme.fonts.subtitle};
-  }
-
-  @media (max-height: 550px) {
-    ${theme.fonts.body14};
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.caption02};
-  margin-bottom: 33px;
-
-  @media (max-height: 680px) {
-    margin-bottom: 10px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body09};
-  }
-
-  @media (max-height: 550px) {
-    ${theme.fonts.body13};
-    margin-bottom: 24px;
+    ${theme.fonts.body10};
+    margin-bottom: 8px;
   }
 `;
 
@@ -208,9 +195,8 @@ const LetterWrapper = styled.div`
 `;
 
 const LetterContainer = styled.div`
-  width: 100px;
-  min-width: 276px;
-  max-height: 283px;
+  width: 100%;
+  max-height: 313px;
 
   @media (max-height: 628px) {
     max-width: 250px;

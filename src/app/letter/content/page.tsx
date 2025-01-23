@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
 import imageCompression from "browser-image-compression";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import ProgressBar from "@/components/common/ProgressBar";
 
 const LetterRegisterPage = () => {
   const router = useRouter();
@@ -189,20 +190,13 @@ const LetterRegisterPage = () => {
         title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
         cancel={false}
       />
+      <ProgressBarWrapper>
+        <ProgressBar current={2} total={3} />
+      </ProgressBarWrapper>
       <Container>
-        <Essential>* 필수</Essential>
-        <Column>
-          <Label>나에게 편지를 보낸 사람은 누구인가요? *</Label>
-          <Input
-            inputType="boxText"
-            value={sender}
-            onChange={handleSenderChange}
-            placeholder="ex) 홍길동"
-          />
-        </Column>
         <Column>
           <Label>
-            편지 내용을 작성해주세요
+            편지 내용
             <Count>
               <Span>{content.length}</Span>
               /1000
@@ -212,12 +206,11 @@ const LetterRegisterPage = () => {
             inputType="boxTextArea"
             value={content}
             onChange={handleContentChange}
-            placeholder="최대 1000자까지 입력이 가능해요"
-            height="193px"
+            placeholder={`받은 편지에 어떤 내용이 담겨있나요?\n텍스트나 사진으로 편지 내용을 보관해보세요`}
+            height="280px"
           />
         </Column>
         <Column $position={true}>
-          <Label $show={false}>사진을 추가해주세요</Label>
           {(previewImages || []).length === 0 ? (
             <AddImageWrapper>
               <AddImageLabel>
@@ -318,6 +311,11 @@ const Layout = styled.div`
   }
 `;
 
+const ProgressBarWrapper = styled.div`
+  width: 100%;
+  padding: 32px 0 56px 0;
+`;
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -331,20 +329,6 @@ const Container = styled.div`
 
   @media (max-height: 628px) {
     position: relative;
-  }
-`;
-
-const Essential = styled.div`
-  text-align: right;
-  color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.caption03};
-  margin-top: 25px;
-  margin-bottom: 17px;
-
-  @media (max-height: 790px) {
-    margin: 0;
-    position: absolute;
-    right: 24px;
   }
 `;
 
@@ -376,7 +360,7 @@ const Column = styled.div<{ $position?: boolean }>`
   }
 `;
 
-const Label = styled.div<{ $show?: boolean }>`
+const Label = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -387,12 +371,6 @@ const Label = styled.div<{ $show?: boolean }>`
   @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
-    ${({ $show }) =>
-      $show === false &&
-      css`
-        display: none;
-        margin-bottom: 0px;
-      `}
   }
 
   @media (max-height: 580px) {
