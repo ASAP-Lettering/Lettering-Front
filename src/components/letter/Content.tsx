@@ -88,7 +88,7 @@ const ContentItem = styled.div`
 const ImageContainer = styled.div<{ src: string }>`
   width: 100%;
   min-height: 310px;
-  max-height: 100%;
+  max-height: 310px;
   border-radius: 10px;
   background-image: url(${(props) => props.src});
   background-size: cover;

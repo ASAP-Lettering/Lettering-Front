@@ -104,7 +104,7 @@ const LetterPreviewPage = () => {
                 isImage={isImage}
                 width="100%"
                 height="100%"
-                padding="30px 22px 52px 22px"
+                padding="30px 22px"
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (

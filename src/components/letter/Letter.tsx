@@ -85,7 +85,7 @@ const Letter = (props: LetterProps) => {
       const container = document.querySelector(".ContentContainer"); // content 부모 컨테이너
       if (!container) return;
 
-      const maxLinesPerPage = 7;
+      const maxLinesPerPage = contentType === "one" ? 7 : 12;
 
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
@@ -250,12 +250,15 @@ const Letter = (props: LetterProps) => {
           <UrlDate>{date}</UrlDate>
         </UrlWrapper>
       )}
-      {contentType === "all" && totalPage > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
-        />
-      )}
+      {contentType === "all" &&
+        (totalPage > 1 ? (
+          <Pagination
+            currentPage={currentPage}
+            totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
+          />
+        ) : (
+          <PaginationDiv />
+        ))}
     </Container>
   );
 };
@@ -466,4 +469,8 @@ const UrlDate = styled.div`
   text-align: center;
   ${(props: any) => props.theme.fonts.caption02};
   color: ${(props: any) => props.theme.colors.gray500};
+`;
+
+const PaginationDiv = styled.div`
+  height: 16px;
 `;
