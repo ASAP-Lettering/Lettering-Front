@@ -357,7 +357,6 @@ const Content = styled.div<{
   align-items: center;
   text-align: left;
   box-sizing: border-box;
-  /* border-radius: ${($isImage) => ($isImage ? "10px" : "0px")}; */
   padding: 10px 0;
   ${(props) =>
     (props.$showType === "previewSend" ||
@@ -365,7 +364,6 @@ const Content = styled.div<{
     props.$contentType === "one"
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
-  /* overflow: hidden; */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
