@@ -85,7 +85,6 @@ const ContentItem = styled.div<{ $isImage: boolean }>`
       border-radius: 10px;
       overflow: hidden;
     `}
-  min-height: 310px;
 `;
 
 const ImageContainer = styled.div<{ src: string }>`
