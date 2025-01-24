@@ -5,10 +5,12 @@ import Button from "@/components/common/Button";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
+import { registerLetterState } from "@/recoil/letterStore";
 import { theme } from "@/styles/theme";
 import { LetterDetailType } from "@/types/letter";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const LetterPage = () => {
@@ -18,6 +20,7 @@ const LetterPage = () => {
   const [key, setKey] = useState(1);
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
+  const [letterState, setLetterState] = useRecoilState(registerLetterState);
 
   const handleButtonClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -26,6 +29,19 @@ const LetterPage = () => {
   const changeImageorContent = () => {
     setIsImage(!isImage);
     setKey(key + 1);
+  };
+
+  //편지 수정 버튼 클릭
+  const handleModify = () => {
+    setLetterState({
+      senderName: letterData?.sender || "",
+      content: letterData?.content || "",
+      images: letterData?.images || [],
+      previewImages: letterData?.images || [],
+      templateType: letterData?.templateType || 1,
+    });
+
+    router.push(`/letter/register?letterId=${id}`);
   };
 
   useEffect(() => {
@@ -81,16 +97,21 @@ const LetterPage = () => {
   return letterData ? (
     <Container>
       <NavigatorBarWrapper>
-        <NavigatorBar cancel={false} url="/planet" />
+        <NavigatorBar
+          cancel={false}
+          url="/planet"
+          title={letterData.space_name}
+        />
       </NavigatorBarWrapper>
+      <IconWrapper>
+        <img
+          src="/assets/icons/ic_edit_2.svg"
+          alt="Edit"
+          onClick={handleModify}
+        />
+        <img src="/assets/icons/ic_more.svg" alt="More options" />
+      </IconWrapper>
       <MainWrapper>
-        <Header>
-          <HeaderTitle>
-            {letterData.space_name} <br />
-            <span>행성에 있는 편지예요!</span>
-          </HeaderTitle>
-          <LetterCount>행성 속 편지 | {letterData.letter_count}개</LetterCount>
-        </Header>
         <LetterContainer>
           <Letter
             showType="receive"
@@ -201,7 +222,7 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   height: 100%;
   padding: 0 18px;
@@ -209,42 +230,12 @@ const MainWrapper = styled.div`
   overflow-x: hidden;
 `;
 
-const Header = styled.div`
+const IconWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  padding-bottom: 15px;
-  width: 100%;
-`;
-
-const HeaderTitle = styled.div`
-  width: 100%;
-  ${(props) => props.theme.fonts.heading01};
-  flex: 2;
-  span {
-    ${(props) => props.theme.fonts.heading02};
-    white-space: nowrap;
-  }
-
-  @media (max-height: 780px) {
-    ${theme.fonts.title01};
-    span {
-      ${(props) => props.theme.fonts.body03};
-    }
-  }
-
-  @media (max-height: 628px) {
-    ${theme.fonts.subtitle};
-    span {
-      ${(props) => props.theme.fonts.body07};
-    }
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.subtitle};
-    span {
-      ${(props) => props.theme.fonts.body07};
-    }
-  }
+  justify-content: end;
+  padding: 0 18px;
+  gap: 8px;
 `;
 
 const LetterContainer = styled.div`
