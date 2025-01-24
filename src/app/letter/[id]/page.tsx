@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { deleteLetter, getSpaceLetter } from "@/api/letter/letter";
-import Button from "@/components/common/Button";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import Loader from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Letter from "@/components/letter/Letter";
-import { useToast } from "@/hooks/useToast";
-import { registerLetterState } from "@/recoil/letterStore";
-import { theme } from "@/styles/theme";
-import { LetterDetailType } from "@/types/letter";
-import { useParams, useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import styled from "styled-components";
+import { deleteLetter, getSpaceLetter } from '@/api/letter/letter';
+import Button from '@/components/common/Button';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import Loader from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import Letter from '@/components/letter/Letter';
+import { useToast } from '@/hooks/useToast';
+import { registerLetterState } from '@/recoil/letterStore';
+import { theme } from '@/styles/theme';
+import { LetterDetailType } from '@/types/letter';
+import { useParams, useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
 
 const LetterPage = () => {
   const router = useRouter();
@@ -37,17 +37,17 @@ const LetterPage = () => {
   };
 
   const replaceDashWithDot = (dateString: string) => {
-    return dateString.replace(/-/g, ".");
+    return dateString.replace(/-/g, '.');
   };
 
   //편지 수정 버튼 클릭
   const handleModify = () => {
     setLetterState({
-      senderName: letterData?.sender || "",
-      content: letterData?.content || "",
+      senderName: letterData?.sender || '',
+      content: letterData?.content || '',
       images: letterData?.images || [],
       previewImages: letterData?.images || [],
-      templateType: letterData?.templateType || 1,
+      templateType: letterData?.templateType || 1
     });
 
     router.push(`/letter/register?letterId=${id}`);
@@ -67,12 +67,12 @@ const LetterPage = () => {
     if (letterData?.next_letter?.letter_id) {
       router.push(`/letter/${letterData.next_letter.letter_id}`);
     } else {
-      router.push("/planet");
+      router.push('/planet');
     }
     showToast(`${letterData?.sender} 님의 편지가 삭제되었어요`, {
       icon: false,
       close: true,
-      bottom: "80px",
+      bottom: '80px'
     });
   };
 
@@ -103,15 +103,15 @@ const LetterPage = () => {
               prev_letter: res.data.prevLetter
                 ? {
                     letter_id: res.data.prevLetter.letterId,
-                    sender_name: res.data.prevLetter.senderName,
+                    sender_name: res.data.prevLetter.senderName
                   }
                 : undefined,
               next_letter: res.data.nextLetter
                 ? {
                     letter_id: res.data.nextLetter.letterId,
-                    sender_name: res.data.nextLetter.senderName,
+                    sender_name: res.data.nextLetter.senderName
                   }
-                : undefined,
+                : undefined
             });
           }
         })
@@ -178,7 +178,7 @@ const LetterPage = () => {
             key={key}
             contentType="all"
             pageType="space"
-            id={letterId || ""}
+            id={letterId || ''}
             templateType={letterData.templateType}
             name={letterData.sender}
             content={letterData.content}
@@ -194,7 +194,7 @@ const LetterPage = () => {
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
-              클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
+              클릭하면 {isImage ? '편지 내용' : '사진'}을 확인할 수 있어요!
             </div>
           </ChangeButtonWrapper>
         ) : (
@@ -235,7 +235,7 @@ const LetterPage = () => {
           buttonType="primary"
           size="large"
           text="답장하기"
-          onClick={() => router.push("/send/letter")}
+          onClick={() => router.push('/send/letter')}
         />
       </ButtonContainer>
     </Container>
@@ -300,32 +300,32 @@ const IconWrapper = styled.div`
 `;
 
 export const PopupContainer = styled.div`
-    width: 88px;
-    height: 124px;
-    flex-shrink: 0;
-    position: absolute;
-    top: 54px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 12px;
-    background: rgba(62, 65, 81, 0.7);
-    backdrop-filter: blur(8px);
-    z-index: 1;
-    padding: 12px;
-    box-sizing: border-box;
+  width: 88px;
+  height: 124px;
+  flex-shrink: 0;
+  position: absolute;
+  top: 54px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(62, 65, 81, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+  padding: 12px;
+  box-sizing: border-box;
 
-    @media (max-height: 628px) {
+  @media (max-height: 628px) {
     width: 78px;
     height: 110px;
-    }
+  }
 
-    @media (max-height: 580px) {
+  @media (max-height: 580px) {
     width: 76px;
     height: 95px;
     padding: 10px;
-    }
+  }
 `;
 
 const ModalDate = styled.div`
@@ -482,7 +482,7 @@ const PaginationWrapper = styled.div`
   }
 `;
 
-const Page = styled.div<{ type: "left" | "center" | "right" }>`
+const Page = styled.div<{ type: 'left' | 'center' | 'right' }>`
   width: 75px;
   display: flex;
   flex-direction: row;
