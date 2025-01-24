@@ -60,20 +60,9 @@ const IndependentLetterPage = () => {
   return letterData ? (
     <Container>
       <NavigatorBarWrapper>
-        <NavigatorBar cancel={false} url="/planet" />
+        <NavigatorBar cancel={false} url="/planet" title="새 편지함" />
       </NavigatorBarWrapper>
       <MainWrapper>
-        <Header>
-          <HeaderTitle>
-            나의 궤도
-            <span>
-              에 있는
-              <br />
-              편지예요!
-            </span>
-          </HeaderTitle>
-          <LetterCount>궤도 속 편지 | {letterData.letterCount}개</LetterCount>
-        </Header>
         <LetterContainer>
           <Letter
             showType="receive"
@@ -177,7 +166,7 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   height: 100%;
   padding: 0 18px;

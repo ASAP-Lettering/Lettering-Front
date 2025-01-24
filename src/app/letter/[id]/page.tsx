@@ -1,10 +1,12 @@
 "use client";
 
-import { getSpaceLetter } from "@/api/letter/letter";
+import { deleteLetter, getSpaceLetter } from "@/api/letter/letter";
 import Button from "@/components/common/Button";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import Loader from "@/components/common/Loader";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Letter from "@/components/letter/Letter";
+import { useToast } from "@/hooks/useToast";
 import { registerLetterState } from "@/recoil/letterStore";
 import { theme } from "@/styles/theme";
 import { LetterDetailType } from "@/types/letter";
@@ -21,6 +23,9 @@ const LetterPage = () => {
   const [letterData, setLetterData] = useState<LetterDetailType>();
   const [isImage, setIsImage] = useState(false);
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
+  const [isPopup, setIsPopup] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const { showToast } = useToast();
 
   const handleButtonClick = (id: string) => {
     router.push(`/letter/${id}`);
@@ -29,6 +34,10 @@ const LetterPage = () => {
   const changeImageorContent = () => {
     setIsImage(!isImage);
     setKey(key + 1);
+  };
+
+  const replaceDashWithDot = (dateString: string) => {
+    return dateString.replace(/-/g, ".");
   };
 
   //편지 수정 버튼 클릭
@@ -42,6 +51,34 @@ const LetterPage = () => {
     });
 
     router.push(`/letter/register?letterId=${id}`);
+  };
+
+  //편지 행성 변경
+  const handlePlanet = () => {
+    router.push(
+      `/planet/move?letter=${letterData?.id}&senderName=${letterData?.sender}`
+    );
+  };
+
+  //삭제 모달 관리
+  const handleConfirm = () => {
+    deleteLetter(id.toString()).then((res) => console.log(res.data));
+
+    if (letterData?.next_letter?.letter_id) {
+      router.push(`/letter/${letterData.next_letter.letter_id}`);
+    } else {
+      router.push("/planet");
+    }
+    showToast(`${letterData?.sender} 님의 편지가 삭제되었어요`, {
+      icon: false,
+      close: true,
+      bottom: "80px",
+    });
+  };
+
+  const handleCancel = () => {
+    setIsDelete(false);
+    setIsPopup(false);
   };
 
   useEffect(() => {
@@ -96,6 +133,14 @@ const LetterPage = () => {
 
   return letterData ? (
     <Container>
+      {isDelete && (
+        <ConfirmModal
+          title="해당 편지를 정말 삭제할까요?"
+          sub="삭제된 편지는 복구되지 않아요."
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
       <NavigatorBarWrapper>
         <NavigatorBar
           cancel={false}
@@ -109,7 +154,22 @@ const LetterPage = () => {
           alt="Edit"
           onClick={handleModify}
         />
-        <img src="/assets/icons/ic_more.svg" alt="More options" />
+        <img
+          src="/assets/icons/ic_more.svg"
+          alt="More options"
+          onClick={() => {
+            setIsPopup(!isPopup);
+          }}
+        ></img>
+        {isPopup && (
+          <PopupContainer>
+            {letterData.date && (
+              <ModalDate>{replaceDashWithDot(letterData.date)}</ModalDate>
+            )}
+            <PopupBtn onClick={handlePlanet}>이동</PopupBtn>
+            <PopupBtn onClick={() => setIsDelete(true)}>삭제</PopupBtn>
+          </PopupContainer>
+        )}
       </IconWrapper>
       <MainWrapper>
         <LetterContainer>
@@ -232,10 +292,74 @@ const MainWrapper = styled.div`
 
 const IconWrapper = styled.div`
   display: flex;
+  position: relative;
   flex-direction: row;
   justify-content: end;
-  padding: 0 18px;
+  padding: 18px;
   gap: 8px;
+`;
+
+export const PopupContainer = styled.div`
+    width: 88px;
+    height: 124px;
+    flex-shrink: 0;
+    position: absolute;
+    top: 54px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(62, 65, 81, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1;
+    padding: 12px;
+    box-sizing: border-box;
+
+    @media (max-height: 628px) {
+    width: 78px;
+    height: 110px;
+    }
+
+    @media (max-height: 580px) {
+    width: 76px;
+    height: 95px;
+    padding: 10px;
+    }
+`;
+
+const ModalDate = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  white-space: nowrap;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${theme.colors.gray400};
+  width: 100%;
+  justify-content: center;
+  padding-top: 8px;
+
+  @media (max-height: 628px) {
+    padding-top: 5px;
+  }
+
+  @media (max-height: 580px) {
+    padding-top: 0px;
+    ${theme.fonts.caption05}
+  }
+`;
+
+const PopupBtn = styled.button`
+  ${(props: any) => props.theme.fonts.button01};
+  color: ${(props: any) => props.theme.colors.white};
+  padding: 10px;
+
+  @media (max-height: 628px) {
+    padding: 5px;
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.button03};
+  }
 `;
 
 const LetterContainer = styled.div`
@@ -252,7 +376,7 @@ const LetterContainer = styled.div`
   }
 
   @media (max-height: 780px) {
-    max-width: 300px;
+    //max-width: 300px;
     min-height: 330px;
     max-height: 330px;
   }
@@ -274,17 +398,6 @@ const LetterContainer = styled.div`
     min-height: 250px;
     max-height: 250px;
   }
-`;
-
-const LetterCount = styled.div`
-  display: flex;
-  ${(props) => props.theme.fonts.caption03};
-  color: ${(props) => props.theme.colors.gray400};
-  flex: 1;
-  flex-direction: column;
-  text-align: end;
-  justify-content: end;
-  padding: 5px;
 `;
 
 const ButtonContainer = styled.div`

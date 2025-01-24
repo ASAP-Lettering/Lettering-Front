@@ -209,11 +209,11 @@ const Letter = (props: LetterProps) => {
             <Name $showType={showType} $contentType={contentType}>
               {`${showType === "send" ? `To. ` : `From. `} ${name}`}
             </Name>
-            {!readOnly && (
+            {/* {!readOnly && (
               <button onClick={() => setIsPopup(!isPopup)}>
                 <img src="/assets/icons/ic_more.svg" alt="More options" />
               </button>
-            )}
+            )} */}
           </TopContainer>
         </>
       )}
