@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
@@ -17,13 +17,15 @@ import { getLetterShareStatus } from "@/api/letter/share";
 
 const SendPreviewPage = () => {
   const router = useRouter();
+  const isKakaoLoaded = useKakaoSDK();
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
   const { draftId, receiverName, content, images, templateType, letterId } =
     useRecoilValue(sendLetterState);
   const { name } = useRecoilValue(userState);
   const [isImage, setIsImage] = useState<boolean>(false);
-
-  const isKakaoLoaded = useKakaoSDK();
+  const [letterCode, setLetterCode] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSharing, setIsSharing] = useState<boolean>(false);
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -35,41 +37,52 @@ const SendPreviewPage = () => {
 
   const handleSendLetterAndShare = async () => {
     /* 편지 전송 및 카카오 공유 */
+    if (isSharing) return; // 중복 실행 방지
+
+    setIsSharing(true);
+    setIsLoading(true);
+
+    const { Kakao, location } = window;
+
+    if (!isKakaoLoaded) {
+      console.error("Kakao SDK is not loaded yet");
+      return;
+    }
+
     try {
       // 1. 편지 전송 API 요청
-      if (!letterId) {
-        const response = await postSendLtter({
-          draftId,
-          receiverName,
-          content,
-          images,
-          templateType,
-        });
-        console.log("편지 쓰기 성공");
-        setLetterState((prevState) => ({
-          ...prevState,
-          letterId: response.data.letterCode,
-        }));
+      const response = await postSendLtter({
+        draftId,
+        receiverName,
+        content,
+        images,
+        templateType,
+      });
+      console.log("편지 쓰기 성공");
+      setLetterState((prevState) => ({
+        ...prevState,
+        letterId: response.data.letterCode,
+      }));
+      setLetterCode(response.data.letterCode);
+      console.log(response.data.letterCode);
 
-        // 2. 카카오 공유 로직 실행
-        if (isKakaoLoaded && response.data.letterCode) {
-          setTimeout(() => {
-            const { Kakao, location } = window;
-            Kakao.Share.sendScrap({
-              requestUrl: location.origin + location.pathname,
-              templateId: 112798,
-              templateArgs: {
-                senderName: name,
-                id: response.data.letterCode,
-              },
-              serverCallbackArgs: {
-                requestType: "SHARE",
-                requestId: response.data.letterCode,
-              },
-            });
-          }, 1000);
-        }
-      }
+      // 2. 카카오 공유 로직 실행 (letterId 상태와 무관하게 항상 실행)
+      Kakao.Share.sendScrap({
+        requestUrl: location.origin + location.pathname,
+        templateId: 112798,
+        templateArgs: {
+          senderName: name,
+          id: response.data.letterCode,
+        },
+        serverCallbackArgs: {
+          requestType: "SHARE",
+          requestId: response.data.letterCode,
+        },
+        // 카카오톡 미설치 시 카카오톡 설치 경로이동
+        installTalk: true,
+      });
+      setIsLoading(false);
+      setIsSharing(false);
     } catch (error) {
       console.log("편지 전송 또는 카카오 공유 실패:", error);
     }
@@ -77,23 +90,26 @@ const SendPreviewPage = () => {
 
   // 3. 공유 완료 상태 폴링
   useEffect(() => {
-    if (letterState.letterId && letterState.letterId?.length > 0) {
+    if (letterCode.length > 0) {
+      console.log("letterCode", letterCode);
+      let intervalTime = 300;
       const interval = setInterval(async () => {
         try {
-          const status = await getLetterShareStatus(letterState.letterId || "");
+          const status = await getLetterShareStatus(letterCode || "");
           console.log(status);
           if (status.isShared) {
+            console.log("완료");
             router.push("/send/complete");
             clearInterval(interval); // 폴링 중단
           }
         } catch (error) {
           console.error("공유 상태 조회 실패:", error);
         }
-      }, 3000);
+      }, intervalTime);
 
       return () => clearInterval(interval);
     }
-  }, [letterState.letterId]);
+  }, [letterCode]);
 
   return (
     <Layout>
@@ -134,7 +150,7 @@ const SendPreviewPage = () => {
             buttonType="primary"
             text="카카오로 편지 보내기"
             onClick={handleSendLetterAndShare}
-            disabled={!receiverName || !content}
+            disabled={!receiverName || !content || isLoading}
           >
             <Image
               src="/assets/icons/ic_kakao_talk.svg"
