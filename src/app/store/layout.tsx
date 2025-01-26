@@ -1,9 +1,6 @@
 "use client";
 
-import NavigatorBar from "@/components/common/NavigatorBar";
-import ProgressBar from "@/components/common/ProgressBar";
 import { theme } from "@/styles/theme";
-import { usePathname } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 
@@ -12,28 +9,7 @@ interface StoreLayoutProps {
 }
 
 const StoreLayout = ({ children }: StoreLayoutProps) => {
-  const pathname = usePathname();
-
-  const current =
-    pathname === "/store/sender"
-      ? 1
-      : pathname === "/store/content"
-      ? 2
-      : pathname === "/store/template"
-      ? 3
-      : null;
-
-  return (
-    <Container>
-      <NavigatorBar title="받은 편지 보관하기" cancel={false} />
-      {current && (
-        <ProgressBarWrapper>
-          <ProgressBar current={current} total={3} />
-        </ProgressBarWrapper>
-      )}
-      {children}
-    </Container>
-  );
+  return <Container>{children}</Container>;
 };
 
 export default StoreLayout;
@@ -52,9 +28,4 @@ const Container = styled.div`
   @media (max-height: 550px) {
     padding-top: 0px;
   }
-`;
-
-const ProgressBarWrapper = styled.div`
-  width: 100%;
-  padding: 32px 0 56px 0;
 `;

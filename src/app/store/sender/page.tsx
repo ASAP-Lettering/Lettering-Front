@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import Header from "@/components/store/Header";
 
 const LetterSenderPage = () => {
   const router = useRouter();
@@ -54,6 +55,7 @@ const LetterSenderPage = () => {
 
   return (
     <>
+      <Header current={1} edit={!!letterId} />
       <Container>
         <Column>
           <Label>나에게 편지 보낸 사람</Label>

@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/useToast";
 import { postImage } from "@/api/image/image";
 import imageCompression from "browser-image-compression";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import Header from "@/components/store/Header";
 
 const LetterContentPage = () => {
   const router = useRouter();
@@ -175,6 +176,7 @@ const LetterContentPage = () => {
 
   return (
     <>
+      <Header current={2} edit={!!letterId} />
       <Container>
         <Column>
           <Label>

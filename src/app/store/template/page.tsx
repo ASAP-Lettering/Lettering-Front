@@ -14,6 +14,7 @@ import {
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import LetterTemplateList from "@/components/letter/LetterTemplateList";
 import { ALL_TEMPLATES } from "@/constants/templates";
+import Header from "@/components/store/Header";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -58,6 +59,7 @@ const LetterTemplatePage = () => {
 
   return (
     <>
+      <Header current={3} edit={!!letterId} />
       <Container>
         <Column>
           <Label>편지지 고르기</Label>

@@ -16,6 +16,7 @@ import {
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import Header from "@/components/store/Header";
 
 const LetterPreviewPage = () => {
   const router = useRouter();
@@ -85,6 +86,7 @@ const LetterPreviewPage = () => {
 
   return (
     <>
+      <Header current={null} edit={!!letterId} />
       <Container>
         <Column>
           <LetterWrapper>
