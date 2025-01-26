@@ -4,8 +4,9 @@ import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import { theme } from "@/styles/theme";
 
-export default function SigninStep3Check() {
+export default function InfoPage() {
   const router = useRouter();
 
   const handleButtonClick = () => {
@@ -43,40 +44,38 @@ export default function SigninStep3Check() {
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100%;
-    color: white;
-    background:${(props) => props.theme.colors.bg};
-    padding: 25px;
-    padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  color: ${theme.colors.white};
+  background: ${(props) => props.theme.colors.bg};
+  padding: 20px;
+  padding-bottom: 40px;
 `;
 
 const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 `;
 
 const Header = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ContentWrapper = styled.div`
-    padding: 10px;
-    ${(props) => props.theme.fonts.body07};
-    color: ${(props) => props.theme.colors.gray200};
+  ${(props) => props.theme.fonts.body07};
+  color: ${(props) => props.theme.colors.gray200};
 `;
 
 const HeaderTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.heading01};
-    margin-top: 2.5rem;
+  width: 100%;
+  ${(props) => props.theme.fonts.heading01};
 `;
 
 const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;

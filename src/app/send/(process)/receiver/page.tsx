@@ -355,6 +355,9 @@ const SendReceiverPage = () => {
         </Column>
       </Container>
       <ButtonWrapper>
+        <DescriptionText onClick={() => router.push("/info")}>
+          왜 실명으로 해야 하나요?
+        </DescriptionText>
         <Button
           buttonType="primary"
           size="large"
@@ -519,6 +522,16 @@ const ButtonWrapper = styled.div`
   padding: 0 20px;
   bottom: 40px;
   left: 0;
+`;
+
+const DescriptionText = styled.button`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  text-decoration: underline;
+  ${theme.fonts.body09};
+  color: ${(props) => props.theme.colors.gray400};
 `;
 
 const BottomWrapper = styled.div`

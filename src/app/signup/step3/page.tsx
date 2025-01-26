@@ -138,7 +138,7 @@ const SignupStep3 = () => {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/signup/step3/check")}>
+        <DescriptionText onClick={() => router.push("/info")}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button
