@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import BlinkTag from "@/components/common/BlinkingTag";
-import Button from "@/components/common/Button";
-import Check from "@/components/common/Check";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import GuideText from "@/components/common/GuideText";
-import Input from "@/components/common/Input";
-import KakaoShareButton from "@/components/common/KakaoShareButton";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Tag from "@/components/common/Tag";
-import Toast from "@/components/common/Toast";
-import Letter from "@/components/letter/Letter";
-import NewItemPicker from "@/components/signup/NewItemPicker";
-import { LETTER_DUMMY } from "@/constants/letterDummy";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import React, { useState } from "react";
-import useMeasure from "react-use-measure";
-import styled from "styled-components";
+import BlinkTag from '@/components/common/BlinkingTag';
+import Button from '@/components/common/Button';
+import Check from '@/components/common/Check';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import GuideText from '@/components/common/GuideText';
+import Input from '@/components/common/Input';
+import KakaoShareButton from '@/components/common/KakaoShareButton';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import Tag from '@/components/common/Tag';
+import Toast from '@/components/common/Toast';
+import Letter from '@/components/letter/Letter';
+import NewItemPicker from '@/components/signup/NewItemPicker';
+import { LETTER_DUMMY } from '@/constants/letterDummy';
+import { theme } from '@/styles/theme';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import useMeasure from 'react-use-measure';
+import styled from 'styled-components';
 
 const GuidePage = () => {
   /* Check */
@@ -33,8 +33,8 @@ const GuidePage = () => {
   };
 
   /* Input */
-  const [text, setText] = useState("");
-  const [textarea, setTextarea] = useState("");
+  const [text, setText] = useState('');
+  const [textarea, setTextarea] = useState('');
 
   /* Toast */
   const [showToast, setShowToast] = useState(false);
@@ -54,7 +54,7 @@ const GuidePage = () => {
   };
 
   const handleConfirm = () => {
-    alert("삭제 완료");
+    alert('삭제 완료');
     setConfirmModal(false);
   };
 
@@ -63,9 +63,9 @@ const GuidePage = () => {
   };
 
   //ItemPicker
-  const [item, setItem] = useState("item4");
+  const [item, setItem] = useState('item4');
 
-  const items = ["item1", "item2", "item3", "item4", "item5", "item6", "item7"];
+  const items = ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7'];
   const handleItemChange = (item: string) => {
     setItem(item);
   };
@@ -73,9 +73,9 @@ const GuidePage = () => {
   //Letter
   const letterData = LETTER_DUMMY[0];
   const imageData = [
-    "https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill",
-    "https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill",
-    "https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill",
+    'https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill',
+    'https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill',
+    'https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill'
   ];
 
   //bottomSheet
@@ -210,7 +210,7 @@ const GuidePage = () => {
       <PickedItemContainer>
         <NewItemPicker
           items={items}
-          defaultItem={"item4"}
+          defaultItem={'item4'}
           unit=""
           onChange={handleItemChange}
         />
@@ -289,21 +289,6 @@ const GuidePage = () => {
           onClick={handleDisplay}
         />
       </ButtonContainer>
-
-      {/* <Background>
-        <Mobile ref={viewportRef}>
-          <Content>테스트</Content>
-          {isDisplayed && (
-            <BottomSheet
-              viewport={`${viewportHeight}px`}
-              title="타이틀입니다."
-              subtitle="서브타이틀입니다."
-              isOpen={isBottomUp}
-              handleOpen={handleBottomUpChange}
-            />
-          )}
-        </Mobile>
-      </Background> */}
       <h3>카카오톡 공유하기</h3>
       <KakaoShareButton letterId="aa" />
       <KakaoShareButton type="small" letterId="aa" />
