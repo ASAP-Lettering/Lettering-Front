@@ -50,7 +50,7 @@ const LetterPage = () => {
       templateType: letterData?.templateType || 1
     });
 
-    router.push(`/letter/register?letterId=${id}`);
+    router.push(`/store/sender?letterId=${id}`);
   };
 
   //편지 행성 변경
