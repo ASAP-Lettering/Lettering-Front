@@ -167,6 +167,7 @@ const Letter = (props: LetterProps) => {
 
   const handleModify = () => {
     setLetterState({
+      draftId: null,
       senderName: name,
       content: content || '',
       images: images || [],
