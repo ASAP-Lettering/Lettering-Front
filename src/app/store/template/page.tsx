@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Button from "@/components/common/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import Letter from "@/components/letter/Letter";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import React, { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import Button from '@/components/common/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Letter from '@/components/letter/Letter';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   registerLetterState,
-  useSsrComplectedState,
-} from "@/recoil/letterStore";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import LetterTemplateList from "@/components/letter/LetterTemplateList";
-import { ALL_TEMPLATES } from "@/constants/templates";
-import Header from "@/components/store/Header";
+  useSsrComplectedState
+} from '@/recoil/letterStore';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import LetterTemplateList from '@/components/letter/LetterTemplateList';
+import { ALL_TEMPLATES } from '@/constants/templates';
+import Header from '@/components/store/Header';
 
 const LetterTemplatePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const letterId = searchParams.get("letterId");
-  const independent = searchParams.get("independent");
+  const letterId = searchParams.get('letterId');
+  const independent = searchParams.get('independent');
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
@@ -44,16 +44,16 @@ const LetterTemplatePage = () => {
     /* 다음 페이지 */
     setRegisterLetterState((prevState) => ({
       ...prevState,
-      templateType: template,
+      templateType: template
     }));
     if (letterId) {
-      if (independent === "true") {
+      if (independent === 'true') {
         router.push(`/store/preview?letterId=${letterId}&independent=true`);
       } else {
         router.push(`/store/preview?letterId=${letterId}`);
       }
     } else {
-      router.push("/store/preview");
+      router.push('/store/preview');
     }
   };
 
@@ -68,7 +68,7 @@ const LetterTemplatePage = () => {
               <Letter
                 showType="previewReceive"
                 contentType="one"
-                id={"0"}
+                id={'0'}
                 templateType={template}
                 name={senderName}
                 content={content}
@@ -76,6 +76,7 @@ const LetterTemplatePage = () => {
                 isImage={!(content.length > 0)}
                 width="100%"
                 height="100%"
+                padding="40px 30px"
               />
             </LetterContainer>
           </LetterWrapper>
@@ -155,9 +156,9 @@ const LetterWrapper = styled.div`
 `;
 
 const LetterContainer = styled.div`
-  width: 100%;
-  min-height: 313px;
-  max-height: 313px;
+  width: 276px;
+  min-height: 284px;
+  max-height: 284px;
 
   @media (max-height: 628px) {
     max-width: 250px;

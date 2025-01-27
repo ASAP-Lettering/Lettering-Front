@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
-import NavigatorBar from '@/components/common/NavigatorBar';
 import Button from '@/components/common/Button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';

@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import Input from "@/components/common/Input";
-import Button from "@/components/common/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import Header from "@/components/store/Header";
+import React, { Suspense, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import Input from '@/components/common/Input';
+import Button from '@/components/common/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useRecoilState } from 'recoil';
+import { registerLetterState } from '@/recoil/letterStore';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import Header from '@/components/store/Header';
 
 const LetterSenderPage = () => {
   const router = useRouter();
-  const [sender, setSender] = useState<string>("");
+  const [sender, setSender] = useState<string>('');
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
 
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const searchParams = useSearchParams();
-  const letterId = searchParams.get("letterId");
-  const independent = searchParams.get("independent");
+  const letterId = searchParams.get('letterId');
+  const independent = searchParams.get('independent');
 
   useEffect(() => {
     if (letterState) {
@@ -32,7 +32,7 @@ const LetterSenderPage = () => {
     setSender(newValue);
     setLetterState((prevState) => ({
       ...prevState,
-      senderName: newValue,
+      senderName: newValue
     }));
   };
 
@@ -40,16 +40,16 @@ const LetterSenderPage = () => {
     /* 다음 페이지 */
     setLetterState((prevState) => ({
       ...prevState,
-      senderName: sender,
+      senderName: sender
     }));
     if (letterId) {
-      if (independent === "true") {
+      if (independent === 'true') {
         router.push(`/store/content?letterId=${letterId}&independent=true`);
       } else {
         router.push(`/store/content?letterId=${letterId}`);
       }
     } else {
-      router.push("/store/content");
+      router.push('/store/content');
     }
   };
 
@@ -63,7 +63,7 @@ const LetterSenderPage = () => {
             inputType="boxText"
             value={sender}
             onChange={handleSenderChange}
-            placeholder="이름을 입력해주세요"
+            placeholder="'성 + 이름' 의 실명을 입력해주세요"
           />
         </Column>
       </Container>
@@ -71,7 +71,7 @@ const LetterSenderPage = () => {
         <Button
           buttonType="primary"
           size="large"
-          text={isImageUploadLoading ? "Loading..." : "다음"}
+          text={isImageUploadLoading ? 'Loading...' : '다음'}
           disabled={!sender}
           onClick={handleAddNext}
         />

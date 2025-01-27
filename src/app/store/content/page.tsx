@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import Input from "@/components/common/Input";
-import Button from "@/components/common/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { useRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
-import { useToast } from "@/hooks/useToast";
-import { postImage } from "@/api/image/image";
-import imageCompression from "browser-image-compression";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import Header from "@/components/store/Header";
+import React, { Suspense, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import Input from '@/components/common/Input';
+import Button from '@/components/common/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { useRecoilState } from 'recoil';
+import { registerLetterState } from '@/recoil/letterStore';
+import { useToast } from '@/hooks/useToast';
+import { postImage } from '@/api/image/image';
+import imageCompression from 'browser-image-compression';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import Header from '@/components/store/Header';
 
 const LetterContentPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [sender, setSender] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [sender, setSender] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [images, setImages] = useState<string[]>([]); // 서버 전송용
   const [previewImages, setPreviewImages] = useState<string[]>([]); // 미리보기용
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
@@ -29,8 +29,8 @@ const LetterContentPage = () => {
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isToastShown, setIsToastShown] = useState(false);
   const searchParams = useSearchParams();
-  const letterId = searchParams.get("letterId");
-  const independent = searchParams.get("independent");
+  const letterId = searchParams.get('letterId');
+  const independent = searchParams.get('independent');
 
   useEffect(() => {
     if (letterState) {
@@ -50,17 +50,17 @@ const LetterContentPage = () => {
     }
     setLetterState((prevState) => ({
       ...prevState,
-      content: newValue,
+      content: newValue
     }));
   };
 
   const handleShowToast = () => {
     /* 토스트 메세지 보여지기 전*/
     if (previewImages.length >= 4 && !isToastShown) {
-      showToast("사진 첨부는 최대 4장까지 가능해요.", {
+      showToast('사진 첨부는 최대 4장까지 가능해요.', {
         icon: true,
         close: false,
-        bottom: "113px",
+        bottom: '113px'
       });
       setIsToastShown(true);
     }
@@ -83,17 +83,17 @@ const LetterContentPage = () => {
       // 미리보기 이미지 업데이트
       const newPreviewImages = [
         ...(previewImages || []),
-        ...validImages.map((file) => URL.createObjectURL(file)),
+        ...validImages.map((file) => URL.createObjectURL(file))
       ];
 
       setPreviewImages(newPreviewImages);
 
       // 총 이미지가 4개를 초과하려고 할 때 (토스트 메세지 보여지기 전)
       if (selectedImages.length > additionalImagesNeeded && !isToastShown) {
-        showToast("사진 첨부는 최대 4장까지 가능해요.", {
+        showToast('사진 첨부는 최대 4장까지 가능해요.', {
           icon: true,
           close: false,
-          bottom: "113px",
+          bottom: '113px'
         });
         setIsToastShown(true);
         setIsButtonDisabled(false);
@@ -104,17 +104,17 @@ const LetterContentPage = () => {
         const compressedFile = await imageCompression(file, {
           maxSizeMB: 500,
           maxWidthOrHeight: 512,
-          useWebWorker: true,
+          useWebWorker: true
         });
 
         try {
           setImageUploadLoading(true);
 
           const response = await postImage(compressedFile);
-          console.log("이미지 업로드 성공", response.data);
+          console.log('이미지 업로드 성공', response.data);
           imageUrls.push(response.data.imageUrl);
         } catch (error) {
-          console.error("이미지 업로드 실패", error);
+          console.error('이미지 업로드 실패', error);
         }
       }
       setImages((prevImages) => [...prevImages, ...imageUrls]);
@@ -123,7 +123,7 @@ const LetterContentPage = () => {
       setLetterState((prevState) => ({
         ...prevState,
         images: [...(prevState.images || []), ...imageUrls],
-        previewImages: newPreviewImages,
+        previewImages: newPreviewImages
       }));
     }
   };
@@ -146,13 +146,13 @@ const LetterContentPage = () => {
     setLetterState((prevState) => ({
       ...prevState,
       images: updatedImages,
-      previewImages: updatedPreviewImages,
+      previewImages: updatedPreviewImages
     }));
   };
 
   useEffect(() => {
-    console.log("images", images);
-    console.log("previewImages", previewImages);
+    console.log('images', images);
+    console.log('previewImages', previewImages);
   }, [images, previewImages]);
 
   const handleAddNext = async () => {
@@ -161,16 +161,16 @@ const LetterContentPage = () => {
       ...prevState,
       content: content,
       images: images,
-      previewImages: previewImages,
+      previewImages: previewImages
     }));
     if (letterId) {
-      if (independent === "true") {
+      if (independent === 'true') {
         router.push(`/store/template?letterId=${letterId}&independent=true`);
       } else {
         router.push(`/store/template?letterId=${letterId}`);
       }
     } else {
-      router.push("/store/template");
+      router.push('/store/template');
     }
   };
 
@@ -178,7 +178,7 @@ const LetterContentPage = () => {
     <>
       <Header current={2} edit={!!letterId} />
       <Container>
-        <Column>
+        <div>
           <Label>
             편지 내용
             <Count>
@@ -193,66 +193,55 @@ const LetterContentPage = () => {
             placeholder={`받은 편지에 어떤 내용이 담겨있나요?\n텍스트나 사진으로 편지 내용을 보관해보세요`}
             height="280px"
           />
-        </Column>
-        <Column $position={true}>
-          {(previewImages || []).length === 0 ? (
-            <AddImageWrapper>
-              <AddImageLabel>
+        </div>
+        <div>
+          <ImagesList>
+            <AddImagesLabel onClick={handleShowToast}>
+              {previewImages.length < 4 && (
                 <input
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={handleAddImages}
-                  style={{ display: "none" }}
+                  style={{ display: 'none' }}
+                  disabled={isButtonDisabled}
                 />
-                + 사진 불러오기 (선택)
-              </AddImageLabel>
-              <SmallText>최대 4장까지 사진 첨부가 가능해요</SmallText>
-            </AddImageWrapper>
-          ) : (
-            <ImagesList>
-              <AddImagesLabel onClick={handleShowToast}>
-                {previewImages.length < 4 && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleAddImages}
-                    style={{ display: "none" }}
-                    disabled={isButtonDisabled}
+              )}
+              <Image
+                src={'/assets/icons/ic_camera.svg'}
+                width={15}
+                height={13}
+                alt="이미지 추가"
+              />
+              {previewImages.length}/4
+            </AddImagesLabel>
+            <ImagesWrapper>
+              {previewImages.map((image, index) => (
+                <ImageDiv>
+                  <Image
+                    src={image}
+                    fill
+                    alt="images"
+                    style={{ borderRadius: '8px' }}
                   />
-                )}
-                +<br />
-                {previewImages.length}/4
-              </AddImagesLabel>
-              <ImagesWrapper>
-                {previewImages.map((image, index) => (
-                  <ImageDiv>
+                  <DeleteIcon onClick={() => handleDeleteImages(index)}>
                     <Image
-                      src={image}
+                      src="/assets/icons/ic_image_delete.svg"
                       fill
-                      alt="images"
-                      style={{ borderRadius: "8px" }}
+                      alt="delete"
                     />
-                    <DeleteIcon onClick={() => handleDeleteImages(index)}>
-                      <Image
-                        src="/assets/icons/ic_image_delete.svg"
-                        fill
-                        alt="delete"
-                      />
-                    </DeleteIcon>
-                  </ImageDiv>
-                ))}
-              </ImagesWrapper>
-            </ImagesList>
-          )}
-        </Column>
+                  </DeleteIcon>
+                </ImageDiv>
+              ))}
+            </ImagesWrapper>
+          </ImagesList>
+        </div>
       </Container>
       <ButtonWrapper>
         <Button
           buttonType="primary"
           size="large"
-          text={isImageUploadLoading ? "Loading..." : "다음"}
+          text={isImageUploadLoading ? 'Loading...' : '다음'}
           disabled={
             !sender ||
             (!content && previewImages?.length === 0) ||
@@ -283,6 +272,7 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 13px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -291,34 +281,6 @@ const Container = styled.div`
 
   @media (max-height: 628px) {
     position: relative;
-  }
-`;
-
-const Column = styled.div<{ $position?: boolean }>`
-  margin-bottom: 40px;
-
-  @media (max-height: 710px) {
-    margin-bottom: 20px;
-  }
-
-  @media (max-height: 628px) {
-    ${({ $position }) =>
-      $position &&
-      css`
-        width: 100%;
-        position: absolute;
-        top: 300px;
-      `}
-  }
-
-  @media (max-height: 580px) {
-    ${({ $position }) =>
-      $position &&
-      css`
-        width: 100%;
-        position: absolute;
-        top: 280px;
-      `}
   }
 `;
 
@@ -355,58 +317,14 @@ const Span = styled.span`
   color: ${theme.colors.white};
 `;
 
-const AddImageWrapper = styled.div`
+const AddImagesLabel = styled.label`
+  width: 58px;
+  height: 58px;
+  padding: 13px 19px 7px 19px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
-`;
-
-const AddImageLabel = styled.label`
-  width: 100%;
-  height: 57px;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 18px;
-  border-radius: 12px;
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.gray400};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  ${theme.fonts.body08}
-
-  @media (max-height: 628px) {
-    height: 48px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 580px) {
-    height: 42px;
-    ${theme.fonts.caption04}
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption04};
-  text-align: center;
-  margin-bottom: 100px;
-
-  @media (max-height: 550px) {
-    display: none;
-  }
-`;
-
-const AddImagesLabel = styled.label`
-  width: 52px;
-  height: 52px;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
   border-radius: 8px;
   background: ${theme.colors.gray700};
   color: ${theme.colors.gray400};
@@ -430,25 +348,19 @@ const ImagesList = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-top: 0px;
-  }
+  gap: 11px;
 `;
 
 const ImagesWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 13px;
+  gap: 14px;
 `;
 
 const ImageDiv = styled.div`
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   position: relative;
 
   @media (max-height: 628px) {
@@ -463,11 +375,11 @@ const ImageDiv = styled.div`
 `;
 
 const DeleteIcon = styled.button`
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -4px;
+  right: -9px;
 
   @media (max-height: 628px) {
     width: 18px;

@@ -353,21 +353,6 @@ const SendContentPage = () => {
           />
         </div>
         <div>
-          {/* {(previewImages || []).length === 0 ? (
-            <AddImageWrapper>
-              <AddImageLabel>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleAddImages}
-                  style={{ display: "none" }}
-                />
-                + 사진 불러오기 (선택)
-              </AddImageLabel>
-              <SmallText>최대 4장까지 사진 첨부가 가능해요</SmallText>
-            </AddImageWrapper>
-          ) : ( */}
           <ImagesList>
             <AddImagesLabel onClick={handleShowToast}>
               {previewImages.length < 4 && (
@@ -408,7 +393,6 @@ const SendContentPage = () => {
               ))}
             </ImagesWrapper>
           </ImagesList>
-          {/* )} */}
         </div>
       </Container>
       <ButtonWrapper>
@@ -518,7 +502,7 @@ const Container = styled.div`
   }
 `;
 
-const Label = styled.div<{ $show?: boolean }>`
+const Label = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -529,12 +513,6 @@ const Label = styled.div<{ $show?: boolean }>`
   @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
-    ${({ $show }) =>
-      $show === false &&
-      css`
-        display: none;
-        margin-bottom: 0px;
-      `}
   }
 
   @media (max-height: 580px) {
@@ -555,50 +533,6 @@ const Count = styled.div`
 
 const Span = styled.span`
   color: ${theme.colors.white};
-`;
-
-const AddImageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-`;
-
-const AddImageLabel = styled.label`
-  width: 100%;
-  height: 57px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 18px;
-  border-radius: 12px;
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.gray400};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  ${theme.fonts.body08}
-
-  @media (max-height: 628px) {
-    height: 48px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 580px) {
-    height: 42px;
-    ${theme.fonts.caption04}
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption04};
-  text-align: center;
-  margin-bottom: 100px;
-
-  @media (max-height: 550px) {
-    display: none;
-  }
 `;
 
 const AddImagesLabel = styled.label`

@@ -1,28 +1,27 @@
-"use client";
+'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Button from "@/components/common/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import Letter from "@/components/letter/Letter";
+import React, { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import Button from '@/components/common/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import Letter from '@/components/letter/Letter';
 import {
   postPhysicalLetter,
   putIndependentLetter,
-  putLetter,
-} from "@/api/letter/letter";
-import { useRecoilValue, useResetRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import Header from "@/components/store/Header";
+  putLetter
+} from '@/api/letter/letter';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { registerLetterState } from '@/recoil/letterStore';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import Header from '@/components/store/Header';
 
 const LetterPreviewPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const letterId = searchParams.get("letterId");
-  const independent = searchParams.get("independent");
+  const letterId = searchParams.get('letterId');
+  const independent = searchParams.get('independent');
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
 
@@ -40,20 +39,20 @@ const LetterPreviewPage = () => {
   const handleRegisterLetter = async () => {
     if (letterId) {
       /* 편지 수정 */
-      if (independent === "true") {
+      if (independent === 'true') {
         try {
           await putIndependentLetter({
             letterId,
             senderName,
             content,
             images,
-            templateType,
+            templateType
           });
-          console.log("궤도 편지 수정 성공");
+          console.log('궤도 편지 수정 성공');
           resetLetterState();
           router.push(`/independent/${letterId}`);
         } catch {
-          console.log("궤도 편지 수정 실패");
+          console.log('궤도 편지 수정 실패');
         }
       } else {
         try {
@@ -62,24 +61,24 @@ const LetterPreviewPage = () => {
             senderName,
             content,
             images,
-            templateType,
+            templateType
           });
-          console.log("행성 편지 수정 성공");
+          console.log('행성 편지 수정 성공');
           resetLetterState();
           router.push(`/letter/${letterId}`);
         } catch {
-          console.log("행성 편지 수정 실패");
+          console.log('행성 편지 수정 실패');
         }
       }
     } else {
       /* 편지 등록 */
       try {
         await postPhysicalLetter({ senderName, content, images, templateType });
-        console.log("실물 편지 등록 성공");
+        console.log('실물 편지 등록 성공');
+        router.push('/planet');
         resetLetterState();
-        router.push("/planet");
       } catch {
-        console.log("실물 편지 등록 실패");
+        console.log('실물 편지 등록 실패');
       }
     }
   };
@@ -94,7 +93,7 @@ const LetterPreviewPage = () => {
               <Letter
                 showType="previewReceive"
                 contentType="all"
-                id={"0"}
+                id={'0'}
                 templateType={templateType}
                 name={senderName}
                 content={content}
@@ -102,7 +101,8 @@ const LetterPreviewPage = () => {
                 isImage={isImage}
                 width="100%"
                 height="100%"
-                padding="30px 22px"
+                padding="38px 28px"
+                nameSize="18px"
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (
@@ -113,7 +113,7 @@ const LetterPreviewPage = () => {
                   height={20}
                   alt="클릭"
                 />
-                클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요
+                클릭하면 {isImage ? '편지 내용' : '사진'}을 확인할 수 있어요
               </ChangeButton>
             )}
           </LetterWrapper>
@@ -122,7 +122,7 @@ const LetterPreviewPage = () => {
           <Button
             buttonType="primary"
             size="large"
-            text={letterId ? "수정 완료" : "등록 완료"}
+            text={letterId ? '수정 완료' : '등록 완료'}
             onClick={handleRegisterLetter}
           />
         </ButtonWrapper>
@@ -151,7 +151,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 42px;
+  justify-content: center;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -164,6 +164,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin-bottom: 40px;
 `;
 
@@ -193,30 +194,26 @@ const LetterContainer = styled.div`
   justify-content: center;
   width: 100%;
   max-width: 345px;
-  min-height: 445px;
-  max-height: 445px;
+  min-height: 354px;
+  max-height: 354px;
 
   @media (max-height: 660px) {
-    max-width: 320px;
     min-height: 350px;
   }
 
   @media (max-height: 628px) {
-    max-width: 320px;
     min-height: 320px;
     max-height: 320px;
   }
 
   @media (max-height: 580px) {
-    max-width: 250px;
-    min-height: 250px;
-    max-height: 250px;
+    min-height: 300px;
+    max-height: 300px;
   }
 
   @media (max-height: 550px) {
-    max-width: 220px;
-    min-height: 220px;
-    max-height: 220px;
+    min-height: 280px;
+    max-height: 280px;
   }
 `;
 
@@ -228,7 +225,6 @@ const ChangeButton = styled.button`
   gap: 4px;
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.caption02};
-  margin-bottom: 100px;
 
   @media (max-height: 730px) {
     flex-direction: row;
