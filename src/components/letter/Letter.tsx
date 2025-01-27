@@ -51,7 +51,6 @@ const Letter = (props: LetterProps) => {
     padding,
     readOnly = false,
     nextLetterId,
-    maxLineWidth,
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -86,7 +85,7 @@ const Letter = (props: LetterProps) => {
       const container = document.querySelector(".ContentContainer"); // content 부모 컨테이너
       if (!container) return;
 
-      const maxLinesPerPage = 7;
+      const maxLinesPerPage = contentType === "one" ? 7 : 12;
 
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
@@ -173,9 +172,9 @@ const Letter = (props: LetterProps) => {
       templateType: templateType,
     });
     if (pageType === "independent") {
-      router.push(`/letter/register?letterId=${id}&independent=true`);
+      router.push(`/store/sender?letterId=${id}&independent=true`);
     } else {
-      router.push(`/letter/register?letterId=${id}`);
+      router.push(`/store/sender?letterId=${id}`);
     }
   };
 
@@ -234,6 +233,7 @@ const Letter = (props: LetterProps) => {
       <Content
         $showType={showType}
         $contentType={contentType}
+        $isImage={isImage}
         className="ContentContainer"
       >
         <SwipeableContent
@@ -251,12 +251,15 @@ const Letter = (props: LetterProps) => {
           <UrlDate>{date}</UrlDate>
         </UrlWrapper>
       )}
-      {contentType === "all" && totalPage > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
-        />
-      )}
+      {contentType === "all" &&
+        (totalPage > 1 ? (
+          <Pagination
+            currentPage={currentPage}
+            totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
+          />
+        ) : (
+          <PaginationDiv />
+        ))}
     </Container>
   );
 };
@@ -275,7 +278,7 @@ const Container = styled.div<{
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  gap: 10px;
+  gap: 20px;
   height: auto;
   padding: ${({ $padding }) => ($padding ? $padding : "34px")};
   max-width: ${({ $width }) => ($width ? $width : "345px")};
@@ -311,7 +314,6 @@ const TopContainer = styled.div<{
 `;
 
 const TopPreviewContainer = styled(TopContainer)`
-  margin-top: ${(props) => (props.$contentType === "all" ? "20px" : "0px")};
   ${theme.fonts.subtitle}
 
   @media (max-height: 628px) {
@@ -340,7 +342,11 @@ const Date = styled.div<{ $showType: string }>`
   ${(props) => (props.$showType === "send" ? props.theme.fonts.caption03 : "")};
 `;
 
-const Content = styled.div<{ $showType: string; $contentType: string }>`
+const Content = styled.div<{
+  $showType: string;
+  $contentType: string;
+  $isImage: boolean;
+}>`
   width: 100%;
   ${(props) =>
     props.$showType === "previewSend" || props.$showType === "previewReceive"
@@ -351,7 +357,6 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
   align-items: center;
   text-align: left;
   box-sizing: border-box;
-  border-radius: 10px;
   padding: 10px 0;
   ${(props) =>
     (props.$showType === "previewSend" ||
@@ -359,7 +364,6 @@ const Content = styled.div<{ $showType: string; $contentType: string }>`
     props.$contentType === "one"
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
-  overflow: hidden;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -468,4 +472,8 @@ const UrlDate = styled.div`
   text-align: center;
   ${(props: any) => props.theme.fonts.caption02};
   color: ${(props: any) => props.theme.colors.gray500};
+`;
+
+const PaginationDiv = styled.div`
+  height: 16px;
 `;

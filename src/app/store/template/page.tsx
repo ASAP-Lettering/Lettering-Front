@@ -1,9 +1,8 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import Letter from "@/components/letter/Letter";
@@ -15,6 +14,7 @@ import {
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import LetterTemplateList from "@/components/letter/LetterTemplateList";
 import { ALL_TEMPLATES } from "@/constants/templates";
+import Header from "@/components/store/Header";
 
 const LetterTemplatePage = () => {
   const router = useRouter();
@@ -28,7 +28,6 @@ const LetterTemplatePage = () => {
   const [template, setTemplateType] = useState<number>(
     templateType || ALL_TEMPLATES[0]
   );
-  const totalPage = 10;
 
   /* SSR 완료 시 상태 업데이트 */
   const setSsrCompleted = useSsrComplectedState();
@@ -49,26 +48,21 @@ const LetterTemplatePage = () => {
     }));
     if (letterId) {
       if (independent === "true") {
-        router.push(`/letter/preview?letterId=${letterId}&independent=true`);
+        router.push(`/store/preview?letterId=${letterId}&independent=true`);
       } else {
-        router.push(`/letter/preview?letterId=${letterId}`);
+        router.push(`/store/preview?letterId=${letterId}`);
       }
     } else {
-      router.push("/letter/preview");
+      router.push("/store/preview");
     }
   };
 
   return (
-    <Layout>
-      <NavigatorBar
-        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
-        cancel={false}
-      />
+    <>
+      <Header current={3} edit={!!letterId} />
       <Container>
-        <Essential>* 필수</Essential>
         <Column>
-          <Label>편지지를 골라볼까요? *</Label>
-          <SmallText>마음에 드는 배경으로 편지를 보관할 수 있어요</SmallText>
+          <Label>편지지 고르기</Label>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -101,7 +95,7 @@ const LetterTemplatePage = () => {
           />
         </ButtonWrapper>
       </Container>
-    </Layout>
+    </>
   );
 };
 
@@ -119,22 +113,6 @@ export default function LetterTemplatePaging() {
   );
 }
 
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px 20px 20px 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 550px) {
-    padding-top: 0px;
-  }
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -143,17 +121,6 @@ const Container = styled.div`
   overflow-y: auto;
 
   &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const Essential = styled.div`
-  text-align: right;
-  color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.caption03};
-  margin-bottom: 17px;
-
-  @media (max-height: 780px) {
     display: none;
   }
 `;
@@ -167,37 +134,17 @@ const Label = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.title01};
+  ${(props) => props.theme.fonts.subtitle};
+  margin-bottom: 12px;
 
   @media (max-height: 628px) {
-    ${theme.fonts.title01};
+    ${theme.fonts.body6}
+    margin-bottom: 12px;
   }
 
   @media (max-height: 580px) {
-    ${theme.fonts.subtitle};
-  }
-
-  @media (max-height: 550px) {
-    ${theme.fonts.body14};
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.caption02};
-  margin-bottom: 33px;
-
-  @media (max-height: 680px) {
-    margin-bottom: 10px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body09};
-  }
-
-  @media (max-height: 550px) {
-    ${theme.fonts.body13};
-    margin-bottom: 24px;
+    ${theme.fonts.body10};
+    margin-bottom: 8px;
   }
 `;
 
@@ -208,9 +155,9 @@ const LetterWrapper = styled.div`
 `;
 
 const LetterContainer = styled.div`
-  width: 100px;
-  min-width: 276px;
-  max-height: 283px;
+  width: 100%;
+  min-height: 313px;
+  max-height: 313px;
 
   @media (max-height: 628px) {
     max-width: 250px;

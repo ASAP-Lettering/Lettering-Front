@@ -13,6 +13,7 @@ interface InputProps {
   readonly?: boolean;
   disabled?: boolean;
   height?: string;
+  padding?: string;
   isValid?: boolean;
   isValidChange?: (vaild: boolean) => void;
   errorMessage?: string;
@@ -51,6 +52,7 @@ const Input = (props: InputProps) => {
     readonly = false,
     disabled = false,
     height,
+    padding,
     isValid = true,
     isValidChange = (isVaild: boolean) => {},
     errorMessage,
@@ -83,6 +85,7 @@ const Input = (props: InputProps) => {
           readOnly={readonly}
           disabled={disabled}
           $height={height || "auto"}
+          $padding={padding}
         />
       ) : (
         <InputWrapper>
@@ -95,6 +98,7 @@ const Input = (props: InputProps) => {
             placeholder={placeholder}
             readOnly={readonly}
             disabled={disabled}
+            $padding={padding}
           />
           {icon && (
             <IconWrapper onClick={onIconClick} clickable={!!onIconClick}>
@@ -130,13 +134,8 @@ const sharedStyles = `
   border-radius: 8px;
   background: ${theme.colors.gray800};
   color: ${theme.colors.white};
-  ${(props: any) => props.theme.fonts.body07};
+  ${(props: any) => props.theme.fonts.body09};
   font-family: "Pretendard";
-
-  &::placeholder {
-    color: ${theme.colors.gray500};
-    ${(props: any) => props.theme.fonts.body07};
-  }
 
   &:disabled {
     border: none;
@@ -147,6 +146,7 @@ const sharedStyles = `
 const StyledInput = styled.input<{
   $inputType: inputType;
   $isVaild: boolean;
+  $padding?: string;
 }>`
   ${sharedStyles}
   height: 52px;
@@ -154,6 +154,11 @@ const StyledInput = styled.input<{
 
   font-size: 16px; // Safari 확대 방지
   transform-origin: left top;
+
+  &::placeholder {
+    color: ${theme.colors.gray500};
+    ${(props: any) => props.theme.fonts.body09};
+  }
 
   ${({ $inputType }) =>
     ($inputType === "underline" || $inputType === "signup") &&
@@ -196,18 +201,23 @@ const StyledInput = styled.input<{
 const StyledTextarea = styled.textarea<{
   $inputType: inputType;
   $height: string;
+  $padding?: string;
 }>`
   ${sharedStyles}
-
+  ${($padding) =>
+    $padding &&
+    css`
+      padding: props;
+    `}
   font-size: 16px; // Safari 확대 방지
   transform-origin: left top;
 
   height: ${({ $height }) => $height};
-  ${(props: any) => props.theme.fonts.body07};
+  ${(props: any) => props.theme.fonts.body09};
 
   &::placeholder {
-    ${(props: any) => props.theme.fonts.body07};
-    letter-spacing: 1px;
+    color: ${theme.colors.gray500};
+    ${(props: any) => props.theme.fonts.body09};
   }
 
   &::-webkit-scrollbar {
