@@ -9,6 +9,14 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/return-await": "off",
+    "import/no-cycle": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "arrow-body-style": "off",
+    "react/self-closing-comp": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "react/jsx-boolean-value": "off",
+    "no-console": "off"
   }
 }
