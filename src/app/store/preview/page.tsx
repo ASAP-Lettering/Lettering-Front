@@ -16,6 +16,7 @@ import {
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { registerLetterState } from "@/recoil/letterStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
+import Header from "@/components/store/Header";
 
 const LetterPreviewPage = () => {
   const router = useRouter();
@@ -84,14 +85,10 @@ const LetterPreviewPage = () => {
   };
 
   return (
-    <Layout>
-      <NavigatorBar
-        title={letterId ? "편지 수정하기" : "받은 편지 보관하기"}
-        cancel={false}
-      />
+    <>
+      <Header current={null} edit={!!letterId} />
       <Container>
         <Column>
-          <Label>이렇게 편지를 {letterId ? "수정" : "등록"}할까요?</Label>
           <LetterWrapper>
             <LetterContainer>
               <Letter
@@ -105,7 +102,7 @@ const LetterPreviewPage = () => {
                 isImage={isImage}
                 width="100%"
                 height="100%"
-                padding="25px 35px 20px 35px"
+                padding="30px 22px"
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (
@@ -130,7 +127,7 @@ const LetterPreviewPage = () => {
           />
         </ButtonWrapper>
       </Container>
-    </Layout>
+    </>
   );
 };
 
@@ -148,28 +145,13 @@ export default function LetterPreviewPaging() {
   );
 }
 
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px 20px 20px 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 628px) {
-    padding-top: 0px;
-  }
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 42px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -183,32 +165,6 @@ const Column = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: 40px;
-`;
-
-const Label = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.title01};
-  margin-top: 49px;
-  margin-bottom: 28px;
-
-  @media (max-height: 820px) {
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-
-  @media (max-height: 690px) {
-    margin-top: 0px;
-    margin-bottom: 10px;
-    ${theme.fonts.subtitle};
-  }
-
-  @media (max-height: 628px) {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    ${theme.fonts.body14};
-  }
 `;
 
 const LetterWrapper = styled.div`
@@ -237,8 +193,8 @@ const LetterContainer = styled.div`
   justify-content: center;
   width: 100%;
   max-width: 345px;
-  min-height: 398px;
-  max-height: 398px;
+  min-height: 445px;
+  max-height: 445px;
 
   @media (max-height: 660px) {
     max-width: 320px;

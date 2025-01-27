@@ -33,7 +33,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
     <SwipeableContainer {...handlers}>
       <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
         {contentType === "one" ? (
-          <ContentItem>
+          <ContentItem $isImage={isImage}>
             {isImage ? (
               <ImageContainer src={content[0]} />
             ) : (
@@ -41,17 +41,15 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             )}
           </ContentItem>
         ) : (
-          content.map((item, index) =>
-            isImage ? (
-              <ContentItem key={index}>
+          content.map((item, index) => (
+            <ContentItem key={index} $isImage={isImage}>
+              {isImage ? (
                 <ImageContainer src={content[index]} />
-              </ContentItem>
-            ) : (
-              <ContentItem key={index}>
+              ) : (
                 <ClampedText $contentType={contentType}>{item}</ClampedText>
-              </ContentItem>
-            )
-          )
+              )}
+            </ContentItem>
+          ))
         )}
       </ContentSlider>
     </SwipeableContainer>
@@ -63,15 +61,11 @@ export default SwipeableContent;
 const SwipeableContainer = styled.div`
   overflow: hidden;
   width: 100%;
-  min-height: 200px;
   height: auto;
   box-sizing: border-box;
-  border-radius: 10px;
-
   @media (max-width: 375px) {
     max-height: 235px;
   }
-
 `;
 
 const ContentSlider = styled.div`
@@ -79,46 +73,28 @@ const ContentSlider = styled.div`
   transition: transform 0.5s ease-out;
 `;
 
-const ContentItem = styled.div`
+const ContentItem = styled.div<{ $isImage: boolean }>`
   width: 100%;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  min-height: 200px;
-
+  ${($isImage) =>
+    $isImage &&
+    css`
+      border-radius: 10px;
+      overflow: hidden;
+    `}
 `;
-
-// const ContentImage = styled.img`
-//     width: 100%;
-//     height: 100%;
-//     object-fit: fill;
-//     object-position: center;
-//     position: absolute;
-//     width: 100%;
-//     top: 50%;
-//     left: 50%;
-//     transform: translate(-50%, -50%);
-
-//     -webkit-user-select: none;
-//     -khtml-user-select: none;
-//     -moz-user-select: none;
-//     -o-user-select: none;
-//     user-select: none;
-//     -webkit-user-drag: none;
-//     -khtml-user-drag: none;
-//     -moz-user-drag: none;
-//     -o-user-drag: none;
-// `;
 
 const ImageContainer = styled.div<{ src: string }>`
   width: 100%;
-  min-height: 230px;
-  max-height: 100%;
-  border-radius: 10px;
+  min-height: 310px;
+  max-height: 310px;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-clip: padding-box;
 
   -webkit-user-select: none;
   -khtml-user-select: none;

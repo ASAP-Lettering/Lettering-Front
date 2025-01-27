@@ -25,7 +25,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import { draftModalState } from "@/recoil/draftStore";
 import imageCompression from "browser-image-compression";
 
-const SendLetterPage = () => {
+const SendReceiverPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const [draftId, setDraftId] = useState<string | null>(null);
@@ -280,7 +280,7 @@ const SendLetterPage = () => {
       images: images,
       previewImages: previewImages,
     }));
-    router.push("/send/template");
+    router.push("/send/content");
   };
 
   /* 임시 저장 삭제 핸들러 */
@@ -333,99 +333,25 @@ const SendLetterPage = () => {
   };
 
   return (
-    <Layout>
-      <NavigatorBarWrapper>
-        <NavigatorBar title="편지 보내기" cancel={false} />
-        <ButtonDiv>
-          <DraftButton
-            onClick={handleSaveLetter}
-            disabled={isDraftDisabled || isImageUploadLoading}
-          >
-            {isImageUploadLoading ? "Loading..." : "임시저장"}
-          </DraftButton>
-          I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
-        </ButtonDiv>
-      </NavigatorBarWrapper>
+    <>
+      <ButtonDiv>
+        <DraftButton
+          onClick={handleSaveLetter}
+          disabled={isDraftDisabled || isImageUploadLoading}
+        >
+          {isImageUploadLoading ? "Loading..." : "임시저장"}
+        </DraftButton>
+        I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
+      </ButtonDiv>
       <Container>
-        <Essential>* 필수</Essential>
         <Column>
-          <Label>편지를 받을 이의 실명을 입력해주세요 *</Label>
+          <Label>편지 받는 사람</Label>
           <Input
             inputType="boxText"
             value={receiver}
             onChange={handleReceiverChange}
-            placeholder="ex) 홍길동"
+            placeholder="반드시 ‘성 + 이름' 의 실명으로 입력해주세요"
           />
-        </Column>
-        <Column>
-          <Label>
-            편지 내용을 작성해주세요 *
-            <Count>
-              <Span>{content.length}</Span>
-              /1000
-            </Count>
-          </Label>
-          <Input
-            inputType="boxTextArea"
-            value={content}
-            onChange={handleContentChange}
-            placeholder="최대 1000자까지 입력이 가능해요"
-            height="193px"
-          />
-        </Column>
-        <Column $position={true}>
-          <Label $show={false}>사진을 추가해주세요</Label>
-          {(previewImages || []).length === 0 ? (
-            <AddImageWrapper>
-              <AddImageLabel>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleAddImages}
-                  style={{ display: "none" }}
-                />
-                + 사진 불러오기 (선택)
-              </AddImageLabel>
-              <SmallText>최대 4장까지 사진 첨부가 가능해요</SmallText>
-            </AddImageWrapper>
-          ) : (
-            <ImagesList>
-              <AddImagesLabel onClick={handleShowToast}>
-                {previewImages.length < 4 && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleAddImages}
-                    style={{ display: "none" }}
-                    disabled={isButtonDisabled}
-                  />
-                )}
-                +<br />
-                {previewImages.length}/4
-              </AddImagesLabel>
-              <ImagesWrapper>
-                {previewImages.map((image, index) => (
-                  <ImageDiv>
-                    <Image
-                      src={image}
-                      fill
-                      alt="images"
-                      style={{ borderRadius: "8px" }}
-                    />
-                    <DeleteIcon onClick={() => handleDeleteImages(index)}>
-                      <Image
-                        src="/assets/icons/ic_image_delete.svg"
-                        fill
-                        alt="delete"
-                      />
-                    </DeleteIcon>
-                  </ImageDiv>
-                ))}
-              </ImagesWrapper>
-            </ImagesList>
-          )}
         </Column>
       </Container>
       <ButtonWrapper>
@@ -433,7 +359,7 @@ const SendLetterPage = () => {
           buttonType="primary"
           size="large"
           text={isImageUploadLoading ? "Loading..." : "다음"}
-          disabled={!receiver || !content || isImageUploadLoading}
+          disabled={!receiver}
           onClick={handleAddNext}
         />
       </ButtonWrapper>
@@ -454,34 +380,11 @@ const SendLetterPage = () => {
           cancelText="취소"
         />
       )}
-    </Layout>
+    </>
   );
 };
 
-export default SendLetterPage;
-
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 7px;
-  padding: 20px;
-  background-color: ${theme.colors.bg};
-  position: relative;
-
-  @media (max-height: 550px) {
-    padding-top: 0px;
-  }
-`;
-
-const NavigatorBarWrapper = styled.div`
-  width: 100%;
-  height: 44px;
-  display: flex;
-  position: relative;
-`;
+export default SendReceiverPage;
 
 const ButtonDiv = styled.div`
   display: inline-flex;
@@ -495,8 +398,8 @@ const ButtonDiv = styled.div`
   ${theme.fonts.caption03};
 
   position: absolute;
-  top: 6.5px;
-  right: 0px;
+  top: 26.5px;
+  right: 20px;
 
   @media (max-height: 628px) {
     ${theme.fonts.caption03};
@@ -557,20 +460,6 @@ const Container = styled.div`
   }
 `;
 
-const Essential = styled.div`
-  text-align: right;
-  color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.caption03};
-  margin-top: 25px;
-  margin-bottom: 17px;
-
-  @media (max-height: 790px) {
-    margin: 0;
-    position: absolute;
-    right: 24px;
-  }
-`;
-
 const Column = styled.div<{ $position?: boolean }>`
   margin-bottom: 40px;
 
@@ -621,145 +510,6 @@ const Label = styled.div<{ $show?: boolean }>`
   @media (max-height: 580px) {
     ${theme.fonts.body10}
     margin-bottom: 8px;
-  }
-`;
-
-const Count = styled.div`
-  display: flex;
-  color: ${theme.colors.gray400};
-  ${theme.fonts.body09};
-
-  @media (max-height: 628px) {
-    ${theme.fonts.body11};
-  }
-`;
-
-const Span = styled.span`
-  color: ${theme.colors.white};
-`;
-
-const AddImageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-`;
-
-const AddImageLabel = styled.label`
-  width: 100%;
-  height: 57px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 18px;
-  border-radius: 12px;
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.gray400};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  ${theme.fonts.body08}
-
-  @media (max-height: 628px) {
-    height: 48px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 580px) {
-    height: 42px;
-    ${theme.fonts.caption04}
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption04};
-  text-align: center;
-  margin-bottom: 100px;
-
-  @media (max-height: 550px) {
-    display: none;
-  }
-`;
-
-const AddImagesLabel = styled.label`
-  width: 52px;
-  height: 52px;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 8px;
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.body08};
-  text-align: center;
-
-  @media (max-height: 628px) {
-    width: 45px;
-    height: 45px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 580px) {
-    width: 39px;
-    height: 39px;
-    ${theme.fonts.body12};
-  }
-`;
-
-const ImagesList = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-top: 0px;
-  }
-`;
-
-const ImagesWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 13px;
-`;
-
-const ImageDiv = styled.div`
-  width: 52px;
-  height: 52px;
-  position: relative;
-
-  @media (max-height: 628px) {
-    width: 45px;
-    height: 45px;
-  }
-
-  @media (max-height: 580px) {
-    width: 39px;
-    height: 39px;
-  }
-`;
-
-const DeleteIcon = styled.button`
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  top: -5px;
-  right: -5px;
-
-  @media (max-height: 628px) {
-    width: 18px;
-    height: 18px;
-  }
-
-  @media (max-height: 580px) {
-    width: 13px;
-    height: 13px;
   }
 `;
 
