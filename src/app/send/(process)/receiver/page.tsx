@@ -14,7 +14,7 @@ import {
   postDraftKey,
   postDraftLetter
 } from '@/api/send/send';
-import DraftBottom from '@/components/send/DraftBottom';
+import DraftBottom from '@/components/draft/DraftBottom';
 import { draftState, sendLetterState } from '@/recoil/letterStore';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useToast } from '@/hooks/useToast';
@@ -22,6 +22,7 @@ import ConfirmModal from '@/components/common/ConfirmModal';
 import { draftModalState } from '@/recoil/draftStore';
 import BottomSheet from '@/components/common/BottomSheet';
 import { checkKorean } from '@/utils/checkKorean';
+import DraftButton from '@/components/draft/DraftButton';
 
 const SendReceiverPage = () => {
   const router = useRouter();
@@ -105,9 +106,7 @@ const SendReceiverPage = () => {
 
   /* 임시 저장 */
   const handleSaveLetter = async () => {
-    console.log('클릭');
-    console.log(isImageUploadLoading);
-    if (!receiver || !content) {
+    if (!receiver) {
       return;
     }
 
@@ -150,7 +149,6 @@ const SendReceiverPage = () => {
     } finally {
       setIsLoading(false);
     }
-    console.log('종료!');
   };
 
   /* 임시 저장 목록 */
@@ -236,15 +234,13 @@ const SendReceiverPage = () => {
 
   return (
     <>
-      <ButtonDiv>
-        <DraftButton
-          onClick={handleSaveLetter}
-          disabled={isDraftDisabled || isImageUploadLoading}
-        >
-          {isImageUploadLoading ? 'Loading...' : '임시저장'}
-        </DraftButton>
-        I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
-      </ButtonDiv>
+      <DraftButton
+        handleSaveLetter={handleSaveLetter}
+        handleDraftBottom={handleDraftBottom}
+        isDraftDisabled={isDraftDisabled}
+        isImageUploadLoading={isImageUploadLoading}
+        tempCount={tempCount}
+      />
       <Container>
         <Column>
           <Label>편지를 받는 사람</Label>
@@ -305,64 +301,6 @@ const SendReceiverPage = () => {
 };
 
 export default SendReceiverPage;
-
-const ButtonDiv = styled.div`
-  display: inline-flex;
-  padding: 6px 12px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 200px;
-  background: ${theme.colors.sub01};
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-
-  position: absolute;
-  top: 26.5px;
-  right: 20px;
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-    top: 6px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-    top: 7px;
-  }
-`;
-
-const DraftButton = styled.button`
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-  white-space: nowrap;
-
-  &:disabled {
-    opacity: 0.6;
-    transition: opacity 0.5s;
-  }
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-  }
-`;
-
-const ListButton = styled.button`
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-  }
-`;
 
 const Container = styled.div`
   width: 100%;
