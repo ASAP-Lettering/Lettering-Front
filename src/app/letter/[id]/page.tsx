@@ -43,6 +43,7 @@ const LetterPage = () => {
   //편지 수정 버튼 클릭
   const handleModify = () => {
     setLetterState({
+      draftId: null,
       senderName: letterData?.sender || '',
       content: letterData?.content || '',
       images: letterData?.images || [],

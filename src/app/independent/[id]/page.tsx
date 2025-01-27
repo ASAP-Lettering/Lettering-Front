@@ -34,6 +34,7 @@ const IndependentLetterPage = () => {
   //편지 수정 버튼 클릭
   const handleModify = () => {
     setLetterState({
+      draftId: null,
       senderName: letterData?.senderName || '',
       content: letterData?.content || '',
       images: letterData?.images || [],
