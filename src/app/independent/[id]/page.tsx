@@ -1,7 +1,6 @@
 'use client';
 
 import { getIndependentLetter } from '@/api/letter/letter';
-import { ModalDate, PopupBtn, PopupContainer } from '@/app/letter/[id]/page';
 import Button from '@/components/common/Button';
 import Loader from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';
@@ -242,6 +241,69 @@ const MainWrapper = styled.div`
   padding: 18px;
   overflow-y: auto;
   overflow-x: hidden;
+`;
+
+const PopupContainer = styled.div`
+  width: 88px;
+  height: 124px;
+  flex-shrink: 0;
+  position: absolute;
+  top: 54px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(62, 65, 81, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+  padding: 12px;
+  box-sizing: border-box;
+
+  @media (max-height: 628px) {
+    width: 78px;
+    height: 110px;
+  }
+
+  @media (max-height: 580px) {
+    width: 76px;
+    height: 95px;
+    padding: 10px;
+  }
+`;
+
+const ModalDate = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  white-space: nowrap;
+  ${(props) => props.theme.fonts.caption03};
+  color: ${theme.colors.gray400};
+  width: 100%;
+  justify-content: center;
+  padding-top: 8px;
+
+  @media (max-height: 628px) {
+    padding-top: 5px;
+  }
+
+  @media (max-height: 580px) {
+    padding-top: 0px;
+    ${theme.fonts.caption05}
+  }
+`;
+
+const PopupBtn = styled.button`
+  ${(props: any) => props.theme.fonts.button01};
+  color: ${(props: any) => props.theme.colors.white};
+  padding: 10px;
+
+  @media (max-height: 628px) {
+    padding: 5px;
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.button03};
+  }
 `;
 
 /*const Header = styled.div`

@@ -43,6 +43,7 @@
     "@types/react-slick": "^0.23.13",
     "@types/react-window": "^1.8.8",
     "eslint": "^8",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-next": "14.2.5",
     "stylelint": "^16.13.2",
     "stylelint-config-recommended": "^15.0.0",
