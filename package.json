@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "lint:style": "stylelint src/**/**.scss --fix"
+    "start": "next start"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -32,7 +30,8 @@
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.12"
+    "styled-components": "^6.1.12",
+    "stylelint-config-property-sort-order-smacss": "^10.0.0"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",

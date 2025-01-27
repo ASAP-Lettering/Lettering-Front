@@ -1,5 +1,4 @@
-// stylelint.config.js
-const sortOrderSmacss = require('stylelint-config-property-sort-order-smacss/generate');
+// const sortOrderSmacss = require('stylelint-config-property-sort-order-smacss/generate');
 
 module.exports = {
   plugins: ['stylelint-order'],
@@ -58,7 +57,6 @@ module.exports = {
     'selector-class-pattern': null,
     'rule-empty-line-before': null,
     'at-rule-empty-line-before': null,
-    'declaration-empty-line-before': null,
-    'order/properties-order': [sortOrderSmacss({ order: 'flexible' })]
+    'declaration-empty-line-before': null
   }
 };
