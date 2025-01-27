@@ -247,12 +247,12 @@ const SendReceiverPage = () => {
       </ButtonDiv>
       <Container>
         <Column>
-          <Label>편지 받는 사람</Label>
+          <Label>편지를 받는 사람</Label>
           <Input
             inputType="boxText"
             value={receiver}
             onChange={handleReceiverChange}
-            placeholder="반드시 ‘성 + 이름' 의 실명으로 입력해주세요"
+            placeholder="'성 + 이름' 의 실명을 입력해주세요"
           />
         </Column>
       </Container>
