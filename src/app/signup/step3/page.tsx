@@ -15,6 +15,7 @@ import { signupState, userInfo } from '@/recoil/signupStore';
 import { signup } from '@/api/login/user';
 import { setTokens } from '@/utils/storage';
 import { useToast } from '@/hooks/useToast';
+import { checkKorean } from '@/utils/checkKorean';
 
 const SignupStep3 = () => {
   const router = useRouter();
@@ -97,7 +98,7 @@ const SignupStep3 = () => {
       {isDisplayed && (
         <BottomSheet
           height={353}
-          title={`'${name}'가 본인 이름이 맞나요?`}
+          title={`'${name}'${checkKorean(name)} 본인 이름이 맞나요?`}
           subtitle="본인의 이름이 아닐 경우, 편지를 보내거나 받을 때에
           오류가 발생할 수 있어요"
           isOpen={isBottomUp}

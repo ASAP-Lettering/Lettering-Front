@@ -3,11 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { theme } from '@/styles/theme';
-import NavigatorBar from '@/components/common/NavigatorBar';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 import {
   deleteDraftLetter,
@@ -20,11 +18,10 @@ import DraftBottom from '@/components/send/DraftBottom';
 import { draftState, sendLetterState } from '@/recoil/letterStore';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useToast } from '@/hooks/useToast';
-import { postImage } from '@/api/image/image';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { draftModalState } from '@/recoil/draftStore';
-import imageCompression from 'browser-image-compression';
 import BottomSheet from '@/components/common/BottomSheet';
+import { checkKorean } from '@/utils/checkKorean';
 
 const SendReceiverPage = () => {
   const router = useRouter();
@@ -293,7 +290,9 @@ const SendReceiverPage = () => {
       {isDisplayed && (
         <BottomSheet
           height={353}
-          title={`'${receiver}'가 받는 분의 실명이 맞나요?`}
+          title={`'${receiver}'${checkKorean(
+            receiver
+          )} 받는 분의 실명이 맞나요?`}
           subtitle={`수신인이 편지를 열어보려면,\n반드시 실명으로 편지를 보내야 해요.`}
           isOpen={isBottomUp}
           confirmText="네, 맞아요"
