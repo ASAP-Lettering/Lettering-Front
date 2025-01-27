@@ -30,8 +30,7 @@
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.12",
-    "stylelint-config-property-sort-order-smacss": "^10.0.0"
+    "styled-components": "^6.1.12"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
@@ -42,12 +41,7 @@
     "@types/react-slick": "^0.23.13",
     "@types/react-window": "^1.8.8",
     "eslint": "^8",
-    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-next": "14.2.5",
-    "stylelint": "^16.13.2",
-    "stylelint-config-recommended": "^15.0.0",
-    "stylelint-config-styled-components": "^0.1.1",
-    "stylelint-processor-styled-components": "^1.10.0",
     "typescript": "^5"
   },
   "description": "- 프레임워크: Next.js\r - 언어: TypeScript\r - 패키지 매니저: npm\r - CSS 프레임워크: styled-components\r - 전역상태관리: Recoil\r - 통신: Axios\r - 그외: Lint & Prettier",
