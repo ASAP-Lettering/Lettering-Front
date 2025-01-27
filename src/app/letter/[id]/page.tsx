@@ -300,7 +300,7 @@ const IconWrapper = styled.div`
   gap: 8px;
 `;
 
-export const PopupContainer = styled.div`
+const PopupContainer = styled.div`
   width: 88px;
   height: 124px;
   flex-shrink: 0;
@@ -329,7 +329,7 @@ export const PopupContainer = styled.div`
   }
 `;
 
-export const ModalDate = styled.div`
+const ModalDate = styled.div`
   display: flex;
   box-sizing: border-box;
   white-space: nowrap;
@@ -349,7 +349,7 @@ export const ModalDate = styled.div`
   }
 `;
 
-export const PopupBtn = styled.button`
+const PopupBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
   padding: 10px;
