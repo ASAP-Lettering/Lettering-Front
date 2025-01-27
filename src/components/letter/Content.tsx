@@ -160,14 +160,16 @@ const ClampedText = styled.div<{ $contentType: contentType }>`
 const PopupOverlay = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 393px;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999999;
+  z-index: 99999;
 `;
 
 const PopupImage = styled.img`
