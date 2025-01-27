@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { theme } from '@/styles/theme';
 import Button from './Button';
+import Image from 'next/image';
 
 const BottomSheet = ({
   height,
@@ -74,6 +75,12 @@ const BottomSheet = ({
           <HandleBar style={{ borderRadius: 9999 }} />
         </BottomHeader>
         <SheetContentWrapper>
+          <Image
+            src={'/assets/images/bottomsheet/bottomsheet_letter.svg'}
+            width={40}
+            height={27}
+            alt="letter"
+          />
           <SheetContent>
             <TitleWrapper>
               <SheetTitle>{title}</SheetTitle>
@@ -85,10 +92,10 @@ const BottomSheet = ({
               text={confirmText}
               onClick={onConfirm}
             />
+            <WriteAgain onClick={() => handleOpen(false)}>
+              {cancelText}
+            </WriteAgain>
           </SheetContent>
-          <WriteAgain onClick={() => handleOpen(false)}>
-            {cancelText}
-          </WriteAgain>
         </SheetContentWrapper>
       </SheetBackground>
     </>
@@ -121,14 +128,14 @@ const SheetBackground = styled(motion.div)<{ $sheetHeight: number }>`
 `;
 
 const BottomHeader = styled.div`
-  height: 50px;
+  height: 56px;
   cursor: grab;
   padding-top: 12px;
   user-select: none;
 `;
 
 const HandleBar = styled.div`
-  width: 58px;
+  width: 77px;
   height: 4px;
   background: ${theme.colors.gray700};
   margin: 0 auto;
@@ -137,7 +144,10 @@ const HandleBar = styled.div`
 const SheetContentWrapper = styled.div`
   width: 100%;
   color: ${theme.colors.black};
-  padding: 24px;
+  padding: 0 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
 `;
 
 const SheetContent = styled.div`
@@ -147,7 +157,7 @@ const SheetContent = styled.div`
 `;
 
 const TitleWrapper = styled.div`
-  margin-bottom: 50px;
+  margin-bottom: 32px;
 `;
 
 const SheetTitle = styled.div`
@@ -163,7 +173,7 @@ const SheetSubTitle = styled.div`
 
 const WriteAgain = styled.button`
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   display: flex;
   text-align: center;
   align-items: center;
