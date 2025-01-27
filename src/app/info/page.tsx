@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import styled from "styled-components";
-import { useRouter } from "next/navigation";
-import { theme } from "@/styles/theme";
+import Button from '@/components/common/Button';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
+import { theme } from '@/styles/theme';
 
 export default function InfoPage() {
   const router = useRouter();
@@ -58,6 +58,10 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  @media (max-height: 680px) {
+    gap: 16px;
+  }
 `;
 
 const Header = styled.div`
@@ -68,11 +72,27 @@ const Header = styled.div`
 const ContentWrapper = styled.div`
   ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray200};
+
+  @media (max-height: 628px) {
+    ${(props) => props.theme.fonts.body09};
+  }
+
+  @media (max-height: 580px) {
+    padding: 15px 0 36px 0;
+  }
 `;
 
 const HeaderTitle = styled.div`
   width: 100%;
   ${(props) => props.theme.fonts.heading01};
+
+  @media (max-height: 628px) {
+    ${(props) => props.theme.fonts.title01};
+  }
+
+  @media (max-height: 580px) {
+    padding: 15px 0 36px 0;
+  }
 `;
 
 const ButtonWrapper = styled.div`

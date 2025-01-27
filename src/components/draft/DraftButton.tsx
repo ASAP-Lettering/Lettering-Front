@@ -44,17 +44,16 @@ const ButtonDiv = styled.div`
   ${theme.fonts.caption03};
 
   position: absolute;
-  top: 26.5px;
+  top: 26px;
   right: 20px;
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-    top: 6px;
-  }
 
   @media (max-height: 580px) {
     ${theme.fonts.body15};
-    top: 7px;
+  }
+
+  @media (max-height: 550px) {
+    ${theme.fonts.body12}
+    top: 9px;
   }
 `;
 

@@ -237,8 +237,12 @@ const StyledTextarea = styled.textarea<{
     background: transparent;
   }
 
+  @media (max-height: 670px) {
+    height: 250px;
+  }
+
   @media (max-height: 628px) {
-    height: 171px;
+    height: 230px;
     font-weight: 400;
     transform: scale(0.875);
     transform-origin: left top;

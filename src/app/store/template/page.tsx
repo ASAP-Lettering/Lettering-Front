@@ -160,27 +160,33 @@ const LetterContainer = styled.div`
   min-height: 284px;
   max-height: 284px;
 
+  @media (max-height: 725px) {
+    max-height: 250px;
+    min-height: 250px;
+  }
+
   @media (max-height: 628px) {
     max-width: 250px;
     min-width: 250px;
-    max-height: 260px;
-    min-height: 260px;
+    max-height: 230px;
+    min-height: 230px;
   }
 
   @media (max-height: 580px) {
-    max-width: 220px;
-    min-width: 220px;
-    max-height: 220px;
-    min-height: 220px;
+    max-width: 250px;
+    min-width: 250px;
+    max-height: 210px;
+    min-height: 210px;
   }
 
   @media (max-height: 550px) {
-    max-width: 178px;
-    min-width: 178px;
+    max-width: 240px;
+    min-width: 240px;
     max-height: 182px;
     min-height: 182px;
   }
 `;
+
 const ButtonWrapper = styled.div`
   width: 100%;
   position: absolute;

@@ -164,11 +164,27 @@ const SheetTitle = styled.div`
   ${theme.fonts.title01}
   color: ${theme.colors.white};
   padding: 5px 0;
+
+  @media (max-height: 628px) {
+    ${theme.fonts.title02};
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.subtitle};
+  }
 `;
 
 const SheetSubTitle = styled.div`
   ${theme.fonts.body07}
   color: ${theme.colors.gray300};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body09};
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.caption04};
+  }
 `;
 
 const WriteAgain = styled.button`

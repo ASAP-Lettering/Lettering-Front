@@ -359,6 +359,7 @@ const LetterContentPage = () => {
             onChange={handleContentChange}
             placeholder={`받은 편지에 어떤 내용이 담겨있나요?\n텍스트나 사진으로 편지 내용을 보관해보세요`}
             height="280px"
+            padding="24px 20px"
           />
         </div>
         <div>
