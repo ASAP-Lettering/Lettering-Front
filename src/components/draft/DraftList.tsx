@@ -1,14 +1,16 @@
-import { formatDate } from "@/lib/day";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import React from "react";
-import { useRecoilState } from "recoil";
-import styled from "styled-components";
-import { draftModalState } from "@/recoil/draftStore";
-import { sendLetterState } from "@/recoil/letterStore";
-import { getDraftLetter } from "@/api/send/send";
+import { formatDate } from '@/lib/day';
+import { theme } from '@/styles/theme';
+import Image from 'next/image';
+import React from 'react';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
+import { draftModalState } from '@/recoil/draftStore';
+import { registerLetterState, sendLetterState } from '@/recoil/letterStore';
+import { getDraftPhysicalLetter } from '@/api/draft/store';
+import { getDraftLetter } from '@/api/draft/send';
 
 interface DraftListProps {
+  draftType: 'send' | 'store';
   id: string;
   name: string;
   content: string;
@@ -19,31 +21,52 @@ interface DraftListProps {
 }
 
 const DraftList = (props: DraftListProps) => {
-  const { id, name, content, timestamp, isDeleteMode, onDelete, onClose } =
-    props;
+  const {
+    draftType,
+    id,
+    name,
+    content,
+    timestamp,
+    isDeleteMode,
+    onDelete,
+    onClose
+  } = props;
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
+  const [registerState, setRegisterState] = useRecoilState(registerLetterState);
 
   const handleConfirmModal = async () => {
     if (!letterState.receiverName && !letterState.content) {
       try {
-        const response = await getDraftLetter(id);
-        console.log("임시 저장 조회 성공", response.data);
+        const response =
+          draftType === 'send'
+            ? await await getDraftLetter(id)
+            : await getDraftPhysicalLetter(id);
+        console.log('임시 저장 조회 성공', response.data);
 
-        setLetterState({
-          draftId: response.data.draftKey,
-          receiverName: response.data.receiverName,
-          content: response.data.content,
-          images: response.data.images,
-          previewImages: response.data.images, // 미리보기로 이미지 불러오기
-          templateType: 0,
-          letterId: null,
-        });
+        draftType === 'send'
+          ? setLetterState({
+              draftId: response.data.draftKey,
+              receiverName: response.data.receiverName,
+              content: response.data.content,
+              images: response.data.images,
+              previewImages: response.data.images, // 미리보기로 이미지 불러오기
+              templateType: 0,
+              letterId: null
+            })
+          : setRegisterState({
+              draftId: response.data.draftKey,
+              senderName: response.data.senderName,
+              content: response.data.content,
+              images: response.data.images,
+              previewImages: response.data.images, // 미리보기로 이미지 불러오기
+              templateType: 0
+            });
 
         onClose();
       } catch {
-        console.log("임시 저장 조회 실패");
+        console.log('임시 저장 조회 실패');
       }
     } else {
       setDraftModal({ id: id, isOpen: !draftModal.isOpen });

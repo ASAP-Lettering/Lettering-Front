@@ -13,7 +13,7 @@ import {
   getDraftLetter,
   postDraftKey,
   postDraftLetter
-} from '@/api/send/send';
+} from '@/api/draft/send';
 import DraftBottom from '@/components/draft/DraftBottom';
 import { draftState, sendLetterState } from '@/recoil/letterStore';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -38,7 +38,7 @@ const SendReceiverPage = () => {
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
-  const [tempCount, setTempCount] = useState<number>(3);
+  const [tempCount, setTempCount] = useState<number>(0);
   const [isDraftBottom, setIsDraftBottom] = useState<boolean>(false);
 
   const [isDisplayed, setIsDisplayed] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const SendReceiverPage = () => {
   const draftKey = useRecoilValue(draftState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const isDraftDisabled = isLoading || (!receiver && !content);
+  const isDraftDisabled = isLoading || (!receiver && (!content || !images));
 
   useEffect(() => {
     if (letterState) {
@@ -110,7 +110,6 @@ const SendReceiverPage = () => {
       return;
     }
 
-    console.log('이후 코드 실행');
     try {
       setIsLoading(true);
 
@@ -156,6 +155,7 @@ const SendReceiverPage = () => {
     setIsDraftBottom(!isDraftBottom);
   };
 
+  /* 실명 확인 BottomSheet 관련 */
   const handleBottomUpChange = (state: boolean) => {
     setIsBottomUp(state);
   };
@@ -269,6 +269,7 @@ const SendReceiverPage = () => {
       {isDraftBottom && (
         <BottomWrapper>
           <DraftBottom
+            draftType="send"
             onClose={handleDraftBottom}
             handleDeleteDraft={handleDeleteDraft}
           />

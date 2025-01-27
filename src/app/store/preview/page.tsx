@@ -22,7 +22,7 @@ const LetterPreviewPage = () => {
   const searchParams = useSearchParams();
   const letterId = searchParams.get('letterId');
   const independent = searchParams.get('independent');
-  const { senderName, content, images, templateType } =
+  const { draftId, senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
 
   const [isImage, setIsImage] = useState<boolean>(false);
@@ -49,8 +49,8 @@ const LetterPreviewPage = () => {
             templateType
           });
           console.log('궤도 편지 수정 성공');
-          resetLetterState();
           router.push(`/independent/${letterId}`);
+          resetLetterState();
         } catch {
           console.log('궤도 편지 수정 실패');
         }
@@ -73,7 +73,13 @@ const LetterPreviewPage = () => {
     } else {
       /* 편지 등록 */
       try {
-        await postPhysicalLetter({ senderName, content, images, templateType });
+        await postPhysicalLetter({
+          draftId,
+          senderName,
+          content,
+          images,
+          templateType
+        });
         console.log('실물 편지 등록 성공');
         router.push('/planet');
         resetLetterState();

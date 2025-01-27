@@ -1,5 +1,4 @@
-import { getAccessToken } from "@/utils/storage";
-import client, { authClient } from "../client";
+import { authClient } from '../client';
 
 // 편지 조회
 export const getLetter = async (letterId: string) => {
@@ -21,31 +20,34 @@ export const postPhysicalLetter = async ({
   content,
   images,
   templateType,
+  draftId
 }: {
   senderName: string;
   content: string;
   images: string[];
   templateType: number;
+  draftId: string | null;
 }) => {
   return await authClient.post(`/api/v1/letters/physical/receive`, {
     senderName,
     content,
     images,
     templateType,
+    draftId
   });
 };
 
 // 이미지 업로드
 export const uploadImage = async ({ imageUrl }: { imageUrl: string }) => {
   return await authClient.post(`/api/v1/images`, {
-    imageUrl,
+    imageUrl
   });
 };
 
 // 편지 열람 가능 검증
 export const verifyLetter = async (letterCode: string) => {
   return await authClient.put(`/api/v1/letters/verify`, {
-    letterCode: letterCode,
+    letterCode: letterCode
   });
 };
 
@@ -57,7 +59,7 @@ export const getVerifyedLetter = async (letterId: string) => {
 // 편지 수령
 export const saveVerifyedLetter = async (letterId: string) => {
   return await authClient.post(`/api/v1/letters/verify/receive`, {
-    letterId: letterId,
+    letterId: letterId
   });
 };
 
@@ -67,7 +69,7 @@ export const putLetter = async ({
   senderName,
   content,
   images,
-  templateType,
+  templateType
 }: {
   letterId: string;
   senderName: string;
@@ -79,7 +81,7 @@ export const putLetter = async ({
     senderName,
     content,
     images,
-    templateType,
+    templateType
   });
 };
 
@@ -89,7 +91,7 @@ export const putIndependentLetter = async ({
   senderName,
   content,
   images,
-  templateType,
+  templateType
 }: {
   letterId: string;
   senderName: string;
@@ -103,7 +105,7 @@ export const putIndependentLetter = async ({
       senderName,
       content,
       images,
-      templateType,
+      templateType
     }
   );
 };

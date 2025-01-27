@@ -14,7 +14,7 @@ import {
   getDraftLetter,
   postDraftKey,
   postDraftLetter
-} from '@/api/send/send';
+} from '@/api/draft/send';
 import DraftBottom from '@/components/draft/DraftBottom';
 import { draftState, sendLetterState } from '@/recoil/letterStore';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -209,7 +209,7 @@ const SendContentPage = () => {
 
   /* 임시 저장 */
   const handleSaveLetter = async () => {
-    if (!receiver && !content) {
+    if (!receiver && (!content || !images)) {
       return;
     }
 
@@ -407,6 +407,7 @@ const SendContentPage = () => {
       {isDraftBottom && (
         <BottomWrapper>
           <DraftBottom
+            draftType="send"
             onClose={handleDraftBottom}
             handleDeleteDraft={handleDeleteDraft}
           />
