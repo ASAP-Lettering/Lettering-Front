@@ -400,7 +400,11 @@ const SendContentPage = () => {
           buttonType="primary"
           size="large"
           text={isImageUploadLoading ? 'Loading...' : '다음'}
-          disabled={!receiver || !content || isImageUploadLoading}
+          disabled={
+            !receiver ||
+            (!content && previewImages?.length === 0) ||
+            isImageUploadLoading
+          }
           onClick={handleAddNext}
         />
       </ButtonWrapper>
