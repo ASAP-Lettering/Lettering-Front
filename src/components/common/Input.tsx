@@ -1,8 +1,8 @@
-import { theme } from "@/styles/theme";
-import React, { ReactNode, useEffect } from "react";
-import styled, { css } from "styled-components";
+import { theme } from '@/styles/theme';
+import React, { ReactNode, useEffect } from 'react';
+import styled, { css } from 'styled-components';
 
-type inputType = "underline" | "boxText" | "boxTextArea" | "signup";
+type inputType = 'underline' | 'boxText' | 'boxTextArea' | 'signup';
 
 interface InputProps {
   inputType?: inputType;
@@ -44,7 +44,7 @@ function isValidKoreanInput(input: string): boolean {
 
 const Input = (props: InputProps) => {
   const {
-    inputType = "boxText",
+    inputType = 'boxText',
     value,
     label,
     onChange,
@@ -57,7 +57,7 @@ const Input = (props: InputProps) => {
     isValidChange = (isVaild: boolean) => {},
     errorMessage,
     icon,
-    onIconClick,
+    onIconClick
   } = props;
 
   const regex = /[^a-zA-Z0-9\u1100-\u11FF\u3131-\u318E\uAC00-\uD7AF\s]/g; // 특수문자
@@ -65,16 +65,16 @@ const Input = (props: InputProps) => {
     const newValue = event.target.value;
     isValidChange(isValidKoreanInput(newValue));
 
-    if (inputType === "signup") {
-      onChange(newValue.replace(regex, "")); // 특수문자입력불가
+    if (inputType === 'signup') {
+      onChange(newValue.replace(regex, '')); // 특수문자입력불가
     }
     onChange(newValue);
   };
 
-  const isTextarea = inputType === "boxTextArea";
+  const isTextarea = inputType === 'boxTextArea';
 
   return (
-    <Container $height={height || "auto"}>
+    <Container>
       {label && <Label>{label}</Label>}
       {isTextarea ? (
         <StyledTextarea
@@ -84,7 +84,7 @@ const Input = (props: InputProps) => {
           placeholder={placeholder}
           readOnly={readonly}
           disabled={disabled}
-          $height={height || "auto"}
+          $height={height || 'auto'}
           $padding={padding}
         />
       ) : (
@@ -92,7 +92,7 @@ const Input = (props: InputProps) => {
           <StyledInput
             $inputType={inputType}
             $isVaild={isValid}
-            type={"text"}
+            type={'text'}
             value={value}
             onChange={handleChange}
             placeholder={placeholder}
@@ -114,11 +114,10 @@ const Input = (props: InputProps) => {
 
 export default Input;
 
-const Container = styled.div<{ $height: string }>`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: ${({ $height }) => $height};
 `;
 
 const Label = styled.label`
@@ -161,7 +160,7 @@ const StyledInput = styled.input<{
   }
 
   ${({ $inputType }) =>
-    ($inputType === "underline" || $inputType === "signup") &&
+    ($inputType === 'underline' || $inputType === 'signup') &&
     css`
       padding: 16px 0px;
       border-radius: 0px;
@@ -204,11 +203,11 @@ const StyledTextarea = styled.textarea<{
   $padding?: string;
 }>`
   ${sharedStyles}
-  ${($padding) =>
+  ${({ $padding }) =>
     $padding &&
     css`
-      padding: props;
-    `}
+      padding: ${$padding};
+    `};
   font-size: 16px; // Safari 확대 방지
   transform-origin: left top;
 
@@ -276,5 +275,5 @@ const IconWrapper = styled.div<{ clickable: boolean }>`
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  cursor: ${({ clickable }) => (clickable ? "pointer" : "default")};
+  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
 `;
