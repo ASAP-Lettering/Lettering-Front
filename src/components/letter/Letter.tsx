@@ -1,19 +1,19 @@
-import React, { use, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import Pagination from "./Pagination";
-import SwipeableContent from "./Content";
-import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import ConfirmModal from "../common/ConfirmModal";
-import { deleteIndependentLetter, deleteLetter } from "@/api/letter/letter";
-import { useRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
-import { flipAnimation } from "@/styles/animation";
-import { useToast } from "@/hooks/useToast";
+import React, { use, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import Pagination from './Pagination';
+import SwipeableContent from './Content';
+import { theme } from '@/styles/theme';
+import { useRouter } from 'next/navigation';
+import ConfirmModal from '../common/ConfirmModal';
+import { deleteIndependentLetter, deleteLetter } from '@/api/letter/letter';
+import { useRecoilState } from 'recoil';
+import { registerLetterState } from '@/recoil/letterStore';
+import { flipAnimation } from '@/styles/animation';
+import { useToast } from '@/hooks/useToast';
 
-type showType = "previewSend" | "previewReceive" | "receive" | "send" | "url";
-export type contentType = "one" | "all";
-type pageType = "independent" | "space";
+type showType = 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
+export type contentType = 'one' | 'all';
+type pageType = 'independent' | 'space';
 
 interface LetterProps {
   showType: showType;
@@ -37,8 +37,8 @@ interface LetterProps {
 const Letter = (props: LetterProps) => {
   const {
     showType,
-    contentType = "all",
-    pageType = "independent",
+    contentType = 'all',
+    pageType = 'independent',
     id,
     templateType,
     name,
@@ -50,7 +50,7 @@ const Letter = (props: LetterProps) => {
     height,
     padding,
     readOnly = false,
-    nextLetterId,
+    nextLetterId
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -82,27 +82,27 @@ const Letter = (props: LetterProps) => {
   /* 페이지 내용 분할 처리 */
   useEffect(() => {
     if (!isImage && content) {
-      const container = document.querySelector(".ContentContainer"); // content 부모 컨테이너
+      const container = document.querySelector('.ContentContainer'); // content 부모 컨테이너
       if (!container) return;
 
-      const maxLinesPerPage = contentType === "one" ? 7 : 12;
+      const maxLinesPerPage = contentType === 'one' ? 7 : 12;
 
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
 
       if (context) {
         canvas.width = container.clientWidth; // 부모 컨테이너의 width 기준
-        context.font = "16px Pretendard";
+        context.font = '16px Pretendard';
         const maxWidth = container.clientWidth;
 
-        let currentLine = "";
+        let currentLine = '';
         let lines: string[] = [];
 
         for (let i = 0; i < content.length; i++) {
           const char = content[i];
-          if (char === "\n") {
+          if (char === '\n') {
             lines.push(currentLine.trim());
-            currentLine = "";
+            currentLine = '';
             continue;
           }
 
@@ -118,7 +118,7 @@ const Letter = (props: LetterProps) => {
 
         const paginated = [];
         for (let i = 0; i < lines.length; i += maxLinesPerPage) {
-          paginated.push(lines.slice(i, i + maxLinesPerPage).join("\n"));
+          paginated.push(lines.slice(i, i + maxLinesPerPage).join('\n'));
         }
 
         setPaginatedContent(paginated);
@@ -127,19 +127,19 @@ const Letter = (props: LetterProps) => {
   }, [content, isImage, contentType]);
 
   const totalPage =
-    contentType === "one"
+    contentType === 'one'
       ? 1
       : isImage
       ? images?.length ?? 0
       : paginatedContent.length;
 
   function replaceDashWithDot(dateString: string) {
-    return dateString.replace(/-/g, ".");
+    return dateString.replace(/-/g, '.');
   }
 
   //삭제 모달 관리
   const handleConfirm = () => {
-    if (pageType === "independent") {
+    if (pageType === 'independent') {
       deleteIndependentLetter(id.toString()).then((res) =>
         console.log(res.data)
       );
@@ -149,12 +149,12 @@ const Letter = (props: LetterProps) => {
     if (nextLetterId) {
       router.push(`/letter/${nextLetterId}`);
     } else {
-      router.push("/planet");
+      router.push('/planet');
     }
     showToast(`${name} 님의 편지가 삭제되었어요`, {
       icon: false,
       close: true,
-      bottom: "80px",
+      bottom: '80px'
     });
   };
 
@@ -166,12 +166,12 @@ const Letter = (props: LetterProps) => {
   const handleModify = () => {
     setLetterState({
       senderName: name,
-      content: content || "",
+      content: content || '',
       images: images || [],
       previewImages: images || [],
-      templateType: templateType,
+      templateType: templateType
     });
-    if (pageType === "independent") {
+    if (pageType === 'independent') {
       router.push(`/store/sender?letterId=${id}&independent=true`);
     } else {
       router.push(`/store/sender?letterId=${id}`);
@@ -185,7 +185,7 @@ const Letter = (props: LetterProps) => {
       $height={height}
       $padding={padding}
       $showType={showType}
-      className={flip ? "flip" : ""}
+      className={flip ? 'flip' : ''}
     >
       {isDelete && (
         <ConfirmModal
@@ -202,11 +202,11 @@ const Letter = (props: LetterProps) => {
           <DeleteBtn onClick={() => setIsDelete(true)}>삭제</DeleteBtn>
         </PopupContainer>
       )}
-      {(showType === "receive" || showType === "send") && (
+      {(showType === 'receive' || showType === 'send') && (
         <>
           <TopContainer $contentType={contentType}>
             <Name $showType={showType} $contentType={contentType}>
-              {`${showType === "send" ? `To. ` : `From. `} ${name}`}
+              {`${showType === 'send' ? `To. ` : `From. `} ${name}`}
             </Name>
             {/* {!readOnly && (
               <button onClick={() => setIsPopup(!isPopup)}>
@@ -216,15 +216,15 @@ const Letter = (props: LetterProps) => {
           </TopContainer>
         </>
       )}
-      {(showType === "send" || (showType === "previewSend" && isImage)) && (
+      {(showType === 'send' || (showType === 'previewSend' && isImage)) && (
         <Date $showType="send">{date}</Date>
       )}
-      {(showType === "previewReceive" || showType === "previewSend") && (
+      {(showType === 'previewReceive' || showType === 'previewSend') && (
         <>
           <TopPreviewContainer $contentType={contentType}>
             {name && (
               <Name $showType={showType} $contentType={contentType}>
-                {`${showType === "previewSend" ? `To. ` : `From. `} ${name}`}
+                {`${showType === 'previewSend' ? `To. ` : `From. `} ${name}`}
               </Name>
             )}
           </TopPreviewContainer>
@@ -245,13 +245,13 @@ const Letter = (props: LetterProps) => {
           page={currentPage}
         />
       </Content>
-      {showType === "url" && (
+      {showType === 'url' && (
         <UrlWrapper>
           <UrlName>From. {name}</UrlName>
           <UrlDate>{date}</UrlDate>
         </UrlWrapper>
       )}
-      {contentType === "all" &&
+      {contentType === 'all' &&
         (totalPage > 1 ? (
           <Pagination
             currentPage={currentPage}
@@ -271,19 +271,19 @@ const Container = styled.div<{
   $width?: string;
   $height?: string;
   $padding?: string;
-  $showType: "previewSend" | "previewReceive" | "receive" | "send" | "url";
+  $showType: 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
 }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  gap: 20px;
+  gap: ${(props) => (props.$showType === 'receive' ? '0px' : '20px')};
   height: auto;
-  padding: ${({ $padding }) => ($padding ? $padding : "34px")};
-  max-width: ${({ $width }) => ($width ? $width : "345px")};
-  max-height: ${({ $height }) => ($height ? $height : "349px")};
-  min-height: ${({ $height }) => ($height ? $height : "349px")};
+  padding: ${({ $padding }) => ($padding ? $padding : '34px')};
+  max-width: ${({ $width }) => ($width ? $width : '345px')};
+  max-height: ${({ $height }) => ($height ? $height : '349px')};
+  min-height: ${({ $height }) => ($height ? $height : '349px')};
   background-image: ${({ $templateType }) =>
     `url('/assets/letter/background_${$templateType}.png')`};
   background-size: cover;
@@ -339,7 +339,7 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
 const Date = styled.div<{ $showType: string }>`
   color: ${theme.colors.gray400};
   ${(props) => props.theme.fonts.body09};
-  ${(props) => (props.$showType === "send" ? props.theme.fonts.caption03 : "")};
+  ${(props) => (props.$showType === 'send' ? props.theme.fonts.caption03 : '')};
 `;
 
 const Content = styled.div<{
@@ -349,7 +349,7 @@ const Content = styled.div<{
 }>`
   width: 100%;
   ${(props) =>
-    props.$showType === "previewSend" || props.$showType === "previewReceive"
+    props.$showType === 'previewSend' || props.$showType === 'previewReceive'
       ? `flex: 1; height: calc(100% - 80px);`
       : `height: 90%;`}
   display: flex;
@@ -359,9 +359,9 @@ const Content = styled.div<{
   box-sizing: border-box;
   padding: 10px 0;
   ${(props) =>
-    (props.$showType === "previewSend" ||
-      props.$showType === "previewReceive") &&
-    props.$contentType === "one"
+    (props.$showType === 'previewSend' ||
+      props.$showType === 'previewReceive') &&
+    props.$contentType === 'one'
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
   -webkit-user-select: none;

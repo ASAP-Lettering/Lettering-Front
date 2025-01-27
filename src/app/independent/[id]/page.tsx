@@ -1,16 +1,20 @@
-"use client";
+'use client';
 
-import { getIndependentLetter } from "@/api/letter/letter";
-import Button from "@/components/common/Button";
-import Loader from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Letter from "@/components/letter/Letter";
-import { theme } from "@/styles/theme";
-import { IndependentLetterType, LetterDetailType } from "@/types/letter";
-import { getAccessToken } from "@/utils/storage";
-import { useParams, useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+import { getIndependentLetter } from '@/api/letter/letter';
+import { ModalDate, PopupBtn, PopupContainer } from '@/app/letter/[id]/page';
+import Button from '@/components/common/Button';
+import Loader from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import Letter from '@/components/letter/Letter';
+import { useToast } from '@/hooks/useToast';
+import { registerLetterState } from '@/recoil/letterStore';
+import { theme } from '@/styles/theme';
+import { IndependentLetterType, LetterDetailType } from '@/types/letter';
+import { getAccessToken } from '@/utils/storage';
+import { useParams, useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
 
 const IndependentLetterPage = () => {
   const router = useRouter();
@@ -23,6 +27,35 @@ const IndependentLetterPage = () => {
   );
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
+  const [letterState, setLetterState] = useRecoilState(registerLetterState);
+  const [isPopup, setIsPopup] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const { showToast } = useToast();
+
+  //편지 수정 버튼 클릭
+  const handleModify = () => {
+    setLetterState({
+      senderName: letterData?.senderName || '',
+      content: letterData?.content || '',
+      images: letterData?.images || [],
+      previewImages: letterData?.images || [],
+      templateType: letterData?.templateType || 1
+    });
+
+    router.push(`/store/sender?letterId=${id}`);
+  };
+
+  //편지 행성 변경
+  const handlePlanet = () => {
+    router.push(
+      `/planet/move?letter=${id}&senderName=${letterData?.senderName}`
+    );
+  };
+
+  const handleCancel = () => {
+    setIsDelete(false);
+    setIsPopup(false);
+  };
 
   const handleButtonClick = (id: string) => {
     router.push(`/independent/${id}`);
@@ -31,6 +64,10 @@ const IndependentLetterPage = () => {
   const changeImageorContent = () => {
     setIsImage(!isImage);
     setKey(key + 1);
+  };
+
+  const replaceDashWithDot = (dateString: string) => {
+    return dateString.replace(/-/g, '.');
   };
 
   useEffect(() => {
@@ -62,13 +99,36 @@ const IndependentLetterPage = () => {
       <NavigatorBarWrapper>
         <NavigatorBar cancel={false} url="/planet" title="새 편지함" />
       </NavigatorBarWrapper>
+      <IconWrapper>
+        <img
+          src="/assets/icons/ic_edit_2.svg"
+          alt="Edit"
+          onClick={handleModify}
+        />
+        <img
+          src="/assets/icons/ic_more.svg"
+          alt="More options"
+          onClick={() => {
+            setIsPopup(!isPopup);
+          }}
+        ></img>
+        {isPopup && (
+          <PopupContainer>
+            {letterData.sendDate && (
+              <ModalDate>{replaceDashWithDot(letterData.sendDate)}</ModalDate>
+            )}
+            <PopupBtn onClick={handlePlanet}>이동</PopupBtn>
+            <PopupBtn onClick={() => setIsDelete(true)}>삭제</PopupBtn>
+          </PopupContainer>
+        )}
+      </IconWrapper>
       <MainWrapper>
         <LetterContainer>
           <Letter
             showType="receive"
             key={key}
             contentType="all"
-            id={letterId || ""}
+            id={letterId || ''}
             templateType={letterData.templateType}
             name={letterData.senderName}
             content={letterData.content}
@@ -83,7 +143,7 @@ const IndependentLetterPage = () => {
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
-              클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
+              클릭하면 {isImage ? '편지 내용' : '사진'}을 확인할 수 있어요!
             </div>
           </ChangeButtonWrapper>
         ) : (
@@ -118,7 +178,7 @@ const IndependentLetterPage = () => {
           buttonType="primary"
           size="large"
           text="답장하기"
-          onClick={() => router.push("/send/letter")}
+          onClick={() => router.push('/send/letter')}
         />
       </ButtonContainer>
     </Container>
@@ -162,6 +222,16 @@ const NavigatorBarWrapper = styled.div`
   padding: 18px 18px 9px 18px;
 `;
 
+const IconWrapper = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: end;
+  padding: 0 18px;
+  margin-bottom: 10px;
+  gap: 8px;
+`;
+
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -169,13 +239,13 @@ const MainWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 0 18px;
+  padding: 18px;
   overflow-y: auto;
   overflow-x: hidden;
 `;
 
-const Header = styled.div`
-  display: flex;
+/*const Header = styled.div`
+   display: flex;
   flex-direction: row;
   padding-bottom: 15px;
   width: 100%;
@@ -210,7 +280,7 @@ const HeaderTitle = styled.div`
       ${(props) => props.theme.fonts.body07};
     }
   }
-`;
+`; */
 
 const LetterContainer = styled.div`
   display: flex;
