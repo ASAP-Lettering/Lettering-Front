@@ -1,53 +1,53 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Input from "@/components/common/Input";
-import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import React, { useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import Input from '@/components/common/Input';
+import Button from '@/components/common/Button';
+import { useRouter } from 'next/navigation';
 
 import {
   deleteDraftLetter,
   getDraftCount,
   getDraftLetter,
   postDraftKey,
-  postDraftLetter,
-} from "@/api/send/send";
-import DraftBottom from "@/components/send/DraftBottom";
-import { draftState, sendLetterState } from "@/recoil/letterStore";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useToast } from "@/hooks/useToast";
-import { postImage } from "@/api/image/image";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { draftModalState } from "@/recoil/draftStore";
-import imageCompression from "browser-image-compression";
+  postDraftLetter
+} from '@/api/draft/send';
+import DraftBottom from '@/components/draft/DraftBottom';
+import { draftState, sendLetterState } from '@/recoil/letterStore';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useToast } from '@/hooks/useToast';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import { draftModalState } from '@/recoil/draftStore';
+import BottomSheet from '@/components/common/BottomSheet';
+import { checkKorean } from '@/utils/checkKorean';
+import DraftButton from '@/components/draft/DraftButton';
 
 const SendReceiverPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const [draftId, setDraftId] = useState<string | null>(null);
-  const [receiver, setReceiver] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [receiver, setReceiver] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [images, setImages] = useState<string[]>([]); // 서버 전송용
   const [previewImages, setPreviewImages] = useState<string[]>([]); // 미리보기용
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-  const [isToastShown, setIsToastShown] = useState(false);
 
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
-  const [tempCount, setTempCount] = useState<number>(3);
+  const [tempCount, setTempCount] = useState<number>(0);
   const [isDraftBottom, setIsDraftBottom] = useState<boolean>(false);
+
+  const [isDisplayed, setIsDisplayed] = useState<boolean>(false);
+  const [isBottomUp, setIsBottomUp] = useState<boolean>(false);
 
   const draftKey = useRecoilValue(draftState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const isDraftDisabled = isLoading || (!receiver && !content);
+  const isDraftDisabled = isLoading || (!receiver && (!content || !images));
 
   useEffect(() => {
     if (letterState) {
@@ -63,9 +63,9 @@ const SendReceiverPage = () => {
     if (draftKey) {
       try {
         const response = await getDraftLetter(draftKey);
-        console.log("임시 저장 편지 조회 성공", response);
+        console.log('임시 저장 편지 조회 성공', response);
       } catch {
-        console.log("임시 저장 편지 조회 실패");
+        console.log('임시 저장 편지 조회 실패');
       }
     }
   };
@@ -75,9 +75,9 @@ const SendReceiverPage = () => {
       try {
         const response = await getDraftCount();
         setTempCount(response.data.count);
-        console.log("임시 저장 개수 조회 성공", response);
+        console.log('임시 저장 개수 조회 성공', response);
       } catch {
-        console.log("임시 저장 개수 조회 실패");
+        console.log('임시 저장 개수 조회 실패');
       }
     };
 
@@ -100,130 +100,16 @@ const SendReceiverPage = () => {
     setReceiver(newValue);
     setLetterState((prevState) => ({
       ...prevState,
-      receiverName: newValue,
-    }));
-  };
-
-  const handleContentChange = (newValue: string) => {
-    const maxLength = 1000;
-    if (newValue.length > maxLength) {
-      setContent(newValue.substring(0, maxLength));
-    } else {
-      setContent(newValue);
-    }
-    setLetterState((prevState) => ({
-      ...prevState,
-      content: newValue,
-    }));
-  };
-
-  const handleShowToast = () => {
-    /* 토스트 메세지 보여지기 전*/
-    if (previewImages.length >= 4 && !isToastShown) {
-      showToast("사진 첨부는 최대 4장까지 가능해요.", {
-        icon: true,
-        close: false,
-        bottom: "113px",
-      });
-      setIsToastShown(true);
-    }
-  };
-
-  const handleAddImages = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = event.target.files;
-    if (files) {
-      const selectedImages: File[] = Array.from(files);
-      const existingImageCount = (previewImages || []).length;
-
-      // 총 이미지 개수를 4개로 제한
-      const additionalImagesNeeded = Math.max(0, 4 - existingImageCount);
-
-      // 초과된 이미지는 제외한 업로드 가능한 이미지
-      const validImages = selectedImages.slice(0, additionalImagesNeeded);
-
-      // 미리보기 이미지 업데이트
-      const newPreviewImages = [
-        ...(previewImages || []),
-        ...validImages.map((file) => URL.createObjectURL(file)),
-      ];
-
-      setPreviewImages(newPreviewImages);
-
-      // 총 이미지가 4개를 초과하려고 할 때 (토스트 메세지 보여지기 전)
-      if (selectedImages.length > additionalImagesNeeded && !isToastShown) {
-        showToast("사진 첨부는 최대 4장까지 가능해요.", {
-          icon: true,
-          close: false,
-          bottom: "113px",
-        });
-        setIsToastShown(true);
-        setIsButtonDisabled(false);
-      }
-
-      setIsButtonDisabled(false);
-
-      const imageUrls: string[] = [];
-      for (const file of validImages) {
-        const compressedFile = await imageCompression(file, {
-          maxSizeMB: 500,
-          maxWidthOrHeight: 512,
-          useWebWorker: true,
-        });
-
-        try {
-          setImageUploadLoading(true);
-
-          const response = await postImage(compressedFile);
-          console.log("이미지 업로드 성공", response.data);
-          imageUrls.push(response.data.imageUrl);
-        } catch (error) {
-          console.error("이미지 업로드 실패", error);
-        }
-      }
-      setImages((prevImages) => [...prevImages, ...imageUrls]);
-      setImageUploadLoading(false);
-
-      setLetterState((prevState) => ({
-        ...prevState,
-        images: [...(prevState.images || []), ...imageUrls],
-        previewImages: newPreviewImages,
-      }));
-    }
-  };
-
-  const handleDeleteImages = (id: number) => {
-    const updatedImages = images.filter((_, index) => index !== id);
-    const updatedPreviewImages = previewImages.filter(
-      (_, index) => index !== id
-    );
-
-    if (previewImages.length - 1 < 4) {
-      setIsButtonDisabled(false);
-    }
-
-    // 상태 업데이트
-    setImages(updatedImages);
-    setPreviewImages(updatedPreviewImages);
-
-    // setLetterState에 변경된 상태 반영
-    setLetterState((prevState) => ({
-      ...prevState,
-      images: updatedImages,
-      previewImages: updatedPreviewImages,
+      receiverName: newValue
     }));
   };
 
   /* 임시 저장 */
   const handleSaveLetter = async () => {
-    console.log("클릭");
-    console.log(isImageUploadLoading);
-    if (!receiver || !content) {
+    if (!receiver) {
       return;
     }
 
-    console.log("이후 코드 실행");
     try {
       setIsLoading(true);
 
@@ -232,43 +118,57 @@ const SendReceiverPage = () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
 
-      console.log("이미지 업로드 완료. 임시 저장 진행 중...");
+      console.log('이미지 업로드 완료. 임시 저장 진행 중...');
 
       // 1. 임시 저장 키 발급
       const draftKeyResponse = await postDraftKey();
       const newDraftId = draftKeyResponse.data.draftId;
       setDraftId(newDraftId);
-      console.log("임시 저장 키 발급 성공", newDraftId);
+      console.log('임시 저장 키 발급 성공', newDraftId);
 
       // 2. 발급된 임시 저장 키로 임시 저장 API 호출
       await postDraftLetter({
         draftId: newDraftId,
         content: content,
         receiverName: receiver,
-        images: images,
+        images: images
       });
-      console.log("임시 저장 성공");
+      console.log('임시 저장 성공');
       setTempCount(tempCount + 1);
 
       // 3. 토스트 메세지
-      showToast("작성하던 편지가 임시 저장됐어요.", {
+      showToast('작성하던 편지가 임시 저장됐어요.', {
         icon: true,
-        iconType: "message",
+        iconType: 'message',
         close: true,
-        bottom: "113px",
+        bottom: '113px'
       });
     } catch (error) {
-      console.error("임시 저장 실패", error);
+      console.error('임시 저장 실패', error);
     } finally {
       setIsLoading(false);
     }
-    console.log("종료!");
   };
 
   /* 임시 저장 목록 */
   const handleDraftBottom = () => {
     setIsDraftBottom(!isDraftBottom);
   };
+
+  /* 실명 확인 BottomSheet 관련 */
+  const handleBottomUpChange = (state: boolean) => {
+    setIsBottomUp(state);
+  };
+
+  useEffect(() => {
+    if (isBottomUp) {
+      setIsDisplayed(true);
+    } else {
+      setTimeout(() => {
+        setIsDisplayed(false);
+      }, 490);
+    }
+  }, [isBottomUp]);
 
   const handleAddNext = async () => {
     /* 다음 페이지 */
@@ -278,9 +178,9 @@ const SendReceiverPage = () => {
       receiverName: receiver,
       content: content,
       images: images,
-      previewImages: previewImages,
+      previewImages: previewImages
     }));
-    router.push("/send/content");
+    router.push('/send/content');
   };
 
   /* 임시 저장 삭제 핸들러 */
@@ -288,9 +188,9 @@ const SendReceiverPage = () => {
     try {
       await deleteDraftLetter(draftId);
       setTempCount((prevCount) => prevCount - 1);
-      console.log("임시 저장 편지가 삭제 성공");
+      console.log('임시 저장 편지가 삭제 성공');
     } catch (error) {
-      console.error("임시 저장 편지 삭제 실패", error);
+      console.error('임시 저장 편지 삭제 실패', error);
     }
   };
 
@@ -304,9 +204,9 @@ const SendReceiverPage = () => {
 
     try {
       const response = await getDraftLetter(draftModal.id);
-      console.log("임시 저장 조회 성공", response.data);
+      console.log('임시 저장 조회 성공', response.data);
 
-      console.log("상태 변경됨");
+      console.log('상태 변경됨');
       setLetterState({
         draftId: response.data.draftKey,
         receiverName: response.data.receiverName,
@@ -314,7 +214,7 @@ const SendReceiverPage = () => {
         images: response.data.images,
         previewImages: response.data.images,
         templateType: 0,
-        letterId: null,
+        letterId: null
       });
 
       // 각 input 상태 업데이트
@@ -328,44 +228,48 @@ const SendReceiverPage = () => {
       setDraftModal({ id: null, isOpen: false });
       setIsDraftBottom(false);
     } catch {
-      console.log("임시 저장 조회 실패");
+      console.log('임시 저장 조회 실패');
     }
   };
 
   return (
     <>
-      <ButtonDiv>
-        <DraftButton
-          onClick={handleSaveLetter}
-          disabled={isDraftDisabled || isImageUploadLoading}
-        >
-          {isImageUploadLoading ? "Loading..." : "임시저장"}
-        </DraftButton>
-        I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
-      </ButtonDiv>
+      <DraftButton
+        handleSaveLetter={handleSaveLetter}
+        handleDraftBottom={handleDraftBottom}
+        isDraftDisabled={isDraftDisabled}
+        isImageUploadLoading={isImageUploadLoading}
+        tempCount={tempCount}
+      />
       <Container>
         <Column>
-          <Label>편지 받는 사람</Label>
+          <Label>편지를 받는 사람</Label>
           <Input
             inputType="boxText"
             value={receiver}
             onChange={handleReceiverChange}
-            placeholder="반드시 ‘성 + 이름' 의 실명으로 입력해주세요"
+            placeholder="'성 + 이름' 의 실명을 입력해주세요"
           />
         </Column>
       </Container>
       <ButtonWrapper>
+        <DescriptionText onClick={() => router.push('/info')}>
+          왜 실명으로 해야 하나요?
+        </DescriptionText>
         <Button
           buttonType="primary"
           size="large"
-          text={isImageUploadLoading ? "Loading..." : "다음"}
+          text={isImageUploadLoading ? 'Loading...' : '다음'}
           disabled={!receiver}
-          onClick={handleAddNext}
+          onClick={() => {
+            setIsBottomUp(true);
+          }}
         />
       </ButtonWrapper>
       {isDraftBottom && (
         <BottomWrapper>
           <DraftBottom
+            draftType="send"
             onClose={handleDraftBottom}
             handleDeleteDraft={handleDeleteDraft}
           />
@@ -380,69 +284,24 @@ const SendReceiverPage = () => {
           cancelText="취소"
         />
       )}
+      {isDisplayed && (
+        <BottomSheet
+          height={353}
+          title={`'${receiver}'${checkKorean(
+            receiver
+          )} 받는 분의 실명이 맞나요?`}
+          subtitle={`수신인이 편지를 열어보려면,\n반드시 실명으로 편지를 보내야 해요.`}
+          isOpen={isBottomUp}
+          confirmText="네, 맞아요"
+          handleOpen={handleBottomUpChange}
+          onConfirm={handleAddNext}
+        />
+      )}
     </>
   );
 };
 
 export default SendReceiverPage;
-
-const ButtonDiv = styled.div`
-  display: inline-flex;
-  padding: 6px 12px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 200px;
-  background: ${theme.colors.sub01};
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-
-  position: absolute;
-  top: 26.5px;
-  right: 20px;
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-    top: 6px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-    top: 7px;
-  }
-`;
-
-const DraftButton = styled.button`
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-  white-space: nowrap;
-
-  &:disabled {
-    opacity: 0.6;
-    transition: opacity 0.5s;
-  }
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-  }
-`;
-
-const ListButton = styled.button`
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-  }
-`;
 
 const Container = styled.div`
   width: 100%;
@@ -519,6 +378,16 @@ const ButtonWrapper = styled.div`
   padding: 0 20px;
   bottom: 40px;
   left: 0;
+`;
+
+const DescriptionText = styled.button`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  text-decoration: underline;
+  ${theme.fonts.body09};
+  color: ${(props) => props.theme.colors.gray400};
 `;
 
 const BottomWrapper = styled.div`

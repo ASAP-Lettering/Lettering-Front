@@ -1,45 +1,105 @@
-"use client";
+'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import Input from "@/components/common/Input";
-import Button from "@/components/common/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { useRecoilState } from "recoil";
-import { registerLetterState } from "@/recoil/letterStore";
-import { useToast } from "@/hooks/useToast";
-import { postImage } from "@/api/image/image";
-import imageCompression from "browser-image-compression";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import Header from "@/components/store/Header";
+import React, { Suspense, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import Input from '@/components/common/Input';
+import Button from '@/components/common/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { draftState, registerLetterState } from '@/recoil/letterStore';
+import { useToast } from '@/hooks/useToast';
+import { postImage } from '@/api/image/image';
+import imageCompression from 'browser-image-compression';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import Header from '@/components/store/Header';
+import { draftModalState } from '@/recoil/draftStore';
+import {
+  deleteDraftPhysicalLetter,
+  getDraftPhysicalCount,
+  getDraftPhysicalLetter,
+  postDraftPhysicalKey,
+  postDraftPhysicalLetter
+} from '@/api/draft/store';
+import DraftBottom from '@/components/draft/DraftBottom';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import DraftButton from '@/components/draft/DraftButton';
 
 const LetterContentPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [sender, setSender] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [sender, setSender] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [images, setImages] = useState<string[]>([]); // 서버 전송용
   const [previewImages, setPreviewImages] = useState<string[]>([]); // 미리보기용
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  const [isToastShown, setIsToastShown] = useState(false);
+
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
 
+  const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
-  const [isToastShown, setIsToastShown] = useState(false);
+  const [tempCount, setTempCount] = useState<number>(3);
+  const [isDraftBottom, setIsDraftBottom] = useState<boolean>(false);
+
+  const draftKey = useRecoilValue(draftState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const isDraftDisabled = isLoading || (!sender && (!content || !images));
+
   const searchParams = useSearchParams();
-  const letterId = searchParams.get("letterId");
-  const independent = searchParams.get("independent");
+  const letterId = searchParams.get('letterId');
+  const independent = searchParams.get('independent');
 
   useEffect(() => {
     if (letterState) {
+      setDraftId(letterState.draftId);
       setSender(letterState.senderName);
       setContent(letterState.content);
       setImages(letterState.images);
       setPreviewImages(letterState.previewImages);
     }
   }, [letterState]);
+
+  const fetchGetDraft = async () => {
+    if (draftKey) {
+      try {
+        const response = await getDraftPhysicalLetter(draftKey);
+        console.log('임시 저장 편지 조회 성공', response);
+      } catch {
+        console.log('임시 저장 편지 조회 실패');
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchGetDraftCount = async () => {
+      try {
+        const response = await getDraftPhysicalCount();
+        setTempCount(response.data.count);
+        console.log('임시 저장 개수 조회 성공', response);
+      } catch {
+        console.log('임시 저장 개수 조회 실패');
+      }
+    };
+
+    fetchGetDraftCount();
+
+    if (draftKey) {
+      fetchGetDraft();
+    }
+
+    if (letterState) {
+      setDraftId(letterState.draftId);
+      setSender(letterState.senderName);
+      setContent(letterState.content);
+      setImages(letterState.images);
+      setPreviewImages(letterState.images);
+    }
+  }, [draftKey]);
 
   const handleContentChange = (newValue: string) => {
     const maxLength = 1000;
@@ -50,17 +110,17 @@ const LetterContentPage = () => {
     }
     setLetterState((prevState) => ({
       ...prevState,
-      content: newValue,
+      content: newValue
     }));
   };
 
   const handleShowToast = () => {
     /* 토스트 메세지 보여지기 전*/
     if (previewImages.length >= 4 && !isToastShown) {
-      showToast("사진 첨부는 최대 4장까지 가능해요.", {
+      showToast('사진 첨부는 최대 4장까지 가능해요.', {
         icon: true,
         close: false,
-        bottom: "113px",
+        bottom: '113px'
       });
       setIsToastShown(true);
     }
@@ -83,17 +143,17 @@ const LetterContentPage = () => {
       // 미리보기 이미지 업데이트
       const newPreviewImages = [
         ...(previewImages || []),
-        ...validImages.map((file) => URL.createObjectURL(file)),
+        ...validImages.map((file) => URL.createObjectURL(file))
       ];
 
       setPreviewImages(newPreviewImages);
 
       // 총 이미지가 4개를 초과하려고 할 때 (토스트 메세지 보여지기 전)
       if (selectedImages.length > additionalImagesNeeded && !isToastShown) {
-        showToast("사진 첨부는 최대 4장까지 가능해요.", {
+        showToast('사진 첨부는 최대 4장까지 가능해요.', {
           icon: true,
           close: false,
-          bottom: "113px",
+          bottom: '113px'
         });
         setIsToastShown(true);
         setIsButtonDisabled(false);
@@ -104,17 +164,17 @@ const LetterContentPage = () => {
         const compressedFile = await imageCompression(file, {
           maxSizeMB: 500,
           maxWidthOrHeight: 512,
-          useWebWorker: true,
+          useWebWorker: true
         });
 
         try {
           setImageUploadLoading(true);
 
           const response = await postImage(compressedFile);
-          console.log("이미지 업로드 성공", response.data);
+          console.log('이미지 업로드 성공', response.data);
           imageUrls.push(response.data.imageUrl);
         } catch (error) {
-          console.error("이미지 업로드 실패", error);
+          console.error('이미지 업로드 실패', error);
         }
       }
       setImages((prevImages) => [...prevImages, ...imageUrls]);
@@ -123,7 +183,7 @@ const LetterContentPage = () => {
       setLetterState((prevState) => ({
         ...prevState,
         images: [...(prevState.images || []), ...imageUrls],
-        previewImages: newPreviewImages,
+        previewImages: newPreviewImages
       }));
     }
   };
@@ -146,13 +206,13 @@ const LetterContentPage = () => {
     setLetterState((prevState) => ({
       ...prevState,
       images: updatedImages,
-      previewImages: updatedPreviewImages,
+      previewImages: updatedPreviewImages
     }));
   };
 
   useEffect(() => {
-    console.log("images", images);
-    console.log("previewImages", previewImages);
+    console.log('images', images);
+    console.log('previewImages', previewImages);
   }, [images, previewImages]);
 
   const handleAddNext = async () => {
@@ -161,24 +221,131 @@ const LetterContentPage = () => {
       ...prevState,
       content: content,
       images: images,
-      previewImages: previewImages,
+      previewImages: previewImages
     }));
     if (letterId) {
-      if (independent === "true") {
+      if (independent === 'true') {
         router.push(`/store/template?letterId=${letterId}&independent=true`);
       } else {
         router.push(`/store/template?letterId=${letterId}`);
       }
     } else {
-      router.push("/store/template");
+      router.push('/store/template');
+    }
+  };
+
+  /* 임시 저장 */
+  const handleSaveLetter = async () => {
+    if (!sender && !content) {
+      return;
+    }
+
+    console.log('이후 코드 실행');
+    try {
+      setIsLoading(true);
+
+      // 이미지 업로드 상태 확인
+      while (isImageUploadLoading) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+
+      console.log('이미지 업로드 완료. 임시 저장 진행 중...');
+
+      // 1. 임시 저장 키 발급
+      const draftKeyResponse = await postDraftPhysicalKey();
+      const newDraftId = draftKeyResponse.data.draftId;
+      setDraftId(newDraftId);
+      console.log('임시 저장 키 발급 성공', newDraftId);
+
+      // 2. 발급된 임시 저장 키로 임시 저장 API 호출
+      await postDraftPhysicalLetter({
+        draftId: newDraftId,
+        content: content,
+        senderName: sender,
+        images: images
+      });
+      console.log('임시 저장 성공');
+      setTempCount(tempCount + 1);
+
+      // 3. 토스트 메세지
+      showToast('작성하던 편지가 임시 저장됐어요.', {
+        icon: true,
+        iconType: 'message',
+        close: true,
+        bottom: '113px'
+      });
+    } catch (error) {
+      console.error('임시 저장 실패', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /* 임시 저장 목록 */
+  const handleDraftBottom = () => {
+    setIsDraftBottom(!isDraftBottom);
+  };
+
+  /* 임시 저장 삭제 핸들러 */
+  const handleDeleteDraft = async (draftId: string) => {
+    try {
+      await deleteDraftPhysicalLetter(draftId);
+      setTempCount((prevCount) => prevCount - 1);
+      console.log('임시 저장 편지가 삭제 성공');
+    } catch (error) {
+      console.error('임시 저장 편지 삭제 실패', error);
+    }
+  };
+
+  const handleCancelModal = () => {
+    setDraftModal({ id: draftModal.id, isOpen: !draftModal.isOpen });
+  };
+
+  const handleSelect = async () => {
+    if (!draftModal.id) return;
+    await handleSaveLetter();
+
+    try {
+      const response = await getDraftPhysicalLetter(draftModal.id);
+      console.log('임시 저장 조회 성공', response.data);
+
+      console.log('상태 변경됨');
+      setLetterState({
+        draftId: response.data.draftKey,
+        senderName: response.data.senerName,
+        content: response.data.content,
+        images: response.data.images,
+        previewImages: response.data.images,
+        templateType: 0
+      });
+
+      // 각 input 상태 업데이트
+      setDraftId(response.data.draftKey);
+      setSender(response.data.senderName);
+      setContent(response.data.content);
+      setImages(response.data.images);
+      setPreviewImages(response.data.images);
+
+      // 모달 닫기
+      setDraftModal({ id: null, isOpen: false });
+      setIsDraftBottom(false);
+    } catch {
+      console.log('임시 저장 조회 실패');
     }
   };
 
   return (
     <>
       <Header current={2} edit={!!letterId} />
+      <DraftButton
+        handleSaveLetter={handleSaveLetter}
+        handleDraftBottom={handleDraftBottom}
+        isDraftDisabled={isDraftDisabled}
+        isImageUploadLoading={isImageUploadLoading}
+        tempCount={tempCount}
+      />
       <Container>
-        <Column>
+        <div>
           <Label>
             편지 내용
             <Count>
@@ -192,67 +359,57 @@ const LetterContentPage = () => {
             onChange={handleContentChange}
             placeholder={`받은 편지에 어떤 내용이 담겨있나요?\n텍스트나 사진으로 편지 내용을 보관해보세요`}
             height="280px"
+            padding="24px 20px"
           />
-        </Column>
-        <Column $position={true}>
-          {(previewImages || []).length === 0 ? (
-            <AddImageWrapper>
-              <AddImageLabel>
+        </div>
+        <div>
+          <ImagesList>
+            <AddImagesLabel onClick={handleShowToast}>
+              {previewImages.length < 4 && (
                 <input
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={handleAddImages}
-                  style={{ display: "none" }}
+                  style={{ display: 'none' }}
+                  disabled={isButtonDisabled}
                 />
-                + 사진 불러오기 (선택)
-              </AddImageLabel>
-              <SmallText>최대 4장까지 사진 첨부가 가능해요</SmallText>
-            </AddImageWrapper>
-          ) : (
-            <ImagesList>
-              <AddImagesLabel onClick={handleShowToast}>
-                {previewImages.length < 4 && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleAddImages}
-                    style={{ display: "none" }}
-                    disabled={isButtonDisabled}
+              )}
+              <Image
+                src={'/assets/icons/ic_camera.svg'}
+                width={15}
+                height={13}
+                alt="이미지 추가"
+              />
+              {previewImages.length}/4
+            </AddImagesLabel>
+            <ImagesWrapper>
+              {previewImages.map((image, index) => (
+                <ImageDiv>
+                  <Image
+                    src={image}
+                    fill
+                    alt="images"
+                    style={{ borderRadius: '8px' }}
                   />
-                )}
-                +<br />
-                {previewImages.length}/4
-              </AddImagesLabel>
-              <ImagesWrapper>
-                {previewImages.map((image, index) => (
-                  <ImageDiv>
+                  <DeleteIcon onClick={() => handleDeleteImages(index)}>
                     <Image
-                      src={image}
+                      src="/assets/icons/ic_image_delete.svg"
                       fill
-                      alt="images"
-                      style={{ borderRadius: "8px" }}
+                      alt="delete"
                     />
-                    <DeleteIcon onClick={() => handleDeleteImages(index)}>
-                      <Image
-                        src="/assets/icons/ic_image_delete.svg"
-                        fill
-                        alt="delete"
-                      />
-                    </DeleteIcon>
-                  </ImageDiv>
-                ))}
-              </ImagesWrapper>
-            </ImagesList>
-          )}
-        </Column>
+                  </DeleteIcon>
+                </ImageDiv>
+              ))}
+            </ImagesWrapper>
+          </ImagesList>
+        </div>
       </Container>
       <ButtonWrapper>
         <Button
           buttonType="primary"
           size="large"
-          text={isImageUploadLoading ? "Loading..." : "다음"}
+          text={isImageUploadLoading ? 'Loading...' : '다음'}
           disabled={
             !sender ||
             (!content && previewImages?.length === 0) ||
@@ -261,6 +418,24 @@ const LetterContentPage = () => {
           onClick={handleAddNext}
         />
       </ButtonWrapper>
+      {isDraftBottom && (
+        <BottomWrapper>
+          <DraftBottom
+            draftType="store"
+            onClose={handleDraftBottom}
+            handleDeleteDraft={handleDeleteDraft}
+          />
+        </BottomWrapper>
+      )}
+      {draftModal.isOpen && (
+        <ConfirmModal
+          title={`작성 중인 편지를 임시저장하고\n선택한 편지를 불러올까요?`}
+          onConfirm={handleSelect}
+          onCancel={handleCancelModal}
+          confirmText="불러오기"
+          cancelText="취소"
+        />
+      )}
     </>
   );
 };
@@ -283,6 +458,7 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 13px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -291,34 +467,6 @@ const Container = styled.div`
 
   @media (max-height: 628px) {
     position: relative;
-  }
-`;
-
-const Column = styled.div<{ $position?: boolean }>`
-  margin-bottom: 40px;
-
-  @media (max-height: 710px) {
-    margin-bottom: 20px;
-  }
-
-  @media (max-height: 628px) {
-    ${({ $position }) =>
-      $position &&
-      css`
-        width: 100%;
-        position: absolute;
-        top: 300px;
-      `}
-  }
-
-  @media (max-height: 580px) {
-    ${({ $position }) =>
-      $position &&
-      css`
-        width: 100%;
-        position: absolute;
-        top: 280px;
-      `}
   }
 `;
 
@@ -355,58 +503,14 @@ const Span = styled.span`
   color: ${theme.colors.white};
 `;
 
-const AddImageWrapper = styled.div`
+const AddImagesLabel = styled.label`
+  width: 58px;
+  height: 58px;
+  padding: 13px 19px 7px 19px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
-`;
-
-const AddImageLabel = styled.label`
-  width: 100%;
-  height: 57px;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 18px;
-  border-radius: 12px;
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.gray400};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  ${theme.fonts.body08}
-
-  @media (max-height: 628px) {
-    height: 48px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 580px) {
-    height: 42px;
-    ${theme.fonts.caption04}
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption04};
-  text-align: center;
-  margin-bottom: 100px;
-
-  @media (max-height: 550px) {
-    display: none;
-  }
-`;
-
-const AddImagesLabel = styled.label`
-  width: 52px;
-  height: 52px;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
   border-radius: 8px;
   background: ${theme.colors.gray700};
   color: ${theme.colors.gray400};
@@ -430,25 +534,19 @@ const ImagesList = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-top: 0px;
-  }
+  gap: 11px;
 `;
 
 const ImagesWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 13px;
+  gap: 14px;
 `;
 
 const ImageDiv = styled.div`
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   position: relative;
 
   @media (max-height: 628px) {
@@ -463,11 +561,11 @@ const ImageDiv = styled.div`
 `;
 
 const DeleteIcon = styled.button`
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -4px;
+  right: -9px;
 
   @media (max-height: 628px) {
     width: 18px;
@@ -486,5 +584,13 @@ const ButtonWrapper = styled.div`
   padding: 0 20px;
   bottom: 40px;
   left: 0;
+  z-index: 1000;
+`;
+
+const BottomWrapper = styled.div`
+  width: 100%;
+  max-width: 393px;
+  position: absolute;
+  bottom: 0px;
   z-index: 1000;
 `;

@@ -1,6 +1,6 @@
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import styled, { css } from "styled-components";
+import { theme } from '@/styles/theme';
+import Image from 'next/image';
+import styled, { css } from 'styled-components';
 
 interface LetterTemplateListProps {
   selectedTemplate: number;
@@ -56,7 +56,7 @@ const TemplatesList = styled.div`
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
 
-  @media (max-height: 740px) {
+  @media (max-height: 760px) {
     margin-top: 30px;
     margin-bottom: 5px;
     ${theme.fonts.body14};

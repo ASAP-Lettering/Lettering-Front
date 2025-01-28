@@ -1,10 +1,10 @@
-import { AtomEffect, atom, useSetRecoilState } from "recoil";
-import { recoilPersist } from "recoil-persist";
+import { AtomEffect, atom, useSetRecoilState } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
 /* Next14에서 persistAtom 사용하기 */
 const ssrCompletedState = atom({
-  key: "SsrCompleted",
-  default: false,
+  key: 'SsrCompleted',
+  default: false
 });
 
 export const useSsrComplectedState = () => {
@@ -25,40 +25,41 @@ type DroppedItem = {
 };
 
 export const registerLetterState = atom({
-  key: "registerLetterState",
+  key: 'registerLetterState',
   default: {
-    senderName: "",
-    content: "",
+    draftId: null as string | null,
+    senderName: '',
+    content: '',
     images: [] as string[],
     previewImages: [] as string[],
-    templateType: 0,
+    templateType: 0
   },
-  effects_UNSTABLE: [persistAtomEffect],
+  effects_UNSTABLE: [persistAtomEffect]
 });
 
 export const sendLetterState = atom({
-  key: "sendLetterState",
+  key: 'sendLetterState',
   default: {
     draftId: null as string | null,
-    receiverName: "",
-    content: "",
+    receiverName: '',
+    content: '',
     images: [] as string[],
     previewImages: [] as string[],
     templateType: 0,
-    letterId: null as string | null,
+    letterId: null as string | null
   },
-  effects_UNSTABLE: [persistAtomEffect],
+  effects_UNSTABLE: [persistAtomEffect]
 });
 
 export const draftState = atom({
-  key: "draftState",
-  default: "",
+  key: 'draftState',
+  default: ''
 });
 
 export const droppedLetterState = atom<DroppedItem>({
-  key: "droppedLetterState",
+  key: 'droppedLetterState',
   default: {
-    tagId: "",
-    name: "",
-  },
+    tagId: '',
+    name: ''
+  }
 });

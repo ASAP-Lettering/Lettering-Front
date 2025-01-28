@@ -32,6 +32,7 @@ interface LetterProps {
   readOnly?: boolean;
   nextLetterId?: string;
   maxLineWidth?: number;
+  nameSize?: string;
 }
 
 const Letter = (props: LetterProps) => {
@@ -50,7 +51,8 @@ const Letter = (props: LetterProps) => {
     height,
     padding,
     readOnly = false,
-    nextLetterId
+    nextLetterId,
+    nameSize
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -165,6 +167,7 @@ const Letter = (props: LetterProps) => {
 
   const handleModify = () => {
     setLetterState({
+      draftId: null,
       senderName: name,
       content: content || '',
       images: images || [],
@@ -205,14 +208,13 @@ const Letter = (props: LetterProps) => {
       {(showType === 'receive' || showType === 'send') && (
         <>
           <TopContainer $contentType={contentType}>
-            <Name $showType={showType} $contentType={contentType}>
+            <Name
+              $showType={showType}
+              $contentType={contentType}
+              $nameSize={nameSize}
+            >
               {`${showType === 'send' ? `To. ` : `From. `} ${name}`}
             </Name>
-            {/* {!readOnly && (
-              <button onClick={() => setIsPopup(!isPopup)}>
-                <img src="/assets/icons/ic_more.svg" alt="More options" />
-              </button>
-            )} */}
           </TopContainer>
         </>
       )}
@@ -223,7 +225,11 @@ const Letter = (props: LetterProps) => {
         <>
           <TopPreviewContainer $contentType={contentType}>
             {name && (
-              <Name $showType={showType} $contentType={contentType}>
+              <Name
+                $showType={showType}
+                $contentType={contentType}
+                $nameSize={nameSize}
+              >
                 {`${showType === 'previewSend' ? `To. ` : `From. `} ${name}`}
               </Name>
             )}
@@ -278,7 +284,6 @@ const Container = styled.div<{
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  gap: ${(props) => (props.$showType === 'receive' ? '0px' : '20px')};
   height: auto;
   padding: ${({ $padding }) => ($padding ? $padding : '34px')};
   max-width: ${({ $width }) => ($width ? $width : '345px')};
@@ -321,11 +326,15 @@ const TopPreviewContainer = styled(TopContainer)`
   }
 `;
 
-const Name = styled.div<{ $showType: string; $contentType: string }>`
+const Name = styled.div<{
+  $showType: string;
+  $contentType: string;
+  $nameSize?: string;
+}>`
   display: flex;
   align-items: center;
   text-align: center;
-  ${(props) => props.theme.fonts.title01};
+  ${(props) => props.theme.fonts.subtitle};
 
   @media (max-height: 628px) {
     ${(props) => props.theme.fonts.body7};
@@ -334,6 +343,12 @@ const Name = styled.div<{ $showType: string; $contentType: string }>`
   @media (max-height: 580px) {
     ${(props) => props.theme.fonts.body10};
   }
+
+  ${({ $nameSize }) =>
+    $nameSize &&
+    css`
+      font-size: ${$nameSize};
+    `}
 `;
 
 const Date = styled.div<{ $showType: string }>`

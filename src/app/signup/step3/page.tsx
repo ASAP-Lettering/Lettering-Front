@@ -1,25 +1,26 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import Input from "@/components/common/Input";
-import { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import useMeasure from "react-use-measure";
-import BottomSheet from "@/components/common/BottomSheet";
-import { Suspense, useState } from "react";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import { signupState, userInfo } from "@/recoil/signupStore";
-import { signup } from "@/api/login/user";
-import { setTokens } from "@/utils/storage";
-import { useToast } from "@/hooks/useToast";
+import Button from '@/components/common/Button';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import styled from 'styled-components';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Input from '@/components/common/Input';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import useMeasure from 'react-use-measure';
+import BottomSheet from '@/components/common/BottomSheet';
+import { Suspense, useState } from 'react';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { signupState, userInfo } from '@/recoil/signupStore';
+import { signup } from '@/api/login/user';
+import { setTokens } from '@/utils/storage';
+import { useToast } from '@/hooks/useToast';
+import { checkKorean } from '@/utils/checkKorean';
 
 const SignupStep3 = () => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [viewportRef, { height: viewportHeight }] = useMeasure();
   const [isBottomUp, setIsBottomUp] = useState(false);
   const [isDisplayed, setIsDisplayed] = useState(false);
@@ -27,16 +28,16 @@ const SignupStep3 = () => {
   const [user, setUser] = useRecoilState(userInfo);
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
 
   const handleButtonClick = () => {
     if (canSignin()) {
       setIsBottomUp(true);
     } else {
-      showToast("형식에 맞지 않는 이름입니다!", {
+      showToast('형식에 맞지 않는 이름입니다!', {
         icon: true,
         close: false,
-        bottom: "120px",
+        bottom: '120px'
       });
       setIsDisplayed(false);
     }
@@ -53,21 +54,17 @@ const SignupStep3 = () => {
   }, [isBottomUp]);
 
   const handleLoginClick = () => {
-    //router.push(`/signin/complete`);
     signup({
       registerToken: registerToken,
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
       birthday: user.birthday,
-      realName: name,
+      realName: name
     })
       .then((res) => {
-        console.log("accessToken", res.data.accessToken);
-        // localStorage.setItem("lettering_access", res.data.accessToken);
-        // localStorage.setItem("lettering_refresh", res.data.refreshToken);
+        console.log('accessToken', res.data.accessToken);
         setTokens(res.data.accessToken, res.data.refreshToken);
-        // router.push(`/signup/complete`);
         if (url) {
           router.push(`/signup/complete?url=${url}`);
         } else {
@@ -77,16 +74,12 @@ const SignupStep3 = () => {
       })
       .catch((error) => {
         console.log(error);
-        router.push("/error");
+        router.push('/error');
         return;
       });
 
     console.log(user);
   };
-
-  //   useEffect(() => {
-  //     console.log(isVaild);
-  //   }, [name]);
 
   const canSignin = () => {
     if (isVaild && name.length > 0) {
@@ -104,8 +97,8 @@ const SignupStep3 = () => {
     <Container ref={viewportRef}>
       {isDisplayed && (
         <BottomSheet
-          viewport={`${viewportHeight - 30}px`}
-          title={`'${name}'가 본인 이름이 맞나요?`}
+          height={353}
+          title={`'${name}'${checkKorean(name)} 본인 이름이 맞나요?`}
           subtitle="본인의 이름이 아닐 경우, 편지를 보내거나 받을 때에
           오류가 발생할 수 있어요"
           isOpen={isBottomUp}
@@ -138,7 +131,7 @@ const SignupStep3 = () => {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/signup/step3/check")}>
+        <DescriptionText onClick={() => router.push('/info')}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button

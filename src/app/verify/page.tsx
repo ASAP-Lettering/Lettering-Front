@@ -3,7 +3,7 @@
 import Button from "@/components/common/Button";
 import NavigatorBar from "@/components/common/NavigatorBar";
 import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Input from "@/components/common/Input";
 import { Suspense, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -11,6 +11,7 @@ import { signup } from "@/api/login/user";
 import { signupState, userInfo } from "@/recoil/signupStore";
 import Loader, { LoaderContainer } from "@/components/common/Loader";
 import { setTokens } from "@/utils/storage";
+import { theme } from "@/styles/theme";
 
 const Verify = () => {
   const router = useRouter();
@@ -20,7 +21,6 @@ const Verify = () => {
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
 
   const handleButtonClick = () => {
-    //router.push(`/signin/complete`);
     signup({
       registerToken: registerToken,
       privatePermission: user.privatePermission,
@@ -31,8 +31,6 @@ const Verify = () => {
     })
       .then((res) => {
         console.log("accessToken", res.data.accessToken);
-        // localStorage.setItem("lettering_access", res.data.accessToken);
-        // localStorage.setItem("lettering_refresh", res.data.refreshToken);
         setTokens(res.data.accessToken, res.data.refreshToken);
       })
       .catch((error) => {
@@ -71,7 +69,7 @@ const Verify = () => {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/signin/step3/check")}>
+        <DescriptionText onClick={() => router.push("/info")}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button
@@ -126,14 +124,13 @@ const InputWrapper = styled.div`
 `;
 
 const DescriptionText = styled.button`
-    ${(props) => props.theme.fonts.regular14};
-    color: ${(props) => props.theme.colors.gray400};
-    text-decoration: underline;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 23px;
-    cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  text-decoration: underline;
+  ${theme.fonts.body09};
+  color: ${(props) => props.theme.colors.gray400};
 `;
 
 const HeaderTitle = styled.div`
@@ -143,10 +140,10 @@ const HeaderTitle = styled.div`
 `;
 
 const HeaderSubTitle = styled.div`
-    width: 100%;
-    ${(props) => props.theme.fonts.body07};
-    color: ${(props) => props.theme.colors.gray300};
-    padding-top: 10px;
+  width: 100%;
+  ${(props) => props.theme.fonts.body07};
+  color: ${(props) => props.theme.colors.gray300};
+  padding-top: 10px;
 `;
 
 const ButtonWrapper = styled.div`

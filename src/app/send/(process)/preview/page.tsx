@@ -1,19 +1,18 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Letter from "@/components/letter/Letter";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { postSendLtter } from "@/api/send/send";
-import { sendLetterState } from "@/recoil/letterStore";
-import useKakaoSDK from "@/hooks/useKakaoSDK";
-import { userState } from "@/recoil/userStore";
-import { getLetterShareStatus } from "@/api/letter/share";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import Button from '@/components/common/Button';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Letter from '@/components/letter/Letter';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { postSendLtter } from '@/api/send/send';
+import { sendLetterState } from '@/recoil/letterStore';
+import useKakaoSDK from '@/hooks/useKakaoSDK';
+import { userState } from '@/recoil/userStore';
+import { getLetterShareStatus } from '@/api/letter/share';
 
 const SendPreviewPage = () => {
   const router = useRouter();
@@ -23,7 +22,7 @@ const SendPreviewPage = () => {
     useRecoilValue(sendLetterState);
   const { name } = useRecoilValue(userState);
   const [isImage, setIsImage] = useState<boolean>(false);
-  const [letterCode, setLetterCode] = useState<string>("");
+  const [letterCode, setLetterCode] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSharing, setIsSharing] = useState<boolean>(false);
 
@@ -45,7 +44,7 @@ const SendPreviewPage = () => {
     const { Kakao, location } = window;
 
     if (!isKakaoLoaded) {
-      console.error("Kakao SDK is not loaded yet");
+      console.error('Kakao SDK is not loaded yet');
       return;
     }
 
@@ -56,12 +55,12 @@ const SendPreviewPage = () => {
         receiverName,
         content,
         images,
-        templateType,
+        templateType
       });
-      console.log("편지 쓰기 성공");
+      console.log('편지 쓰기 성공');
       setLetterState((prevState) => ({
         ...prevState,
-        letterId: response.data.letterCode,
+        letterId: response.data.letterCode
       }));
       setLetterCode(response.data.letterCode);
       console.log(response.data.letterCode);
@@ -72,38 +71,38 @@ const SendPreviewPage = () => {
         templateId: 112798,
         templateArgs: {
           senderName: name,
-          id: response.data.letterCode,
+          id: response.data.letterCode
         },
         serverCallbackArgs: {
-          requestType: "SHARE",
-          requestId: response.data.letterCode,
+          requestType: 'SHARE',
+          requestId: response.data.letterCode
         },
         // 카카오톡 미설치 시 카카오톡 설치 경로이동
-        installTalk: true,
+        installTalk: true
       });
       setIsLoading(false);
       setIsSharing(false);
     } catch (error) {
-      console.log("편지 전송 또는 카카오 공유 실패:", error);
+      console.log('편지 전송 또는 카카오 공유 실패:', error);
     }
   };
 
   // 3. 공유 완료 상태 폴링
   useEffect(() => {
     if (letterCode.length > 0) {
-      console.log("letterCode", letterCode);
+      console.log('letterCode', letterCode);
       let intervalTime = 300;
       const interval = setInterval(async () => {
         try {
-          const status = await getLetterShareStatus(letterCode || "");
+          const status = await getLetterShareStatus(letterCode || '');
           console.log(status);
           if (status.isShared) {
-            console.log("완료");
-            router.push("/send/complete");
+            console.log('완료');
+            router.push('/send/complete');
             clearInterval(interval); // 폴링 중단
           }
         } catch (error) {
-          console.error("공유 상태 조회 실패:", error);
+          console.error('공유 상태 조회 실패:', error);
         }
       }, intervalTime);
 
@@ -119,7 +118,7 @@ const SendPreviewPage = () => {
             <LetterContainer>
               <Letter
                 showType="previewSend"
-                id={"0"}
+                id={'0'}
                 templateType={templateType}
                 name={receiverName}
                 content={content}
@@ -127,7 +126,8 @@ const SendPreviewPage = () => {
                 isImage={isImage}
                 width="100%"
                 height="100%"
-                padding="30px 22px"
+                padding="38px 28px"
+                nameSize="18px"
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (
@@ -138,7 +138,7 @@ const SendPreviewPage = () => {
                   height={20}
                   alt="클릭"
                 />
-                클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요
+                클릭하면 {isImage ? '편지 내용' : '사진'}을 확인할 수 있어요
               </ChangeButton>
             )}
           </LetterWrapper>
@@ -171,7 +171,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 42px;
+  justify-content: center;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -184,6 +184,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin-bottom: 40px;
 `;
 
@@ -211,32 +212,29 @@ const LetterWrapper = styled.div`
 const LetterContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 345px;
-  min-height: 445px;
-  max-height: 445px;
+  min-height: 354px;
+  max-height: 354px;
 
   @media (max-height: 660px) {
-    max-width: 320px;
     min-height: 350px;
   }
 
   @media (max-height: 628px) {
-    max-width: 320px;
     min-height: 320px;
     max-height: 320px;
   }
 
   @media (max-height: 580px) {
-    max-width: 250px;
-    min-height: 250px;
-    max-height: 250px;
+    min-height: 300px;
+    max-height: 300px;
   }
 
   @media (max-height: 550px) {
-    max-width: 220px;
-    min-height: 220px;
-    max-height: 220px;
+    min-height: 280px;
+    max-height: 280px;
   }
 `;
 
@@ -248,7 +246,6 @@ const ChangeButton = styled.button`
   gap: 4px;
   color: ${theme.colors.gray300};
   ${(props) => props.theme.fonts.caption02};
-  margin-bottom: 100px;
 
   @media (max-height: 730px) {
     flex-direction: row;

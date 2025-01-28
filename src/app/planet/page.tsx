@@ -1,44 +1,44 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import Bottom from "@/components/common/Bottom";
-import Tag from "@/components/common/Tag";
-import { theme } from "@/styles/theme";
-import Pagination from "@/components/common/Pagination";
-import { useRouter } from "next/navigation";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { getMainId, getSpaceInfo, putSpace } from "@/api/planet/space/space";
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import Image from 'next/image';
+import Bottom from '@/components/common/Bottom';
+import Tag from '@/components/common/Tag';
+import { theme } from '@/styles/theme';
+import Pagination from '@/components/common/Pagination';
+import { useRouter } from 'next/navigation';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMainId, getSpaceInfo, putSpace } from '@/api/planet/space/space';
 import {
   getOrbitLetter,
   getPlanetLetterList,
   putLetterToIndep,
-  putLetterToPlanet,
-} from "@/api/planet/letter/spaceLetter";
-import Loader from "@/components/common/Loader";
-import { SpaceInfo } from "@/types/space";
+  putLetterToPlanet
+} from '@/api/planet/letter/spaceLetter';
+import Loader from '@/components/common/Loader';
+import { SpaceInfo } from '@/types/space';
 import {
   getAccessToken,
   getCookie,
   getInitUserToast,
   getOnboarding,
   setCookie,
-  setInitUserToast,
-} from "@/utils/storage";
-import { getLetterCount } from "@/api/letter/letter";
-import PlanetSlide from "@/components/planet/PlanetSlide";
-import { planetRefState } from "@/recoil/RefStore";
+  setInitUserToast
+} from '@/utils/storage';
+import { getLetterCount } from '@/api/letter/letter';
+import PlanetSlide from '@/components/planet/PlanetSlide';
+import { planetRefState } from '@/recoil/RefStore';
 import {
   droppedLetterState,
   registerLetterState,
-  sendLetterState,
-} from "@/recoil/letterStore";
-import { useToast } from "@/hooks/useToast";
-import Tooltip from "@/components/common/Tooltip";
-import { userState } from "@/recoil/userStore";
-import { spaceState } from "@/recoil/spaceStore";
-import { Orbit } from "@/types/orbit";
+  sendLetterState
+} from '@/recoil/letterStore';
+import { useToast } from '@/hooks/useToast';
+import Tooltip from '@/components/common/Tooltip';
+import { userState } from '@/recoil/userStore';
+import { spaceState } from '@/recoil/spaceStore';
+import { Orbit } from '@/types/orbit';
 
 const PlanetPage = () => {
   const router = useRouter();
@@ -69,36 +69,37 @@ const PlanetPage = () => {
   /* 홈에서 편지 등록 및 쓰기 store 초기화 */
   useEffect(() => {
     setRegisterState({
-      senderName: "",
-      content: "",
+      draftId: null,
+      senderName: '',
+      content: '',
       images: [],
       previewImages: [],
-      templateType: 0,
+      templateType: 0
     });
     setSendState({
       draftId: null,
-      receiverName: "",
-      content: "",
+      receiverName: '',
+      content: '',
       images: [] as string[],
       previewImages: [] as string[],
       templateType: 0,
-      letterId: null,
+      letterId: null
     });
   }, []);
 
   const fetchGetLetterCount = async () => {
     try {
       const response = await getLetterCount();
-      console.log("모든 편지 수 조회 성공:", response.data);
+      console.log('모든 편지 수 조회 성공:', response.data);
       setCountLetter(response.data.letterCount);
       setCurrentOrbits(response.data.content);
 
-      if (response.data.letterCount < 3 && getInitUserToast() !== "true") {
+      if (response.data.letterCount < 3 && getInitUserToast() !== 'true') {
         setShowTooltip(true);
         setInitUserToast();
       }
     } catch (error) {
-      console.error("행성 편지 목록 조회 실패:", error);
+      console.error('행성 편지 목록 조회 실패:', error);
     }
   };
 
@@ -111,14 +112,14 @@ const PlanetPage = () => {
       const response = await getPlanetLetterList({
         spaceId: viewSpaceId || spaceId,
         page: page - 1,
-        size: size,
+        size: size
       });
-      console.log("행성 편지 목록 조회 성공:", response.data);
+      console.log('행성 편지 목록 조회 성공:', response.data);
       setCurrentOrbits(response.data.content);
       setTotalPages(
         response.data.totalElements === 0 ? 1 : response.data.totalPages
       );
-      console.log("페이지", response.data.totalPages);
+      console.log('페이지', response.data.totalPages);
       setSpaceTotalLetter(response.data.totalElements);
       //드래그 된 아이템이 있을때
       // if (droppedItem) {
@@ -133,7 +134,7 @@ const PlanetPage = () => {
       // }
       //setDroppedItem(null);
     } catch (error) {
-      console.error("행성 편지 목록 조회 실패:", error);
+      console.error('행성 편지 목록 조회 실패:', error);
     }
   };
 
@@ -141,35 +142,35 @@ const PlanetPage = () => {
     if (viewSpaceId) {
       try {
         const response = await getSpaceInfo(viewSpaceId);
-        console.log("선택한 스페이스 정보 조회 성공:", response.data);
+        console.log('선택한 스페이스 정보 조회 성공:', response.data);
         setSpaceInfo({
           spaceId: viewSpaceId,
           spaceName: response.data.spaceName,
-          templateType: response.data.templateType,
+          templateType: response.data.templateType
         });
         fetchPlanetLetterList(viewSpaceId, currentPage, itemsPerPage);
       } catch (error) {
-        console.error("선택한 스페이스 정보 조회 실패:", error);
+        console.error('선택한 스페이스 정보 조회 실패:', error);
         setSpaceInfo(null);
       }
     }
     try {
       const response = await getMainId();
-      console.log("메인 ID 조회 성공:", response.data);
+      console.log('메인 ID 조회 성공:', response.data);
       if (!viewSpaceId) {
         setSpaceInfo({
           spaceId: response.data.spaceId,
           spaceName: response.data.spaceName,
-          templateType: response.data.templateType,
+          templateType: response.data.templateType
         });
       }
       setUser((prevState) => ({
         ...prevState,
-        name: response.data.username,
+        name: response.data.username
       }));
       fetchPlanetLetterList(response.data.spaceId, currentPage, itemsPerPage);
     } catch (error) {
-      console.error("메인 ID 조회 실패:", error);
+      console.error('메인 ID 조회 실패:', error);
       setSpaceInfo(null);
 
       /* 메인 ID 없을 경우 회원 탈퇴로 간주 */
@@ -180,10 +181,10 @@ const PlanetPage = () => {
   const fetchOrbitLetter = async () => {
     try {
       const response = await getOrbitLetter();
-      console.log("궤도 편지 목록 조회 성공:", response.data);
+      console.log('궤도 편지 목록 조회 성공:', response.data);
       setOrbitMessages(response.data.content);
     } catch (error) {
-      console.error("궤도 편지 목록 조회 실패:", error);
+      console.error('궤도 편지 목록 조회 실패:', error);
       setOrbitMessages(null);
     } finally {
       setIsLoading(false);
@@ -210,24 +211,24 @@ const PlanetPage = () => {
       try {
         const response = await putSpace({
           spaceId: spaceInfo.spaceId,
-          spaceName: newName,
+          spaceName: newName
         });
         setSpaceInfo((prevInfo) => {
           if (prevInfo) {
             return {
               ...prevInfo,
-              spaceName: newName,
+              spaceName: newName
             };
           }
           return prevInfo;
         });
-        console.log("행성 이름 수정 성공:", response.data);
+        console.log('행성 이름 수정 성공:', response.data);
       } catch (error) {
-        console.error("행성 이름 수정 실패:", error);
+        console.error('행성 이름 수정 실패:', error);
         setSpaceInfo((prevInfo) => {
           if (prevInfo) {
             return {
-              ...prevInfo,
+              ...prevInfo
             };
           }
           return prevInfo;
@@ -239,8 +240,8 @@ const PlanetPage = () => {
   const handleNextPage = () => {
     setDroppedItem(null);
     setDroppedLetter({
-      tagId: "",
-      name: "",
+      tagId: '',
+      name: ''
     });
     if (currentPage < totalPages) {
       setDirection(1);
@@ -251,8 +252,8 @@ const PlanetPage = () => {
   const handlePrevPage = () => {
     setDroppedItem(null);
     setDroppedLetter({
-      tagId: "",
-      name: "",
+      tagId: '',
+      name: ''
     });
     if (currentPage > 1) {
       setDirection(-1);
@@ -262,8 +263,8 @@ const PlanetPage = () => {
 
   /* 온보딩 여부 조회 */
   useEffect(() => {
-    if (getOnboarding() === "false") {
-      router.push("/onboarding");
+    if (getOnboarding() === 'false') {
+      router.push('/onboarding');
     }
   }, []);
 
@@ -279,7 +280,7 @@ const PlanetPage = () => {
 
   //마이 페이지로 이동
   const goToMyPage = () => {
-    router.push("/mypage");
+    router.push('/mypage');
   };
 
   //승효 - 수정사항 코드(드래그앤드롭 & 슬라이드)
@@ -293,13 +294,13 @@ const PlanetPage = () => {
       setIsDroppped(true);
       setDroppedLetter({
         tagId: droppedItem.letterId,
-        name: droppedItem.senderName,
+        name: droppedItem.senderName
       });
       const timer = setTimeout(() => {
         setDroppedItem(null);
         setDroppedLetter({
-          tagId: "",
-          name: "",
+          tagId: '',
+          name: ''
         });
         setIsDroppped(false);
       }, 4000);
@@ -313,7 +314,7 @@ const PlanetPage = () => {
   useEffect(() => {
     if (ref.current) {
       setPlanetRef(ref.current);
-      console.log("ref 저장");
+      console.log('ref 저장');
     }
   }, [ref.current]);
 
@@ -343,11 +344,11 @@ const PlanetPage = () => {
         // } else {
         //   setCurrentOrbits([...currentOrbits, draggedItem]);
         // }
-        console.log("현재 행성에는 아이템이 있습니다.");
+        console.log('현재 행성에는 아이템이 있습니다.');
       } else {
         //행성에 편지가 존재하지 않을때(0개)
         // setCurrentOrbits([draggedItem]);
-        console.log("현재 행성에는 아이템이 없습니다.");
+        console.log('현재 행성에는 아이템이 없습니다.');
       }
     } else if (currentPage === 1) {
       //페이지는 여러장이지만 현재 위치가 1페이지일때
@@ -403,7 +404,7 @@ const PlanetPage = () => {
           clientY <= planetBounds.bottom
         ) {
           console.log(
-            "드래그 대상",
+            '드래그 대상',
             droppedItem,
             droppedItem?.letterId,
             droppedItem?.senderName
@@ -412,13 +413,13 @@ const PlanetPage = () => {
             const orbitItem: Orbit = {
               letterId: droppedItem.letterId,
               senderName: droppedItem.senderName,
-              receivedDate: "",
+              receivedDate: ''
             };
 
             handleTagTouch(orbitItem);
           }
         } else {
-          console.log("드래그 범위가 아님");
+          console.log('드래그 범위가 아님');
         }
       }
     }
@@ -427,27 +428,27 @@ const PlanetPage = () => {
   const handleMovePlanet = async (letterId: string, senderName: string) => {
     try {
       await putLetterToPlanet({
-        letterId: letterId || "",
-        spaceId: spaceInfo?.spaceId!,
+        letterId: letterId || '',
+        spaceId: spaceInfo?.spaceId!
       });
 
       showToast(`${senderName}님의 편지가 행성으로 이동했습니다.`, {
         icon: false,
         close: true,
-        bottom: "230px",
-        padding: "11px 13px",
+        bottom: '230px',
+        padding: '11px 13px'
       });
       //setDroppedItem(null);
       setChange(!change);
     } catch {
-      console.log("편지 다른 행성 이동 실패");
+      console.log('편지 다른 행성 이동 실패');
     }
   };
 
   //토큰 유효한지 확인
   useEffect(() => {
     if (!accessToken) {
-      router.push("/login");
+      router.push('/login');
     }
   }, []);
 
@@ -499,14 +500,14 @@ const PlanetPage = () => {
                   name={spaceInfo?.spaceName}
                   icon="chevron"
                   onClick={() => {
-                    router.push("/planet/manage");
+                    router.push('/planet/manage');
                   }}
                 />
                 <Tag
                   tagType="planet"
                   name=""
                   icon="plus"
-                  onClick={() => router.push("/planet/add")}
+                  onClick={() => router.push('/planet/add')}
                 />
               </TagList>
               <MainWrapper>

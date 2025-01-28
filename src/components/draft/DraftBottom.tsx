@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import { motion, AnimatePresence } from "framer-motion";
-import DraftList from "./DraftList";
-import Image from "next/image";
-import { getDraftList } from "@/api/send/send";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import { motion, AnimatePresence } from 'framer-motion';
+import DraftList from './DraftList';
+import Image from 'next/image';
+import { getDraftList } from '@/api/draft/send';
+import { getDraftPhysicalList } from '@/api/draft/store';
 
 interface Draft {
   draftKey: string;
-  receiverName: string;
+  name: string;
   content: string;
   lastUpdated: string;
 }
 
 interface DraftBottomProps {
+  draftType: 'send' | 'store';
   onClose: () => void;
   handleDeleteDraft: (draftId: string) => void;
 }
 
 const DraftBottom = (props: DraftBottomProps) => {
-  const { onClose, handleDeleteDraft } = props;
+  const { draftType, onClose, handleDeleteDraft } = props;
   const [draftLists, setDraftLists] = useState<Draft[] | null>(null);
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
   const [isClosing, setIsClosing] = useState<boolean>(false);
@@ -27,11 +29,21 @@ const DraftBottom = (props: DraftBottomProps) => {
   useEffect(() => {
     const fetchGetDraftList = async () => {
       try {
-        const response = await getDraftList();
-        setDraftLists(response.data.drafts);
-        console.log("임시 저장 목록 조회 성공");
+        const response =
+          draftType === 'send'
+            ? await getDraftList()
+            : await getDraftPhysicalList();
+
+        const mappedDrafts = response.data.drafts.map((draft: any) => ({
+          draftKey: draft.draftKey,
+          name: draft.senderName || draft.receiverName, // `name`을 senderName 또는 receiverName으로 설정
+          content: draft.content,
+          lastUpdated: draft.lastUpdated
+        }));
+        setDraftLists(mappedDrafts);
+        console.log('임시 저장 목록 조회 성공');
       } catch {
-        console.log("임시 저장 목록 조회 실패");
+        console.log('임시 저장 목록 조회 실패');
       }
     };
 
@@ -64,10 +76,10 @@ const DraftBottom = (props: DraftBottomProps) => {
         >
           <Container
             as={motion.div}
-            initial={{ y: "100%" }}
+            initial={{ y: '100%' }}
             animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
             <CloseWrapper>
               <CloseButton
@@ -85,7 +97,7 @@ const DraftBottom = (props: DraftBottomProps) => {
               </Title>
               {draftLists && draftLists.length > 0 && (
                 <EditButton onClick={() => setIsDeleteMode(!isDeleteMode)}>
-                  {isDeleteMode ? "완료" : "삭제"}
+                  {isDeleteMode ? '완료' : '삭제'}
                 </EditButton>
               )}
             </Top>
@@ -94,8 +106,9 @@ const DraftBottom = (props: DraftBottomProps) => {
                 {draftLists.map((item) => (
                   <DraftListWrapper key={item.draftKey}>
                     <DraftList
+                      draftType={draftType}
                       id={item.draftKey}
-                      name={item.receiverName}
+                      name={item.name}
                       content={item.content}
                       timestamp={item.lastUpdated}
                       isDeleteMode={isDeleteMode}

@@ -19,6 +19,7 @@ const colors = {
 
   bg: "#060812",
   white: "#FFFFFF",
+  black: "#000000",
   red: "#E1303E",
 } as const;
 

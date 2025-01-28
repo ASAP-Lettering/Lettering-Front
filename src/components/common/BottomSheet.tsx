@@ -1,44 +1,32 @@
-import { useEffect, useMemo, useState } from "react";
-import { useDragControls } from "framer-motion";
-import styled from "@emotion/styled";
-import { motion } from "framer-motion";
-import useMeasure from "react-use-measure";
-import { theme } from "@/styles/theme";
-import Button from "./Button";
+import { useDragControls } from 'framer-motion';
+import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import { theme } from '@/styles/theme';
+import Button from './Button';
+import Image from 'next/image';
 
 const BottomSheet = ({
-  viewport = "100dvh",
+  height,
   title,
   subtitle,
-  button = "",
-  subButton = "",
   isOpen,
+  confirmText = '확인 완료',
+  cancelText = '다시 수정할게요',
   handleOpen,
-  onConfirm,
+  onConfirm
 }: {
-  viewport: string;
+  height: number;
   title: string;
   subtitle?: string;
-  button?: string;
-  subButton?: string;
   isOpen: boolean;
+  confirmText?: string;
+  cancelText?: string;
   handleOpen: (state: boolean) => void;
   onConfirm: () => void;
 }) => {
-  //const [isOpened, setIsOpened] = useState(isOpen);
-  const [contentRef, contentBounds] = useMeasure();
   const dragControls = useDragControls();
 
-  //   useEffect(() => {
-  //     setIsOpened(isOpen);
-  //   }, [isOpen]);
-
-  const animateState = isOpen ? "opened" : "closed";
-
-  const expandedHeight = useMemo(
-    () => Math.min(contentBounds.height - 180, window.innerHeight - 50),
-    [contentBounds.height]
-  );
+  const animateState = isOpen ? 'opened' : 'closed';
 
   return (
     <>
@@ -47,60 +35,52 @@ const BottomSheet = ({
         animate={animateState}
         variants={{
           opened: {
-            backdropFilter: "blur(1px)",
-            pointerEvents: "all",
-            opacity: 0.7,
+            backdropFilter: 'blur(1px)',
+            pointerEvents: 'all',
+            opacity: 0.7
           },
           closed: {
-            backdropFilter: "blur(0px)",
-            pointerEvents: "none",
-            opacity: 0,
-          },
+            backdropFilter: 'blur(0px)',
+            pointerEvents: 'none',
+            opacity: 0
+          }
         }}
         onTap={() => {
-          //setIsOpened(false);
           handleOpen(false);
         }}
       />
 
       <SheetBackground
+        $sheetHeight={height}
         initial="closed"
         animate={animateState}
         variants={{
-          opened: { top: `calc(${viewport}  - ${expandedHeight}px)` },
-          closed: { top: `calc(${viewport} - 60px)` },
+          opened: { bottom: `-200px` },
+          closed: { bottom: `-${height + 200}px` }
         }}
-        transition={{ type: "spring", bounce: 0, duration: 0.5 }}
+        transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
         drag="y"
         dragControls={dragControls}
         dragListener={false}
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.2}
-        // dragMomentum={false}
-        // dragTransition={{ min: 0, max: 1, bounceStiffness: 200, bounceDamping: 20 }}
         onDragEnd={(event, info) => {
-          // y가 음수이면 위로, 양수이면 아래로
-          const offsetThreshold = 150;
-          const deltaThreshold = 5;
-
-          const isOverOffsetThreshold =
-            Math.abs(info.offset.y) > offsetThreshold;
-          const isOverDeltaThreshold = Math.abs(info.delta.y) > deltaThreshold;
-
-          const isOverThreshold = isOverOffsetThreshold || isOverDeltaThreshold;
-
-          if (!isOverThreshold) return;
-
-          const newIsOpened = info.offset.y < 0;
-
-          //setIsOpened(newIsOpened);
-          handleOpen(newIsOpened);
+          const offsetThreshold = 10;
+          if (info.offset.y > offsetThreshold) {
+            handleOpen(false);
+          }
         }}
       >
         <BottomHeader onPointerDown={(e) => dragControls.start(e)}>
           <HandleBar style={{ borderRadius: 9999 }} />
         </BottomHeader>
-        <SheetContentWrapper style={{ height: 500 }} ref={contentRef}>
+        <SheetContentWrapper>
+          <Image
+            src={'/assets/images/bottomsheet/bottomsheet_letter.svg'}
+            width={40}
+            height={27}
+            alt="letter"
+          />
           <SheetContent>
             <TitleWrapper>
               <SheetTitle>{title}</SheetTitle>
@@ -109,13 +89,13 @@ const BottomSheet = ({
             <Button
               buttonType="primary"
               size="large"
-              text="확인 완료"
+              text={confirmText}
               onClick={onConfirm}
             />
+            <WriteAgain onClick={() => handleOpen(false)}>
+              {cancelText}
+            </WriteAgain>
           </SheetContent>
-          <WriteAgain onClick={() => handleOpen(false)}>
-            다시 수정할게요
-          </WriteAgain>
         </SheetContentWrapper>
       </SheetBackground>
     </>
@@ -129,43 +109,45 @@ const BackgroundOverlay = styled(motion.div)`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100dvh;
-  background: black;
+  height: 100%;
+  background: ${theme.colors.black};
 `;
 
-const SheetBackground = styled(motion.div)`
+const SheetBackground = styled(motion.div)<{ $sheetHeight: number }>`
   position: absolute;
-  top: 0;
-  /* bottom: 0; */
+  bottom: 0px;
   left: 0;
   width: 100%;
-  height: 100lvh;
-  background:${theme.colors.gray900};
+  height: ${(props) => props.$sheetHeight + 200}px;
+  background: ${theme.colors.gray900};
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
   border-radius: 24px 24px 0 0;
-  padding: 12px 0 24px 0;
+  padding: 0 0 24px 0;
   will-change: transform;
   z-index: 9999;
 `;
 
 const BottomHeader = styled.div`
-  height: 50px;
+  height: 56px;
   cursor: grab;
+  padding-top: 12px;
   user-select: none;
 `;
 
 const HandleBar = styled.div`
-  width: 58px;
+  width: 77px;
   height: 4px;
   background: ${theme.colors.gray700};
   margin: 0 auto;
-  /* border: 1px solid red; */
 `;
 
 const SheetContentWrapper = styled.div`
   width: 100%;
-  color: black;
-  padding: 24px;
+  color: ${theme.colors.black};
+  padding: 0 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
 `;
 
 const SheetContent = styled.div`
@@ -175,27 +157,43 @@ const SheetContent = styled.div`
 `;
 
 const TitleWrapper = styled.div`
-  margin-bottom: 50px;
+  margin-bottom: 32px;
 `;
 
 const SheetTitle = styled.div`
-    ${theme.fonts.title01}
-    color: white;
-    padding: 5px 0;
+  ${theme.fonts.title01}
+  color: ${theme.colors.white};
+  padding: 5px 0;
+
+  @media (max-height: 628px) {
+    ${theme.fonts.title02};
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.subtitle};
+  }
 `;
 
 const SheetSubTitle = styled.div`
-    ${theme.fonts.body07}
-    color: ${theme.colors.gray300};
+  ${theme.fonts.body07}
+  color: ${theme.colors.gray300};
+
+  @media (max-height: 628px) {
+    ${theme.fonts.body09};
+  }
+
+  @media (max-height: 580px) {
+    ${theme.fonts.caption04};
+  }
 `;
 
 const WriteAgain = styled.button`
-    width: 100%;
-    padding: 10px;
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    ${theme.fonts.caption02}
-    color: ${theme.colors.gray200};
+  width: 100%;
+  padding: 14px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  ${theme.fonts.caption02}
+  color: ${theme.colors.gray200};
 `;

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
-import Letter from "@/components/letter/Letter";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { sendLetterState, useSsrComplectedState } from "@/recoil/letterStore";
-import LetterTemplateList from "@/components/letter/LetterTemplateList";
-import { ALL_TEMPLATES } from "@/constants/templates";
+import React, { useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import Button from '@/components/common/Button';
+import { useRouter } from 'next/navigation';
+import Letter from '@/components/letter/Letter';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { sendLetterState, useSsrComplectedState } from '@/recoil/letterStore';
+import LetterTemplateList from '@/components/letter/LetterTemplateList';
+import { ALL_TEMPLATES } from '@/constants/templates';
 
 const SendTemplatePage = () => {
   const router = useRouter();
@@ -25,7 +25,7 @@ const SendTemplatePage = () => {
   const setSsrCompleted = useSsrComplectedState();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       setSsrCompleted();
     }
   }, [setSsrCompleted]);
@@ -38,9 +38,9 @@ const SendTemplatePage = () => {
     /* 다음 페이지 */
     setSendLetterState((prevState) => ({
       ...prevState,
-      templateType: template,
+      templateType: template
     }));
-    router.push("/send/preview");
+    router.push('/send/preview');
   };
 
   return (
@@ -53,7 +53,7 @@ const SendTemplatePage = () => {
               <Letter
                 showType="previewSend"
                 contentType="one"
-                id={"0"}
+                id={'0'}
                 templateType={template}
                 name={receiverName}
                 content={content}
@@ -61,6 +61,7 @@ const SendTemplatePage = () => {
                 isImage={!(content.length > 0)}
                 width="100%"
                 height="100%"
+                padding="40px 30px"
               />
             </LetterContainer>
           </LetterWrapper>
@@ -128,27 +129,32 @@ const LetterWrapper = styled.div`
 `;
 
 const LetterContainer = styled.div`
-  width: 100%;
-  min-height: 313px;
-  max-height: 313px;
+  width: 276px;
+  min-height: 284px;
+  max-height: 284px;
+
+  @media (max-height: 725px) {
+    max-height: 250px;
+    min-height: 250px;
+  }
 
   @media (max-height: 628px) {
     max-width: 250px;
     min-width: 250px;
-    max-height: 260px;
-    min-height: 260px;
+    max-height: 230px;
+    min-height: 230px;
   }
 
   @media (max-height: 580px) {
-    max-width: 220px;
-    min-width: 220px;
-    max-height: 220px;
-    min-height: 220px;
+    max-width: 250px;
+    min-width: 250px;
+    max-height: 210px;
+    min-height: 210px;
   }
 
   @media (max-height: 550px) {
-    max-width: 178px;
-    min-width: 178px;
+    max-width: 240px;
+    min-width: 240px;
     max-height: 182px;
     min-height: 182px;
   }

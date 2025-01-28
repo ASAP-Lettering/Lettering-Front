@@ -1,35 +1,36 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import Input from "@/components/common/Input";
-import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import React, { useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import Input from '@/components/common/Input';
+import Button from '@/components/common/Button';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 import {
   deleteDraftLetter,
   getDraftCount,
   getDraftLetter,
   postDraftKey,
-  postDraftLetter,
-} from "@/api/send/send";
-import DraftBottom from "@/components/send/DraftBottom";
-import { draftState, sendLetterState } from "@/recoil/letterStore";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useToast } from "@/hooks/useToast";
-import { postImage } from "@/api/image/image";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { draftModalState } from "@/recoil/draftStore";
-import imageCompression from "browser-image-compression";
+  postDraftLetter
+} from '@/api/draft/send';
+import DraftBottom from '@/components/draft/DraftBottom';
+import { draftState, sendLetterState } from '@/recoil/letterStore';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useToast } from '@/hooks/useToast';
+import { postImage } from '@/api/image/image';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import { draftModalState } from '@/recoil/draftStore';
+import imageCompression from 'browser-image-compression';
+import DraftButton from '@/components/draft/DraftButton';
 
 const SendContentPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const [draftId, setDraftId] = useState<string | null>(null);
-  const [receiver, setReceiver] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [receiver, setReceiver] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [images, setImages] = useState<string[]>([]); // 서버 전송용
   const [previewImages, setPreviewImages] = useState<string[]>([]); // 미리보기용
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
@@ -62,9 +63,9 @@ const SendContentPage = () => {
     if (draftKey) {
       try {
         const response = await getDraftLetter(draftKey);
-        console.log("임시 저장 편지 조회 성공", response);
+        console.log('임시 저장 편지 조회 성공', response);
       } catch {
-        console.log("임시 저장 편지 조회 실패");
+        console.log('임시 저장 편지 조회 실패');
       }
     }
   };
@@ -74,9 +75,9 @@ const SendContentPage = () => {
       try {
         const response = await getDraftCount();
         setTempCount(response.data.count);
-        console.log("임시 저장 개수 조회 성공", response);
+        console.log('임시 저장 개수 조회 성공', response);
       } catch {
-        console.log("임시 저장 개수 조회 실패");
+        console.log('임시 저장 개수 조회 실패');
       }
     };
 
@@ -104,17 +105,17 @@ const SendContentPage = () => {
     }
     setLetterState((prevState) => ({
       ...prevState,
-      content: newValue,
+      content: newValue
     }));
   };
 
   const handleShowToast = () => {
     /* 토스트 메세지 보여지기 전*/
     if (previewImages.length >= 4 && !isToastShown) {
-      showToast("사진 첨부는 최대 4장까지 가능해요.", {
+      showToast('사진 첨부는 최대 4장까지 가능해요.', {
         icon: true,
         close: false,
-        bottom: "113px",
+        bottom: '113px'
       });
       setIsToastShown(true);
     }
@@ -137,17 +138,17 @@ const SendContentPage = () => {
       // 미리보기 이미지 업데이트
       const newPreviewImages = [
         ...(previewImages || []),
-        ...validImages.map((file) => URL.createObjectURL(file)),
+        ...validImages.map((file) => URL.createObjectURL(file))
       ];
 
       setPreviewImages(newPreviewImages);
 
       // 총 이미지가 4개를 초과하려고 할 때 (토스트 메세지 보여지기 전)
       if (selectedImages.length > additionalImagesNeeded && !isToastShown) {
-        showToast("사진 첨부는 최대 4장까지 가능해요.", {
+        showToast('사진 첨부는 최대 4장까지 가능해요.', {
           icon: true,
           close: false,
-          bottom: "113px",
+          bottom: '113px'
         });
         setIsToastShown(true);
         setIsButtonDisabled(false);
@@ -160,17 +161,17 @@ const SendContentPage = () => {
         const compressedFile = await imageCompression(file, {
           maxSizeMB: 500,
           maxWidthOrHeight: 512,
-          useWebWorker: true,
+          useWebWorker: true
         });
 
         try {
           setImageUploadLoading(true);
 
           const response = await postImage(compressedFile);
-          console.log("이미지 업로드 성공", response.data);
+          console.log('이미지 업로드 성공', response.data);
           imageUrls.push(response.data.imageUrl);
         } catch (error) {
-          console.error("이미지 업로드 실패", error);
+          console.error('이미지 업로드 실패', error);
         }
       }
       setImages((prevImages) => [...prevImages, ...imageUrls]);
@@ -179,7 +180,7 @@ const SendContentPage = () => {
       setLetterState((prevState) => ({
         ...prevState,
         images: [...(prevState.images || []), ...imageUrls],
-        previewImages: newPreviewImages,
+        previewImages: newPreviewImages
       }));
     }
   };
@@ -202,19 +203,17 @@ const SendContentPage = () => {
     setLetterState((prevState) => ({
       ...prevState,
       images: updatedImages,
-      previewImages: updatedPreviewImages,
+      previewImages: updatedPreviewImages
     }));
   };
 
   /* 임시 저장 */
   const handleSaveLetter = async () => {
-    console.log("클릭");
-    console.log(isImageUploadLoading);
-    if (!receiver || !content) {
+    if (!receiver && (!content || !images)) {
       return;
     }
 
-    console.log("이후 코드 실행");
+    console.log('이후 코드 실행');
     try {
       setIsLoading(true);
 
@@ -223,37 +222,36 @@ const SendContentPage = () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
 
-      console.log("이미지 업로드 완료. 임시 저장 진행 중...");
+      console.log('이미지 업로드 완료. 임시 저장 진행 중...');
 
       // 1. 임시 저장 키 발급
       const draftKeyResponse = await postDraftKey();
       const newDraftId = draftKeyResponse.data.draftId;
       setDraftId(newDraftId);
-      console.log("임시 저장 키 발급 성공", newDraftId);
+      console.log('임시 저장 키 발급 성공', newDraftId);
 
       // 2. 발급된 임시 저장 키로 임시 저장 API 호출
       await postDraftLetter({
         draftId: newDraftId,
         content: content,
         receiverName: receiver,
-        images: images,
+        images: images
       });
-      console.log("임시 저장 성공");
+      console.log('임시 저장 성공');
       setTempCount(tempCount + 1);
 
       // 3. 토스트 메세지
-      showToast("작성하던 편지가 임시 저장됐어요.", {
+      showToast('작성하던 편지가 임시 저장됐어요.', {
         icon: true,
-        iconType: "message",
+        iconType: 'message',
         close: true,
-        bottom: "113px",
+        bottom: '113px'
       });
     } catch (error) {
-      console.error("임시 저장 실패", error);
+      console.error('임시 저장 실패', error);
     } finally {
       setIsLoading(false);
     }
-    console.log("종료!");
   };
 
   /* 임시 저장 목록 */
@@ -269,9 +267,9 @@ const SendContentPage = () => {
       receiverName: receiver,
       content: content,
       images: images,
-      previewImages: previewImages,
+      previewImages: previewImages
     }));
-    router.push("/send/template");
+    router.push('/send/template');
   };
 
   /* 임시 저장 삭제 핸들러 */
@@ -279,9 +277,9 @@ const SendContentPage = () => {
     try {
       await deleteDraftLetter(draftId);
       setTempCount((prevCount) => prevCount - 1);
-      console.log("임시 저장 편지가 삭제 성공");
+      console.log('임시 저장 편지가 삭제 성공');
     } catch (error) {
-      console.error("임시 저장 편지 삭제 실패", error);
+      console.error('임시 저장 편지 삭제 실패', error);
     }
   };
 
@@ -295,9 +293,9 @@ const SendContentPage = () => {
 
     try {
       const response = await getDraftLetter(draftModal.id);
-      console.log("임시 저장 조회 성공", response.data);
+      console.log('임시 저장 조회 성공', response.data);
 
-      console.log("상태 변경됨");
+      console.log('상태 변경됨');
       setLetterState({
         draftId: response.data.draftKey,
         receiverName: response.data.receiverName,
@@ -305,7 +303,7 @@ const SendContentPage = () => {
         images: response.data.images,
         previewImages: response.data.images,
         templateType: 0,
-        letterId: null,
+        letterId: null
       });
 
       // 각 input 상태 업데이트
@@ -319,23 +317,21 @@ const SendContentPage = () => {
       setDraftModal({ id: null, isOpen: false });
       setIsDraftBottom(false);
     } catch {
-      console.log("임시 저장 조회 실패");
+      console.log('임시 저장 조회 실패');
     }
   };
 
   return (
     <>
-      <ButtonDiv>
-        <DraftButton
-          onClick={handleSaveLetter}
-          disabled={isDraftDisabled || isImageUploadLoading}
-        >
-          {isImageUploadLoading ? "Loading..." : "임시저장"}
-        </DraftButton>
-        I<ListButton onClick={handleDraftBottom}>{tempCount}</ListButton>
-      </ButtonDiv>
+      <DraftButton
+        handleSaveLetter={handleSaveLetter}
+        handleDraftBottom={handleDraftBottom}
+        isDraftDisabled={isDraftDisabled}
+        isImageUploadLoading={isImageUploadLoading}
+        tempCount={tempCount}
+      />
       <Container>
-        <Column>
+        <div>
           <Label>
             편지 내용
             <Count>
@@ -349,75 +345,69 @@ const SendContentPage = () => {
             onChange={handleContentChange}
             placeholder={`보낼 편지에 어떤 내용을 담고싶나요?\n텍스트나 사진으로 편지 내용을 작성해보세요`}
             height="280px"
+            padding="24px 20px"
           />
-        </Column>
-        <Column $position={true}>
-          <Label $show={false}>사진을 추가해주세요</Label>
-          {(previewImages || []).length === 0 ? (
-            <AddImageWrapper>
-              <AddImageLabel>
+        </div>
+        <div>
+          <ImagesList>
+            <AddImagesLabel onClick={handleShowToast}>
+              {previewImages.length < 4 && (
                 <input
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={handleAddImages}
-                  style={{ display: "none" }}
+                  style={{ display: 'none' }}
+                  disabled={isButtonDisabled}
                 />
-                + 사진 불러오기 (선택)
-              </AddImageLabel>
-              <SmallText>최대 4장까지 사진 첨부가 가능해요</SmallText>
-            </AddImageWrapper>
-          ) : (
-            <ImagesList>
-              <AddImagesLabel onClick={handleShowToast}>
-                {previewImages.length < 4 && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleAddImages}
-                    style={{ display: "none" }}
-                    disabled={isButtonDisabled}
+              )}
+              <Image
+                src={'/assets/icons/ic_camera.svg'}
+                width={15}
+                height={13}
+                alt="이미지 추가"
+              />
+              {previewImages.length}/4
+            </AddImagesLabel>
+            <ImagesWrapper>
+              {previewImages.map((image, index) => (
+                <ImageDiv>
+                  <Image
+                    src={image}
+                    fill
+                    alt="images"
+                    style={{ borderRadius: '8px' }}
                   />
-                )}
-                +<br />
-                {previewImages.length}/4
-              </AddImagesLabel>
-              <ImagesWrapper>
-                {previewImages.map((image, index) => (
-                  <ImageDiv>
+                  <DeleteIcon onClick={() => handleDeleteImages(index)}>
                     <Image
-                      src={image}
+                      src="/assets/icons/ic_image_delete.svg"
                       fill
-                      alt="images"
-                      style={{ borderRadius: "8px" }}
+                      alt="delete"
                     />
-                    <DeleteIcon onClick={() => handleDeleteImages(index)}>
-                      <Image
-                        src="/assets/icons/ic_image_delete.svg"
-                        fill
-                        alt="delete"
-                      />
-                    </DeleteIcon>
-                  </ImageDiv>
-                ))}
-              </ImagesWrapper>
-            </ImagesList>
-          )}
-        </Column>
+                  </DeleteIcon>
+                </ImageDiv>
+              ))}
+            </ImagesWrapper>
+          </ImagesList>
+        </div>
       </Container>
       <ButtonWrapper>
         <Button
           buttonType="primary"
           size="large"
-          text={isImageUploadLoading ? "Loading..." : "다음"}
-          disabled={!receiver || !content || isImageUploadLoading}
+          text={isImageUploadLoading ? 'Loading...' : '다음'}
+          disabled={
+            !receiver ||
+            (!content && previewImages?.length === 0) ||
+            isImageUploadLoading
+          }
           onClick={handleAddNext}
         />
       </ButtonWrapper>
       {isDraftBottom && (
         <BottomWrapper>
           <DraftBottom
+            draftType="send"
             onClose={handleDraftBottom}
             handleDeleteDraft={handleDeleteDraft}
           />
@@ -438,69 +428,12 @@ const SendContentPage = () => {
 
 export default SendContentPage;
 
-const ButtonDiv = styled.div`
-  display: inline-flex;
-  padding: 6px 12px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 200px;
-  background: ${theme.colors.sub01};
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-
-  position: absolute;
-  top: 26.5px;
-  right: 20px;
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-    top: 6px;
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-    top: 7px;
-  }
-`;
-
-const DraftButton = styled.button`
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-  white-space: nowrap;
-
-  &:disabled {
-    opacity: 0.6;
-    transition: opacity 0.5s;
-  }
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-  }
-`;
-
-const ListButton = styled.button`
-  color: ${theme.colors.gray200};
-  ${theme.fonts.caption03};
-
-  @media (max-height: 628px) {
-    ${theme.fonts.caption03};
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.body15};
-  }
-`;
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 13px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -512,35 +445,7 @@ const Container = styled.div`
   }
 `;
 
-const Column = styled.div<{ $position?: boolean }>`
-  margin-bottom: 40px;
-
-  @media (max-height: 710px) {
-    margin-bottom: 20px;
-  }
-
-  @media (max-height: 628px) {
-    ${({ $position }) =>
-      $position &&
-      css`
-        width: 100%;
-        position: absolute;
-        top: 300px;
-      `}
-  }
-
-  @media (max-height: 580px) {
-    ${({ $position }) =>
-      $position &&
-      css`
-        width: 100%;
-        position: absolute;
-        top: 280px;
-      `}
-  }
-`;
-
-const Label = styled.div<{ $show?: boolean }>`
+const Label = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -551,12 +456,6 @@ const Label = styled.div<{ $show?: boolean }>`
   @media (max-height: 628px) {
     ${theme.fonts.body6}
     margin-bottom: 12px;
-    ${({ $show }) =>
-      $show === false &&
-      css`
-        display: none;
-        margin-bottom: 0px;
-      `}
   }
 
   @media (max-height: 580px) {
@@ -579,58 +478,14 @@ const Span = styled.span`
   color: ${theme.colors.white};
 `;
 
-const AddImageWrapper = styled.div`
+const AddImagesLabel = styled.label`
+  width: 58px;
+  height: 58px;
+  padding: 13px 19px 7px 19px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
-`;
-
-const AddImageLabel = styled.label`
-  width: 100%;
-  height: 57px;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 18px;
-  border-radius: 12px;
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.gray400};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  ${theme.fonts.body08}
-
-  @media (max-height: 628px) {
-    height: 48px;
-    ${theme.fonts.body12};
-  }
-
-  @media (max-height: 580px) {
-    height: 42px;
-    ${theme.fonts.caption04}
-  }
-`;
-
-const SmallText = styled.div`
-  color: ${theme.colors.gray500};
-  ${theme.fonts.caption04};
-  text-align: center;
-  margin-bottom: 100px;
-
-  @media (max-height: 550px) {
-    display: none;
-  }
-`;
-
-const AddImagesLabel = styled.label`
-  width: 52px;
-  height: 52px;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
   border-radius: 8px;
   background: ${theme.colors.gray700};
   color: ${theme.colors.gray400};
@@ -654,25 +509,19 @@ const ImagesList = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  margin-bottom: 100px;
-
-  @media (max-height: 628px) {
-    margin-top: 0px;
-  }
+  gap: 11px;
 `;
 
 const ImagesWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 13px;
+  gap: 14px;
 `;
 
 const ImageDiv = styled.div`
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   position: relative;
 
   @media (max-height: 628px) {
@@ -687,11 +536,11 @@ const ImageDiv = styled.div`
 `;
 
 const DeleteIcon = styled.button`
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -4px;
+  right: -9px;
 
   @media (max-height: 628px) {
     width: 18px;
