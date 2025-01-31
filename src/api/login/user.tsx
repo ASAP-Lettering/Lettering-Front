@@ -1,11 +1,11 @@
-import { RegisterDataType } from "@/types/user";
-import client, { authClient } from "../client";
-import { getRefreshToken, setTokens } from "@/utils/storage";
+import { RegisterDataType } from '@/types/user';
+import client, { authClient } from '../client';
+import { getRefreshToken, setTokens } from '@/utils/storage';
 
 // 로그인
 export const login = async (loginType: string, accessToken: string) => {
   return await client.post(`/api/v1/auth/login/${loginType}`, {
-    accessToken: accessToken,
+    accessToken: accessToken
   });
 };
 
@@ -14,16 +14,14 @@ export const signup = async ({
   servicePermission,
   privatePermission,
   marketingPermission,
-  birthday,
-  realName,
+  realName
 }: RegisterDataType) => {
   return await client.post(`/api/v1/users`, {
     registerToken: registerToken,
     servicePermission: servicePermission,
     privatePermission: privatePermission,
     marketingPermission: marketingPermission,
-    birthday: birthday,
-    realName: realName,
+    realName: realName
   });
 };
 
@@ -31,8 +29,8 @@ export const signup = async ({
 export const getNewTokens = async () => {
   const storedRefreshToken = getRefreshToken();
   if (storedRefreshToken) {
-    const response = await client.post("/api/v1/auth/reissue", {
-      refreshToken: storedRefreshToken,
+    const response = await client.post('/api/v1/auth/reissue', {
+      refreshToken: storedRefreshToken
     });
     const { accessToken, refreshToken } = response.data;
     setTokens(accessToken, refreshToken);
