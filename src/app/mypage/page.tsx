@@ -122,7 +122,7 @@ const MyPage = () => {
                 </TitleWrapper>
               </MenuWrapper>
             </MainWrapper>
-            <Line />
+            <DivDivder />
             <SettingWrapper>
               <SettingContainer>
                 <MenuWrapper onClick={goToLetterType}>
@@ -180,6 +180,7 @@ export default function MyPagePaging() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   height: 100%;
   min-height: 100%;
   max-height: 100%;
@@ -197,6 +198,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
   padding: 24px;
   overflow-y: auto;
   box-sizing: border-box;
@@ -226,6 +228,7 @@ const ProfileHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const ProfileImage = styled.img`
@@ -291,6 +294,15 @@ const CountDivider = styled.div`
   margin: 0 8px;
 `;
 
+const DivDivder = styled.div`
+  width: 100vw;
+  height: 2px;
+  flex-shrink: 0;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  background-color: ${(props: any) => props.theme.colors.gray900};
+`;
+
 const CountTitle = styled.div`
   ${(props: any) => props.theme.fonts.body09};
   color: ${(props: any) => props.theme.colors.gray300};
@@ -344,11 +356,6 @@ const MenuTitle = styled.div`
   @media (max-height: 628px) {
     ${theme.fonts.body16};
   }
-`;
-
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const TextWrapper = styled.div`
