@@ -1,139 +1,144 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-// import DatePicker from "@/components/signup/DatePicker";
-import { useRecoilState } from "recoil";
-import { signupState, userInfo } from "@/recoil/signupStore";
-import ItemPicker from "@/components/signup/ItemPicker";
-import { signup } from "@/api/login/user";
-import NewItemPicker from "@/components/signup/NewItemPicker";
-import { setTokens } from "@/utils/storage";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-
-export interface DatePickerState {
-  year: number;
-  month: number;
-  day: number;
-}
+import Button from '@/components/common/Button';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import styled from 'styled-components';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Input from '@/components/common/Input';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import useMeasure from 'react-use-measure';
+import BottomSheet from '@/components/common/BottomSheet';
+import { Suspense, useState } from 'react';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { signupState, userInfo } from '@/recoil/signupStore';
+import { signup } from '@/api/login/user';
+import { setTokens } from '@/utils/storage';
+import { useToast } from '@/hooks/useToast';
+import { checkKorean } from '@/utils/checkKorean';
 
 const SignupStep2 = () => {
-  const [user, setUser] = useRecoilState(userInfo);
   const router = useRouter();
+  const { showToast } = useToast();
+  const [name, setName] = useState('');
+  const [viewportRef, { height: viewportHeight }] = useMeasure();
+  const [isBottomUp, setIsBottomUp] = useState(false);
+  const [isDisplayed, setIsDisplayed] = useState(false);
+  const [isVaild, setIsVaild] = useState(true);
+  const [user, setUser] = useRecoilState(userInfo);
+  const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
-  const [isBirthdayUpdated, setIsBirthdayUpdated] = useState(false);
-  const [selectedYear, setSelectedYear] = useState("2001");
-  const [selectedMonth, setSelectedMonth] = useState("1");
-  const [selecetedDate, setSelecetedDate] = useState("1");
-  const formattedMonth = String(selectedMonth).padStart(2, "0");
-  const formattedDay = String(selecetedDate).padStart(2, "0");
-  const newBirthday = `${selectedYear}-${formattedMonth}-${formattedDay}`;
-
-  const handleSelectYearChange = (year: string) => {
-    setSelectedYear(year);
-    console.log(year);
-  };
-
-  const handleSelectMonthChange = (month: string) => {
-    setSelectedMonth(month);
-  };
-
-  const handleSelectDayChange = (day: string) => {
-    setSelecetedDate(day);
-  };
+  const url = searchParams.get('url');
 
   const handleButtonClick = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      birthday: newBirthday,
-    }));
-    if (url) {
-      router.push(`/signup/step3?url=${url}`);
+    if (canSignin()) {
+      setIsBottomUp(true);
     } else {
-      router.push(`/signup/step3`);
-      console.log(user);
+      showToast('형식에 맞지 않는 이름입니다!', {
+        icon: true,
+        close: false,
+        bottom: '120px'
+      });
+      setIsDisplayed(false);
     }
   };
-
-  const skipButtonClick = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      birthday: "",
-    }));
-    if (url) {
-      router.push(`/signup/step3?url=${url}`);
-    } else {
-      router.push(`/signup/step3`);
-      console.log(user);
-    }
-  };
-
-  const years = Array.from({ length: 115 }, (_, i) => (1910 + i).toString());
-  const months = Array.from({ length: 12 }, (_, i) => (1 + i).toString());
-  const days = Array.from(
-    {
-      length: new Date(
-        parseInt(selectedYear),
-        parseInt(selectedMonth),
-        0
-      ).getDate(),
-    },
-    (_, i) => (1 + i).toString()
-  );
 
   useEffect(() => {
-    if (isBirthdayUpdated) {
-      if (url) {
-        router.push(`/signup/complete?url=${url}`);
-      } else {
-        router.push(`/signup/complete`);
-      }
+    if (isBottomUp) {
+      setIsDisplayed(true);
+    } else {
+      setTimeout(() => {
+        setIsDisplayed(false);
+      }, 490);
     }
-  }, [isBirthdayUpdated]);
+  }, [isBottomUp]);
+
+  const handleLoginClick = () => {
+    signup({
+      registerToken: registerToken,
+      privatePermission: user.privatePermission,
+      servicePermission: user.servicePermission,
+      marketingPermission: user.marketingPermission,
+      realName: name
+    })
+      .then((res) => {
+        console.log('accessToken', res.data.accessToken);
+        setTokens(res.data.accessToken, res.data.refreshToken);
+        if (url) {
+          router.push(`/signup/complete?url=${url}`);
+        } else {
+          router.push(`/signup/complete`);
+          console.log(user);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        router.push('/error');
+        return;
+      });
+
+    console.log(user);
+  };
+
+  const canSignin = () => {
+    if (isVaild && name.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleBottomUpChange = (state: boolean) => {
+    setIsBottomUp(state);
+  };
 
   return (
-    <Container>
-      <MainWrapper>
-        <NavigatorBar
-          cancel={false}
-          nextlabel={true}
-          nextClick={() => skipButtonClick()}
+    <Container ref={viewportRef}>
+      {isDisplayed && (
+        <BottomSheet
+          height={353}
+          title={`'${name}'${checkKorean(name)} 본인 이름이 맞나요?`}
+          subtitle="본인의 이름이 아닐 경우, 편지를 보내거나 받을 때에
+          오류가 발생할 수 있어요"
+          isOpen={isBottomUp}
+          handleOpen={handleBottomUpChange}
+          onConfirm={handleLoginClick}
         />
+      )}
+      <MainWrapper>
+        <NavigatorBar cancel={false} />
         <Header>
-          <HeaderTitle>생년월일을 입력해주세요</HeaderTitle>
-          <HeaderSubTitle>이후에 마이페이지에서 변경이 가능해요</HeaderSubTitle>
+          <HeaderTitle>
+            회원가입을 하기 전
+            <br />
+            먼저 본인 인증이 필요해요
+          </HeaderTitle>
+          <HeaderSubTitle>
+            별명이 아닌 정확한 실명을 입력해주세요
+          </HeaderSubTitle>
         </Header>
-        <ItemPickerWrapper>
-          <NewItemPicker
-            items={years}
-            defaultItem={"2004"}
-            unit="년"
-            onChange={handleSelectYearChange}
+        <InputWrapper>
+          <Input
+            inputType="signup"
+            value={name}
+            onChange={setName}
+            placeholder="ex)홍길동"
+            isValid={isVaild}
+            isValidChange={setIsVaild}
+            errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
           />
-          <NewItemPicker
-            items={months}
-            defaultItem={"1"}
-            unit="월"
-            onChange={handleSelectMonthChange}
-          />
-          <NewItemPicker
-            items={days}
-            defaultItem={"1"}
-            unit="일"
-            onChange={handleSelectDayChange}
-          ></NewItemPicker>
-          <PickedItemContainer />
-        </ItemPickerWrapper>
+        </InputWrapper>
       </MainWrapper>
-      <Button
-        buttonType="primary"
-        text="다음"
-        onClick={() => handleButtonClick()}
-      ></Button>
+      <ButtonWrapper>
+        <DescriptionText onClick={() => router.push('/info')}>
+          왜 실명 인증이 필요한가요?
+        </DescriptionText>
+        <Button
+          buttonType="primary"
+          text="다음"
+          onClick={handleButtonClick}
+        ></Button>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -155,16 +160,20 @@ export default function SignupStep2Paging() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   justify-content: space-between;
   min-height: 100%;
   color: white;
   background: ${(props) => props.theme.colors.bg};
   padding: 25px;
   padding-bottom: 40px;
+  position: relative;
+  overflow: hidden;
 `;
 
 const MainWrapper = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
 `;
 
@@ -172,6 +181,22 @@ const Header = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
+  margin-bottom: 100px;
+`;
+
+const InputWrapper = styled.div`
+  padding: 10px;
+`;
+
+const DescriptionText = styled.button`
+  ${(props) => props.theme.fonts.regular14};
+  color: ${(props) => props.theme.colors.gray400};
+  text-decoration: underline;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 23px;
+  cursor: pointer;
 `;
 
 const HeaderTitle = styled.div`
@@ -182,30 +207,12 @@ const HeaderTitle = styled.div`
 
 const HeaderSubTitle = styled.div`
   width: 100%;
-  ${(props) => props.theme.fonts.regular16};
+  ${(props) => props.theme.fonts.body07};
   color: ${(props) => props.theme.colors.gray300};
   padding-top: 10px;
 `;
 
-const ItemPickerWrapper = styled.div`
-  width: 100%;
-  overflow: hidden;
-  margin-top: 15vh;
+const ButtonWrapper = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 12px;
-  justify-content: center;
-  position: relative;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: y mandatory; 
-`;
-
-const PickedItemContainer = styled.div`
-  position: absolute;
-  top: 79px;
-  width: 95%;
-  height: 60px;
-  background-color: ${(props) => props.theme.colors.gray800};
-  border-radius: 8px;
-  z-index: 2;
+  flex-direction: column;
 `;

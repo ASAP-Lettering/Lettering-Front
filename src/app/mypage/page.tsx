@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { getLetterCount } from "@/api/letter/letter";
-import { getUserInfo, logout } from "@/api/mypage/user";
-import Button from "@/components/common/Button";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import { theme } from "@/styles/theme";
-import { clearOnboarding, clearTokens, getRefreshToken } from "@/utils/storage";
-import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+import { getLetterCount } from '@/api/letter/letter';
+import { getUserInfo, logout } from '@/api/mypage/user';
+import Button from '@/components/common/Button';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import { theme } from '@/styles/theme';
+import { clearOnboarding, clearTokens, getRefreshToken } from '@/utils/storage';
+import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const MyPage = () => {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [planetCount, setPlanetCount] = useState(0);
   const [letterCount, setLetterCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const goToProfile = () => {
-    router.push("/profile");
+    router.push('/profile');
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const MyPage = () => {
   }, [name, email]);
 
   const goToLetterType = () => {
-    router.push("/mypage/lettertype");
+    router.push('/mypage/lettertype');
   };
 
   const handleLogout = async () => {
@@ -47,18 +47,18 @@ const MyPage = () => {
           console.log(res.data);
           clearTokens();
           clearOnboarding();
-          router.push("/login");
+          router.push('/login');
         })
         .catch((err) => console.log(err));
     }
   };
 
   const goToSendedLetter = () => {
-    router.push("/mypage/send");
+    router.push('/mypage/send');
   };
 
   const goToAcountDelete = () => {
-    router.push("/mypage/delete");
+    router.push('/mypage/delete');
   };
 
   const fetchUserInfo = async () => {
@@ -66,9 +66,9 @@ const MyPage = () => {
       const response = await getUserInfo();
       setName(response.data.name);
       setEmail(response.data.email);
-      console.log("회원정보 조회 성공:", response.data);
+      console.log('회원정보 조회 성공:', response.data);
     } catch (error) {
-      console.error("회원정보 조회 실패:", error);
+      console.error('회원정보 조회 실패:', error);
     }
   };
 
@@ -78,7 +78,7 @@ const MyPage = () => {
       setLetterCount(response.data.letterCount);
       setPlanetCount(response.data.spaceCount);
     } catch (error) {
-      console.error("편지수, 행성수 조회 실패:", error);
+      console.error('편지수, 행성수 조회 실패:', error);
     }
   };
 
@@ -96,63 +96,61 @@ const MyPage = () => {
           <MainContainer>
             <MainWrapper>
               <ProfileHeader>
+                <ProfileImage src="/assets/profile/img_profile_letter.png" />
                 <ProfileInfo>
-                  <ProfileName>{name}님의 프로필</ProfileName>
+                  <ProfileName>{name}님의 스페이스</ProfileName>
                   <ProfileEmail>
                     <img src="/assets/icons/ic_kakao_profile.svg" />
                     <div>{email}</div>
                   </ProfileEmail>
+                  <CountRaw>
+                    <CountTitle>행성</CountTitle>
+                    <CountValue>{planetCount}개</CountValue>
+                    <CountDivider />
+                    <CountTitle>편지</CountTitle>
+                    <CountValue>{letterCount}개</CountValue>
+                  </CountRaw>
                 </ProfileInfo>
-                <ProfileBtn
-                  src="/assets/icons/ic_arrow_profile.svg"
-                  onClick={goToProfile}
-                />
               </ProfileHeader>
-              <CountContainer>
-                <CountRaw>
-                  <CountTitle>내 편지</CountTitle>
-                  <CountValue>총 {letterCount}개</CountValue>
-                </CountRaw>
-                <CountRaw>
-                  <CountTitle>내 행성</CountTitle>
-                  <CountValue>총 {planetCount}개</CountValue>
-                </CountRaw>
-              </CountContainer>
-              <Button
-                buttonType="secondary"
-                size="large"
-                icon={true}
-                text="보낸 편지함 보기"
-                onClick={goToSendedLetter}
-              />
+              <MenuWrapper onClick={goToSendedLetter}>
+                <TitleWrapper>
+                  <MenuTitle>
+                    <img src="/assets/icons/ic_letter.svg" />
+                    내가 보낸 편지
+                  </MenuTitle>
+                  <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+                </TitleWrapper>
+              </MenuWrapper>
             </MainWrapper>
-            <Line />
+            <DivDivder />
             <SettingWrapper>
               <SettingContainer>
-                <SettingTitle>설정</SettingTitle>
                 <MenuWrapper onClick={goToLetterType}>
-                  <div>
-                    <MenuTitle>편지 날짜 보기</MenuTitle>
-                    <MenuSubTitle>
-                      편지 이름과 날짜를 함께 확인할 수 있어요
-                    </MenuSubTitle>
-                  </div>
-                  <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+                  <SettingTitle>설정</SettingTitle>
+                  <TitleWrapper>
+                    <MenuTitle>
+                      <TextWrapper>
+                        편지 날짜 보기
+                        <MenuSubTitle>
+                          편지 이름과 날짜를 함께 확인할 수 있어요
+                        </MenuSubTitle>
+                      </TextWrapper>
+                    </MenuTitle>
+                    <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+                  </TitleWrapper>
                 </MenuWrapper>
               </SettingContainer>
               <SettingContainer>
-                <SettingTitle>내 계정</SettingTitle>
-                <MenuWrapper onClick={handleLogout}>
-                  <div>
+                <MenuWrapper>
+                  <SettingTitle>내 계정</SettingTitle>
+                  <TitleWrapper onClick={handleLogout}>
                     <MenuTitle>로그아웃</MenuTitle>
-                  </div>
-                  <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
-                </MenuWrapper>
-                <MenuWrapper onClick={goToAcountDelete}>
-                  <div>
-                    <MenuTitle>탈퇴</MenuTitle>
-                  </div>
-                  <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+                    <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+                  </TitleWrapper>
+                  <TitleWrapper onClick={goToAcountDelete}>
+                    <MenuTitle>회원탈퇴</MenuTitle>
+                    <ProfileBtn src="/assets/icons/ic_arrow_profile.svg" />
+                  </TitleWrapper>
                 </MenuWrapper>
               </SettingContainer>
             </SettingWrapper>
@@ -182,6 +180,7 @@ export default function MyPagePaging() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   height: 100%;
   min-height: 100%;
   max-height: 100%;
@@ -199,6 +198,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
   padding: 24px;
   overflow-y: auto;
   box-sizing: border-box;
@@ -228,11 +228,27 @@ const ProfileHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const ProfileImage = styled.img`
+  width: 100%;
+  height: auto;
+
+  @media (max-height: 760px) {
+    width: 180px;
+  }
+
+  @media (max-width: 400px) {
+    width: 130px;
+    height: 130px;
+  }
 `;
 
 const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 4px;
 `;
 
@@ -264,21 +280,27 @@ const ProfileBtn = styled.img`
   }
 `;
 
-const CountContainer = styled.div`
-  border-radius: 8px;
-  background-color: ${(props: any) => props.theme.colors.gray900};
-  display: flex;
-  flex-direction: column;
-  padding: 14px 20px;
-  gap: 10px;
-  margin-top: 24px;
-  margin-bottom: 12px;
-`;
-
 const CountRaw = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  gap: 8px;
+  align-items: center; /* 세로 중앙 정렬 */
+`;
+
+const CountDivider = styled.div`
+  width: 1px;
+  height: 16px;
+  background-color: ${(props: any) => props.theme.colors.gray400};
+  margin: 0 8px;
+`;
+
+const DivDivder = styled.div`
+  width: 100vw;
+  height: 2px;
+  flex-shrink: 0;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  background-color: ${(props: any) => props.theme.colors.gray900};
 `;
 
 const CountTitle = styled.div`
@@ -314,7 +336,7 @@ const SettingWrapper = styled.div`
 `;
 
 const SettingTitle = styled.div`
-  ${(props: any) => props.theme.fonts.body07};
+  ${(props: any) => props.theme.fonts.body08};
   color: ${(props: any) => props.theme.colors.gray100};
   margin-bottom: 10px;
 
@@ -324,12 +346,27 @@ const SettingTitle = styled.div`
 `;
 
 const MenuTitle = styled.div`
+  display: flex;
+  gap: 11px;
+  text-align: left;
+  align-items: center;
   ${(props: any) => props.theme.fonts.body06};
   color: ${(props: any) => props.theme.colors.white};
 
   @media (max-height: 628px) {
     ${theme.fonts.body16};
   }
+`;
+
+const TextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const MenuSubTitle = styled.div`
@@ -343,9 +380,12 @@ const MenuSubTitle = styled.div`
 
 const MenuWrapper = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 10px 0;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-radius: 8px;
+  gap: 10px;
+  padding: 19px;
+  background-color: ${(props: any) => props.theme.colors.gray800};
   cursor: pointer;
 `;
 
@@ -355,7 +395,7 @@ const SettingContainer = styled.div`
 
 const VersionText = styled.div`
   margin-top: 4px;
-  color: var(--gray-700, #2E3040);
+  color: var(--gray-700, #2e3040);
   font-family: Pretendard;
   font-size: 11.844px;
   font-style: normal;
