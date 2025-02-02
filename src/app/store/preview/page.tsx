@@ -97,7 +97,7 @@ const LetterPreviewPage = () => {
           <LetterWrapper>
             <LetterContainer>
               <Letter
-                showType="previewReceive"
+                showType="receive"
                 contentType="all"
                 id={'0'}
                 templateType={templateType}

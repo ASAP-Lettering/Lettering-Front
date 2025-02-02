@@ -11,7 +11,9 @@ import { registerLetterState } from '@/recoil/letterStore';
 import { flipAnimation } from '@/styles/animation';
 import { useToast } from '@/hooks/useToast';
 
-type showType = 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
+// showType: "편지 보내기" | "편지 보관하기" | "편지 열람" | "보낸 편지 조회" | "카톡으로 접근한 편지 조회"
+// type showType = 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
+type showType = 'receive' | 'send' | 'url';
 export type contentType = 'one' | 'all';
 type pageType = 'independent' | 'space';
 
@@ -187,7 +189,6 @@ const Letter = (props: LetterProps) => {
       $width={width}
       $height={height}
       $padding={padding}
-      $showType={showType}
       className={flip ? 'flip' : ''}
     >
       {isDelete && (
@@ -208,34 +209,13 @@ const Letter = (props: LetterProps) => {
       {(showType === 'receive' || showType === 'send') && (
         <>
           <TopContainer $contentType={contentType}>
-            <Name
-              $showType={showType}
-              $contentType={contentType}
-              $nameSize={nameSize}
-            >
+            <Name $nameSize={nameSize}>
               {`${showType === 'send' ? `To. ` : `From. `} ${name}`}
             </Name>
           </TopContainer>
         </>
       )}
-      {(showType === 'send' || (showType === 'previewSend' && isImage)) && (
-        <Date $showType="send">{date}</Date>
-      )}
-      {(showType === 'previewReceive' || showType === 'previewSend') && (
-        <>
-          <TopPreviewContainer $contentType={contentType}>
-            {name && (
-              <Name
-                $showType={showType}
-                $contentType={contentType}
-                $nameSize={nameSize}
-              >
-                {`${showType === 'previewSend' ? `To. ` : `From. `} ${name}`}
-              </Name>
-            )}
-          </TopPreviewContainer>
-        </>
-      )}
+      {showType === 'send' && <Date>{date}</Date>}
       <Content
         $showType={showType}
         $contentType={contentType}
@@ -277,7 +257,6 @@ const Container = styled.div<{
   $width?: string;
   $height?: string;
   $padding?: string;
-  $showType: 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
 }>`
   display: flex;
   flex-direction: column;
@@ -327,8 +306,6 @@ const TopPreviewContainer = styled(TopContainer)`
 `;
 
 const Name = styled.div<{
-  $showType: string;
-  $contentType: string;
   $nameSize?: string;
 }>`
   display: flex;
@@ -351,10 +328,9 @@ const Name = styled.div<{
     `}
 `;
 
-const Date = styled.div<{ $showType: string }>`
+const Date = styled.div`
   color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.body09};
-  ${(props) => (props.$showType === 'send' ? props.theme.fonts.caption03 : '')};
+  ${theme.fonts.caption03};
 `;
 
 const Content = styled.div<{
@@ -363,10 +339,11 @@ const Content = styled.div<{
   $isImage: boolean;
 }>`
   width: 100%;
-  ${(props) =>
+  /* ${(props) =>
     props.$showType === 'previewSend' || props.$showType === 'previewReceive'
-      ? `flex: 1; height: calc(100% - 80px);`
-      : `height: 90%;`}
+      ? // ? `flex: 1; height: calc(100% - 80px);`
+        `height: 100%;`
+      : `height: 90%;`} */
   display: flex;
   justify-content: flex-start;
   align-items: center;

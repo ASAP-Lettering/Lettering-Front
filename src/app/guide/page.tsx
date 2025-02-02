@@ -73,9 +73,9 @@ const GuidePage = () => {
   //Letter
   const letterData = LETTER_DUMMY[0];
   const imageData = [
-    'https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill',
-    'https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill',
-    'https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill'
+    'https://lettering-images.s3.amazonaws.com/0192e660-0efb-7729-b107-19f5ed4a7fb9/4c182685-da2a-49fd-8251-ecc8914733c6',
+    'https://lettering-images.s3.amazonaws.com/0192e660-0efb-7729-b107-19f5ed4a7fb9/4c182685-da2a-49fd-8251-ecc8914733c6',
+    'https://lettering-images.s3.amazonaws.com/0192e660-0efb-7729-b107-19f5ed4a7fb9/4c182685-da2a-49fd-8251-ecc8914733c6'
   ];
 
   //bottomSheet
@@ -235,7 +235,7 @@ const GuidePage = () => {
         isImage={true}
       />
       <Letter
-        showType="previewReceive"
+        showType="send"
         contentType="all"
         id={letterData.id.toString()}
         templateType={letterData.templateType}
@@ -243,9 +243,21 @@ const GuidePage = () => {
         content={letterData.content}
         date={letterData.date}
         isImage={false}
+        height="450px"
       />
       <Letter
-        showType="previewReceive"
+        showType="send"
+        contentType="one"
+        id={letterData.id.toString()}
+        templateType={letterData.templateType}
+        name={letterData.sender}
+        images={imageData}
+        date={letterData.date}
+        isImage={true}
+        height="450px"
+      />
+      <Letter
+        showType="url"
         contentType="one"
         id={letterData.id.toString()}
         templateType={letterData.templateType}
@@ -253,26 +265,6 @@ const GuidePage = () => {
         content={letterData.content}
         date={letterData.date}
         isImage={false}
-      />
-      <Letter
-        showType="previewSend"
-        contentType="all"
-        id={letterData.id.toString()}
-        templateType={letterData.templateType}
-        name={letterData.sender}
-        images={imageData}
-        date={letterData.date}
-        isImage={true}
-      />
-      <Letter
-        showType="previewSend"
-        contentType="one"
-        id={letterData.id.toString()}
-        templateType={letterData.templateType}
-        name={letterData.sender}
-        images={imageData}
-        date={letterData.date}
-        isImage={true}
       />
       <h3>BottomSheet</h3>
       <ButtonContainer>

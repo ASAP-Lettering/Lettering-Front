@@ -51,7 +51,7 @@ const SendTemplatePage = () => {
           <LetterWrapper>
             <LetterContainer>
               <Letter
-                showType="previewSend"
+                showType="send"
                 contentType="one"
                 id={'0'}
                 templateType={template}
