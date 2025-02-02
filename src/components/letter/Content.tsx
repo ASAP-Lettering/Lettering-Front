@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 import { contentType } from './Letter';
@@ -24,6 +24,20 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
 }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [popupPage, setPopupPage] = useState(page);
+  const [minWidth, setMinWidth] = useState(393);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      setMinWidth(window.innerWidth || 393);
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, []);
 
   /* 스와이프 핸들러 */
   const handlers = useSwipeable({
@@ -74,7 +88,12 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             style={{ transform: `translateX(${popupOffset}%)` }}
           >
             {content.map((imgSrc, index) => (
-              <PopupImage key={index} src={imgSrc} draggable="false" />
+              <PopupImage
+                key={index}
+                src={imgSrc}
+                draggable="false"
+                $minWidth={minWidth}
+              />
             ))}
           </PopupImageSlider>
         </PopupOverlay>
@@ -244,9 +263,9 @@ const PopupImageSlider = styled.div`
   transition: transform 0.5s ease-out;
 `;
 
-const PopupImage = styled.img`
+const PopupImage = styled.img<{ $minWidth: number }>`
   width: 100%;
-  max-width: 393px;
+  min-width: ${({ $minWidth }) => `${$minWidth < 393 ? $minWidth : 393}px`};
   height: 100%;
   object-fit: contain;
 `;
