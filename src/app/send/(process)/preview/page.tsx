@@ -25,9 +25,31 @@ const SendPreviewPage = () => {
   const [letterCode, setLetterCode] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSharing, setIsSharing] = useState<boolean>(false);
+  const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
+  }, []);
+
+  useEffect(() => {
+    const updateMaxLines = () => {
+      if (window.innerHeight > 670) {
+        setMaxLinesPerPage(12);
+      } else if (window.innerHeight > 628) {
+        setMaxLinesPerPage(8);
+      } else if (window.innerHeight > 580) {
+        setMaxLinesPerPage(7);
+      } else {
+        setMaxLinesPerPage(9);
+      }
+    };
+
+    updateMaxLines();
+    window.addEventListener('resize', updateMaxLines);
+
+    return () => {
+      window.removeEventListener('resize', updateMaxLines);
+    };
   }, []);
 
   const handleFlipLetter = () => {
@@ -119,7 +141,9 @@ const SendPreviewPage = () => {
               $hasChangeButton={content.length > 0 && images.length > 0}
             >
               <Letter
+                key={`${maxLinesPerPage}`}
                 showType="send"
+                contentType="all"
                 id={'0'}
                 templateType={templateType}
                 name={receiverName}
@@ -130,6 +154,7 @@ const SendPreviewPage = () => {
                 height="100%"
                 padding="38px 28px"
                 nameSize="18px"
+                maxLines={maxLinesPerPage}
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (

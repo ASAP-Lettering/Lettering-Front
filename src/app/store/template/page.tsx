@@ -24,6 +24,8 @@ const LetterTemplatePage = () => {
   const { senderName, content, images, templateType } =
     useRecoilValue(registerLetterState);
   const setRegisterLetterState = useSetRecoilState(registerLetterState);
+  const [maxLinesPerPage, setMaxLinesPerPage] = useState(7);
+  const [fontSize, setFontSize] = useState<string>('16px');
 
   const [template, setTemplateType] = useState<number>(
     templateType || ALL_TEMPLATES[0]
@@ -35,6 +37,34 @@ const LetterTemplatePage = () => {
   useEffect(() => {
     setSsrCompleted();
   }, [setSsrCompleted]);
+
+  useEffect(() => {
+    const updateMaxLines = () => {
+      if (window.innerHeight > 725) {
+        setMaxLinesPerPage(8);
+        setFontSize('16px');
+      } else if (window.innerHeight > 628) {
+        setMaxLinesPerPage(7);
+        setFontSize('16px');
+      } else if (window.innerHeight > 580) {
+        setMaxLinesPerPage(6);
+        setFontSize('16px');
+      } else if (window.innerHeight > 550) {
+        setMaxLinesPerPage(5);
+        setFontSize('16px');
+      } else {
+        setMaxLinesPerPage(4);
+        setFontSize('11px');
+      }
+    };
+
+    updateMaxLines();
+    window.addEventListener('resize', updateMaxLines);
+
+    return () => {
+      window.removeEventListener('resize', updateMaxLines);
+    };
+  }, []);
 
   const hanleChangeTemplate = (id: number) => {
     setTemplateType(id);
@@ -66,8 +96,10 @@ const LetterTemplatePage = () => {
           <LetterWrapper>
             <LetterContainer>
               <Letter
+                key={`${maxLinesPerPage}-${fontSize}`}
                 showType="receive"
                 contentType="one"
+                isTemplate={true}
                 id={'0'}
                 templateType={template}
                 name={senderName}
@@ -77,6 +109,8 @@ const LetterTemplatePage = () => {
                 width="100%"
                 height="100%"
                 padding="40px 30px"
+                maxLines={maxLinesPerPage}
+                fontSize={fontSize}
               />
             </LetterContainer>
           </LetterWrapper>

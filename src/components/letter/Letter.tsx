@@ -20,6 +20,7 @@ type pageType = 'independent' | 'space';
 interface LetterProps {
   showType: showType;
   contentType?: contentType;
+  isTemplate?: boolean;
   pageType?: pageType;
   id: string;
   templateType: number;
@@ -33,14 +34,16 @@ interface LetterProps {
   padding?: string;
   readOnly?: boolean;
   nextLetterId?: string;
-  maxLineWidth?: number;
+  maxLines?: number;
   nameSize?: string;
+  fontSize?: string;
 }
 
 const Letter = (props: LetterProps) => {
   const {
     showType,
     contentType = 'all',
+    isTemplate = false,
     pageType = 'independent',
     id,
     templateType,
@@ -54,7 +57,9 @@ const Letter = (props: LetterProps) => {
     padding,
     readOnly = false,
     nextLetterId,
-    nameSize
+    maxLines,
+    nameSize,
+    fontSize // 줄넘김 인식을 위한 폰트 사이즈 지정 (ex. "11px")
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -89,14 +94,20 @@ const Letter = (props: LetterProps) => {
       const container = document.querySelector('.ContentContainer'); // content 부모 컨테이너
       if (!container) return;
 
-      const maxLinesPerPage = contentType === 'one' ? 7 : 12;
+      const maxLinesPerPage = isTemplate
+        ? maxLines + 2
+        : maxLines
+        ? maxLines
+        : contentType === 'one'
+        ? 7
+        : 12;
 
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
 
       if (context) {
         canvas.width = container.clientWidth; // 부모 컨테이너의 width 기준
-        context.font = '16px Pretendard';
+        context.font = `${fontSize ? fontSize : '16px'} Pretendard`;
         const maxWidth = container.clientWidth;
 
         let currentLine = '';
@@ -217,9 +228,9 @@ const Letter = (props: LetterProps) => {
       )}
       {showType === 'send' && <Date>{date}</Date>}
       <Content
-        $showType={showType}
+        key={`${maxLines}`}
+        $isTemplate={isTemplate}
         $contentType={contentType}
-        $isImage={isImage}
         className="ContentContainer"
       >
         <SwipeableContent
@@ -229,6 +240,7 @@ const Letter = (props: LetterProps) => {
           totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
           isImage={isChangeImage}
           page={currentPage}
+          maxLines={maxLines}
         />
       </Content>
       {showType === 'url' && (
@@ -326,9 +338,8 @@ const Date = styled.div`
 `;
 
 const Content = styled.div<{
-  $showType: string;
+  $isTemplate: boolean;
   $contentType: string;
-  $isImage: boolean;
 }>`
   width: 100%;
   height: 100%;
@@ -339,9 +350,7 @@ const Content = styled.div<{
   box-sizing: border-box;
   padding: 10px 0;
   ${(props) =>
-    (props.$showType === 'previewSend' ||
-      props.$showType === 'previewReceive') &&
-    props.$contentType === 'one'
+    props.$isTemplate && props.$contentType === 'one'
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
   -webkit-user-select: none;

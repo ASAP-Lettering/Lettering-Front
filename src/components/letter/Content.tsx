@@ -12,6 +12,7 @@ interface SwipeableContentProps {
   totalPage: number;
   isImage: boolean;
   page: number;
+  maxLines?: number;
 }
 
 const SwipeableContent: React.FC<SwipeableContentProps> = ({
@@ -20,13 +21,15 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
   setPage,
   totalPage,
   isImage,
-  page
+  page,
+  maxLines
 }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [popupPage, setPopupPage] = useState(page);
   const [minWidth, setMinWidth] = useState(393);
 
   useEffect(() => {
+    console.log('maxLines', maxLines);
     const updateWidth = () => {
       setMinWidth(window.innerWidth || 393);
     };
@@ -109,7 +112,9 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
                 </PopupBtn>
               </ImageContainerWrapper>
             ) : (
-              <ClampedText $contentType={contentType}>{content}</ClampedText>
+              <ClampedText $contentType={contentType} $maxLines={maxLines}>
+                {content[0]}
+              </ClampedText>
             )}
           </ContentItem>
         ) : (
@@ -128,7 +133,9 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
                   </PopupBtn>
                 </ImageContainerWrapper>
               ) : (
-                <ClampedText $contentType={contentType}>{item}</ClampedText>
+                <ClampedText $contentType={contentType} $maxLines={maxLines}>
+                  {item}
+                </ClampedText>
               )}
             </ContentItem>
           ))
@@ -166,12 +173,6 @@ const ContentItem = styled.div<{ $isImage: boolean }>`
   flex-shrink: 0;
   display: flex;
   overflow: hidden;
-  align-items: center;
-  ${($isImage) =>
-    $isImage &&
-    css`
-      overflow: hidden;
-    `}
 `;
 
 const ImageContainerWrapper = styled.div`
@@ -198,16 +199,19 @@ const ImageContainer = styled(Image)`
   -o-user-drag: none;
 `;
 
-const ClampedText = styled.div<{ $contentType: contentType }>`
+const ClampedText = styled.div<{
+  $contentType: contentType;
+  $maxLines: number;
+}>`
   width: 100%;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 
-  ${({ $contentType }) =>
+  ${({ $contentType, $maxLines }) =>
     $contentType === 'one'
       ? css`
-          -webkit-line-clamp: 7;
+          -webkit-line-clamp: ${$maxLines || 7};
           text-overflow: ellipsis;
         `
       : css`
