@@ -1,43 +1,43 @@
-"use client";
+'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Button from "@/components/common/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import PlanetBox from "@/components/planet/PlanetBox";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
+import React, { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import Button from '@/components/common/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
+import PlanetBox from '@/components/planet/PlanetBox';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 import {
   putLetterToIndep,
-  putLetterToPlanet,
-} from "@/api/planet/letter/spaceLetter";
-import Image from "next/image";
-import { getSpaceList } from "@/api/planet/space/space";
-import { useToast } from "@/hooks/useToast";
-import { Planet } from "@/types/planet";
+  putLetterToPlanet
+} from '@/api/planet/letter/spaceLetter';
+import Image from 'next/image';
+import { getSpaceList } from '@/api/planet/space/space';
+import { useToast } from '@/hooks/useToast';
+import { Planet } from '@/types/planet';
 
 const PlanetMovePage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const searchParams = useSearchParams();
-  const letterId = searchParams.get("letter");
-  const senderName = searchParams.get("senderName");
+  const letterId = searchParams.get('letter');
+  const senderName = searchParams.get('senderName');
 
   const [planets, setPlanets] = useState<Planet[]>();
-  const [checkedPlanet, setCheckedPlanet] = useState<string>("");
+  const [checkedPlanet, setCheckedPlanet] = useState<string>('');
   const [checkedIndep, setCheckedIndep] = useState<boolean>(false);
-  const [checkePlanetName, setCheckedPlanetName] = useState<string>("");
+  const [checkePlanetName, setCheckedPlanetName] = useState<string>('');
 
   useEffect(() => {
     const fetchSpaceList = async () => {
       try {
         const response = await getSpaceList();
-        console.log("전체 스페이스 목록 조회 성공:", response.data);
+        console.log('전체 스페이스 목록 조회 성공:', response.data);
         setPlanets(response.data.spaces);
         setCheckedPlanet(response.data.spaces[0].spaceId);
       } catch (error) {
-        console.error("전체 스페이스 목록 조회 실패:", error);
+        console.error('전체 스페이스 목록 조회 실패:', error);
       }
     };
 
@@ -56,23 +56,23 @@ const PlanetMovePage = () => {
       try {
         // 우선, 편지 궤도(독립 편지)로 보내기
         await putLetterToIndep(letterId);
-        console.log("편지 궤도 보내기 성공");
+        console.log('편지 궤도 보내기 성공');
 
         // checkedPlanet가 있을 경우, 다른 행성으로 이동
         if (checkedPlanet) {
           await putLetterToPlanet({
             letterId: letterId,
-            spaceId: checkedPlanet,
+            spaceId: checkedPlanet
           });
-          console.log("편지 다른 행성 이동 성공");
+          console.log('편지 다른 행성 이동 성공');
 
           showToast(
             `${senderName} 님의 편지가 ${checkePlanetName} 행성으로 이동했어요`,
             {
               icon: false,
               close: false,
-              bottom: "230px",
-              padding: "11px 20px",
+              bottom: '230px',
+              padding: '11px 20px'
             }
           );
         } else {
@@ -81,14 +81,14 @@ const PlanetMovePage = () => {
             {
               icon: false,
               close: false,
-              bottom: "230px",
+              bottom: '230px'
             }
           );
         }
 
-        router.push("/planet");
+        router.push('/planet');
       } catch (error) {
-        console.log("편지 이동 실패", error);
+        console.log('편지 이동 실패', error);
       }
     }
   };
@@ -98,7 +98,7 @@ const PlanetMovePage = () => {
       setCheckedIndep(false);
     } else {
       setCheckedIndep(true);
-      setCheckedPlanet("");
+      setCheckedPlanet('');
     }
   };
 
@@ -135,10 +135,10 @@ const PlanetMovePage = () => {
                 alt="check"
               />
             )}
-            행성 궤도로 보내기
+            새 편지함으로 보내기
           </Top>
           <Small>
-            궤도로 옮겨질 시, 홈에서 끌어당겨 언제든 추가할 수 있어요
+            새 편지함에서 끌어당겨 언제든 다른 행성에 추가할 수 있어요
           </Small>
         </SendOrbitArea>
       </SendOrbitAreaWrapper>
@@ -148,7 +148,7 @@ const PlanetMovePage = () => {
           size="large"
           text="이동하기"
           disabled={
-            (checkedPlanet === "" && checkedIndep === false) ||
+            (checkedPlanet === '' && checkedIndep === false) ||
             checkedPlanet === planets?.[0]?.spaceId
           }
           onClick={handleMovePlanet}
