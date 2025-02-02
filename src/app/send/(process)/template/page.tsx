@@ -84,6 +84,7 @@ const SendTemplatePage = () => {
                 key={`${maxLinesPerPage}-${fontSize}`}
                 showType="send"
                 contentType="one"
+                isTemplate={true}
                 id={'0'}
                 templateType={template}
                 name={receiverName}
