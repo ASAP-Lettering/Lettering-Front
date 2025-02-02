@@ -343,6 +343,7 @@ const LetterContainer = styled.div`
   @media (max-height: 824px) {
     max-width: 320px;
     min-height: 350px;
+    max-height: 350px;
   }
 
   @media (max-height: 780px) {

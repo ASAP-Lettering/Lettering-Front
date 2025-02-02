@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
-import { getSentLetterDetail } from "@/api/mypage/user";
-import KakaoShareButton from "@/components/common/KakaoShareButton";
-import Loader from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Letter from "@/components/letter/Letter";
-import { theme } from "@/styles/theme";
-import { SentDetailLetterType } from "@/types/letter";
-import { getAccessToken } from "@/utils/storage";
-import { useParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+import { getSentLetterDetail } from '@/api/mypage/user';
+import KakaoShareButton from '@/components/common/KakaoShareButton';
+import Loader from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import Letter from '@/components/letter/Letter';
+import { theme } from '@/styles/theme';
+import { SentDetailLetterType } from '@/types/letter';
+import { useParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const SendDetailPage = () => {
   const { id } = useParams();
@@ -18,8 +17,30 @@ const SendDetailPage = () => {
   const [key, setKey] = useState(1);
   const [letterData, setLetterData] = useState<SentDetailLetterType>();
   const [isImage, setIsImage] = useState(false);
-  const accessToken = getAccessToken();
-  const [letterCode, setLetterCode] = useState("");
+  const [letterCode, setLetterCode] = useState('');
+
+  const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+
+  useEffect(() => {
+    const updateMaxLines = () => {
+      if (window.innerHeight > 780) {
+        setMaxLinesPerPage(10);
+      } else if (window.innerHeight > 630) {
+        setMaxLinesPerPage(7);
+      } else if (window.innerHeight > 580) {
+        setMaxLinesPerPage(5);
+      } else {
+        setMaxLinesPerPage(6);
+      }
+    };
+
+    updateMaxLines();
+    window.addEventListener('resize', updateMaxLines);
+
+    return () => {
+      window.removeEventListener('resize', updateMaxLines);
+    };
+  }, []);
 
   const changeImageorContent = () => {
     setIsImage(!isImage);
@@ -50,16 +71,16 @@ const SendDetailPage = () => {
       <MainWrapper>
         <Header>
           <LetterCount>
-            편지 정보 | {letterData.content.length}자{" "}
+            편지 정보 | {letterData.content.length}자{' '}
             {letterData.images.length > 0 &&
               ` · 사진 ${letterData.images.length}장`}
           </LetterCount>
         </Header>
         <LetterContainer>
           <Letter
+            key={`${key}-${maxLinesPerPage}`}
             showType="send"
-            key={key}
-            id={letterId || ""}
+            id={letterId || ''}
             templateType={letterData.templateType}
             name={letterData.receiverName}
             content={letterData.content}
@@ -69,6 +90,7 @@ const SendDetailPage = () => {
             isImage={isImage}
             width="100%"
             height="100%"
+            maxLines={maxLinesPerPage}
           />
         </LetterContainer>
         <WhiteSpace />
@@ -76,7 +98,7 @@ const SendDetailPage = () => {
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
-              클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
+              클릭하면 {isImage ? '편지 내용' : '사진'}을 확인할 수 있어요!
             </div>
           </ChangeButtonWrapper>
         ) : (
@@ -158,6 +180,7 @@ const LetterContainer = styled.div`
 
   @media (max-height: 824px) {
     max-width: 320px;
+    max-height: 350px;
     min-height: 350px;
   }
 
