@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 import { contentType } from './Letter';
 import Image from 'next/image';
+import { theme } from '@/styles/theme';
 
 interface SwipeableContentProps {
   contentType: contentType;
@@ -22,7 +23,9 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
   page
 }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
-  const [popupImage, setPopupImage] = useState('');
+  const [popupPage, setPopupPage] = useState(page);
+
+  /* 스와이프 핸들러 */
   const handlers = useSwipeable({
     onSwipedLeft: () => setPage(page < totalPage - 1 ? page + 1 : page),
     onSwipedRight: () => setPage(page > 0 ? page - 1 : page),
@@ -30,10 +33,21 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
     trackMouse: true
   });
 
-  const xOffset = -page * 100;
+  /* 팝업 내 스와이프 핸들러 */
+  const popupHandlers = useSwipeable({
+    onSwipedLeft: () =>
+      setPopupPage(popupPage < totalPage - 1 ? popupPage + 1 : popupPage),
+    onSwipedRight: () =>
+      setPopupPage(popupPage > 0 ? popupPage - 1 : popupPage),
+    trackTouch: true,
+    trackMouse: true
+  });
 
-  const openPopup = (image: string) => {
-    setPopupImage(image);
+  const xOffset = -page * 100;
+  const popupOffset = -popupPage * 100;
+
+  const openPopup = (index: number) => {
+    setPopupPage(index);
     setPopupOpen(true);
   };
 
@@ -42,8 +56,27 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
   return (
     <SwipeableContainer {...handlers}>
       {isPopupOpen && (
-        <PopupOverlay onClick={closePopup}>
-          <PopupImage src={popupImage} onClick={(e) => e.stopPropagation()} />
+        <PopupOverlay {...popupHandlers}>
+          <PopupTop>
+            <PopupPage>
+              {totalPage > 1 && (
+                <span>
+                  {popupPage + 1} / {totalPage}
+                </span>
+              )}
+            </PopupPage>
+            <PopupCloseButton onClick={closePopup}>
+              <img src="/assets/icons/ic_cancel.svg" width={24} height={24} />
+            </PopupCloseButton>
+          </PopupTop>
+          {/* 팝업 이미지 슬라이더*/}
+          <PopupImageSlider
+            style={{ transform: `translateX(${popupOffset}%)` }}
+          >
+            {content.map((imgSrc, index) => (
+              <PopupImage key={index} src={imgSrc} draggable="false" />
+            ))}
+          </PopupImageSlider>
         </PopupOverlay>
       )}
       <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
@@ -52,8 +85,7 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             {isImage ? (
               <ImageContainerWrapper>
                 <ImageContainer src={content[0]} alt="image" fill />
-                <PopupBtn onClick={() => openPopup(content[0])}>
-                  {' '}
+                <PopupBtn onClick={() => openPopup(0)}>
                   <img src="/assets/icons/ic_search.svg" />
                 </PopupBtn>
               </ImageContainerWrapper>
@@ -66,9 +98,13 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             <ContentItem key={index} $isImage={isImage}>
               {isImage ? (
                 <ImageContainerWrapper>
-                  {/* <ImageContainer src={content[index]} /> */}
-                  <ImageContainer src={content[0]} alt="image" fill />
-                  <PopupBtn onClick={() => openPopup(content[index])}>
+                  <ImageContainer
+                    src={content[index]}
+                    alt="image"
+                    fill
+                    draggable="false"
+                  />
+                  <PopupBtn onClick={() => openPopup(index)}>
                     <img src="/assets/icons/ic_search.svg" />
                   </PopupBtn>
                 </ImageContainerWrapper>
@@ -173,16 +209,46 @@ const PopupOverlay = styled.div`
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   z-index: 99999;
+  overflow: hidden;
+`;
+
+const PopupTop = styled.div`
+  width: 100%;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 53px;
+  z-index: 10;
+`;
+
+const PopupPage = styled.div`
+  color: ${theme.colors.white};
+  ${theme.fonts.body09};
+`;
+
+const PopupCloseButton = styled.button`
+  width: 24px;
+  height: 24px;
+`;
+
+const PopupImageSlider = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-out;
 `;
 
 const PopupImage = styled.img`
-  max-width: 90%;
-  max-height: 90%;
+  width: 100%;
+  max-width: 393px;
+  height: 100%;
   object-fit: contain;
-  border-radius: 10px;
 `;
 
 const PopupBtn = styled.button`
