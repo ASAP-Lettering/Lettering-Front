@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 import { contentType } from './Letter';
+import Image from 'next/image';
 
 interface SwipeableContentProps {
   contentType: contentType;
@@ -50,8 +51,11 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
           <ContentItem $isImage={isImage}>
             {isImage ? (
               <ImageContainerWrapper>
-                <ImageContainer src={content[0]}></ImageContainer>
-                <PopupBtn onClick={() => openPopup(content[0])}>Open</PopupBtn>
+                <ImageContainer src={content[0]} alt="image" fill />
+                <PopupBtn onClick={() => openPopup(content[0])}>
+                  {' '}
+                  <img src="/assets/icons/ic_search.svg" />
+                </PopupBtn>
               </ImageContainerWrapper>
             ) : (
               <ClampedText $contentType={contentType}>{content}</ClampedText>
@@ -62,9 +66,10 @@ const SwipeableContent: React.FC<SwipeableContentProps> = ({
             <ContentItem key={index} $isImage={isImage}>
               {isImage ? (
                 <ImageContainerWrapper>
-                  <ImageContainer src={content[index]} />
+                  {/* <ImageContainer src={content[index]} /> */}
+                  <ImageContainer src={content[0]} alt="image" fill />
                   <PopupBtn onClick={() => openPopup(content[index])}>
-                    <img src="/assets/icons/ic_search.svg"></img>
+                    <img src="/assets/icons/ic_search.svg" />
                   </PopupBtn>
                 </ImageContainerWrapper>
               ) : (
@@ -83,21 +88,26 @@ export default SwipeableContent;
 const SwipeableContainer = styled.div`
   overflow: hidden;
   width: 100%;
-  height: auto;
+  height: 100%;
   box-sizing: border-box;
   border-radius: 10px;
+  position: relative;
+
   @media (max-width: 375px) {
     max-height: 235px;
   }
 `;
 
 const ContentSlider = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   transition: transform 0.5s ease-out;
 `;
 
 const ContentItem = styled.div<{ $isImage: boolean }>`
   width: 100%;
+  height: 100%;
   flex-shrink: 0;
   display: flex;
   overflow: hidden;
@@ -115,16 +125,12 @@ const ImageContainerWrapper = styled.div`
   height: 100%;
 `;
 
-const ImageContainer = styled.div<{ src: string }>`
+const ImageContainer = styled(Image)`
   width: 100%;
-  height: 100%; /* 부모 컨테이너에 맞추어 높이를 조정 */
-  min-height: 200px;
-  max-height: 300px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
   overflow: hidden;
-  background-image: url(${(props) => props.src});
-  background-size: cover; /* 이미지를 부모 컨테이너에 맞추고 초과된 부분을 크롭 */
-  background-position: center; /* 이미지의 가운데를 표시 */
-  background-repeat: no-repeat;
 
   -webkit-user-select: none;
   -khtml-user-select: none;

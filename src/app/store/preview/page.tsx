@@ -95,7 +95,9 @@ const LetterPreviewPage = () => {
       <Container>
         <Column>
           <LetterWrapper>
-            <LetterContainer>
+            <LetterContainer
+              $hasChangeButton={content.length > 0 && images.length > 0}
+            >
               <Letter
                 showType="receive"
                 contentType="all"
@@ -195,13 +197,14 @@ const LetterWrapper = styled.div`
   }
 `;
 
-const LetterContainer = styled.div`
+const LetterContainer = styled.div<{ $hasChangeButton: boolean }>`
   display: flex;
   justify-content: center;
   width: 100%;
   max-width: 345px;
-  min-height: 354px;
-  max-height: 354px;
+  min-height: 443px;
+  max-height: 443px;
+  margin-bottom: ${({ $hasChangeButton }) => ($hasChangeButton ? '0' : '80px')};
 
   @media (max-height: 660px) {
     min-height: 350px;
@@ -220,6 +223,8 @@ const LetterContainer = styled.div`
   @media (max-height: 550px) {
     min-height: 280px;
     max-height: 280px;
+    margin-bottom: ${({ $hasChangeButton }) =>
+      $hasChangeButton ? '0' : '55px'};
   }
 `;
 

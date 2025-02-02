@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Pagination from './Pagination';
 import SwipeableContent from './Content';
@@ -237,15 +237,14 @@ const Letter = (props: LetterProps) => {
           <UrlDate>{date}</UrlDate>
         </UrlWrapper>
       )}
-      {contentType === 'all' &&
-        (totalPage > 1 ? (
+      <PaginationDiv>
+        {contentType === 'all' && totalPage > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
           />
-        ) : (
-          <PaginationDiv />
-        ))}
+        )}
+      </PaginationDiv>
     </Container>
   );
 };
@@ -263,7 +262,7 @@ const Container = styled.div<{
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  height: auto;
+  height: 100%;
   padding: ${({ $padding }) => ($padding ? $padding : '34px')};
   max-width: ${({ $width }) => ($width ? $width : '345px')};
   max-height: ${({ $height }) => ($height ? $height : '349px')};
@@ -297,14 +296,6 @@ const TopContainer = styled.div<{
   }
 `;
 
-const TopPreviewContainer = styled(TopContainer)`
-  ${theme.fonts.subtitle}
-
-  @media (max-height: 628px) {
-    margin-top: 0;
-  }
-`;
-
 const Name = styled.div<{
   $nameSize?: string;
 }>`
@@ -312,6 +303,7 @@ const Name = styled.div<{
   align-items: center;
   text-align: center;
   ${(props) => props.theme.fonts.subtitle};
+  margin-bottom: 10px;
 
   @media (max-height: 628px) {
     ${(props) => props.theme.fonts.body7};
@@ -339,11 +331,7 @@ const Content = styled.div<{
   $isImage: boolean;
 }>`
   width: 100%;
-  /* ${(props) =>
-    props.$showType === 'previewSend' || props.$showType === 'previewReceive'
-      ? // ? `flex: 1; height: calc(100% - 80px);`
-        `height: 100%;`
-      : `height: 90%;`} */
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -419,7 +407,7 @@ const EditBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
   padding: 10px;
-  border-bottom: 1px solid #5b5f70;
+  border-bottom: 1px solid ${theme.colors.gray500};
 
   @media (max-height: 628px) {
     padding: 5px;
@@ -467,5 +455,9 @@ const UrlDate = styled.div`
 `;
 
 const PaginationDiv = styled.div`
-  height: 16px;
+  height: 6px;
+  position: absolute;
+  bottom: 23px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
