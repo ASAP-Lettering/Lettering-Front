@@ -19,10 +19,6 @@ const MyPage = () => {
   const [letterCount, setLetterCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const goToProfile = () => {
-    router.push('/profile');
-  };
-
   useEffect(() => {
     fetchUserInfo();
     fetchGetCount();
@@ -225,23 +221,24 @@ const MainWrapper = styled.div`
 `;
 
 const ProfileHeader = styled.div`
+  height: 144px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 25px;
+
+  @media (max-width: 370px) {
+    gap: 10px;
+  }
 `;
 
 const ProfileImage = styled.img`
-  width: 100%;
+  width: 143px;
   height: auto;
 
-  @media (max-height: 760px) {
-    width: 180px;
-  }
-
-  @media (max-width: 400px) {
-    width: 130px;
-    height: 130px;
+  @media (max-width: 370px) {
+    width: 100px;
   }
 `;
 
@@ -250,6 +247,7 @@ const ProfileInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 4px;
+  white-space: nowrap;
 `;
 
 const ProfileName = styled.div`

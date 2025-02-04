@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Pagination from './Pagination';
 import SwipeableContent from './Content';
@@ -11,13 +11,16 @@ import { registerLetterState } from '@/recoil/letterStore';
 import { flipAnimation } from '@/styles/animation';
 import { useToast } from '@/hooks/useToast';
 
-type showType = 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
+// showType: "편지 보내기" | "편지 보관하기" | "편지 열람" | "보낸 편지 조회" | "카톡으로 접근한 편지 조회"
+// type showType = 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
+type showType = 'receive' | 'send' | 'url';
 export type contentType = 'one' | 'all';
 type pageType = 'independent' | 'space';
 
 interface LetterProps {
   showType: showType;
   contentType?: contentType;
+  isTemplate?: boolean;
   pageType?: pageType;
   id: string;
   templateType: number;
@@ -31,14 +34,16 @@ interface LetterProps {
   padding?: string;
   readOnly?: boolean;
   nextLetterId?: string;
-  maxLineWidth?: number;
+  maxLines?: number;
   nameSize?: string;
+  fontSize?: string;
 }
 
 const Letter = (props: LetterProps) => {
   const {
     showType,
     contentType = 'all',
+    isTemplate = false,
     pageType = 'independent',
     id,
     templateType,
@@ -52,7 +57,9 @@ const Letter = (props: LetterProps) => {
     padding,
     readOnly = false,
     nextLetterId,
-    nameSize
+    maxLines,
+    nameSize,
+    fontSize // 줄넘김 인식을 위한 폰트 사이즈 지정 (ex. "11px")
   } = props;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -87,14 +94,20 @@ const Letter = (props: LetterProps) => {
       const container = document.querySelector('.ContentContainer'); // content 부모 컨테이너
       if (!container) return;
 
-      const maxLinesPerPage = contentType === 'one' ? 7 : 12;
+      const maxLinesPerPage = isTemplate
+        ? maxLines + 2
+        : maxLines
+        ? maxLines
+        : contentType === 'one'
+        ? 7
+        : 12;
 
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
 
       if (context) {
         canvas.width = container.clientWidth; // 부모 컨테이너의 width 기준
-        context.font = '16px Pretendard';
+        context.font = `${fontSize ? fontSize : '16px'} Pretendard`;
         const maxWidth = container.clientWidth;
 
         let currentLine = '';
@@ -187,7 +200,6 @@ const Letter = (props: LetterProps) => {
       $width={width}
       $height={height}
       $padding={padding}
-      $showType={showType}
       className={flip ? 'flip' : ''}
     >
       {isDelete && (
@@ -208,38 +220,17 @@ const Letter = (props: LetterProps) => {
       {(showType === 'receive' || showType === 'send') && (
         <>
           <TopContainer $contentType={contentType}>
-            <Name
-              $showType={showType}
-              $contentType={contentType}
-              $nameSize={nameSize}
-            >
+            <Name $nameSize={nameSize}>
               {`${showType === 'send' ? `To. ` : `From. `} ${name}`}
             </Name>
           </TopContainer>
         </>
       )}
-      {(showType === 'send' || (showType === 'previewSend' && isImage)) && (
-        <Date $showType="send">{date}</Date>
-      )}
-      {(showType === 'previewReceive' || showType === 'previewSend') && (
-        <>
-          <TopPreviewContainer $contentType={contentType}>
-            {name && (
-              <Name
-                $showType={showType}
-                $contentType={contentType}
-                $nameSize={nameSize}
-              >
-                {`${showType === 'previewSend' ? `To. ` : `From. `} ${name}`}
-              </Name>
-            )}
-          </TopPreviewContainer>
-        </>
-      )}
+      {showType === 'send' && <Date>{date}</Date>}
       <Content
-        $showType={showType}
+        key={`${maxLines}`}
+        $isTemplate={isTemplate}
         $contentType={contentType}
-        $isImage={isImage}
         className="ContentContainer"
       >
         <SwipeableContent
@@ -249,6 +240,7 @@ const Letter = (props: LetterProps) => {
           totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
           isImage={isChangeImage}
           page={currentPage}
+          maxLines={maxLines}
         />
       </Content>
       {showType === 'url' && (
@@ -257,15 +249,14 @@ const Letter = (props: LetterProps) => {
           <UrlDate>{date}</UrlDate>
         </UrlWrapper>
       )}
-      {contentType === 'all' &&
-        (totalPage > 1 ? (
+      <PaginationDiv>
+        {contentType === 'all' && totalPage > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPage={totalPage ? (totalPage >= 8 ? 8 : totalPage) : 0}
           />
-        ) : (
-          <PaginationDiv />
-        ))}
+        )}
+      </PaginationDiv>
     </Container>
   );
 };
@@ -277,14 +268,13 @@ const Container = styled.div<{
   $width?: string;
   $height?: string;
   $padding?: string;
-  $showType: 'previewSend' | 'previewReceive' | 'receive' | 'send' | 'url';
 }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  height: auto;
+  height: 100%;
   padding: ${({ $padding }) => ($padding ? $padding : '34px')};
   max-width: ${({ $width }) => ($width ? $width : '345px')};
   max-height: ${({ $height }) => ($height ? $height : '349px')};
@@ -318,23 +308,14 @@ const TopContainer = styled.div<{
   }
 `;
 
-const TopPreviewContainer = styled(TopContainer)`
-  ${theme.fonts.subtitle}
-
-  @media (max-height: 628px) {
-    margin-top: 0;
-  }
-`;
-
 const Name = styled.div<{
-  $showType: string;
-  $contentType: string;
   $nameSize?: string;
 }>`
   display: flex;
   align-items: center;
   text-align: center;
   ${(props) => props.theme.fonts.subtitle};
+  margin-bottom: 10px;
 
   @media (max-height: 628px) {
     ${(props) => props.theme.fonts.body7};
@@ -351,22 +332,17 @@ const Name = styled.div<{
     `}
 `;
 
-const Date = styled.div<{ $showType: string }>`
+const Date = styled.div`
   color: ${theme.colors.gray400};
-  ${(props) => props.theme.fonts.body09};
-  ${(props) => (props.$showType === 'send' ? props.theme.fonts.caption03 : '')};
+  ${theme.fonts.caption03};
 `;
 
 const Content = styled.div<{
-  $showType: string;
+  $isTemplate: boolean;
   $contentType: string;
-  $isImage: boolean;
 }>`
   width: 100%;
-  ${(props) =>
-    props.$showType === 'previewSend' || props.$showType === 'previewReceive'
-      ? `flex: 1; height: calc(100% - 80px);`
-      : `height: 90%;`}
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -374,9 +350,7 @@ const Content = styled.div<{
   box-sizing: border-box;
   padding: 10px 0;
   ${(props) =>
-    (props.$showType === 'previewSend' ||
-      props.$showType === 'previewReceive') &&
-    props.$contentType === 'one'
+    props.$isTemplate && props.$contentType === 'one'
       ? props.theme.fonts.caption09
       : props.theme.fonts.body07};
   -webkit-user-select: none;
@@ -442,7 +416,7 @@ const EditBtn = styled.button`
   ${(props: any) => props.theme.fonts.button01};
   color: ${(props: any) => props.theme.colors.white};
   padding: 10px;
-  border-bottom: 1px solid #5b5f70;
+  border-bottom: 1px solid ${theme.colors.gray500};
 
   @media (max-height: 628px) {
     padding: 5px;
@@ -490,5 +464,9 @@ const UrlDate = styled.div`
 `;
 
 const PaginationDiv = styled.div`
-  height: 16px;
+  height: 6px;
+  position: absolute;
+  bottom: 23px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
