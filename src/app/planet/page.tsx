@@ -56,7 +56,7 @@ const PlanetPage = () => {
 
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo | null>(null);
   const [user, setUser] = useRecoilState(userState);
-  const [countLetter, setCountLetter] = useState<number>(0);
+  // const [countLetter, setCountLetter] = useState<number>(0);
   const accessToken = getAccessToken(); // 에러핸들링
 
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -91,7 +91,7 @@ const PlanetPage = () => {
     try {
       const response = await getLetterCount();
       console.log('모든 편지 수 조회 성공:', response.data);
-      setCountLetter(response.data.letterCount);
+      // setCountLetter(response.data.letterCount);
       setCurrentOrbits(response.data.content);
 
       if (response.data.letterCount < 3 && getInitUserToast() !== 'true') {
@@ -471,21 +471,7 @@ const PlanetPage = () => {
             />
             <Container>
               <Top>
-                <Title>
-                  {countLetter < 3 ? (
-                    <>
-                      {user.name}님의 스페이스를
-                      <br />
-                      편지로 수놓아 보세요
-                    </>
-                  ) : (
-                    <>
-                      {user.name}님의 스페이스에
-                      <br />
-                      <Em>{countLetter}개의 편지</Em>가 수놓여 있어요!
-                    </>
-                  )}
-                </Title>
+                <Title>{user.name}님의 스페이스</Title>
                 <Icon
                   src="/assets/icons/ic_mypage.svg"
                   width={24}
@@ -498,7 +484,8 @@ const PlanetPage = () => {
                 <Tag
                   tagType="planet"
                   name={spaceInfo?.spaceName}
-                  icon="chevron"
+                  icon="hamburger"
+                  iconPosition="left"
                   onClick={() => {
                     router.push('/planet/manage');
                   }}
@@ -523,7 +510,7 @@ const PlanetPage = () => {
                     currentOrbits={currentOrbits || []}
                     setCurrentOrbits={setCurrentOrbits}
                     onEditPlanetName={handleEditPlanetName}
-                    setCountLetter={setCountLetter}
+                    // setCountLetter={setCountLetter}
                     setChange={setChange}
                   />
                 </SliderWrapper>
@@ -618,11 +605,7 @@ const Top = styled.div`
 
 const Title = styled.div`
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.heading02};
-`;
-
-const Em = styled.span`
-  ${(props) => props.theme.fonts.heading01}
+  ${(props) => props.theme.fonts.heading01};
 `;
 
 const TagList = styled.div`

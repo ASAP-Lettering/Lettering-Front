@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
-import { SpaceInfo } from "@/types/space";
-import Planet from "../common/Planet";
-import { Orbit } from "@/types/orbit";
+import React from 'react';
+import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import { SpaceInfo } from '@/types/space';
+import Planet from '../common/Planet';
+import { Orbit } from '@/types/orbit';
 
 interface PlanetSlideProps {
   idx: number;
@@ -12,36 +12,36 @@ interface PlanetSlideProps {
   direction: number;
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
-  setCountLetter: React.Dispatch<React.SetStateAction<number>>;
+  // setCountLetter: React.Dispatch<React.SetStateAction<number>>;
   setChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const slideVariants = {
   hidden: (direction: number) => ({
-    x: direction > 0 ? "100%" : "-100%",
-    opacity: 0,
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0
   }),
   visible: {
     x: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: 'spring',
       stiffness: 300,
       damping: 25, // Adjusted for a smoother feel
-      mass: 0.5, // Added mass for more natural movement
-    },
+      mass: 0.5 // Added mass for more natural movement
+    }
   },
   exit: (direction: number) => ({
-    x: direction > 0 ? "-100%" : "100%",
+    x: direction > 0 ? '-100%' : '100%',
     opacity: 0,
     transition: {
-      type: "spring",
+      type: 'spring',
       stiffness: 300,
       damping: 25, // Consistent with the enter transition
       mass: 0.5,
-      ease: [0.4, 0.0, 0.2, 1], // Ease-in-out effect
-    },
-  }),
+      ease: [0.4, 0.0, 0.2, 1] // Ease-in-out effect
+    }
+  })
 };
 
 const PlanetSlide = ({
@@ -50,9 +50,9 @@ const PlanetSlide = ({
   spaceInfo,
   currentOrbits,
   setCurrentOrbits,
-  setCountLetter,
+  // setCountLetter,
   setChange,
-  onEditPlanetName,
+  onEditPlanetName
 }: PlanetSlideProps) => {
   return (
     <AnimatePresence custom={direction}>
@@ -67,11 +67,11 @@ const PlanetSlide = ({
         >
           <Planet
             planetType={spaceInfo?.templateType || 0}
-            planet={spaceInfo?.spaceName || ""}
+            planet={spaceInfo?.spaceName || ''}
             orbits={currentOrbits || []}
             onEditPlanetName={onEditPlanetName}
             setCurrentOrbits={setCurrentOrbits}
-            setCountLetter={setCountLetter}
+            // setCountLetter={setCountLetter}
             setChange={setChange}
           />
           {/* <TestDiv /> */}
