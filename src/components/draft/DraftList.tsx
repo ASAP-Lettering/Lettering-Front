@@ -87,7 +87,12 @@ const DraftList = (props: DraftListProps) => {
     <>
       <Container onClick={handleConfirmModal}>
         <Top>
-          {name.length > 0 ? <Name>{name}</Name> : <Blank>이름 없음</Blank>}|
+          {name && name.length > 0 ? (
+            <Name>{name}</Name>
+          ) : (
+            <Blank>이름 없음</Blank>
+          )}
+          |
           {content && content.length > 0 ? (
             <Content>{content}</Content>
           ) : (
