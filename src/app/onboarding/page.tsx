@@ -4,12 +4,14 @@ import Button from '@/components/common/Button';
 import Loader from '@/components/common/Loader';
 import Pagination from '@/components/letter/Pagination';
 
-import { Suspense, useState, useRef, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSwipeable } from 'react-swipeable';
 import styled from 'styled-components';
 
 const Onboarding = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const router = useRouter();
   const totalPage = 2;
   const handlers = useSwipeable({
     onSwipedLeft: () =>
@@ -27,6 +29,14 @@ const Onboarding = () => {
     console.log(currentPage);
   }, [currentPage]);
 
+  const handleBtnClick = () => {
+    if (currentPage === 0) {
+      setCurrentPage(1);
+    } else {
+      router.push('/planet');
+    }
+  };
+
   return (
     <Container>
       <MainContainer>
@@ -34,10 +44,16 @@ const Onboarding = () => {
         <ContentWrapper {...handlers}>
           <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
             <Content active={currentPage === 0}>페이지 1의 내용</Content>
-            <Content active={currentPage === 1}>페이지 2의 내용</Content>
+            <Content active={currentPage === 1}>
+              <ContentImage src="/assets/gif/onboarding.gif" />
+            </Content>
           </ContentSlider>
         </ContentWrapper>
-        <Button buttonType="primary" text="다음" />
+        <Button
+          buttonType="primary"
+          text={currentPage === 0 ? '다음' : '시작하기'}
+          onClick={handleBtnClick}
+        />
       </MainContainer>
     </Container>
   );
@@ -111,6 +127,22 @@ const Content = styled.div<{ active: boolean }>`
   display: flex;
   overflow: hidden;
   align-items: center;
+`;
+
+const ContentImage = styled.img`
+  width: 100%;
+  height: auto;
+
+  //드래그방지
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
 
 /* 로딩 */
