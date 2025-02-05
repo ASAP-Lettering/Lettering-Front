@@ -33,7 +33,7 @@ const SendPreviewPage = () => {
 
   useEffect(() => {
     const updateMaxLines = () => {
-      if (window.innerHeight > 670) {
+      if (window.innerHeight > 660) {
         setMaxLinesPerPage(12);
       } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
@@ -248,6 +248,7 @@ const LetterContainer = styled.div<{ $hasChangeButton: boolean }>`
 
   @media (max-height: 660px) {
     min-height: 350px;
+    max-height: 350px;
   }
 
   @media (max-height: 628px) {

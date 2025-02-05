@@ -35,7 +35,7 @@ const LetterPreviewPage = () => {
 
   useEffect(() => {
     const updateMaxLines = () => {
-      if (window.innerHeight > 670) {
+      if (window.innerHeight > 660) {
         setMaxLinesPerPage(12);
       } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
@@ -224,13 +224,14 @@ const LetterWrapper = styled.div`
 const LetterContainer = styled.div<{ $hasChangeButton: boolean }>`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 345px;
   min-height: 443px;
   max-height: 443px;
   margin-bottom: ${({ $hasChangeButton }) => ($hasChangeButton ? '0' : '80px')};
 
-  @media (max-height: 670px) {
+  @media (max-height: 660px) {
     min-height: 350px;
     max-height: 350px;
   }
