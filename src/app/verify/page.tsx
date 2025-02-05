@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import styled from "styled-components";
-import { useRouter } from "next/navigation";
-import Input from "@/components/common/Input";
-import { Suspense, useState } from "react";
-import { useRecoilState } from "recoil";
-import { signup } from "@/api/login/user";
-import { signupState, userInfo } from "@/recoil/signupStore";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import { setTokens } from "@/utils/storage";
-import { theme } from "@/styles/theme";
+import Button from '@/components/common/Button';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
+import Input from '@/components/common/Input';
+import { Suspense, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { signup } from '@/api/login/user';
+import { signupState, userInfo } from '@/recoil/signupStore';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { setTokens } from '@/utils/storage';
+import { theme } from '@/styles/theme';
 
 const Verify = () => {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [isVaild, setIsVaild] = useState(true);
   const [user, setUser] = useRecoilState(userInfo);
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
@@ -26,16 +26,15 @@ const Verify = () => {
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
-      birthday: user.birthday,
-      realName: name,
+      realName: name
     })
       .then((res) => {
-        console.log("accessToken", res.data.accessToken);
+        console.log('accessToken', res.data.accessToken);
         setTokens(res.data.accessToken, res.data.refreshToken);
       })
       .catch((error) => {
         console.log(error);
-        router.push("/error");
+        router.push('/error');
         return;
       });
 
@@ -69,7 +68,7 @@ const Verify = () => {
         </InputWrapper>
       </MainWrapper>
       <ButtonWrapper>
-        <DescriptionText onClick={() => router.push("/info")}>
+        <DescriptionText onClick={() => router.push('/info')}>
           왜 실명 인증이 필요한가요?
         </DescriptionText>
         <Button

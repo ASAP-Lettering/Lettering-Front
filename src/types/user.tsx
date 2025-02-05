@@ -3,6 +3,5 @@ export interface RegisterDataType {
   servicePermission: boolean;
   privatePermission: boolean;
   marketingPermission: boolean;
-  birthday: string;
   realName: string;
 }

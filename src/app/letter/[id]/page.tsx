@@ -27,6 +27,29 @@ const LetterPage = () => {
   const [isDelete, setIsDelete] = useState(false);
   const { showToast } = useToast();
 
+  const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+
+  useEffect(() => {
+    const updateMaxLines = () => {
+      if (window.innerHeight > 800) {
+        setMaxLinesPerPage(10);
+      } else if (window.innerHeight > 680) {
+        setMaxLinesPerPage(8);
+      } else if (window.innerHeight > 600) {
+        setMaxLinesPerPage(6);
+      } else {
+        setMaxLinesPerPage(5);
+      }
+    };
+
+    updateMaxLines();
+    window.addEventListener('resize', updateMaxLines);
+
+    return () => {
+      window.removeEventListener('resize', updateMaxLines);
+    };
+  }, []);
+
   const handleButtonClick = (id: string) => {
     router.push(`/letter/${id}`);
   };
@@ -175,8 +198,8 @@ const LetterPage = () => {
       <MainWrapper>
         <LetterContainer>
           <Letter
+            key={`${key}-${maxLinesPerPage}`}
             showType="receive"
-            key={key}
             contentType="all"
             pageType="space"
             id={letterId || ''}
@@ -189,6 +212,7 @@ const LetterPage = () => {
             nextLetterId={letterData.next_letter?.letter_id}
             width="100%"
             height="100%"
+            maxLines={maxLinesPerPage}
           />
         </LetterContainer>
         {letterData.images.length > 0 && letterData.content.length > 0 ? (
@@ -289,6 +313,10 @@ const MainWrapper = styled.div`
   padding: 0 18px;
   overflow-y: auto;
   overflow-x: hidden;
+
+  @media (max-height: 680px) {
+    justify-content: flex-start;
+  }
 `;
 
 const IconWrapper = styled.div`
@@ -375,21 +403,22 @@ const LetterContainer = styled.div`
   @media (max-height: 824px) {
     max-width: 320px;
     min-height: 350px;
+    max-height: 350px;
   }
 
   @media (max-height: 780px) {
-    //max-width: 300px;
+    max-width: 300px;
     min-height: 330px;
     max-height: 330px;
   }
 
   @media (max-height: 680px) {
     max-width: 300px;
-    min-height: 330px;
-    max-height: 330px;
+    min-height: 300px;
+    max-height: 300px;
   }
 
-  @media (max-height: 580px) {
+  @media (max-height: 600px) {
     max-width: 250px;
     min-height: 250px;
     max-height: 250px;

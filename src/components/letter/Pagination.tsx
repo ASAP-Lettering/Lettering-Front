@@ -1,7 +1,7 @@
-import { theme } from "@/styles/theme";
-import React from "react";
-import styled from "styled-components";
-import { motion } from "framer-motion";
+import { theme } from '@/styles/theme';
+import React from 'react';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 interface PaginationProps {
   currentPage: number;
@@ -35,7 +35,6 @@ const Wrapper = styled.div`
   justify-content: center;
   gap: 4px;
   color: ${theme.colors.gray400};
-  padding-top: 10px;
 `;
 
 const PaginationWrapper = styled.div`
@@ -48,9 +47,9 @@ const PaginationWrapper = styled.div`
 const Circle = styled(motion.div)<{ $isActive: boolean }>`
   width: 6px;
   height: 6px;
-  border-radius: ${({ $isActive }) => ($isActive ? "174px" : "50%")};
+  border-radius: ${({ $isActive }) => ($isActive ? '174px' : '50%')};
   background-color: ${({ $isActive }) =>
     $isActive ? theme.colors.white : theme.colors.gray500};
-  width: ${({ $isActive }) => ($isActive ? "16px" : "6px")}; 
+  width: ${({ $isActive }) => ($isActive ? '16px' : '6px')};
   margin: 0 3px;
 `;

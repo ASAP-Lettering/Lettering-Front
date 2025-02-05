@@ -1,17 +1,15 @@
-import { RegisterDataType } from "@/types/user";
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 export const userInfo = atom({
-  key: "RegisterUser",
+  key: 'RegisterUser',
   default: {
     servicePermission: false,
     privatePermission: false,
-    marketingPermission: false,
-    birthday: "",
-  },
+    marketingPermission: false
+  }
 });
 
 export const signupState = atom({
-  key: "registerToken",
-  default: "",
+  key: 'registerToken',
+  default: ''
 });

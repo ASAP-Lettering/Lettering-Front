@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
 import {
   getVerifyedLetter,
   saveVerifyedLetter,
-  verifyLetter,
-} from "@/api/letter/letter";
-import { getMainId } from "@/api/planet/space/space";
-import Button from "@/components/common/Button";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import Letter from "@/components/letter/Letter";
-import { LetterType } from "@/types/letter";
-import { getAccessToken } from "@/utils/storage";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+  verifyLetter
+} from '@/api/letter/letter';
+import { getMainId } from '@/api/planet/space/space';
+import Button from '@/components/common/Button';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import Letter from '@/components/letter/Letter';
+import { LetterType } from '@/types/letter';
+import { getAccessToken } from '@/utils/storage';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const VerifyLetter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
   const [key, setKey] = useState(1);
-  const [letterId, setletterId] = useState("");
+  const [letterId, setletterId] = useState('');
   const [letterData, setLetterData] = useState<LetterType>();
   const [isImage, setIsImage] = useState(false);
   const accessToken = getAccessToken();
   const [isLoading, setIsLoading] = useState(true);
 
   const handleButtonClick = () => {
-    router.push("/planet");
+    router.push('/planet');
   };
 
   const changeImageorContent = () => {
@@ -45,11 +45,11 @@ const VerifyLetter = () => {
         sender: response.data.senderName,
         content: response.data.content,
         date: response.data.date,
-        images: response.data.images,
+        images: response.data.images
       });
     } catch (error) {
       //검증 완료된 사용자이지만 모종의 이유로 데이터 받아오는 것이 실패한 경우
-      console.error("편지 조회 실패:", error);
+      console.error('편지 조회 실패:', error);
       router.push(`/error/network`);
     }
   };
@@ -59,10 +59,10 @@ const VerifyLetter = () => {
       const response = await saveVerifyedLetter(letterId);
       console.log(response.data.message);
     } catch (error) {
-      console.log("편지 저장 실패: ", error);
-      router.push("/error/network");
+      console.log('편지 저장 실패: ', error);
+      router.push('/error/network');
     }
-    router.push("/planet");
+    router.push('/planet');
   };
 
   useEffect(() => {
@@ -89,16 +89,16 @@ const VerifyLetter = () => {
             .catch((error) => {
               if (error.status === 403) {
                 //해당 사용자가 열람 가능한 편지가 아님
-                console.error("검증 실패:", error);
+                console.error('검증 실패:', error);
                 router.push(`/error/letter`);
               } else {
-                router.push("/error");
+                router.push('/error');
               }
             });
         }
       } catch (error) {
         // 메인 ID 조회 실패 시 로그인 페이지로 이동
-        console.error("유효한 회원이 아닌 것으로 판단:", error);
+        console.error('유효한 회원이 아닌 것으로 판단:', error);
         if (url) {
           router.push(`/login?url=${url}`);
         } else {
@@ -127,7 +127,7 @@ const VerifyLetter = () => {
           <Letter
             showType="url"
             key={key}
-            id={letterId || ""}
+            id={letterId || ''}
             templateType={letterData.templateType}
             name={letterData.sender}
             images={letterData.images}
@@ -139,7 +139,7 @@ const VerifyLetter = () => {
           <Letter
             showType="url"
             key={key}
-            id={letterId || ""}
+            id={letterId || ''}
             templateType={letterData.templateType}
             name={letterData.sender}
             content={letterData.content}
@@ -152,7 +152,7 @@ const VerifyLetter = () => {
           <ChangeButtonWrapper onClick={changeImageorContent}>
             <img src="/assets/icons/ic_change_image.svg"></img>
             <div>
-              클릭하면 {isImage ? "편지 내용" : "사진"}을 확인할 수 있어요!
+              클릭하면 {isImage ? '편지 내용' : '사진'}을 확인할 수 있어요!
             </div>
           </ChangeButtonWrapper>
         ) : (
@@ -201,19 +201,13 @@ const Container = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   height: 100%;
-  max-height: 852px;
+  height: 100%;
   color: white;
+  overflow-y: auto;
   overflow-x: hidden;
   padding: 40px 0;
   background: ${(props) => props.theme.colors.bg};
-`;
 
-const MainWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0 19px 0 24px;
-  overflow-y: auto;
-  overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 5px; /* Width of the scrollbar */
   }
@@ -227,6 +221,14 @@ const MainWrapper = styled.div`
     background: ${(props: any) => props.theme.colors.gray600};
     border-radius: 10px; /* Rounded corners */
   }
+`;
+
+const MainWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 19px 0 24px;
+  overflow-x: hidden;
+  padding-bottom: 100px;
 `;
 
 const Header = styled.div`
@@ -249,11 +251,16 @@ const HeaderSubTitle = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  width: 100%;
+  position: absolute;
+  padding: 0 20px;
+  bottom: 40px;
+  left: 0;
   display: flex;
   flex-direction: row;
-  width: 100%;
   gap: 12px;
   justify-content: center;
+  z-index: 1000;
 `;
 
 const ChangeButtonWrapper = styled.div`

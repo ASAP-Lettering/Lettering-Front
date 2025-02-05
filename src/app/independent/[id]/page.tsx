@@ -5,7 +5,6 @@ import Button from '@/components/common/Button';
 import Loader from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';
 import Letter from '@/components/letter/Letter';
-import { useToast } from '@/hooks/useToast';
 import { registerLetterState } from '@/recoil/letterStore';
 import { theme } from '@/styles/theme';
 import { IndependentLetterType, LetterDetailType } from '@/types/letter';
@@ -20,7 +19,6 @@ const IndependentLetterPage = () => {
   const { id } = useParams();
   const letterId = Array.isArray(id) ? id[0] : id;
   const [key, setKey] = useState(1);
-  //const searchParams = useSearchParams();
   const [letterData, setLetterData] = useState<IndependentLetterType | null>(
     null
   );
@@ -29,7 +27,29 @@ const IndependentLetterPage = () => {
   const [letterState, setLetterState] = useRecoilState(registerLetterState);
   const [isPopup, setIsPopup] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const { showToast } = useToast();
+
+  const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+
+  useEffect(() => {
+    const updateMaxLines = () => {
+      if (window.innerHeight > 800) {
+        setMaxLinesPerPage(10);
+      } else if (window.innerHeight > 680) {
+        setMaxLinesPerPage(8);
+      } else if (window.innerHeight > 600) {
+        setMaxLinesPerPage(6);
+      } else {
+        setMaxLinesPerPage(5);
+      }
+    };
+
+    updateMaxLines();
+    window.addEventListener('resize', updateMaxLines);
+
+    return () => {
+      window.removeEventListener('resize', updateMaxLines);
+    };
+  }, []);
 
   //편지 수정 버튼 클릭
   const handleModify = () => {
@@ -125,8 +145,8 @@ const IndependentLetterPage = () => {
       <MainWrapper>
         <LetterContainer>
           <Letter
+            key={`${key}-${maxLinesPerPage}`}
             showType="receive"
-            key={key}
             contentType="all"
             id={letterId || ''}
             templateType={letterData.templateType}
@@ -137,6 +157,7 @@ const IndependentLetterPage = () => {
             isImage={isImage}
             width="100%"
             height="100%"
+            maxLines={maxLinesPerPage}
           />
         </LetterContainer>
         {letterData.images.length > 0 && letterData.content.length > 0 ? (
@@ -242,6 +263,10 @@ const MainWrapper = styled.div`
   padding: 18px;
   overflow-y: auto;
   overflow-x: hidden;
+
+  @media (max-height: 680px) {
+    justify-content: flex-start;
+  }
 `;
 
 const PopupContainer = styled.div`
@@ -307,44 +332,6 @@ const PopupBtn = styled.button`
   }
 `;
 
-/*const Header = styled.div`
-   display: flex;
-  flex-direction: row;
-  padding-bottom: 15px;
-  width: 100%;
-`;
-
-const HeaderTitle = styled.div`
-  width: 100%;
-  ${(props) => props.theme.fonts.heading01};
-  flex: 2;
-  span {
-    ${(props) => props.theme.fonts.heading02};
-    white-space: nowrap;
-  }
-
-  @media (max-height: 780px) {
-    ${theme.fonts.title01};
-    span {
-      ${(props) => props.theme.fonts.body03};
-    }
-  }
-
-  @media (max-height: 628px) {
-    ${theme.fonts.subtitle};
-    span {
-      ${(props) => props.theme.fonts.body07};
-    }
-  }
-
-  @media (max-height: 580px) {
-    ${theme.fonts.subtitle};
-    span {
-      ${(props) => props.theme.fonts.body07};
-    }
-  }
-`; */
-
 const LetterContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -356,6 +343,7 @@ const LetterContainer = styled.div`
   @media (max-height: 824px) {
     max-width: 320px;
     min-height: 350px;
+    max-height: 350px;
   }
 
   @media (max-height: 780px) {
@@ -366,11 +354,11 @@ const LetterContainer = styled.div`
 
   @media (max-height: 680px) {
     max-width: 300px;
-    min-height: 330px;
-    max-height: 330px;
+    min-height: 300px;
+    max-height: 300px;
   }
 
-  @media (max-height: 580px) {
+  @media (max-height: 600px) {
     max-width: 250px;
     min-height: 250px;
     max-height: 250px;
@@ -381,17 +369,6 @@ const LetterContainer = styled.div`
     min-height: 250px;
     max-height: 250px;
   }
-`;
-
-const LetterCount = styled.div`
-  display: flex;
-  ${(props) => props.theme.fonts.caption03};
-  color: ${(props) => props.theme.colors.gray400};
-  flex: 1;
-  flex-direction: column;
-  text-align: end;
-  justify-content: end;
-  padding: 5px;
 `;
 
 const ButtonContainer = styled.div`

@@ -25,9 +25,31 @@ const SendPreviewPage = () => {
   const [letterCode, setLetterCode] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSharing, setIsSharing] = useState<boolean>(false);
+  const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
+  }, []);
+
+  useEffect(() => {
+    const updateMaxLines = () => {
+      if (window.innerHeight > 670) {
+        setMaxLinesPerPage(12);
+      } else if (window.innerHeight > 628) {
+        setMaxLinesPerPage(8);
+      } else if (window.innerHeight > 580) {
+        setMaxLinesPerPage(7);
+      } else {
+        setMaxLinesPerPage(9);
+      }
+    };
+
+    updateMaxLines();
+    window.addEventListener('resize', updateMaxLines);
+
+    return () => {
+      window.removeEventListener('resize', updateMaxLines);
+    };
   }, []);
 
   const handleFlipLetter = () => {
@@ -115,9 +137,13 @@ const SendPreviewPage = () => {
       <Container>
         <Column>
           <LetterWrapper>
-            <LetterContainer>
+            <LetterContainer
+              $hasChangeButton={content.length > 0 && images.length > 0}
+            >
               <Letter
-                showType="previewSend"
+                key={`${maxLinesPerPage}`}
+                showType="send"
+                contentType="all"
                 id={'0'}
                 templateType={templateType}
                 name={receiverName}
@@ -128,6 +154,7 @@ const SendPreviewPage = () => {
                 height="100%"
                 padding="38px 28px"
                 nameSize="18px"
+                maxLines={maxLinesPerPage}
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (
@@ -209,14 +236,15 @@ const LetterWrapper = styled.div`
   }
 `;
 
-const LetterContainer = styled.div`
+const LetterContainer = styled.div<{ $hasChangeButton: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   max-width: 345px;
-  min-height: 354px;
-  max-height: 354px;
+  min-height: 443px;
+  max-height: 443px;
+  margin-bottom: ${({ $hasChangeButton }) => ($hasChangeButton ? '0' : '80px')};
 
   @media (max-height: 660px) {
     min-height: 350px;
@@ -235,6 +263,8 @@ const LetterContainer = styled.div`
   @media (max-height: 550px) {
     min-height: 280px;
     max-height: 280px;
+    margin-bottom: ${({ $hasChangeButton }) =>
+      $hasChangeButton ? '0' : '55px'};
   }
 `;
 

@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
-import NavigatorBar from "@/components/common/NavigatorBar";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export default function Signup() {
   return <Container></Container>;
