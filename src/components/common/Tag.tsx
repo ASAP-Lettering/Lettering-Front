@@ -157,7 +157,7 @@ const Tag = (props: TagProps) => {
     } else if (icon === 'plus') {
       return '/assets/icons/ic_plus.svg';
     } else if (icon === 'hamburger') {
-      return '/assets/icons/ic_hamburger_menu_white.svg';
+      return '/assets/icons/ic_hamburger.svg';
     }
     return '';
   };

@@ -1,12 +1,12 @@
-import { theme } from "@/styles/theme";
-import React from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import Check from "../common/Check";
+import { theme } from '@/styles/theme';
+import React from 'react';
+import styled from 'styled-components';
+import Image from 'next/image';
+import Check from '../common/Check';
 import {
   DraggableProvidedDraggableProps,
-  DraggableProvidedDragHandleProps,
-} from "react-beautiful-dnd";
+  DraggableProvidedDragHandleProps
+} from 'react-beautiful-dnd';
 
 interface PlanetListProps {
   id: string;
@@ -36,7 +36,7 @@ const PlanetList = (props: PlanetListProps) => {
     innerRef,
     dragHandleProps,
     draggableProps,
-    modify,
+    modify
   } = props;
 
   return (
@@ -59,7 +59,7 @@ const PlanetList = (props: PlanetListProps) => {
         {modify && (
           <DragButton type="button" {...dragHandleProps}>
             <Image
-              src="/assets/icons/ic_hamburger_menu.svg"
+              src="/assets/icons/ic_kebab.svg"
               width={24}
               height={24}
               alt="list"
