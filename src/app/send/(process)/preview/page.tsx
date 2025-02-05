@@ -26,6 +26,7 @@ const SendPreviewPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSharing, setIsSharing] = useState<boolean>(false);
   const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+  const [fontSize, setFontSize] = useState<string>('16px');
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -35,12 +36,16 @@ const SendPreviewPage = () => {
     const updateMaxLines = () => {
       if (window.innerHeight > 660) {
         setMaxLinesPerPage(12);
+        setFontSize('16px');
       } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
+        setFontSize('16px');
       } else if (window.innerHeight > 580) {
         setMaxLinesPerPage(7);
+        setFontSize('16px');
       } else {
         setMaxLinesPerPage(9);
+        setFontSize('11px');
       }
     };
 
@@ -155,6 +160,7 @@ const SendPreviewPage = () => {
                 padding="38px 28px"
                 nameSize="18px"
                 maxLines={maxLinesPerPage}
+                fontSize={fontSize}
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (

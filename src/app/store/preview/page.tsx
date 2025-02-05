@@ -28,6 +28,7 @@ const LetterPreviewPage = () => {
   const [isImage, setIsImage] = useState<boolean>(false);
   const resetLetterState = useResetRecoilState(registerLetterState);
   const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+  const [fontSize, setFontSize] = useState<string>('16px');
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -37,12 +38,16 @@ const LetterPreviewPage = () => {
     const updateMaxLines = () => {
       if (window.innerHeight > 660) {
         setMaxLinesPerPage(12);
+        setFontSize('16px');
       } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
+        setFontSize('16px');
       } else if (window.innerHeight > 580) {
         setMaxLinesPerPage(7);
+        setFontSize('16px');
       } else {
         setMaxLinesPerPage(9);
+        setFontSize('11px');
       }
     };
 
@@ -135,6 +140,7 @@ const LetterPreviewPage = () => {
                 padding="38px 28px"
                 nameSize="18px"
                 maxLines={maxLinesPerPage}
+                fontSize={fontSize}
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (

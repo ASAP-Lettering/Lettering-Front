@@ -28,19 +28,25 @@ const LetterPage = () => {
   const { showToast } = useToast();
 
   const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+  const [fontSize, setFontSize] = useState<string>('16px');
 
   useEffect(() => {
     const updateMaxLines = () => {
       if (window.innerHeight > 780) {
         setMaxLinesPerPage(11);
+        setFontSize('16px');
       } else if (window.innerHeight > 660) {
         setMaxLinesPerPage(9);
+        setFontSize('16px');
       } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
+        setFontSize('16px');
       } else if (window.innerHeight > 580) {
         setMaxLinesPerPage(7);
+        setFontSize('16px');
       } else {
         setMaxLinesPerPage(8);
+        setFontSize('11px');
       }
     };
 
@@ -219,6 +225,7 @@ const LetterPage = () => {
             width="100%"
             height="100%"
             maxLines={maxLinesPerPage}
+            fontSize={fontSize}
           />
         </LetterContainer>
         {letterData.images.length > 0 && letterData.content.length > 0 ? (
