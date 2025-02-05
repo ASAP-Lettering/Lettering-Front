@@ -28,6 +28,7 @@ const LetterPreviewPage = () => {
   const [isImage, setIsImage] = useState<boolean>(false);
   const resetLetterState = useResetRecoilState(registerLetterState);
   const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+  const [fontSize, setFontSize] = useState<string>('16px');
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -35,14 +36,18 @@ const LetterPreviewPage = () => {
 
   useEffect(() => {
     const updateMaxLines = () => {
-      if (window.innerHeight > 670) {
+      if (window.innerHeight > 660) {
         setMaxLinesPerPage(12);
+        setFontSize('16px');
       } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
+        setFontSize('16px');
       } else if (window.innerHeight > 580) {
         setMaxLinesPerPage(7);
+        setFontSize('16px');
       } else {
         setMaxLinesPerPage(9);
+        setFontSize('11px');
       }
     };
 
@@ -135,6 +140,7 @@ const LetterPreviewPage = () => {
                 padding="38px 28px"
                 nameSize="18px"
                 maxLines={maxLinesPerPage}
+                fontSize={fontSize}
               />
             </LetterContainer>
             {content.length > 0 && images.length > 0 && (
@@ -224,13 +230,14 @@ const LetterWrapper = styled.div`
 const LetterContainer = styled.div<{ $hasChangeButton: boolean }>`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 345px;
   min-height: 443px;
   max-height: 443px;
   margin-bottom: ${({ $hasChangeButton }) => ($hasChangeButton ? '0' : '80px')};
 
-  @media (max-height: 670px) {
+  @media (max-height: 660px) {
     min-height: 350px;
     max-height: 350px;
   }

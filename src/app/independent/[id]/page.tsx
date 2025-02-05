@@ -29,17 +29,25 @@ const IndependentLetterPage = () => {
   const [isDelete, setIsDelete] = useState(false);
 
   const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
+  const [fontSize, setFontSize] = useState<string>('16px');
 
   useEffect(() => {
     const updateMaxLines = () => {
-      if (window.innerHeight > 800) {
-        setMaxLinesPerPage(10);
-      } else if (window.innerHeight > 680) {
+      if (window.innerHeight > 780) {
+        setMaxLinesPerPage(11);
+        setFontSize('16px');
+      } else if (window.innerHeight > 660) {
+        setMaxLinesPerPage(9);
+        setFontSize('16px');
+      } else if (window.innerHeight > 628) {
         setMaxLinesPerPage(8);
-      } else if (window.innerHeight > 600) {
-        setMaxLinesPerPage(6);
+        setFontSize('16px');
+      } else if (window.innerHeight > 580) {
+        setMaxLinesPerPage(7);
+        setFontSize('16px');
       } else {
-        setMaxLinesPerPage(5);
+        setMaxLinesPerPage(8);
+        setFontSize('11px');
       }
     };
 
@@ -143,7 +151,11 @@ const IndependentLetterPage = () => {
         )}
       </IconWrapper>
       <MainWrapper>
-        <LetterContainer>
+        <LetterContainer
+          $hasChangeButton={
+            letterData.content.length > 0 && letterData.images.length > 0
+          }
+        >
           <Letter
             key={`${key}-${maxLinesPerPage}`}
             showType="receive"
@@ -158,6 +170,7 @@ const IndependentLetterPage = () => {
             width="100%"
             height="100%"
             maxLines={maxLinesPerPage}
+            fontSize={fontSize}
           />
         </LetterContainer>
         {letterData.images.length > 0 && letterData.content.length > 0 ? (
@@ -332,42 +345,41 @@ const PopupBtn = styled.button`
   }
 `;
 
-const LetterContainer = styled.div`
+const LetterContainer = styled.div<{ $hasChangeButton: boolean }>`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 345px;
   min-height: 398px;
   max-height: 398px;
+  margin-bottom: ${({ $hasChangeButton }) => ($hasChangeButton ? '0' : '80px')};
 
-  @media (max-height: 824px) {
-    max-width: 320px;
+  @media (max-height: 780px) {
     min-height: 350px;
     max-height: 350px;
   }
 
-  @media (max-height: 780px) {
-    max-width: 300px;
+  @media (max-height: 660px) {
     min-height: 330px;
     max-height: 330px;
   }
 
-  @media (max-height: 680px) {
-    max-width: 300px;
-    min-height: 300px;
-    max-height: 300px;
+  @media (max-height: 628px) {
+    min-height: 310px;
+    max-height: 310px;
   }
 
-  @media (max-height: 600px) {
-    max-width: 250px;
-    min-height: 250px;
-    max-height: 250px;
+  @media (max-height: 580px) {
+    min-height: 280px;
+    max-height: 280px;
   }
 
   @media (max-height: 550px) {
-    max-width: 250px;
-    min-height: 250px;
-    max-height: 250px;
+    min-height: 260px;
+    max-height: 260px;
+    margin-bottom: ${({ $hasChangeButton }) =>
+      $hasChangeButton ? '0' : '55px'};
   }
 `;
 

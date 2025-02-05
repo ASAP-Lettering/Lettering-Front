@@ -158,16 +158,10 @@ const SendContentPage = () => {
 
       const imageUrls: string[] = [];
       for (const file of validImages) {
-        const compressedFile = await imageCompression(file, {
-          maxSizeMB: 500,
-          maxWidthOrHeight: 512,
-          useWebWorker: true
-        });
-
         try {
           setImageUploadLoading(true);
 
-          const response = await postImage(compressedFile);
+          const response = await postImage(file);
           console.log('이미지 업로드 성공', response.data);
           imageUrls.push(response.data.imageUrl);
         } catch (error) {
