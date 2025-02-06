@@ -12,15 +12,14 @@ interface PlanetListProps {
   id: string;
   planetName: string;
   count: number;
-  checked: string[];
-  deleteMode: boolean;
+  dragMode?: boolean;
   isMain?: boolean;
   onClick?: () => void;
+  onShowBottom: () => void;
   children?: React.ReactNode;
   innerRef?: (element: HTMLElement | null) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps | null;
   draggableProps?: DraggableProvidedDraggableProps | null;
-  modify?: boolean;
 }
 
 const PlanetList = (props: PlanetListProps) => {
@@ -28,43 +27,51 @@ const PlanetList = (props: PlanetListProps) => {
     id,
     planetName,
     count,
-    checked,
-    deleteMode,
+    dragMode,
     isMain,
     onClick,
+    onShowBottom,
     children,
     innerRef,
     dragHandleProps,
-    draggableProps,
-    modify
+    draggableProps
   } = props;
+
+  const handleShowBottom = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onShowBottom();
+  };
 
   return (
     <Box ref={innerRef} onClick={onClick} {...draggableProps}>
       <ContentWrapper>
         <LeftWrapper>
-          {deleteMode && (
-            <CheckWrapper>
-              <Check checkType="round" checked={checked.includes(id)} />
-            </CheckWrapper>
-          )}
           <TextWrapper>
             <Top>
-              {isMain && <MainLabel>메인</MainLabel>}
+              {isMain && <MainLabel>홈</MainLabel>}
               {planetName}
             </Top>
             {count}개의 편지
           </TextWrapper>
         </LeftWrapper>
-        {modify && (
-          <DragButton type="button" {...dragHandleProps}>
+        {dragMode ? (
+          <IconButton {...dragHandleProps}>
+            <Image
+              src="/assets/icons/ic_hamburger_gray.svg"
+              width={24}
+              height={24}
+              alt="list"
+            />
+          </IconButton>
+        ) : (
+          <IconButton onClick={handleShowBottom}>
             <Image
               src="/assets/icons/ic_kebab.svg"
               width={24}
               height={24}
               alt="list"
             />
-          </DragButton>
+          </IconButton>
         )}
       </ContentWrapper>
       {children}
@@ -114,13 +121,17 @@ const TextWrapper = styled.div`
 const Top = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.body06};
 `;
 
 const MainLabel = styled.div`
-  padding: 0 9px;
+  width: 39px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 4px;
   text-align: center;
   background: ${theme.colors.sub01};
@@ -128,9 +139,7 @@ const MainLabel = styled.div`
   white-space: nowrap;
 `;
 
-const CheckWrapper = styled.div``;
-
-const DragButton = styled.button`
+const IconButton = styled.button`
   width: 24px;
   height: 24px;
   display: flex;

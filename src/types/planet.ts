@@ -3,5 +3,5 @@ export interface Planet {
   spaceName: string;
   letterCount: number;
   checked: boolean;
-  current: boolean;
+  isMainSpace: boolean;
 }

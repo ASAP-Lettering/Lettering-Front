@@ -1,37 +1,41 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Button from "@/components/common/Button";
-import PlanetList from "@/components/planet/PlanetList";
-import Image from "next/image";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { theme } from '@/styles/theme';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import PlanetList from '@/components/planet/PlanetList';
+import Image from 'next/image';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   deleteSpaces,
   getSpaceList,
-  putSpacesOrder,
-} from "@/api/planet/space/space";
-import { useToast } from "@/hooks/useToast";
-import { spaceState } from "@/recoil/spaceStore";
-import { useSetRecoilState } from "recoil";
-import { useRouter } from "next/navigation";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import { Planet } from "@/types/planet";
+  putSpacesOrder
+} from '@/api/planet/space/space';
+import { useToast } from '@/hooks/useToast';
+import { spaceState } from '@/recoil/spaceStore';
+import { useSetRecoilState } from 'recoil';
+import { useRouter } from 'next/navigation';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { Planet } from '@/types/planet';
+import BottomSheet from '@/components/common/BottomSheet';
 
 const PlanetManagePage = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const [count, setCount] = useState<number | null>(null);
-  const [deleteMode, setDeleteMode] = useState<boolean>(false);
-  const [checkedPlanets, setCheckedPlanets] = useState<string[]>([]);
+  const [dragMode, setDragMode] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string>();
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
-  const [changedOrder, setChangedOrder] = useState<string[]>([]);
+  const [changedOrder, setChangedOrder] = useState<
+    { spaceId: string; index: number }[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [planets, setPlanets] = useState<Planet[]>();
+  const [showBottom, setShowBottom] = useState<boolean>(false);
+  const [isBottomUp, setIsBottomUp] = useState<boolean>(false);
 
   const setViewSpaceId = useSetRecoilState(spaceState);
 
@@ -39,11 +43,11 @@ const PlanetManagePage = () => {
     try {
       setIsLoading(true);
       const response = await getSpaceList();
-      console.log("전체 스페이스 목록 조회 성공:", response.data);
+      console.log('전체 스페이스 목록 조회 성공:', response.data);
       setPlanets(response.data.spaces);
       setCount(response.data.spaces.length);
     } catch (error) {
-      console.error("전체 스페이스 목록 조회 실패:", error);
+      console.error('전체 스페이스 목록 조회 실패:', error);
     } finally {
       setIsLoading(false);
     }
@@ -53,70 +57,86 @@ const PlanetManagePage = () => {
     fetchSpaceList();
   }, []);
 
-  const handleClickDeleteMode = () => {
-    setDeleteMode(!deleteMode);
+  const handleClickDragMode = () => {
+    setDragMode(!dragMode);
   };
 
-  const handleClickCheckAll = () => {
-    if (planets && planets.length > 0) {
-      if (checkedPlanets.length === planets.length) {
-        setCheckedPlanets([]);
-      } else {
-        setCheckedPlanets(planets.map((planet) => planet.spaceId));
-      }
+  const handleOrderEditComplete = async () => {
+    /* 스페이스 순서 변경 API 호출 */
+    try {
+      const response = await putSpacesOrder({ orders: changedOrder });
+      console.log('결과', changedOrder);
+      console.log('스페이스 순서 변경 성공:', response);
+    } catch (error) {
+      console.error('스페이스 순서 변경 실패:', error);
     }
+    setDragMode(false);
   };
 
   const handleChangeChecked = (id: string) => {
-    if (deleteMode) {
-      if (checkedPlanets.includes(id)) {
-        setCheckedPlanets(checkedPlanets.filter((planetId) => planetId !== id));
-      } else {
-        setCheckedPlanets([...checkedPlanets, id]);
-      }
-    } else {
+    if (!dragMode) {
       /* 선택 행성 조회 모드 */
       if (id) {
         setViewSpaceId(id);
-        router.push("/planet");
+        router.push('/planet');
       }
     }
   };
 
+  /* BottomSheet 관련 함수 */
+  const handleShowBottom = (id: string) => {
+    setSelectedId(id);
+    setShowBottom(true);
+  };
+
+  const handleBottomUpChange = (state: boolean) => {
+    setIsBottomUp(state);
+  };
+
+  /* 홈(메인) 행성 고정 */
+  const handleFixMainPlanet = () => {
+    /* TODO: 선택 행성 (selectedId) 메인 행성으로 변경 API 연동 */
+    setShowBottom(false);
+  };
+
+  /* 행성 삭제 관련 함수 */
   const handleDeletePlanet = () => {
+    setShowBottom(false);
     setConfirmDeleteModal(true);
   };
 
   const handleConfirmDeletePlanet = async () => {
-    if (checkedPlanets.length > 0) {
+    if (selectedId) {
       const smallestIndexPlanet = planets
-        ?.filter((planet) => checkedPlanets.includes(planet.spaceId))
+        ?.filter((planet) => selectedId.includes(planet.spaceId))
         ?.reduce((prev, curr) =>
           planets.indexOf(prev) < planets.indexOf(curr) ? prev : curr
         );
 
       /* 행성 삭제하기 */
       try {
-        const response = await deleteSpaces({ spaceIds: checkedPlanets });
-        console.log("행성 삭제 성공:", response.data);
+        const response = await deleteSpaces({ spaceIds: [selectedId] });
+        console.log('행성 삭제 성공:', response.data);
         setPlanets(
-          planets?.filter((planet) => !checkedPlanets.includes(planet.spaceId))
+          (prevPlanets) =>
+            prevPlanets?.filter(
+              (planet) => !selectedId.includes(planet.spaceId)
+            ) || []
         );
         await fetchSpaceList();
+        setShowBottom(false);
       } catch (error) {
-        console.error("행성 삭제 실패:", error);
+        console.error('행성 삭제 실패:', error);
       }
 
       setConfirmDeleteModal(false);
-      setDeleteMode(false);
+      setDragMode(false);
       showToast(
-        `${smallestIndexPlanet?.spaceName} ${
-          checkedPlanets.length > 1 ? `외 ${checkedPlanets.length - 1}개` : ""
-        } 행성과 등록된 편지들이 함께 삭제 되었어요`,
+        `${smallestIndexPlanet?.spaceName} 행성과 등록된 편지들이 함께 삭제 되었어요`,
         {
           icon: false,
           close: false,
-          bottom: "65px",
+          bottom: '65px'
         }
       );
     }
@@ -126,14 +146,14 @@ const PlanetManagePage = () => {
     setConfirmDeleteModal(false);
   };
 
-  const onDragEnd = async ({
+  const onDragEnd = ({
     source,
-    destination,
+    destination
   }: {
     source: any;
     destination: any;
   }) => {
-    console.log("dragEnd");
+    console.log('dragEnd');
     if (!destination) return; // destination이 없다면 return
     console.log(source, destination);
 
@@ -148,21 +168,11 @@ const PlanetManagePage = () => {
     const newOrder: { spaceId: string; index: number }[] = items.map(
       (item: Planet, index: number) => ({
         spaceId: item.spaceId,
-        index: index,
+        index: index
       })
     );
-    setChangedOrder(newOrder.map((item) => item.spaceId));
-
+    setChangedOrder(newOrder);
     console.log(newOrder);
-
-    /* 스페이스 순서 변경 API 호출 */
-    try {
-      const response = await putSpacesOrder({ orders: newOrder });
-      console.log("결과", newOrder);
-      console.log("스페이스 순서 변경 성공:", response);
-    } catch (error) {
-      console.error("스페이스 순서 변경 실패:", error);
-    }
   };
 
   return (
@@ -170,20 +180,14 @@ const PlanetManagePage = () => {
       <NavigatorBar title="나의 행성 관리" cancel={false} />
       <Container>
         <Top>
-          <Label>총 {count === null || isLoading ? "..." : count}개</Label>
-          {deleteMode ? (
-            <CheckAllButton onClick={handleClickCheckAll}>
-              <Image
-                src="/assets/icons/ic_check_small.svg"
-                width={13}
-                height={9}
-                alt="check"
-              />
-              전체 선택
+          <Label>총 {count === null || isLoading ? '...' : count}개</Label>
+          {dragMode ? (
+            <CheckAllButton onClick={handleOrderEditComplete}>
+              편집 완료
             </CheckAllButton>
           ) : (
-            <DeleteModeButton onClick={handleClickDeleteMode}>
-              삭제
+            <DeleteModeButton onClick={handleClickDragMode}>
+              순서 편집
             </DeleteModeButton>
           )}
         </Top>
@@ -199,11 +203,11 @@ const PlanetManagePage = () => {
                 <PlanetBoxList
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  $marginBottom={deleteMode}
+                  $marginBottom={dragMode}
                 >
                   {planets?.map((planet, index) => (
                     <Draggable
-                      key={planet.spaceId + "-button"}
+                      key={planet.spaceId + '-button'}
                       draggableId={planet.spaceId}
                       index={index}
                       disableInteractiveElementBlocking
@@ -213,16 +217,15 @@ const PlanetManagePage = () => {
                           id={planet.spaceId}
                           planetName={planet.spaceName}
                           count={planet.letterCount}
-                          checked={checkedPlanets}
-                          deleteMode={deleteMode}
+                          dragMode={dragMode}
                           onClick={() => {
                             handleChangeChecked(planet.spaceId);
                           }}
-                          isMain={index === 0}
+                          onShowBottom={() => handleShowBottom(planet.spaceId)}
+                          isMain={planet.isMainSpace}
                           innerRef={provided.innerRef}
                           dragHandleProps={provided.dragHandleProps}
                           draggableProps={provided.draggableProps}
-                          modify={true}
                         />
                       )}
                     </Draggable>
@@ -234,22 +237,33 @@ const PlanetManagePage = () => {
           </DragDropContext>
         )}
       </Container>
-      {deleteMode && (
-        <ButtonWrapper>
-          <Button
-            buttonType="secondary"
-            text="취소"
-            width="90px"
-            onClick={handleClickDeleteMode}
-          />
-          <Button
-            buttonType="primary"
-            size="large"
-            text="삭제하기"
-            disabled={checkedPlanets?.length === 0}
-            onClick={handleDeletePlanet}
-          />
-        </ButtonWrapper>
+      {showBottom && (
+        <BottomSheet
+          height={213}
+          isOpen={isBottomUp}
+          handleOpen={handleBottomUpChange}
+        >
+          <BottomSheetContent>
+            <BottomSheetButton onClick={handleFixMainPlanet}>
+              <Image
+                src="/assets/icons/ic_pin.svg"
+                width={24}
+                height={24}
+                alt="고정"
+              />
+              홈 행성 고정
+            </BottomSheetButton>
+            <BottomSheetButton onClick={handleDeletePlanet}>
+              <Image
+                src="/assets/icons/ic_trash.svg"
+                width={24}
+                height={24}
+                alt="삭제"
+              />
+              행성 삭제
+            </BottomSheetButton>
+          </BottomSheetContent>
+        </BottomSheet>
       )}
       {confirmDeleteModal && (
         <ConfirmModal
@@ -267,21 +281,15 @@ export default PlanetManagePage;
 
 const Layout = styled.div`
   width: 100%;
-  height: auto;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  /* overflow-y: hidden; */
   gap: 7px;
   padding: 20px;
   background-color: ${theme.colors.bg};
   position: relative;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
 `;
 
 const Container = styled.div`
@@ -327,6 +335,7 @@ const Divider = styled.div`
 `;
 
 const PlanetBoxList = styled.div<{ $marginBottom: boolean }>`
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -336,17 +345,27 @@ const PlanetBoxList = styled.div<{ $marginBottom: boolean }>`
     css`
       margin-bottom: 100px;
     `}
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
-const ButtonWrapper = styled.div`
-  width: 100%;
-  max-width: 393px;
+const BottomSheetContent = styled.div`
   display: flex;
-  gap: 15px;
-  position: fixed;
-  padding: 0 20px;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 24px;
+`;
+
+const BottomSheetButton = styled.button`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  color: ${theme.colors.white};
+  ${theme.fonts.body02};
 `;
