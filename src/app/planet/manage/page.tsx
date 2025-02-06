@@ -84,9 +84,19 @@ const PlanetManagePage = () => {
   };
 
   /* BottomSheet 관련 함수 */
+  useEffect(() => {
+    if (isBottomUp) {
+      setShowBottom(true);
+    } else {
+      setTimeout(() => {
+        setShowBottom(false);
+      }, 490);
+    }
+  }, [isBottomUp]);
+
   const handleShowBottom = (id: string) => {
     setSelectedId(id);
-    setShowBottom(true);
+    setIsBottomUp(true);
   };
 
   const handleBottomUpChange = (state: boolean) => {
@@ -95,23 +105,31 @@ const PlanetManagePage = () => {
 
   /* 홈(메인) 행성 고정 */
   const handleFixMainPlanet = () => {
+    const selectedPlanet = planets?.filter((planet) =>
+      selectedId.includes(planet.spaceId)
+    );
+
     /* TODO: 선택 행성 (selectedId) 메인 행성으로 변경 API 연동 */
-    setShowBottom(false);
+
+    setIsBottomUp(false);
+    showToast(`${selectedPlanet[0]?.spaceName} 행성을 홈으로 고정했어요`, {
+      icon: false,
+      close: false,
+      bottom: '65px'
+    });
   };
 
   /* 행성 삭제 관련 함수 */
   const handleDeletePlanet = () => {
-    setShowBottom(false);
+    setIsBottomUp(false);
     setConfirmDeleteModal(true);
   };
 
   const handleConfirmDeletePlanet = async () => {
     if (selectedId) {
-      const smallestIndexPlanet = planets
-        ?.filter((planet) => selectedId.includes(planet.spaceId))
-        ?.reduce((prev, curr) =>
-          planets.indexOf(prev) < planets.indexOf(curr) ? prev : curr
-        );
+      const selectedPlanet = planets?.filter((planet) =>
+        selectedId.includes(planet.spaceId)
+      );
 
       /* 행성 삭제하기 */
       try {
@@ -124,7 +142,7 @@ const PlanetManagePage = () => {
             ) || []
         );
         await fetchSpaceList();
-        setShowBottom(false);
+        setIsBottomUp(false);
       } catch (error) {
         console.error('행성 삭제 실패:', error);
       }
@@ -132,7 +150,7 @@ const PlanetManagePage = () => {
       setConfirmDeleteModal(false);
       setDragMode(false);
       showToast(
-        `${smallestIndexPlanet?.spaceName} 행성과 등록된 편지들이 함께 삭제 되었어요`,
+        `${selectedPlanet[0]?.spaceName} 행성과 등록된 편지들이 함께 삭제되었어요`,
         {
           icon: false,
           close: false,
@@ -203,7 +221,6 @@ const PlanetManagePage = () => {
                 <PlanetBoxList
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  $marginBottom={dragMode}
                 >
                   {planets?.map((planet, index) => (
                     <Draggable
@@ -285,7 +302,7 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  /* overflow-y: hidden; */
+  overflow-y: hidden;
   gap: 7px;
   padding: 20px;
   background-color: ${theme.colors.bg};
@@ -334,17 +351,12 @@ const Divider = styled.div`
   margin-bottom: 22px;
 `;
 
-const PlanetBoxList = styled.div<{ $marginBottom: boolean }>`
+const PlanetBoxList = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-
-  ${({ $marginBottom }) =>
-    $marginBottom &&
-    css`
-      margin-bottom: 100px;
-    `}
+  padding-bottom: 50px;
 
   ::-webkit-scrollbar {
     display: none;
@@ -354,11 +366,13 @@ const PlanetBoxList = styled.div<{ $marginBottom: boolean }>`
 `;
 
 const BottomSheetContent = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: flex-start;
   gap: 24px;
+  margin-top: 20px;
 `;
 
 const BottomSheetButton = styled.button`

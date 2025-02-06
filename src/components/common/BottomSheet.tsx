@@ -138,7 +138,7 @@ const SheetBackground = styled(motion.div)<{ $sheetHeight: number }>`
 const BottomHeader = styled.div`
   height: 56px;
   cursor: grab;
-  padding-top: 12px;
+  padding-top: 19px;
   user-select: none;
 `;
 
@@ -160,6 +160,7 @@ const SheetContentWrapper = styled.div`
 
 const SheetContent = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;
