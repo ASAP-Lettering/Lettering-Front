@@ -1,26 +1,27 @@
-import Providers from "./providers";
-import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import GoogleAnalytics from '@/lib/GoogleAnalytics';
+import Providers from './providers';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 export const metadata = {
-  title: "레터링 | 온라인 편지 아카이빙 플랫폼",
-  titleTemplate: "%s - 레터링",
+  title: '레터링 | 온라인 편지 아카이빙 플랫폼',
+  titleTemplate: '%s - 레터링',
   description:
-    "다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.",
+    '다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.',
   icons: {
-    icon: "/favicon_16.png",
+    icon: '/favicon_16.png'
   },
   openGraph: {
-    site_name: "레터링",
-    title: "레터링 | 온라인 편지 아카이빙 플랫폼",
+    site_name: '레터링',
+    title: '레터링 | 온라인 편지 아카이빙 플랫폼',
     description:
-      "다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.",
-    url: "https://www.lettering.world",
-    type: "website",
-  },
+      '다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.',
+    url: 'https://www.lettering.world',
+    type: 'website'
+  }
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -60,14 +61,14 @@ export default function RootLayout({
                 a.getElementsByTagName('head')[0].appendChild(s);
                 m.mazeUniversalSnippetApiKey = e;
               })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '697c563b-a019-4f27-8185-5f33599d9c4d');
-            `,
+            `
           }}
         />
       </head>
       <body>
         <Providers>{children}</Providers>
-        <GoogleTagManager gtmId="GTM-K4JD5J82" />
-        <GoogleAnalytics gaId="G-RT86Q6W1PP" />
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER} />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
       </body>
     </html>
   );
