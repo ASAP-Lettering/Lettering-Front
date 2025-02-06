@@ -1,14 +1,14 @@
-import { deleteOrbitLetter } from "@/api/planet/letter/spaceLetter";
-import { planetRefState } from "@/recoil/RefStore";
-import { theme } from "@/styles/theme";
-import { Orbit } from "@/types/orbit";
-import Image from "next/image";
-import React, { useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import { deleteOrbitLetter } from '@/api/planet/letter/spaceLetter';
+import { planetRefState } from '@/recoil/RefStore';
+import { theme } from '@/styles/theme';
+import { Orbit } from '@/types/orbit';
+import Image from 'next/image';
+import React, { useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styled, { css } from 'styled-components';
 
-type tagType = "orbit" | "planet" | "letter";
-type iconType = "chevron" | "edit" | "plus";
+type tagType = 'orbit' | 'planet' | 'letter';
+type iconType = 'chevron' | 'edit' | 'plus' | 'hamburger';
 
 interface TagProps {
   tagType: tagType;
@@ -17,6 +17,7 @@ interface TagProps {
   isNew?: boolean;
   isDeleteMode?: boolean;
   icon?: iconType;
+  iconPosition?: 'right' | 'left';
   orbitType?: string;
   receivedDate?: string;
   onClick?: () => void;
@@ -37,6 +38,7 @@ const Tag = (props: TagProps) => {
     isNew,
     isDeleteMode = false,
     icon,
+    iconPosition = 'right',
     orbitType,
     receivedDate,
     onClick,
@@ -46,7 +48,7 @@ const Tag = (props: TagProps) => {
     onDelete,
     isDragable = false,
     onDragEnd,
-    onTouchEnd,
+    onTouchEnd
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -60,7 +62,7 @@ const Tag = (props: TagProps) => {
   const [planetRef, setPlanetRef] = useRecoilState(planetRefState);
 
   const handleEditClick = () => {
-    if (icon === "edit") {
+    if (icon === 'edit') {
       setIsEditing(true);
     }
   };
@@ -73,17 +75,17 @@ const Tag = (props: TagProps) => {
       return `${match[1]}.${match[2]}.${match[3]}`;
     }
 
-    throw new Error("Invalid date format");
+    throw new Error('Invalid date format');
   };
 
   const handleDragStart = () => {
-    if (onDragEnd && tagId && name && tagType === "orbit") {
-      console.log("드래그 시작");
+    if (onDragEnd && tagId && name && tagType === 'orbit') {
+      console.log('드래그 시작');
       setIsDragging(true);
       clearHoldTimeout();
       onDragEnd({
         letterId: tagId,
-        senderName: name,
+        senderName: name
       });
     }
   };
@@ -105,10 +107,10 @@ const Tag = (props: TagProps) => {
     if (tagId && onDelete) {
       try {
         const response = await deleteOrbitLetter(tagId);
-        console.log("궤도 편지 삭제 성공", response);
+        console.log('궤도 편지 삭제 성공', response);
         onDelete(tagId);
       } catch {
-        console.log("궤도 편지 삭제 실패");
+        console.log('궤도 편지 삭제 실패');
       }
     }
   };
@@ -148,24 +150,26 @@ const Tag = (props: TagProps) => {
   };
 
   const renderIcon = () => {
-    if (icon === "chevron") {
-      return "/assets/icons/ic_chevron_right.svg";
-    } else if (icon === "edit") {
-      return "/assets/icons/ic_edit.svg";
-    } else if (icon === "plus") {
-      return "/assets/icons/ic_plus.svg";
+    if (icon === 'chevron') {
+      return '/assets/icons/ic_chevron_right.svg';
+    } else if (icon === 'edit') {
+      return '/assets/icons/ic_edit.svg';
+    } else if (icon === 'plus') {
+      return '/assets/icons/ic_plus.svg';
+    } else if (icon === 'hamburger') {
+      return '/assets/icons/ic_hamburger.svg';
     }
-    return "";
+    return '';
   };
 
   //모바일 터치 드래그
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (tagType === "letter") {
+    if (tagType === 'letter') {
       handleHoldStart();
     }
-    if (isDragable && tagType === "orbit") {
+    if (isDragable && tagType === 'orbit') {
       e.stopPropagation();
-      console.log("터치 시작", e.touches?.[0]);
+      console.log('터치 시작', e.touches?.[0]);
 
       const touch = e.touches?.[0];
       if (touch) {
@@ -173,18 +177,18 @@ const Tag = (props: TagProps) => {
         startPositionRef.current = position;
       }
 
-      e.currentTarget.addEventListener("touchmove", handleTouchMove, {
-        passive: false,
+      e.currentTarget.addEventListener('touchmove', handleTouchMove, {
+        passive: false
       });
-      e.currentTarget.addEventListener("touchend", handleTouchEnd, {
-        once: true,
+      e.currentTarget.addEventListener('touchend', handleTouchEnd, {
+        once: true
       });
     }
   };
 
   const handleTouchMove = (e: TouchEvent) => {
     const startPosition = startPositionRef.current;
-    console.log("터치 움직임", startPosition);
+    console.log('터치 움직임', startPosition);
 
     if (startPosition) {
       const touch = e.touches[0];
@@ -193,14 +197,14 @@ const Tag = (props: TagProps) => {
 
       setTranslate({
         x: touch.clientX - startPosition.x,
-        y: touch.clientY - startPosition.y,
+        y: touch.clientY - startPosition.y
       });
 
       if (tagRef.current) {
-        tagRef.current.style.zIndex = "999999";
+        tagRef.current.style.zIndex = '999999';
         tagRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-        tagRef.current.style.position = "absolute";
-        tagRef.current.style.touchAction = "none";
+        tagRef.current.style.position = 'absolute';
+        tagRef.current.style.touchAction = 'none';
       }
 
       if (e.cancelable) {
@@ -210,13 +214,13 @@ const Tag = (props: TagProps) => {
   };
 
   const handleTouchEnd = () => {
-    if (tagType === "letter") {
+    if (tagType === 'letter') {
       handleHoldEnd();
     }
 
-    console.log("터치 끝");
+    console.log('터치 끝');
 
-    if (planetRef && tagRef.current && tagType === "orbit") {
+    if (planetRef && tagRef.current && tagType === 'orbit') {
       const parentRect = planetRef.getBoundingClientRect();
       const tagRect = tagRef.current.getBoundingClientRect();
       const isAtLeast80pxAboveBottom = tagRect.bottom <= parentRect.bottom - 80;
@@ -236,22 +240,22 @@ const Tag = (props: TagProps) => {
         name
       ) {
         // 태그가 부모 영역 내에 있고, 밑에서 100px 이상 떨어져 있을 때
-        console.log("드래그한 태그가 영역 내에 있습니다.");
+        console.log('드래그한 태그가 영역 내에 있습니다.');
         onDragEnd({
           letterId: tagId,
-          senderName: name,
+          senderName: name
         });
         onTouchEnd({
           letterId: tagId,
-          senderName: name,
+          senderName: name
         });
       } else if (!isAtLeast80pxAboveBottom) {
         // 태그가 부모 영역 밑에서 100px 이내에 있을 때
         console.log(
-          "태그가 부모 영역의 밑에서 100px 이내에 있습니다. 이벤트를 취소합니다."
+          '태그가 부모 영역의 밑에서 100px 이내에 있습니다. 이벤트를 취소합니다.'
         );
       } else {
-        console.log("드래그한 태그가 영역 내에 없습니다.");
+        console.log('드래그한 태그가 영역 내에 없습니다.');
       }
     }
 
@@ -260,13 +264,13 @@ const Tag = (props: TagProps) => {
 
   const resetTag = () => {
     if (tagRef.current) {
-      tagRef.current.style.transform = "";
-      tagRef.current.style.zIndex = "";
-      tagRef.current.style.position = "relative";
+      tagRef.current.style.transform = '';
+      tagRef.current.style.zIndex = '';
+      tagRef.current.style.position = 'relative';
     }
 
-    document.removeEventListener("touchmove", handleTouchMove);
-    document.removeEventListener("touchend", handleTouchEnd);
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
   };
 
   //   useEffect(() => {
@@ -287,7 +291,8 @@ const Tag = (props: TagProps) => {
     <Box
       $tagType={tagType}
       $hasName={!!name}
-      $hasEditIcon={icon === "edit"}
+      $hasEditIcon={icon === 'edit'}
+      $iconPosition={iconPosition}
       {...(orbitType ? { $orbitType: orbitType } : {})}
       onClick={onHold ? handleHoldEnd : handleBoxClick}
       ref={(el) => {
@@ -310,7 +315,7 @@ const Tag = (props: TagProps) => {
           textLength={editedName?.length || 0} // 텍스트 길이 전달
           autoFocus
         />
-      ) : orbitType && receivedDate && orbitType === "2" ? (
+      ) : orbitType && receivedDate && orbitType === '2' ? (
         <OrbitContainer>
           <Name>{name}</Name>
           <Date>{formatDate(receivedDate)}</Date>
@@ -318,8 +323,8 @@ const Tag = (props: TagProps) => {
       ) : (
         <Name>{name}</Name>
       )}
-      {tagType === "orbit" && isNew && !isDeleteMode && <Circle />}
-      {tagType === "orbit" && isDeleteMode && (
+      {tagType === 'orbit' && isNew && !isDeleteMode && <Circle />}
+      {tagType === 'orbit' && isDeleteMode && (
         <DeleteIcon
           src="/assets/icons/ic_delete_mode.svg"
           width={20}
@@ -328,13 +333,14 @@ const Tag = (props: TagProps) => {
           onClick={handleDeleteOrbit}
         />
       )}
-      {tagType === "planet" && (
+      {tagType === 'planet' && (
         <IconImage
           src={renderIcon()}
           width={24}
           height={24}
           alt="planet"
           onClick={handleEditClick}
+          $iconPosition={iconPosition}
         />
       )}
     </Box>
@@ -348,9 +354,12 @@ const Box = styled.div<{
   $hasName?: boolean;
   $hasEditIcon?: boolean;
   $orbitType?: string;
+  $iconPosition?: string;
 }>`
   width: auto;
   display: inline-flex;
+  flex-direction: ${({ $iconPosition }) =>
+    $iconPosition === 'left' ? 'row-reverse' : 'row'};
   justify-content: center;
   align-items: center;
   border-radius: 100px;
@@ -360,7 +369,7 @@ const Box = styled.div<{
   z-index: 10;
 
   ${({ $tagType }) =>
-    $tagType === "orbit" &&
+    $tagType === 'orbit' &&
     css`
       height: 34px;
       padding: 6px 23px;
@@ -371,10 +380,10 @@ const Box = styled.div<{
     `}
 
   ${({ $tagType, $hasName, $hasEditIcon }) =>
-    $tagType === "planet" &&
+    $tagType === 'planet' &&
     css`
       height: 37px;
-      padding: 7.5px 4px 7.5px 16px;
+      padding: 7.5px 10px;
       border-radius: 8px;
       background: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.body08};
@@ -396,17 +405,17 @@ const Box = styled.div<{
     `}
   
     ${({ $tagType, $orbitType }) =>
-    $tagType === "letter" &&
+    $tagType === 'letter' &&
     css`
       display: block;
       max-width: 90px;
-      padding: ${$orbitType === "2" ? "7.5px 15px" : "11px 15px"};
+      padding: ${$orbitType === '2' ? '7.5px 15px' : '11px 15px'};
       border-radius: 40px;
       background: ${theme.colors.sub01};
       ${(props) =>
-        $orbitType === "2" ? props.theme.fonts.body8 : props.theme.fonts.body6};
+        $orbitType === '2' ? props.theme.fonts.body8 : props.theme.fonts.body6};
       line-height: 16px;
-      font-size: ${$orbitType === "2" && "14px"};
+      font-size: ${$orbitType === '2' && '14px'};
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -472,7 +481,13 @@ const DeleteIcon = styled(Image)`
   right: -2px;
 `;
 
-const IconImage = styled(Image)`
+const IconImage = styled(Image)<{ $iconPosition: string }>`
+  ${({ $iconPosition }) =>
+    $iconPosition === 'left' &&
+    css`
+      margin-right: 6px;
+    `};
+
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;

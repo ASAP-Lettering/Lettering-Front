@@ -12,6 +12,7 @@
     "@emotion/styled": "^11.13.0",
     "@next/third-parties": "^14.2.5",
     "axios": "^1.7.7",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "browser-image-compression": "^2.0.2",
     "cookie": "^1.0.0",
     "eslint-config-airbnb": "^19.0.4",

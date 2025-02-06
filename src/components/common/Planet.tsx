@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import styled from "styled-components";
-import Tag from "./Tag";
-import Button from "./Button";
-import { useRouter } from "next/navigation";
-import ConfirmModal from "./ConfirmModal";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { toastState } from "@/recoil/toastStore";
-import { deletePlanetLetter } from "@/api/planet/letter/spaceLetter";
-import { droppedLetterState } from "@/recoil/letterStore";
-import BlinkTag from "./BlinkingTag";
-import { useToast } from "@/hooks/useToast";
-import { getCookie } from "@/utils/storage";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import styled from 'styled-components';
+import Tag from './Tag';
+import Button from './Button';
+import { useRouter } from 'next/navigation';
+import ConfirmModal from './ConfirmModal';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { toastState } from '@/recoil/toastStore';
+import { deletePlanetLetter } from '@/api/planet/letter/spaceLetter';
+import { droppedLetterState } from '@/recoil/letterStore';
+import BlinkTag from './BlinkingTag';
+import { useToast } from '@/hooks/useToast';
+import { getCookie } from '@/utils/storage';
 
 interface Orbit {
   letterId: string;
@@ -27,7 +27,7 @@ interface PlanetProps {
   orbits?: Orbit[];
   onEditPlanetName: (newName: string) => void;
   setCurrentOrbits: React.Dispatch<React.SetStateAction<Orbit[] | undefined>>;
-  setCountLetter: React.Dispatch<React.SetStateAction<number>>;
+  // setCountLetter: React.Dispatch<React.SetStateAction<number>>;
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -38,17 +38,17 @@ const Planet = (props: PlanetProps) => {
     orbits,
     onEditPlanetName,
     setCurrentOrbits,
-    setCountLetter,
-    setChange,
+    // setCountLetter,
+    setChange
   } = props;
 
   const router = useRouter();
   const { showToast } = useToast();
   const [hold, setHold] = useState<boolean>(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
-  const [orbitId, setOrbitId] = useState<string>("");
-  const [senderName, setSenderName] = useState<string>("");
-  const type = getCookie("letter-tagtype"); // 편지 태그 - 이름(1) / 이름과날짜(2) 구분용
+  const [orbitId, setOrbitId] = useState<string>('');
+  const [senderName, setSenderName] = useState<string>('');
+  const type = getCookie('letter-tagtype'); // 편지 태그 - 이름(1) / 이름과날짜(2) 구분용
 
   const radius = 150; // Orbit들이 배치될 원의 반지름
   const center = 150; // 행성이 위치할 중앙의 좌표
@@ -65,12 +65,13 @@ const Planet = (props: PlanetProps) => {
     return orbit ? orbit.senderName : undefined;
   };
 
-  const handleShowHold = (orbitId: string) => {
-    const senderName = findSenderName(orbitId, orbits);
-    setOrbitId(orbitId);
-    setSenderName(senderName ?? "");
-    setHold(!hold);
-  };
+  // 편지 홀드 (이동하기, 삭제하기 버튼) 기능 주석
+  // const handleShowHold = (orbitId: string) => {
+  //   const senderName = findSenderName(orbitId, orbits);
+  //   setOrbitId(orbitId);
+  //   setSenderName(senderName ?? '');
+  //   setHold(!hold);
+  // };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setHold(false);
@@ -92,14 +93,14 @@ const Planet = (props: PlanetProps) => {
     try {
       await deletePlanetLetter(orbitId);
       setConfirmDeleteModal(false);
-      console.log("편지 삭제 성공");
+      console.log('편지 삭제 성공');
 
       setCurrentOrbits((prevOrbits) =>
         prevOrbits?.filter((orbit) => orbit.letterId !== orbitId)
       );
-      setCountLetter((prevCount) => (prevCount ? prevCount - 1 : prevCount));
+      // setCountLetter((prevCount) => (prevCount ? prevCount - 1 : prevCount));
     } catch {
-      console.log("편지 삭제 실패");
+      console.log('편지 삭제 실패');
     }
 
     // 토스트 메세지
@@ -107,7 +108,7 @@ const Planet = (props: PlanetProps) => {
     showToast(`${orbit?.senderName} 님의 편지가 삭제되었어요`, {
       icon: true,
       close: false,
-      bottom: "230px",
+      bottom: '230px'
     });
     if (setChange) {
       setChange((prev) => !prev);
@@ -133,7 +134,6 @@ const Planet = (props: PlanetProps) => {
         priority
         onContextMenu={handleContextMenu}
       />
-      {/* <Shadow /> */}
       {orbits &&
         orbits.map((orbit, index) => {
           const angle = -(index / orbits.length) * 2 * Math.PI - Math.PI / 2; // 각 Orbit 요소의 각도 계산
@@ -145,7 +145,7 @@ const Planet = (props: PlanetProps) => {
               key={orbit.letterId}
               style={{
                 transform: `translate(${x}px, ${y}px)`,
-                transition: "transform 0.8s ease",
+                transition: 'transform 0.8s ease'
               }}
             >
               {orbit.letterId === droppedLetter.tagId ? (
@@ -164,7 +164,7 @@ const Planet = (props: PlanetProps) => {
                       handleTagClick(orbit.letterId);
                     }}
                     onHold={() => {
-                      handleShowHold(orbit.letterId);
+                      // handleShowHold(orbit.letterId);
                     }}
                   />
                 )

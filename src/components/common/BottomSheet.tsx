@@ -13,16 +13,18 @@ const BottomSheet = ({
   confirmText = '확인 완료',
   cancelText = '다시 수정할게요',
   handleOpen,
-  onConfirm
+  onConfirm,
+  children
 }: {
   height: number;
-  title: string;
+  title?: string;
   subtitle?: string;
   isOpen: boolean;
   confirmText?: string;
   cancelText?: string;
   handleOpen: (state: boolean) => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
+  children?: React.ReactNode;
 }) => {
   const dragControls = useDragControls();
 
@@ -75,27 +77,33 @@ const BottomSheet = ({
           <HandleBar style={{ borderRadius: 9999 }} />
         </BottomHeader>
         <SheetContentWrapper>
-          <Image
-            src={'/assets/images/bottomsheet/bottomsheet_letter.svg'}
-            width={40}
-            height={27}
-            alt="letter"
-          />
-          <SheetContent>
-            <TitleWrapper>
-              <SheetTitle>{title}</SheetTitle>
-              <SheetSubTitle>{subtitle}</SheetSubTitle>
-            </TitleWrapper>
-            <Button
-              buttonType="primary"
-              size="large"
-              text={confirmText}
-              onClick={onConfirm}
-            />
-            <WriteAgain onClick={() => handleOpen(false)}>
-              {cancelText}
-            </WriteAgain>
-          </SheetContent>
+          {children ? (
+            children
+          ) : (
+            <>
+              <Image
+                src={'/assets/images/bottomsheet/bottomsheet_letter.svg'}
+                width={40}
+                height={27}
+                alt="letter"
+              />
+              <SheetContent>
+                <TitleWrapper>
+                  <SheetTitle>{title}</SheetTitle>
+                  <SheetSubTitle>{subtitle}</SheetSubTitle>
+                </TitleWrapper>
+                <Button
+                  buttonType="primary"
+                  size="large"
+                  text={confirmText}
+                  onClick={onConfirm}
+                />
+                <WriteAgain onClick={() => handleOpen(false)}>
+                  {cancelText}
+                </WriteAgain>
+              </SheetContent>
+            </>
+          )}
         </SheetContentWrapper>
       </SheetBackground>
     </>
@@ -130,7 +138,7 @@ const SheetBackground = styled(motion.div)<{ $sheetHeight: number }>`
 const BottomHeader = styled.div`
   height: 56px;
   cursor: grab;
-  padding-top: 12px;
+  padding-top: 19px;
   user-select: none;
 `;
 
@@ -152,6 +160,7 @@ const SheetContentWrapper = styled.div`
 
 const SheetContent = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;
