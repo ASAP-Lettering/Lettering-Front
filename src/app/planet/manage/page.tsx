@@ -11,6 +11,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   deleteSpaces,
   getSpaceList,
+  putMainSpace,
   putSpacesOrder
 } from '@/api/planet/space/space';
 import { useToast } from '@/hooks/useToast';
@@ -104,13 +105,19 @@ const PlanetManagePage = () => {
   };
 
   /* 홈(메인) 행성 고정 */
-  const handleFixMainPlanet = () => {
+  const handleFixMainPlanet = async () => {
     const selectedPlanet = planets?.filter((planet) =>
       selectedId.includes(planet.spaceId)
     );
-
-    /* TODO: 선택 행성 (selectedId) 메인 행성으로 변경 API 연동 */
-
+    await putMainSpace(selectedId);
+    setPlanets(
+      planets.map((planet) =>
+        planet.spaceId === selectedId
+          ? { ...planet, isMainSpace: true }
+          : { ...planet, isMainSpace: false }
+      )
+    );
+    setViewSpaceId(null);
     setIsBottomUp(false);
     showToast(`${selectedPlanet[0]?.spaceName} 행성을 홈으로 고정했어요`, {
       icon: false,
