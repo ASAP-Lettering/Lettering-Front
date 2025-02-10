@@ -83,8 +83,8 @@ export default PlanetList;
 
 const Box = styled.div`
   width: 100%;
+  height: 68px;
   display: flex;
-  padding: 14px 12px 14px 16px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -140,8 +140,8 @@ const MainLabel = styled.div`
 `;
 
 const IconButton = styled.button`
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
