@@ -103,6 +103,7 @@ const SignupStep2 = () => {
           isOpen={isBottomUp}
           handleOpen={handleBottomUpChange}
           onConfirm={handleLoginClick}
+          confirmText="네, 맞아요"
         />
       )}
       <MainWrapper>
@@ -111,10 +112,10 @@ const SignupStep2 = () => {
           <HeaderTitle>
             회원가입을 하기 전
             <br />
-            먼저 본인 인증이 필요해요
+            먼저 실명 입력이 필요해요
           </HeaderTitle>
           <HeaderSubTitle>
-            별명이 아닌 정확한 실명을 입력해주세요
+            반드시 ‘성+이름’의 실명으로 작성해주세요
           </HeaderSubTitle>
         </Header>
         <InputWrapper>
@@ -122,7 +123,7 @@ const SignupStep2 = () => {
             inputType="signup"
             value={name}
             onChange={setName}
-            placeholder="ex)홍길동"
+            placeholder="ex) 홍길동"
             isValid={isVaild}
             isValidChange={setIsVaild}
             errorMessage="단독 자음, 모음만 쓸 수 없어요 (ex) ㄱ, ㅏ)"
@@ -136,6 +137,7 @@ const SignupStep2 = () => {
         <Button
           buttonType="primary"
           text="다음"
+          disabled={!name}
           onClick={handleButtonClick}
         ></Button>
       </ButtonWrapper>

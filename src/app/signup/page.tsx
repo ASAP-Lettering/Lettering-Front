@@ -1,5 +1,6 @@
 'use client';
 
+import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 
 export default function Signup() {
@@ -10,6 +11,6 @@ const Container = styled.div`
   display: flex;
   min-height: 100%;
   padding: 20px;
-  color: white;
-  background: #060812;
+  color: ${theme.colors.white};
+  background: ${theme.colors.bg};
 `;

@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import Check from "@/components/common/Check";
-import { Suspense, useState } from "react";
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import { userInfo } from "@/recoil/signupStore";
-import { useRecoilState } from "recoil";
-import { links } from "@/styles/theme";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import { useToast } from "@/hooks/useToast";
+import Button from '@/components/common/Button';
+import Check from '@/components/common/Check';
+import { Suspense, useState } from 'react';
+import styled from 'styled-components';
+import { useRouter, useSearchParams } from 'next/navigation';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import { userInfo } from '@/recoil/signupStore';
+import { useRecoilState } from 'recoil';
+import { links } from '@/styles/theme';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { useToast } from '@/hooks/useToast';
 
 const SignupStep1 = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
   const [user, setUser] = useRecoilState(userInfo);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isSerivceChecked, setIsServiceChecked] = useState(false);
@@ -28,34 +28,34 @@ const SignupStep1 = () => {
       if (url) {
         router.push(`/signup/step2?url=${url}`);
       } else {
-        router.push("/signup/step2");
+        router.push('/signup/step2');
       }
 
       setUser({
         ...user,
         marketingPermission: isMarketingChecked,
         servicePermission: isSerivceChecked,
-        privatePermission: isPersonalChecked,
+        privatePermission: isPersonalChecked
       });
     } else {
-      showToast("필수 항목에 동의해주세요!", {
+      showToast('필수 항목에 동의해주세요!', {
         icon: true,
         close: false,
-        bottom: "120px",
+        bottom: '120px'
       });
     }
   };
 
   const handleCheckChange = (type: string) => {
     switch (type) {
-      case "all":
+      case 'all':
         const newAllChecked = !isAllChecked;
         setIsAllChecked(newAllChecked);
         setIsServiceChecked(newAllChecked);
         setIsPersonalChecked(newAllChecked);
         setIsMarketingChecked(newAllChecked);
         break;
-      case "service":
+      case 'service':
         const newServiceChecked = !isSerivceChecked;
         setIsServiceChecked(newServiceChecked);
         updateAllChecked(
@@ -64,7 +64,7 @@ const SignupStep1 = () => {
           isMarketingChecked
         );
         break;
-      case "personal":
+      case 'personal':
         const newPersonalChecked = !isPersonalChecked;
         setIsPersonalChecked(newPersonalChecked);
         updateAllChecked(
@@ -73,7 +73,7 @@ const SignupStep1 = () => {
           isMarketingChecked
         );
         break;
-      case "marketing":
+      case 'marketing':
         const newMarketingChecked = !isMarketingChecked;
         setIsMarketingChecked(newMarketingChecked);
         updateAllChecked(
@@ -113,7 +113,7 @@ const SignupStep1 = () => {
               <Check
                 checkType="box"
                 checked={isAllChecked}
-                onChange={() => handleCheckChange("all")}
+                onChange={() => handleCheckChange('all')}
                 label="약관 전체 동의"
                 sublabel="(선택사항 포함)"
               />
@@ -122,7 +122,7 @@ const SignupStep1 = () => {
               <Check
                 checkType="default"
                 checked={isSerivceChecked}
-                onChange={() => handleCheckChange("service")}
+                onChange={() => handleCheckChange('service')}
                 label="서비스 이용 약관"
                 sublabel="(필수)"
               />
@@ -137,7 +137,7 @@ const SignupStep1 = () => {
               <Check
                 checkType="default"
                 checked={isPersonalChecked}
-                onChange={() => handleCheckChange("personal")}
+                onChange={() => handleCheckChange('personal')}
                 label="개인정보 수집 및 이용 동의"
                 sublabel="(필수)"
               />
@@ -152,7 +152,7 @@ const SignupStep1 = () => {
               <Check
                 checkType="default"
                 checked={isMarketingChecked}
-                onChange={() => handleCheckChange("marketing")}
+                onChange={() => handleCheckChange('marketing')}
                 label="마케팅 수신 동의"
                 sublabel="(선택)"
               />
@@ -169,6 +169,7 @@ const SignupStep1 = () => {
       <Button
         buttonType="primary"
         text="다음"
+        disabled={!isSerivceChecked || !isPersonalChecked}
         onClick={handleButtonClick}
       ></Button>
     </Container>

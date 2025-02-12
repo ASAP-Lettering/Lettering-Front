@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
 import {
   deleteSentLetter,
   deleteSentLetters,
-  getSentLetter,
-} from "@/api/mypage/user";
-import Button from "@/components/common/Button";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import LetterTag from "@/components/mypage/LetterTag";
-import { useToast } from "@/hooks/useToast";
-import { SentLetterListType } from "@/types/letter";
-import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+  getSentLetter
+} from '@/api/mypage/user';
+import Button from '@/components/common/Button';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import LetterTag from '@/components/mypage/LetterTag';
+import { useToast } from '@/hooks/useToast';
+import { SentLetterListType } from '@/types/letter';
+import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const SendedLetter = () => {
   const [isSelecting, setIsSelecting] = useState(false); // 항목을 선택중인지
@@ -49,7 +49,7 @@ const SendedLetter = () => {
       await fetchDeleteLetter(selectedId);
       setIsSelecting(false);
       setSelectedId([]);
-      console.log("Deleted IDs:", selectedId);
+      console.log('Deleted IDs:', selectedId);
       fetchLetterList();
     }
   };
@@ -69,7 +69,7 @@ const SendedLetter = () => {
   const fetchLetterList = async () => {
     try {
       const response = await getSentLetter();
-      setSenderArray(response.data.content);
+      setSenderArray(response.data.content.reverse());
     } catch (error) {
       console.log(error);
     }
@@ -78,22 +78,22 @@ const SendedLetter = () => {
   const fetchDeleteLetter = async (letterIds: string[]) => {
     if (letterIds.length === 1) {
       try {
-        const response = await deleteSentLetter(letterIds[0]);
+        await deleteSentLetter(letterIds[0]);
         showToast(`1개의 편지가 삭제되었어요`, {
           icon: false,
           close: true,
-          bottom: "50px",
+          bottom: '50px'
         });
       } catch (error) {
         console.log(error);
       }
     } else if (letterIds.length > 1) {
       try {
-        const response = await deleteSentLetters(letterIds);
+        await deleteSentLetters(letterIds);
         showToast(`${letterIds.length}개의 편지가 삭제되었어요`, {
           icon: false,
           close: true,
-          bottom: "50px",
+          bottom: '50px'
         });
       } catch (error) {
         console.log(error);
@@ -105,7 +105,7 @@ const SendedLetter = () => {
     <Container $isSelecting={isSelecting}>
       {isPopup && (
         <ConfirmModal
-          title={selectedId.length + "개의 편지를 정말 삭제할까요?"}
+          title={selectedId.length + '개의 편지를 정말 삭제할까요?'}
           sub="삭제된 편지는 복구되지 않아요."
           onConfirm={discardItems}
           onCancel={cancelItems}
@@ -118,7 +118,7 @@ const SendedLetter = () => {
         <Header>
           {!isSelecting ? (
             <>
-              {" "}
+              {' '}
               <SelectText onClick={() => setIsSelecting(!isSelecting)}>
                 삭제
               </SelectText>
@@ -191,10 +191,10 @@ const Container = styled.div<{
   max-height: 100%;
   justify-content: space-between;
   /* ${({ $isSelecting }) =>
-    $isSelecting ? "justify-content: space-between" : ""}; */
+    $isSelecting ? 'justify-content: space-between' : ''}; */
   color: white;
   background: ${(props) => props.theme.colors.bg};
-  background-image: url("/assets/mypage/img_background.png");
+  background-image: url('/assets/mypage/img_background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

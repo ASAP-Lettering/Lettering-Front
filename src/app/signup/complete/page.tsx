@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-import styled from "styled-components";
+import Button from '@/components/common/Button';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import styled from 'styled-components';
 
 const Signup = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
 
   const handleButtonClick = () => {
     if (url) {
       router.push(`/verify/letter?url=${url}`);
     } else {
-      router.push("/onboarding");
+      router.push('/onboarding');
     }
   };
   return (
@@ -29,7 +29,7 @@ const Signup = () => {
             <br /> 레터링에 오신 걸 환영해요
           </HeaderTitle>
           <HeaderSubTitle>
-            편지에 담긴 진심으로 나만의 우주를 채워보세요!
+            편지에 담긴 진심으로 나의 스페이스를 채워보세요!
           </HeaderSubTitle>
         </Header>
         <ImageWrapper>
@@ -39,7 +39,7 @@ const Signup = () => {
       <Wrapper>
         <Button
           buttonType="primary"
-          text={url ? "나에게 온 편지 열기" : "나의 스페이스에 접속하기"}
+          text={url ? '나에게 온 편지 열기' : '나의 스페이스에 접속하기'}
           onClick={handleButtonClick}
         ></Button>
       </Wrapper>
@@ -72,7 +72,7 @@ const Container = styled.div`
   flex-direction: column;
   //overflow: scroll;
   justify-content: space-between;
-  background-image: url("/assets/signup/signup_bg.png");
+  background-image: url('/assets/signup/signup_bg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
