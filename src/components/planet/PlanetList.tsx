@@ -87,7 +87,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  margin-bottom: 10px;
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
@@ -95,6 +95,7 @@ const Box = styled.div`
 
 const ContentWrapper = styled.div`
   width: 100%;
+  height: 68px;
   display: flex;
   justify-content: space-between;
   align-items: center;
