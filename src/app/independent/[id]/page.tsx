@@ -212,7 +212,7 @@ const IndependentLetterPage = () => {
           buttonType="primary"
           size="large"
           text="답장하기"
-          onClick={() => router.push('/send/letter')}
+          onClick={() => router.push('/send/receiver')}
         />
       </ButtonContainer>
     </Container>
