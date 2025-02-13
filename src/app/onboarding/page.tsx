@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import { useSwipeable } from 'react-swipeable';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
+import { putOnboarding } from '@/api/mypage/user';
+import { setOnboarding } from '@/utils/storage';
 
 const Onboarding = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -34,6 +36,8 @@ const Onboarding = () => {
     if (currentPage === 0) {
       setCurrentPage(1);
     } else {
+      putOnboarding();
+      setOnboarding('true');
       router.push('/planet');
     }
   };
