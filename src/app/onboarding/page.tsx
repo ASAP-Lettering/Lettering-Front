@@ -63,7 +63,7 @@ const Onboarding = () => {
                 <br />
                 원하는 행성 안에 편지를 보관할 수 있어요
               </SubTitle>
-              <ContentImage src="/assets/gif/onboarding.gif" />
+              <ContentImage src="/assets/gif/onboarding_final.gif" />
             </Content>
           </ContentSlider>
         </ContentWrapper>
@@ -196,6 +196,7 @@ const LetterImage = styled.img`
   aspect-ratio: 1; // 정사각형 비율 유지
   border-radius: 5px;
   object-fit: cover;
+  background-color: black;
 `;
 
 const ContentImage = styled.img`
