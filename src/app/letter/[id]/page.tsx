@@ -87,9 +87,7 @@ const LetterPage = () => {
 
   //편지 행성 변경
   const handlePlanet = () => {
-    router.push(
-      `/planet/move?letter=${letterData?.id}&senderName=${letterData?.sender}`
-    );
+    router.push(`/planet/move?letter=${id}&senderName=${letterData?.sender}`);
   };
 
   //삭제 모달 관리

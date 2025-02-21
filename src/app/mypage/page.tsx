@@ -248,6 +248,7 @@ const ProfileInfo = styled.div`
   justify-content: center;
   gap: 4px;
   white-space: nowrap;
+  padding-right: 15px;
 `;
 
 const ProfileName = styled.div`
