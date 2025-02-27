@@ -226,11 +226,7 @@ const ProfileHeader = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 25px;
-
-  @media (max-width: 370px) {
-    gap: 10px;
-  }
+  gap: 10px;
 `;
 
 const ProfileImage = styled.img`
