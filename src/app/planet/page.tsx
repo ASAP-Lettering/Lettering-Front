@@ -558,6 +558,7 @@ const Layout = styled.div`
   gap: 10px;
   padding: 20px 0px 0px 0px;
   position: relative;
+  background-color: ${theme.colors.bg};
 
   ::-webkit-scrollbar {
     display: none;
@@ -668,7 +669,6 @@ const BottomWrapper = styled.div`
 const LoaderContainer = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
