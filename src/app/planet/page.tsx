@@ -531,14 +531,14 @@ const PlanetPage = () => {
                   onOrbitTouch={handleTagTouch}
                 />
               </BottomWrapper>
-              {showTooltip && (
-                <Tooltip
-                  message={`먼저 편지를 보관한 후, 행성으로 끌어 당겨보세요`}
-                  close={true}
-                  bottom="230px"
-                  onClose={() => setShowTooltip(false)}
-                />
-              )}
+              {/* {showTooltip && ( */}
+              <Tooltip
+                message={`먼저 편지를 보관한 후, 행성으로 끌어 당겨보세요`}
+                close={true}
+                bottom="230px"
+                onClose={() => setShowTooltip(false)}
+              />
+              {/* )} */}
             </Container>
           </>
         )}

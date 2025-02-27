@@ -49,20 +49,24 @@ const Onboarding = () => {
         <ContentWrapper {...handlers}>
           <ContentSlider style={{ transform: `translateX(${xOffset}%)` }}>
             <Content active={currentPage === 0}>
-              <MainTitle>채팅방 속 잠들어 있는 편지를 보관하세요</MainTitle>
-              <SubTitle>
-                소중한 사람에게 받은 메신저 편지를
-                <br /> 레터링에 모아둘 수 있어요
-              </SubTitle>
+              <Text>
+                <MainTitle>채팅방 속 잠들어 있는 편지를 보관하세요</MainTitle>
+                <SubTitle>
+                  소중한 사람에게 받은 메신저 편지를
+                  <br /> 레터링에 모아둘 수 있어요
+                </SubTitle>
+              </Text>
               <ContentImage src="/assets/onboarding/onboarding-pic2.png" />
             </Content>
             <Content active={currentPage === 1}>
-              <MainTitle>드래그하여 손쉽게 편지를 정리해봐요</MainTitle>
-              <SubTitle>
-                행성은 폴더의 역할과 같아요
-                <br />
-                원하는 행성 안에 편지를 보관할 수 있어요
-              </SubTitle>
+              <Text>
+                <MainTitle>드래그하여 손쉽게 편지를 정리해봐요</MainTitle>
+                <SubTitle>
+                  행성은 폴더의 역할과 같아요
+                  <br />
+                  원하는 행성 안에 편지를 보관할 수 있어요
+                </SubTitle>
+              </Text>
               <ContentImage src="/assets/gif/onboarding_final.gif" />
             </Content>
           </ContentSlider>
@@ -78,12 +82,14 @@ const Onboarding = () => {
             ))}
           </LetterImageContainer>
         )}
+      </MainContainer>
+      <ButtonWrapper>
         <Button
           buttonType="primary"
           text={currentPage === 0 ? '다음' : '시작하기'}
           onClick={handleBtnClick}
         />
-      </MainContainer>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -106,10 +112,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 393px;
   height: 100%;
+  min-height: 550px;
   justify-content: space-between;
-  color: white;
+  color: ${theme.colors.white};
   background-image: url('/assets/mypage/img_background.png');
   background-size: cover;
   background-position: center;
@@ -120,13 +126,14 @@ const Container = styled.div`
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
+  min-height: 550px;
   align-items: center;
   justify-content: space-between;
-  padding: 24px;
+  padding: 24px 24px 80px 24px;
   overflow: hidden;
   box-sizing: border-box;
-  width: 100%;
   touch-action: none; /* 기본 스크롤 방지 */
   transition: transform 0.3s ease-in-out; /* 페이지 전환 애니메이션 */
 `;
@@ -148,26 +155,46 @@ const ContentSlider = styled.div`
 
 const Content = styled.div<{ active: boolean }>`
   width: 100%;
-  min-height: 800px;
+  height: 100vh;
+  min-height: 550px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
   position: relative;
 `;
 
+const Text = styled.div`
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 100px;
+
+  @media (max-height: 850px) {
+    padding-top: 80px;
+  }
+  @media (max-height: 800px) {
+    padding-top: 60px;
+  }
+  @media (max-height: 700px) {
+    padding-top: 30px;
+  }
+  @media (max-height: 628px) {
+    padding-top: 10px;
+  }
+  @media (max-height: 580px) {
+    padding-top: 0px;
+  }
+`;
+
 const MainTitle = styled.div`
-  color: white;
+  color: ${theme.colors.white};
   text-align: center;
-  font-family: Pretendard;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 34px;
-  letter-spacing: -0.6px;
+  ${theme.fonts.title01};
   box-sizing: border-box;
   padding-top: 31px;
   user-select: none;
@@ -196,18 +223,20 @@ const LetterImage = styled.img`
   aspect-ratio: 1; // 정사각형 비율 유지
   border-radius: 5px;
   object-fit: cover;
-  background-color: black;
 `;
 
 const ContentImage = styled.img`
-  width: 80%;
-  min-width: 280px;
-  min-height: 600px;
-  margin-top: 36px;
+  max-width: 346px;
+  max-height: 60vh;
+  height: auto;
   align-items: center;
   border-radius: 12px;
   border: 4px solid ${theme.colors.gray800};
   object-fit: contain;
+  position: absolute;
+  bottom: 65px;
+  left: 50%;
+  transform: translateX(-50%);
 
   //드래그방지
   -webkit-user-select: none;
@@ -229,4 +258,13 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  padding: 0 24px;
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
