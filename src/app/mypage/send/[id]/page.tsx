@@ -79,7 +79,7 @@ const SendDetailPage = () => {
       <MainWrapper>
         <Header>
           <LetterCount>
-            편지 정보 | {letterData.content.length}자{' '}
+            {letterData.sendDate} | {letterData.content.length}자{' '}
             {letterData.images.length > 0 &&
               ` · 사진 ${letterData.images.length}장`}
           </LetterCount>
@@ -97,7 +97,6 @@ const SendDetailPage = () => {
             name={letterData.receiverName}
             content={letterData.content}
             images={letterData.images}
-            date={letterData.sendDate}
             readOnly={true}
             isImage={isImage}
             width="100%"
