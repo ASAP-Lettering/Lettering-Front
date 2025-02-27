@@ -533,7 +533,7 @@ const PlanetPage = () => {
               </BottomWrapper>
               {showTooltip && (
                 <Tooltip
-                  message={`궤도에 있는 편지들을 끌어 당겨 행성으로 \n옮길 수있어요`}
+                  message={`먼저 편지를 보관한 후, 행성으로 끌어 당겨보세요`}
                   close={true}
                   bottom="230px"
                   onClose={() => setShowTooltip(false)}
