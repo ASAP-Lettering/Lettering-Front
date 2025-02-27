@@ -16,6 +16,9 @@ import Image from 'next/image';
 import { getSpaceList } from '@/api/planet/space/space';
 import { useToast } from '@/hooks/useToast';
 import { Planet } from '@/types/planet';
+import { useRecoilValue } from 'recoil';
+import { spaceState } from '@/recoil/spaceStore';
+import { getSpaceId } from '@/utils/storage';
 
 const PlanetMovePage = () => {
   const router = useRouter();
@@ -23,9 +26,13 @@ const PlanetMovePage = () => {
   const searchParams = useSearchParams();
   const letterId = searchParams.get('letter');
   const senderName = searchParams.get('senderName');
+  const viewSpaceId = useRecoilValue(spaceState);
+  const mainSpaceId = getSpaceId();
 
   const [planets, setPlanets] = useState<Planet[]>();
-  const [checkedPlanet, setCheckedPlanet] = useState<string>('');
+  const [checkedPlanet, setCheckedPlanet] = useState<string>(
+    viewSpaceId || mainSpaceId
+  );
   const [checkedIndep, setCheckedIndep] = useState<boolean>(false);
   const [checkePlanetName, setCheckedPlanetName] = useState<string>('');
 
@@ -35,7 +42,6 @@ const PlanetMovePage = () => {
         const response = await getSpaceList();
         console.log('전체 스페이스 목록 조회 성공:', response.data);
         setPlanets(response.data.spaces);
-        setCheckedPlanet(response.data.spaces[0].spaceId);
       } catch (error) {
         console.error('전체 스페이스 목록 조회 실패:', error);
       }
@@ -116,7 +122,7 @@ const PlanetMovePage = () => {
               planetName={item.spaceName}
               count={item.letterCount}
               checked={checkedPlanet}
-              current={index === 0}
+              current={item.spaceId === (viewSpaceId || mainSpaceId)}
               onClick={() => {
                 handleChangeChecked(item);
               }}
@@ -149,7 +155,8 @@ const PlanetMovePage = () => {
           text="이동하기"
           disabled={
             (checkedPlanet === '' && checkedIndep === false) ||
-            checkedPlanet === planets?.[0]?.spaceId
+            checkedPlanet === planets?.[0]?.spaceId ||
+            checkedPlanet === (viewSpaceId || mainSpaceId)
           }
           onClick={handleMovePlanet}
         />
