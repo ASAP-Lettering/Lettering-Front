@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import Tag from './Tag';
@@ -6,12 +6,12 @@ import Button from './Button';
 import { useRouter } from 'next/navigation';
 import ConfirmModal from './ConfirmModal';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { toastState } from '@/recoil/toastStore';
 import { deletePlanetLetter } from '@/api/planet/letter/spaceLetter';
 import { droppedLetterState } from '@/recoil/letterStore';
 import BlinkTag from './BlinkingTag';
 import { useToast } from '@/hooks/useToast';
 import { getCookie } from '@/utils/storage';
+import { PLANET_BLUR_DATA } from '@/constants/planetBlur';
 
 interface Orbit {
   letterId: string;
@@ -131,6 +131,8 @@ const Planet = (props: PlanetProps) => {
         width={400}
         height={400}
         alt="planet"
+        placeholder="blur"
+        blurDataURL={'data:/image/png;base64,' + PLANET_BLUR_DATA[planetType]}
         priority
         onContextMenu={handleContextMenu}
       />
