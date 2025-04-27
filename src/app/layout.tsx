@@ -36,6 +36,10 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximumScale=1, user-scalable=no"
         />
+        <meta
+          name="google-site-verification"
+          content={process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE}
+        />
         <link rel="apple-touch-icon" href="/favicon_114.png"></link>
         <link rel="shortcut icon" href="/favicon_72.png"></link>
         {/* Maze Snippet */}
