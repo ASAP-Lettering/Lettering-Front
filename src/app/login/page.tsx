@@ -1,6 +1,7 @@
 'use client';
 
 import SocialKakao from '@/components/signup/SocialKakao';
+import SocialGoogle from '@/components/signup/SocialGoogle';
 import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 import Image from 'next/image';
@@ -26,17 +27,13 @@ export default function Login() {
             />
           </OauthButton>
           <OauthButton bgColor="#FFFFFF">
-            <Image
-              src="/assets/icons/ic_google.svg"
-              alt="Google"
-              width={33}
-              height={33}
-            />
+            <SocialGoogle />
           </OauthButton>
           <OauthButton bgColor="#FEE500">
             <SocialKakao />
           </OauthButton>
         </OauthWrapper>
+        <LetterBtnText>로그인 없이 편지 작성해보기</LetterBtnText>
       </ImageWrapper>
     </Container>
   );
@@ -133,7 +130,7 @@ const OauthWrapper = styled.div`
   gap: 24px;
   display: flex;
   position: absolute;
-  bottom: 60px;
+  bottom: 123px;
   justify-content: center;
 `;
 
@@ -149,4 +146,13 @@ const OauthButton = styled.button<OauthButtonProps>`
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s;
+`;
+
+const LetterBtnText = styled.div`
+  ${(props) => props.theme.fonts.caption02};
+  color: ${theme.colors.gray400};
+  position: absolute;
+  bottom: 69px;
+  text-decoration-line: underline;
+  cursor: pointer;
 `;
