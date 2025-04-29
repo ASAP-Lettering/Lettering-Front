@@ -1,8 +1,13 @@
-"use client";
+'use client';
 
-import SocialKakao from "@/components/signup/SocialKakao";
-import { theme } from "@/styles/theme";
-import styled from "styled-components";
+import SocialKakao from '@/components/signup/SocialKakao';
+import { theme } from '@/styles/theme';
+import styled from 'styled-components';
+import Image from 'next/image';
+
+interface OauthButtonProps {
+  bgColor: string;
+}
 
 export default function Login() {
   return (
@@ -11,9 +16,27 @@ export default function Login() {
         <LogoTitle data="/assets/login/login_text.svg" />
         <LogoText>편지로 수놓는 나의 스페이스</LogoText>
         <LogoImage src="/assets/login/login_logo.png" />
-        <SocialKakaoWrapper>
-          <SocialKakao />
-        </SocialKakaoWrapper>
+        <OauthWrapper>
+          <OauthButton bgColor="#03CF5D">
+            <Image
+              src="/assets/icons/ic_naver.svg"
+              alt="Naver"
+              width={26}
+              height={26}
+            />
+          </OauthButton>
+          <OauthButton bgColor="#FFFFFF">
+            <Image
+              src="/assets/icons/ic_google.svg"
+              alt="Google"
+              width={33}
+              height={33}
+            />
+          </OauthButton>
+          <OauthButton bgColor="#FEE500">
+            <SocialKakao />
+          </OauthButton>
+        </OauthWrapper>
       </ImageWrapper>
     </Container>
   );
@@ -25,7 +48,7 @@ const Container = styled.div`
   height: 100vh;
   flex-direction: column;
   justify-content: space-between;
-  background-image: url("/assets/login/login_bg.png");
+  background-image: url('/assets/login/login_bg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -104,13 +127,26 @@ const ImageWrapper = styled.div`
   overflow: hidden;
 `;
 
-const SocialKakaoWrapper = styled.div`
+const OauthWrapper = styled.div`
   width: 100%;
   max-width: 393px;
-  padding: 0 4px;
+  gap: 24px;
   display: flex;
   position: absolute;
   bottom: 60px;
-  left: 50%;
-  transform: translate(-50%);
+  justify-content: center;
+`;
+
+const OauthButton = styled.button<OauthButtonProps>`
+  width: 69px;
+  height: 69px;
+  border-radius: 50%;
+  border: none;
+  background-color: ${({ bgColor }) => bgColor};
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
 `;

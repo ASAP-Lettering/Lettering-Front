@@ -1,26 +1,26 @@
-import React, { Suspense, useEffect, useState } from "react";
-import Image from "next/image";
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { accessState } from "@/recoil/accessStore";
-import { getAccessToken, setLetterUrl } from "@/utils/storage";
-import Loader, { LoaderContainer } from "../common/Loader";
+import React, { Suspense, useEffect, useState } from 'react';
+import Image from 'next/image';
+import styled from 'styled-components';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useRecoilState } from 'recoil';
+import { accessState } from '@/recoil/accessStore';
+import { getAccessToken, setLetterUrl } from '@/utils/storage';
+import Loader, { LoaderContainer } from '../common/Loader';
 
 const SocialKakao = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const accessToken = getAccessToken();
-  const [absoluteUrl, setabsoluteUrl] = useState("");
+  const [absoluteUrl, setabsoluteUrl] = useState('');
   const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${absoluteUrl}&response_type=code&url=${url}`;
   const [localAccessToken, setAccessToken] = useRecoilState(accessState);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       setabsoluteUrl(
-        window.location.protocol + "//" + window.location.host + "/login/kakao"
+        window.location.protocol + '//' + window.location.host + '/login/kakao'
       );
     }
   }, []);
@@ -35,6 +35,7 @@ const SocialKakao = () => {
     //   }
     //   setAccessToken(accessToken);
     // } else {
+    //받은 편지를 통해 들어올 경우 url를 저장한다.
     if (url) {
       setLetterUrl(url);
     }
@@ -44,9 +45,9 @@ const SocialKakao = () => {
   return (
     <SocialLoginBox onClick={handleLogin}>
       <StyledImage
-        src="/assets/login/mobile_btn_login.svg"
-        width={440}
-        height={48}
+        src="/assets/icons/ic_kakaotalk.svg"
+        width={38}
+        height={38}
         alt="kakao"
       />
     </SocialLoginBox>
@@ -80,6 +81,6 @@ const SocialLoginBox = styled.div`
 const StyledImage = styled(Image)`
   width: 100%;
   height: 100%;
-  padding: 0 20px;
+  padding: 0 16px;
   object-fit: contain;
 `;
