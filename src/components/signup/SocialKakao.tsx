@@ -1,26 +1,24 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useRecoilState } from 'recoil';
-import { accessState } from '@/recoil/accessStore';
-import { getAccessToken, setLetterUrl } from '@/utils/storage';
+import { useSearchParams } from 'next/navigation';
+import { setLetterUrl } from '@/utils/storage';
 import Loader, { LoaderContainer } from '../common/Loader';
 
 const SocialKakao = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const accessToken = getAccessToken();
-  const [absoluteUrl, setabsoluteUrl] = useState('');
-  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${absoluteUrl}&response_type=code&url=${url}`;
-  const [localAccessToken, setAccessToken] = useRecoilState(accessState);
+  const [redirectUrl, setRedirectUrl] = useState('');
+  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${redirectUrl}&response_type=code&url=${url}`;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setabsoluteUrl(
-        window.location.protocol + '//' + window.location.host + '/login/kakao'
+      setRedirectUrl(
+        window.location.protocol +
+          '//' +
+          window.location.host +
+          '/login/auth?type=kakao'
       );
     }
   }, []);
@@ -39,6 +37,17 @@ const SocialKakao = () => {
     if (url) {
       setLetterUrl(url);
     }
+    // redirectUri가 준비된 뒤에 인가 URL 생성
+    const params = new URLSearchParams({
+      client_id: REST_API_KEY,
+      redirect_uri: redirectUrl,
+      response_type: 'code'
+    });
+    if (url) {
+      params.set('url', url);
+    }
+
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
     window.location.href = KAKAO_URL;
   };
 

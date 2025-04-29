@@ -1,10 +1,8 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useRecoilState } from 'recoil';
-import { accessState } from '@/recoil/accessStore';
-import { getAccessToken, setLetterUrl } from '@/utils/storage';
+import { useSearchParams } from 'next/navigation';
+import { setLetterUrl } from '@/utils/storage';
 import Loader, { LoaderContainer } from '../common/Loader';
 
 const SocialGoogle = () => {
