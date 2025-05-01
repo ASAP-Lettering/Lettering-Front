@@ -5,20 +5,17 @@ import { useSearchParams } from 'next/navigation';
 import { setLetterUrl } from '@/utils/storage';
 import Loader, { LoaderContainer } from '../common/Loader';
 
-const SocialKakao = () => {
+const SocialGoogle = () => {
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
   const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const [redirectUrl, setRedirectUrl] = useState('');
-  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${redirectUrl}&response_type=code&url=${url}`;
+  const GOOGLE_URL = '/login/google';
+  const [absoluteUrl, setabsoluteUrl] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setRedirectUrl(
-        window.location.protocol +
-          '//' +
-          window.location.host +
-          '/login/auth?type=kakao'
+      setabsoluteUrl(
+        window.location.protocol + '//' + window.location.host + '/login/kakao'
       );
     }
   }, []);
@@ -37,33 +34,22 @@ const SocialKakao = () => {
     if (url) {
       setLetterUrl(url);
     }
-    // redirectUri가 준비된 뒤에 인가 URL 생성
-    const params = new URLSearchParams({
-      client_id: REST_API_KEY,
-      redirect_uri: redirectUrl,
-      response_type: 'code'
-    });
-    if (url) {
-      params.set('url', url);
-    }
-
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
-    window.location.href = KAKAO_URL;
+    window.location.href = GOOGLE_URL;
   };
 
   return (
     <SocialLoginBox onClick={handleLogin}>
       <StyledImage
-        src="/assets/icons/ic_kakaotalk.svg"
-        width={38}
-        height={38}
-        alt="kakao"
+        src="/assets/icons/ic_google.svg"
+        width={33}
+        height={33}
+        alt="google"
       />
     </SocialLoginBox>
   );
 };
 
-export default function SocialKakaoPaging() {
+export default function SocialGooglePaging() {
   return (
     <Suspense
       fallback={
@@ -72,7 +58,7 @@ export default function SocialKakaoPaging() {
         </LoaderContainer>
       }
     >
-      <SocialKakao />
+      <SocialGoogle />
     </Suspense>
   );
 }
