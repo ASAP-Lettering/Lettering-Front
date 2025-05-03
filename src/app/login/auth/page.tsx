@@ -17,9 +17,12 @@ const Auth = () => {
   const [absoluteUrl, setAbsoluteUrl] = useState('');
   const [storeUrl, setstoreUrl] = useState('');
   const [type, setType] = useState('');
+  const [oauthAccessToken, setOauthAccessToken] = useState('');
+  const [provider, setProvider] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      //oauth 타입을 state에 저장
       const params = new URL(window.location.href).searchParams;
       const typeParam = params.get('type');
       setType(typeParam);
@@ -31,29 +34,72 @@ const Auth = () => {
   }, []);
 
   useEffect(() => {
-    if (!absoluteUrl) {
-      return;
-    }
+    if (!absoluteUrl || !type) return;
     const getToken = async () => {
       const AUTHORIZATION_CODE = new URL(window.location.href).searchParams.get(
         'code'
       );
+
       const TYPE = new URL(window.location.href).searchParams.get('type');
 
       let tokenUrl = '';
-      let provider: 'KAKAO' | 'GOOGLE' | 'NAVER';
 
       if (!AUTHORIZATION_CODE || !TYPE) {
         console.error('Authorization Code or Type is missing');
         return;
       }
 
+      //type에 따라 다른 토큰 url 지정
       switch (TYPE) {
         case 'kakao':
-          tokenUrl = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${REST_API_KEY}&redirect_uri=${absoluteUrl}&code=${AUTHORIZATION_CODE}`;
-          provider = 'KAKAO';
+          setProvider('KAKAO');
+          try {
+            const response = await axios.post(
+              'https://kauth.kakao.com/oauth/token',
+              new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: REST_API_KEY,
+                redirect_uri: absoluteUrl,
+                code: AUTHORIZATION_CODE
+              }),
+              {
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+              }
+            );
+            setOauthAccessToken(response.data.access_token);
+          } catch (error) {
+            console.error(error);
+            clearLetterUrl();
+            return;
+          }
+
           break;
         case 'google':
+          setProvider('GOOGLE');
+          try {
+            const body = new URLSearchParams({
+              grant_type: 'authorization_code',
+              client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+              client_secret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET!,
+              redirect_uri: absoluteUrl,
+              code: AUTHORIZATION_CODE
+            });
+
+            const response = await axios.post(
+              'https://oauth2.googleapis.com/token',
+              body.toString(),
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
+              }
+            );
+            setOauthAccessToken(response.data.access_token);
+          } catch (error) {
+            console.error('Unsupported OAuth type:', type);
+            clearLetterUrl();
+            return;
+          }
           break;
         case 'naver':
           break;
@@ -61,49 +107,46 @@ const Auth = () => {
           console.error('Unknown OAuth type:', TYPE);
           return;
       }
-
-      try {
-        const response = await axios.post(tokenUrl, {
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        const oauthAccessToken = response.data.access_token;
-
-        if (oauthAccessToken) {
-          login(provider, oauthAccessToken)
-            .then((res) => {
-              console.log('accessToken', res.data.accessToken);
-              setTokens(res.data.accessToken, res.data.refreshToken);
-              /* 온보딩 여부 저장 */
-              setOnboarding(res.data.isProcessedOnboarding);
-              if (storeUrl) {
-                router.push(`/verify/letter?url=${storeUrl}`);
-                clearLetterUrl();
-              } else {
-                router.push('/planet');
-              }
-            })
-            .catch((error) => {
-              if (error.response && error.response.status === 401) {
-                console.log('registerToken', error.response.data.registerToken);
-                setRegisterToken(error.response.data.registerToken);
-                if (storeUrl) {
-                  router.push(`/signup/step1?url=${storeUrl}`);
-                  clearLetterUrl();
-                } else {
-                  router.push('/signup/step1');
-                }
-              }
-            });
-        }
-      } catch (error) {
-        console.error(error);
-        clearLetterUrl();
-        return;
-      }
     };
     getToken();
-  }, [absoluteUrl]);
+  }, [absoluteUrl, type]);
+
+  useEffect(() => {
+    try {
+      if (oauthAccessToken) {
+        login(provider, oauthAccessToken)
+          .then((res) => {
+            console.log('accessToken', res.data.accessToken);
+            setTokens(res.data.accessToken, res.data.refreshToken);
+            /* 온보딩 여부 저장 */
+            setOnboarding(res.data.isProcessedOnboarding);
+            if (storeUrl) {
+              router.push(`/verify/letter?url=${storeUrl}`);
+              clearLetterUrl();
+            } else {
+              router.push('/planet');
+            }
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 401) {
+              console.log('registerToken', error.response.data.registerToken);
+              setRegisterToken(error.response.data.registerToken);
+              if (storeUrl) {
+                router.push(`/signup/step1?url=${storeUrl}`);
+                clearLetterUrl();
+              } else {
+                router.push('/signup/step1');
+              }
+            }
+          });
+      }
+    } catch (error) {
+      console.log('oauth token 에러');
+      console.error(error);
+      clearLetterUrl();
+      return;
+    }
+  }, [oauthAccessToken]);
 
   return (
     <Container>
