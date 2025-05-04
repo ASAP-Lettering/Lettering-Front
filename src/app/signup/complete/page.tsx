@@ -68,9 +68,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 393px;
   height: 100%;
-  max-height: 853px;
   flex-direction: column;
-  //overflow: scroll;
   justify-content: space-between;
   background-image: url('/assets/signup/signup_bg.png');
   background-size: cover;
