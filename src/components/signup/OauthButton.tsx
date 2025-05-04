@@ -96,6 +96,8 @@ const OauthButton = (props: OauthButtonProps) => {
 export default OauthButton;
 
 const Wrapper = styled.div`
+  width: 69px;
+  height: 69px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -126,7 +128,9 @@ const Bubble = styled.div`
   height: 28px;
   position: absolute;
   top: -45px;
-  background-color: #3399ff;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: ${theme.colors.blue};
   color: ${theme.colors.white};
   padding: 5px 10px;
   border-radius: 8px;
@@ -137,13 +141,13 @@ const Bubble = styled.div`
   &::after {
     content: '';
     position: absolute;
-    bottom: -11.5px;
+    bottom: -9px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-width: 6px;
+    border-width: 10px 6px 0 6px;
     border-style: solid;
-    border-color: #3399ff transparent transparent transparent;
+    border-color: ${theme.colors.blue} transparent transparent transparent;
   }
 `;
