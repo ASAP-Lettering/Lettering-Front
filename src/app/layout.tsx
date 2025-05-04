@@ -7,8 +7,9 @@ export const metadata = {
   titleTemplate: '%s - 레터링',
   description:
     '다양한 우주 행성 그리고 별빛이 담긴 편지지로 마음을 형상화한 편지를 보관해보세요.',
+  manifest: '/manifest.json',
   icons: {
-    icon: '/favicon_16.png'
+    icon: '/icon_16.png'
   },
   openGraph: {
     site_name: '레터링',
@@ -40,8 +41,9 @@ export default function RootLayout({
           name="google-site-verification"
           content={process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE}
         />
-        <link rel="apple-touch-icon" href="/favicon_114.png"></link>
-        <link rel="shortcut icon" href="/favicon_72.png"></link>
+        <meta name="theme-color" content="#444d9b" />
+        <link rel="apple-touch-icon" href="/icon_114.png"></link>
+        <link rel="shortcut icon" href="/icon_72.png"></link>
         {/* Maze Snippet */}
         <script
           dangerouslySetInnerHTML={{
