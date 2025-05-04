@@ -1,4 +1,6 @@
+import withPlugins from 'next-compose-plugins';
 import withPWA from 'next-pwa';
+import typescript from 'next-plugin-graphql';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +14,24 @@ const nextConfig = {
   }
 };
 
-export default withPWA({
-  dest: 'public'
-})(nextConfig);
+export default withPlugins(
+  [
+    [
+      withPWA,
+      {
+        pwa: {
+          dest: 'public'
+        }
+      }
+    ],
+    [
+      typescript,
+      {
+        typescriptLoaderOptions: {
+          transpileOnly: false
+        }
+      }
+    ]
+  ],
+  nextConfig
+);
