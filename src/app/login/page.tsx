@@ -10,6 +10,10 @@ interface OauthButtonProps {
   bgColor: string;
 }
 
+const notReady = () => {
+  alert('준비 중입니다.');
+};
+
 export default function Login() {
   return (
     <Container>
@@ -24,6 +28,7 @@ export default function Login() {
               alt="Naver"
               width={26}
               height={26}
+              onClick={notReady}
             />
           </OauthButton>
           <OauthButton bgColor="#FFFFFF">
@@ -33,7 +38,9 @@ export default function Login() {
             <SocialKakao />
           </OauthButton>
         </OauthWrapper>
-        <LetterBtnText>로그인 없이 편지 작성해보기</LetterBtnText>
+        <LetterBtnText onClick={notReady}>
+          로그인 없이 편지 작성해보기
+        </LetterBtnText>
       </ImageWrapper>
     </Container>
   );
