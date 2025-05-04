@@ -4,7 +4,12 @@ import { login } from '@/api/login/user';
 import Loader from '@/components/common/Loader';
 import { signupState } from '@/recoil/signupStore';
 import { Provider } from '@/types/login';
-import { clearLetterUrl, setOnboarding, setTokens } from '@/utils/storage';
+import {
+  clearLetterUrl,
+  setOnboarding,
+  setRecentLogin,
+  setTokens
+} from '@/utils/storage';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -139,6 +144,8 @@ const Auth = () => {
             setTokens(res.data.accessToken, res.data.refreshToken);
             /* 온보딩 여부 저장 */
             setOnboarding(res.data.isProcessedOnboarding);
+            /* 최근 로그인 정보 저장 */
+            setRecentLogin(type);
             if (storeUrl) {
               router.push(`/verify/letter?url=${storeUrl}`);
               clearLetterUrl();

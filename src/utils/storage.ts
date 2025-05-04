@@ -47,6 +47,21 @@ export const clearOnboarding = () => {
   removeCookie("lettering-onboarding")
 }
 
+/* 최근 로그인 방식 */
+export const setRecentLogin = (loginType: string) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem('recent_login', loginType);
+  }
+  return null;
+};
+
+export const getRecentLogin = () => {
+  if (typeof window !== 'undefined') {
+     return localStorage.getItem('recent_login');
+  }
+  return null;
+};
+
 /* letter URL */
 export const setLetterUrl = (url: string) => {
   if (typeof window !== "undefined") {

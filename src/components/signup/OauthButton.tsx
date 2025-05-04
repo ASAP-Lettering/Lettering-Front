@@ -2,8 +2,10 @@ import React, { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import { useSearchParams } from 'next/navigation';
-import { setLetterUrl } from '@/utils/storage';
+import { getRecentLogin, setLetterUrl } from '@/utils/storage';
 import { OAuthType } from '@/types/login';
+import { theme } from '@/styles/theme';
+import { float } from '@/styles/animation';
 
 interface OauthButtonProps {
   loginType: OAuthType;
@@ -82,13 +84,23 @@ const OauthButton = (props: OauthButtonProps) => {
   };
 
   return (
-    <SocialButton $bgColor={bgColor} onClick={handleLogin}>
-      <SocialIcon src={icon} width={size} height={size} alt={loginType} />
-    </SocialButton>
+    <Wrapper>
+      {loginType === getRecentLogin() && <Bubble>최근에 로그인했어요</Bubble>}
+      <SocialButton $bgColor={bgColor} onClick={handleLogin}>
+        <SocialIcon src={icon} width={size} height={size} alt={loginType} />
+      </SocialButton>
+    </Wrapper>
   );
 };
 
 export default OauthButton;
+
+const Wrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const SocialButton = styled.button<{ $bgColor: string }>`
   width: 69px;
@@ -108,4 +120,30 @@ const SocialIcon = styled(Image)`
   height: 100%;
   padding: 0 16px;
   object-fit: contain;
+`;
+
+const Bubble = styled.div`
+  height: 28px;
+  position: absolute;
+  top: -45px;
+  background-color: #3399ff;
+  color: ${theme.colors.white};
+  padding: 5px 10px;
+  border-radius: 8px;
+  ${theme.fonts.caption03};
+  white-space: nowrap;
+  animation: ${float} 2s ease-in-out infinite;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -11.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #3399ff transparent transparent transparent;
+  }
 `;
