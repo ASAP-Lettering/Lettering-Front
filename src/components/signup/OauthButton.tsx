@@ -19,9 +19,11 @@ const OauthButton = (props: OauthButtonProps) => {
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
   const [redirectUri, setRedirectUri] = useState<string>('');
+  const [recentLogin, setRecentLogin] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      setRecentLogin(getRecentLogin());
       setRedirectUri(
         window.location.protocol +
           '//' +
@@ -85,7 +87,7 @@ const OauthButton = (props: OauthButtonProps) => {
 
   return (
     <Wrapper>
-      {loginType === getRecentLogin() && <Bubble>최근에 로그인했어요</Bubble>}
+      {recentLogin === loginType && <Bubble>최근에 로그인했어요</Bubble>}
       <SocialButton $bgColor={bgColor} onClick={handleLogin}>
         <SocialIcon src={icon} width={size} height={size} alt={loginType} />
       </SocialButton>
