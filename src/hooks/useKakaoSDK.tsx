@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const useKakaoSDK = () => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
-  const JS_KEY = process.env.NEXT_PUBLIC_JAVASCRIPT_KEY;
+  const JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY;
 
   useEffect(() => {
     if (!JS_KEY) {
-      console.error("Kakao JavaScript key is missing");
+      console.error('Kakao JavaScript key is missing');
       return;
     }
 
-    const script = document.createElement("script");
-    script.src = "https://developers.kakao.com/sdk/js/kakao.js";
+    const script = document.createElement('script');
+    script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
     script.async = true;
 
     script.onload = () => {

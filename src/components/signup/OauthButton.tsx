@@ -52,7 +52,7 @@ const OauthButton = (props: OauthButtonProps) => {
       }
 
       case 'kakao': {
-        const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+        const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
         authUrl = [
           'https://kauth.kakao.com/oauth/authorize',
           `?client_id=${KAKAO_CLIENT_ID}`,
