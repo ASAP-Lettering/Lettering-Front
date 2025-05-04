@@ -10,6 +10,36 @@ interface OauthButtonProps {
   bgColor: string;
 }
 
+const notReady = () => {
+  alert('준비 중입니다.');
+};
+
+const oauthButtons = [
+  {
+    key: 'naver',
+    bgColor: '#03CF5D',
+    component: (
+      <Image
+        src="/assets/icons/ic_naver.svg"
+        alt="Naver"
+        width={26}
+        height={26}
+        onClick={() => alert('준비 중입니다.')}
+      />
+    )
+  },
+  {
+    key: 'google',
+    bgColor: '#FFFFFF',
+    component: <SocialGoogle />
+  },
+  {
+    key: 'kakao',
+    bgColor: '#FEE500',
+    component: <SocialKakao />
+  }
+];
+
 export default function Login() {
   return (
     <Container>
@@ -18,22 +48,15 @@ export default function Login() {
         <LogoText>편지로 수놓는 나의 스페이스</LogoText>
         <LogoImage src="/assets/login/login_logo.png" />
         <OauthWrapper>
-          <OauthButton bgColor="#03CF5D">
-            <Image
-              src="/assets/icons/ic_naver.svg"
-              alt="Naver"
-              width={26}
-              height={26}
-            />
-          </OauthButton>
-          <OauthButton bgColor="#FFFFFF">
-            <SocialGoogle />
-          </OauthButton>
-          <OauthButton bgColor="#FEE500">
-            <SocialKakao />
-          </OauthButton>
+          {oauthButtons.map(({ key, bgColor, component }) => (
+            <OauthButton key={key} bgColor={bgColor}>
+              {component}
+            </OauthButton>
+          ))}
         </OauthWrapper>
-        <LetterBtnText>로그인 없이 편지 작성해보기</LetterBtnText>
+        <LetterBtnText onClick={notReady}>
+          로그인 없이 편지 작성해보기
+        </LetterBtnText>
       </ImageWrapper>
     </Container>
   );
