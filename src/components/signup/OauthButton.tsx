@@ -3,10 +3,10 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import { useSearchParams } from 'next/navigation';
 import { setLetterUrl } from '@/utils/storage';
-import { loginType } from '@/types/login';
+import { OAuthType } from '@/types/login';
 
 interface OauthButtonProps {
-  loginType: loginType;
+  loginType: OAuthType;
   bgColor: string;
   icon: string;
   size: number;
@@ -63,6 +63,15 @@ const OauthButton = (props: OauthButtonProps) => {
       }
 
       case 'naver': {
+        const NAVER_CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
+        const state = Math.random().toString(36).substring(2);
+        authUrl = [
+          'https://nid.naver.com/oauth2.0/authorize',
+          `?client_id=${NAVER_CLIENT_ID}`,
+          `&redirect_uri=${redirectUri}`,
+          `&response_type=code`,
+          `&state=${state}`
+        ].join('');
         break;
       }
     }

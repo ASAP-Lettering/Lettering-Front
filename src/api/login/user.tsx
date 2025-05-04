@@ -1,9 +1,10 @@
 import { RegisterDataType } from '@/types/user';
 import client, { authClient } from '../client';
 import { getRefreshToken, setTokens } from '@/utils/storage';
+import { Provider } from '@/types/login';
 
 // 로그인
-export const login = async (loginType: string, accessToken: string) => {
+export const login = async (loginType: Provider, accessToken: string) => {
   return await client.post(`/api/v1/auth/login/${loginType}`, {
     accessToken: accessToken
   });

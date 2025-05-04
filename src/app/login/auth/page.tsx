@@ -3,6 +3,7 @@
 import { login } from '@/api/login/user';
 import Loader from '@/components/common/Loader';
 import { signupState } from '@/recoil/signupStore';
+import { Provider } from '@/types/login';
 import { clearLetterUrl, setOnboarding, setTokens } from '@/utils/storage';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -13,12 +14,10 @@ import styled from 'styled-components';
 const Auth = () => {
   const [registerToken, setRegisterToken] = useRecoilState(signupState);
   const router = useRouter();
-  const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
   const [absoluteUrl, setAbsoluteUrl] = useState('');
   const [storeUrl, setstoreUrl] = useState('');
   const [type, setType] = useState('');
   const [oauthAccessToken, setOauthAccessToken] = useState('');
-  const [provider, setProvider] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -50,13 +49,12 @@ const Auth = () => {
       //type에 따라 다른 토큰 url 지정
       switch (TYPE) {
         case 'kakao':
-          setProvider('KAKAO');
           try {
             const response = await axios.post(
               'https://kauth.kakao.com/oauth/token',
               new URLSearchParams({
                 grant_type: 'authorization_code',
-                client_id: REST_API_KEY,
+                client_id: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY,
                 redirect_uri: absoluteUrl,
                 code: AUTHORIZATION_CODE
               }),
@@ -73,7 +71,6 @@ const Auth = () => {
 
           break;
         case 'google':
-          setProvider('GOOGLE');
           try {
             const body = new URLSearchParams({
               grant_type: 'authorization_code',
@@ -100,6 +97,30 @@ const Auth = () => {
           }
           break;
         case 'naver':
+          try {
+            // 백엔드 서버로부터 요청해서 받아오는 방식으로 변경하기
+            // const body = new URLSearchParams({
+            //   grant_type: 'authorization_code',
+            //   client_id: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID!,
+            //   client_secret: process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET!,
+            //   redirect_uri: absoluteUrl,
+            //   code: AUTHORIZATION_CODE,
+            // });
+            // const response = await axios.post(
+            //   'https://nid.naver.com/oauth2.0/token',
+            //   body.toString(),
+            //   {
+            //     headers: {
+            //       'Content-Type': 'application/x-www-form-urlencoded'
+            //     }
+            //   }
+            // );
+            // setOauthAccessToken(response.data.access_token);
+          } catch (error) {
+            console.error('Unsupported OAuth type:', type);
+            clearLetterUrl();
+            return;
+          }
           break;
         default:
           console.error('Unknown OAuth type:', TYPE);
@@ -112,7 +133,7 @@ const Auth = () => {
   useEffect(() => {
     try {
       if (oauthAccessToken) {
-        login(provider, oauthAccessToken)
+        login(type?.toUpperCase() as Provider, oauthAccessToken)
           .then((res) => {
             console.log('accessToken', res.data.accessToken);
             setTokens(res.data.accessToken, res.data.refreshToken);

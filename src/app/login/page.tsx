@@ -4,7 +4,7 @@ import Loader, { LoaderContainer } from '@/components/common/Loader';
 import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';
 import { theme } from '@/styles/theme';
-import { loginType } from '@/types/login';
+import { OAuthType } from '@/types/login';
 import { Suspense } from 'react';
 import styled from 'styled-components';
 
@@ -30,7 +30,7 @@ export default function Login() {
             {OAUTH.map((item) => (
               <OauthButton
                 key={item.key}
-                loginType={item.key as loginType}
+                loginType={item.key as OAuthType}
                 bgColor={item.bgColor}
                 icon={item.icon}
                 size={item.size}
