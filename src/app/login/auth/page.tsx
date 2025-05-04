@@ -1,5 +1,6 @@
 'use client';
 
+import { getOauthAccessToken } from '@/api/login/oauth';
 import { login } from '@/api/login/user';
 import Loader from '@/components/common/Loader';
 import { signupState } from '@/recoil/signupStore';
@@ -43,6 +44,7 @@ const Auth = () => {
       const AUTHORIZATION_CODE = new URL(window.location.href).searchParams.get(
         'code'
       );
+      const STATE = new URL(window.location.href).searchParams.get('state');
 
       const TYPE = new URL(window.location.href).searchParams.get('type');
 
@@ -103,24 +105,12 @@ const Auth = () => {
           break;
         case 'naver':
           try {
-            // 백엔드 서버로부터 요청해서 받아오는 방식으로 변경하기
-            // const body = new URLSearchParams({
-            //   grant_type: 'authorization_code',
-            //   client_id: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID!,
-            //   client_secret: process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET!,
-            //   redirect_uri: absoluteUrl,
-            //   code: AUTHORIZATION_CODE,
-            // });
-            // const response = await axios.post(
-            //   'https://nid.naver.com/oauth2.0/token',
-            //   body.toString(),
-            //   {
-            //     headers: {
-            //       'Content-Type': 'application/x-www-form-urlencoded'
-            //     }
-            //   }
-            // );
-            // setOauthAccessToken(response.data.access_token);
+            const response = await getOauthAccessToken(
+              'NAVER' as Provider,
+              AUTHORIZATION_CODE,
+              STATE
+            );
+            setOauthAccessToken(response);
           } catch (error) {
             console.error('Unsupported OAuth type:', type);
             clearLetterUrl();
