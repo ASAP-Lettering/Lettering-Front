@@ -17,6 +17,8 @@ const MyPage = () => {
   const [email, setEmail] = useState('');
   const [planetCount, setPlanetCount] = useState(0);
   const [letterCount, setLetterCount] = useState(0);
+  const [platform, setPlatform] = useState('');
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -62,7 +64,8 @@ const MyPage = () => {
       const response = await getUserInfo();
       setName(response.data.name);
       setEmail(response.data.email);
-      console.log('회원정보 조회 성공:', response.data);
+      setPlatform(response.data.socialPlatform);
+      // console.log('회원정보 조회 성공:', response.data);
     } catch (error) {
       console.error('회원정보 조회 실패:', error);
     }
@@ -75,6 +78,19 @@ const MyPage = () => {
       setPlanetCount(response.data.spaceCount);
     } catch (error) {
       console.error('편지수, 행성수 조회 실패:', error);
+    }
+  };
+
+  const EmailType = (platform): string => {
+    switch (platform) {
+      case 'GOOGLE':
+        return '/assets/icons/ic_google.svg';
+      case 'KAKAO':
+        return '/assets/icons/ic_kakao_profile.svg';
+      case 'NAVER':
+        return '/assets/icons/ic_naver.svg';
+      default:
+        return '';
     }
   };
 
@@ -96,7 +112,11 @@ const MyPage = () => {
                 <ProfileInfo>
                   <ProfileName>{name}님의 스페이스</ProfileName>
                   <ProfileEmail>
-                    <img src="/assets/icons/ic_kakao_profile.svg" />
+                    <StyledIcon
+                      src={EmailType(platform)}
+                      alt="emailIcon"
+                      platform={platform as keyof typeof iconSizes}
+                    />
                     <div>{email}</div>
                   </ProfileEmail>
                   <CountRaw>
@@ -236,6 +256,17 @@ const ProfileImage = styled.img`
   @media (max-width: 370px) {
     width: 100px;
   }
+`;
+
+const iconSizes = {
+  GOOGLE: 20,
+  KAKAO: 20,
+  NAVER: 20
+} as const;
+
+const StyledIcon = styled.img<{ platform: keyof typeof iconSizes }>`
+  width: ${({ platform }) => iconSizes[platform]}px;
+  height: ${({ platform }) => iconSizes[platform]}px;
 `;
 
 const ProfileInfo = styled.div`

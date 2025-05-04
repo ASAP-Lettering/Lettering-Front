@@ -8,33 +8,36 @@ import Loader, { LoaderContainer } from '../common/Loader';
 const SocialGoogle = () => {
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
-  const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const GOOGLE_URL = '/login/google';
   const [absoluteUrl, setabsoluteUrl] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setabsoluteUrl(
-        window.location.protocol + '//' + window.location.host + '/login/kakao'
+        window.location.protocol +
+          '//' +
+          window.location.host +
+          '/login/auth?type=google'
       );
     }
   }, []);
 
   const handleLogin = () => {
-    //이때 localStorage에 저장된 accessToken이 만료되었는지 확인해야함.
-    // if (accessToken) {
-    //   if (url) {
-    //     router.push(`/verify?url=${url}`);
-    //   } else {
-    //     router.push("/");
-    //   }
-    //   setAccessToken(accessToken);
-    // } else {
-    //받은 편지를 통해 들어올 경우 url를 저장한다.
     if (url) {
       setLetterUrl(url);
     }
-    window.location.href = GOOGLE_URL;
+    const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const scope = 'openid profile email';
+
+    const authUrl = [
+      'https://accounts.google.com/o/oauth2/v2/auth',
+      `?client_id=${GOOGLE_CLIENT_ID}`,
+      `&redirect_uri=${encodeURIComponent(absoluteUrl)}`,
+      `&response_type=code`,
+      `&scope=${encodeURIComponent(scope)}`,
+      `&access_type=offline`,
+      `&prompt=consent`
+    ].join('');
+    window.location.href = authUrl;
   };
 
   return (
