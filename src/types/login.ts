@@ -1,0 +1,1 @@
+export type loginType = 'naver' | 'google' | 'kakao';

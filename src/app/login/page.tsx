@@ -1,44 +1,16 @@
 'use client';
 
-import SocialKakao from '@/components/signup/SocialKakao';
-import SocialGoogle from '@/components/signup/SocialGoogle';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import OauthButton from '@/components/signup/OauthButton';
+import { OAUTH } from '@/constants/oauth';
 import { theme } from '@/styles/theme';
+import { loginType } from '@/types/login';
+import { Suspense } from 'react';
 import styled from 'styled-components';
-import Image from 'next/image';
-
-interface OauthButtonProps {
-  bgColor: string;
-}
 
 const notReady = () => {
   alert('준비 중입니다.');
 };
-
-const oauthButtons = [
-  {
-    key: 'naver',
-    bgColor: '#03CF5D',
-    component: (
-      <Image
-        src="/assets/icons/ic_naver.svg"
-        alt="Naver"
-        width={26}
-        height={26}
-        onClick={() => alert('준비 중입니다.')}
-      />
-    )
-  },
-  {
-    key: 'google',
-    bgColor: '#FFFFFF',
-    component: <SocialGoogle />
-  },
-  {
-    key: 'kakao',
-    bgColor: '#FEE500',
-    component: <SocialKakao />
-  }
-];
 
 export default function Login() {
   return (
@@ -48,11 +20,23 @@ export default function Login() {
         <LogoText>편지로 수놓는 나의 스페이스</LogoText>
         <LogoImage src="/assets/login/login_logo.png" />
         <OauthWrapper>
-          {oauthButtons.map(({ key, bgColor, component }) => (
-            <OauthButton key={key} bgColor={bgColor}>
-              {component}
-            </OauthButton>
-          ))}
+          <Suspense
+            fallback={
+              <LoaderContainer>
+                <Loader />
+              </LoaderContainer>
+            }
+          >
+            {OAUTH.map((item) => (
+              <OauthButton
+                key={item.key}
+                loginType={item.key as loginType}
+                bgColor={item.bgColor}
+                icon={item.icon}
+                size={item.size}
+              />
+            ))}
+          </Suspense>
         </OauthWrapper>
         <LetterBtnText onClick={notReady}>
           로그인 없이 편지 작성해보기
@@ -155,20 +139,6 @@ const OauthWrapper = styled.div`
   position: absolute;
   bottom: 123px;
   justify-content: center;
-`;
-
-const OauthButton = styled.button<OauthButtonProps>`
-  width: 69px;
-  height: 69px;
-  border-radius: 50%;
-  border: none;
-  background-color: ${({ bgColor }) => bgColor};
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
 `;
 
 const LetterBtnText = styled.div`
