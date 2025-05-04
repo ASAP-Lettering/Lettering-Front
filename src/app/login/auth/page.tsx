@@ -42,8 +42,6 @@ const Auth = () => {
 
       const TYPE = new URL(window.location.href).searchParams.get('type');
 
-      let tokenUrl = '';
-
       if (!AUTHORIZATION_CODE || !TYPE) {
         console.error('Authorization Code or Type is missing');
         return;
