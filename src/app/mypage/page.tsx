@@ -2,9 +2,9 @@
 
 import { getLetterCount } from '@/api/letter/letter';
 import { getUserInfo, logout } from '@/api/mypage/user';
-import Button from '@/components/common/Button';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';
+import { OAUTH } from '@/constants/oauth';
 import { theme } from '@/styles/theme';
 import { clearOnboarding, clearTokens, getRefreshToken } from '@/utils/storage';
 import { useRouter } from 'next/navigation';
@@ -65,7 +65,6 @@ const MyPage = () => {
       setName(response.data.name);
       setEmail(response.data.email);
       setPlatform(response.data.socialPlatform);
-      // console.log('회원정보 조회 성공:', response.data);
     } catch (error) {
       console.error('회원정보 조회 실패:', error);
     }
@@ -81,18 +80,9 @@ const MyPage = () => {
     }
   };
 
-  const EmailType = (platform): string => {
-    switch (platform) {
-      case 'GOOGLE':
-        return '/assets/icons/ic_google.svg';
-      case 'KAKAO':
-        return '/assets/icons/ic_kakao_profile.svg';
-      case 'NAVER':
-        return '/assets/icons/ic_naver.svg';
-      default:
-        return '';
-    }
-  };
+  const profileSrc = OAUTH.find(
+    (oauth) => oauth.key === platform.toLowerCase()
+  )?.profile;
 
   return (
     <Container>
@@ -112,11 +102,7 @@ const MyPage = () => {
                 <ProfileInfo>
                   <ProfileName>{name}님의 스페이스</ProfileName>
                   <ProfileEmail>
-                    <StyledIcon
-                      src={EmailType(platform)}
-                      alt="emailIcon"
-                      platform={platform as keyof typeof iconSizes}
-                    />
+                    <StyledIcon src={profileSrc} alt={platform} />
                     <div>{email}</div>
                   </ProfileEmail>
                   <CountRaw>
@@ -258,15 +244,9 @@ const ProfileImage = styled.img`
   }
 `;
 
-const iconSizes = {
-  GOOGLE: 20,
-  KAKAO: 20,
-  NAVER: 20
-} as const;
-
-const StyledIcon = styled.img<{ platform: keyof typeof iconSizes }>`
-  width: ${({ platform }) => iconSizes[platform]}px;
-  height: ${({ platform }) => iconSizes[platform]}px;
+const StyledIcon = styled.img`
+  width: 20px;
+  height: 20px;
 `;
 
 const ProfileInfo = styled.div`
