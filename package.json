@@ -20,6 +20,8 @@
     "framer-motion": "^11.4.0",
     "js-cookie": "^3.0.5",
     "next": "14.2.5",
+    "next-compose-plugins": "^2.2.1",
+    "next-plugin-graphql": "^0.0.2",
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",
@@ -43,6 +45,7 @@
     "@types/react-window": "^1.8.8",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "next-pwa": "^5.6.0",
     "typescript": "^5"
   },
   "description": "- 프레임워크: Next.js\r - 언어: TypeScript\r - 패키지 매니저: npm\r - CSS 프레임워크: styled-components\r - 전역상태관리: Recoil\r - 통신: Axios\r - 그외: Lint & Prettier",
