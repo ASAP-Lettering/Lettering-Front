@@ -5,14 +5,17 @@ import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';
 import { theme } from '@/styles/theme';
 import { OAuthType } from '@/types/login';
+import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import styled from 'styled-components';
 
-const notReady = () => {
-  alert('준비 중입니다.');
-};
-
 export default function Login() {
+  const router = useRouter();
+
+  const handleGuestLetterStart = () => {
+    router.push('/send/receiver?guest=true');
+  };
+
   return (
     <Container>
       <ImageWrapper>
@@ -38,8 +41,8 @@ export default function Login() {
             ))}
           </Suspense>
         </OauthWrapper>
-        <LetterBtnText onClick={notReady}>
-          로그인 없이 편지 작성해보기
+        <LetterBtnText onClick={handleGuestLetterStart}>
+          로그인 없이 편지 보내기
         </LetterBtnText>
       </ImageWrapper>
     </Container>

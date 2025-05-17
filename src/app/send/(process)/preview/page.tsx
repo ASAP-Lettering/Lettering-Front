@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import Button from '@/components/common/Button';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Letter from '@/components/letter/Letter';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -16,6 +16,7 @@ import { getLetterShareStatus } from '@/api/letter/share';
 
 const SendPreviewPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isKakaoLoaded = useKakaoSDK();
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
   const { draftId, receiverName, content, images, templateType, letterId } =
@@ -27,6 +28,8 @@ const SendPreviewPage = () => {
   const [isSharing, setIsSharing] = useState<boolean>(false);
   const [maxLinesPerPage, setMaxLinesPerPage] = useState(12);
   const [fontSize, setFontSize] = useState<string>('16px');
+
+  const isGuest = searchParams.get('guest') === 'true';
 
   useEffect(() => {
     setIsImage(!!!(content.length > 0));
@@ -76,33 +79,39 @@ const SendPreviewPage = () => {
     }
 
     try {
+      let letterCode = '';
       // 1. 편지 전송 API 요청
-      const response = await postSendLtter({
-        draftId,
-        receiverName,
-        content,
-        images,
-        templateType
-      });
-      console.log('편지 쓰기 성공');
-      setLetterState((prevState) => ({
-        ...prevState,
-        letterId: response.data.letterCode
-      }));
-      setLetterCode(response.data.letterCode);
-      console.log(response.data.letterCode);
+      if (isGuest) {
+        // 비회원 편지 저장 API 연동
+      } else {
+        const response = await postSendLtter({
+          draftId,
+          receiverName,
+          content,
+          images,
+          templateType
+        });
+        console.log('편지 쓰기 성공');
+        setLetterState((prevState) => ({
+          ...prevState,
+          letterId: response.data.letterCode
+        }));
+        letterCode = response.data.letterCode;
+        setLetterCode(response.data.letterCode);
+        console.log(response.data.letterCode);
+      }
 
       // 2. 카카오 공유 로직 실행 (letterId 상태와 무관하게 항상 실행)
       Kakao.Share.sendScrap({
         requestUrl: location.origin + location.pathname,
         templateId: 112798,
         templateArgs: {
-          senderName: name,
-          id: response.data.letterCode
+          senderName: isGuest ? receiverName + ' 님께' : name + ' 님으로부터',
+          id: letterCode
         },
         serverCallbackArgs: {
           requestType: 'SHARE',
-          requestId: response.data.letterCode
+          requestId: letterCode
         },
         // 카카오톡 미설치 시 카카오톡 설치 경로이동
         installTalk: true

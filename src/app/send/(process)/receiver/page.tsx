@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import { theme } from '@/styles/theme';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
   deleteDraftLetter,
@@ -26,6 +26,7 @@ import DraftButton from '@/components/draft/DraftButton';
 
 const SendReceiverPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { showToast } = useToast();
   const [draftId, setDraftId] = useState<string | null>(null);
   const [receiver, setReceiver] = useState<string>('');
@@ -35,6 +36,8 @@ const SendReceiverPage = () => {
 
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
+
+  const isGuest = searchParams.get('guest') === 'true';
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
@@ -81,7 +84,7 @@ const SendReceiverPage = () => {
       }
     };
 
-    fetchGetDraftCount();
+    if (!isGuest) fetchGetDraftCount();
 
     if (draftKey) {
       fetchGetDraft();
@@ -180,7 +183,8 @@ const SendReceiverPage = () => {
       images: images,
       previewImages: previewImages
     }));
-    router.push('/send/content');
+
+    router.push(`/send/content${isGuest ? '?guest=true' : ''}`);
   };
 
   /* 임시 저장 삭제 핸들러 */
@@ -234,13 +238,15 @@ const SendReceiverPage = () => {
 
   return (
     <>
-      <DraftButton
-        handleSaveLetter={handleSaveLetter}
-        handleDraftBottom={handleDraftBottom}
-        isDraftDisabled={isDraftDisabled}
-        isImageUploadLoading={isImageUploadLoading}
-        tempCount={tempCount}
-      />
+      {!isGuest && (
+        <DraftButton
+          handleSaveLetter={handleSaveLetter}
+          handleDraftBottom={handleDraftBottom}
+          isDraftDisabled={isDraftDisabled}
+          isImageUploadLoading={isImageUploadLoading}
+          tempCount={tempCount}
+        />
+      )}
       <Container>
         <Column>
           <Label>편지를 받는 사람</Label>

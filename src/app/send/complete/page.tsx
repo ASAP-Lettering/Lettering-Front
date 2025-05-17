@@ -1,18 +1,31 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import { sendLetterState } from "@/recoil/letterStore";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { useRecoilValue } from "recoil";
-import styled from "styled-components";
+import Button from '@/components/common/Button';
+import { SEND_COMPLETE_SUBTEXT } from '@/constants/send/message';
+import { sendLetterState } from '@/recoil/letterStore';
+import { theme } from '@/styles/theme';
+import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
 
 const SendCompletePage = () => {
   const router = useRouter();
-
+  const searchParams = useSearchParams();
+  const isGuest = searchParams.get('guest') === 'true';
   const { receiverName } = useRecoilValue(sendLetterState);
+
+  const subText = isGuest
+    ? SEND_COMPLETE_SUBTEXT.guest
+    : SEND_COMPLETE_SUBTEXT.member;
+
+  const handleComplete = () => {
+    if (isGuest) {
+    } else {
+      router.push('/planet');
+    }
+  };
 
   return (
     <Layout>
@@ -21,7 +34,7 @@ const SendCompletePage = () => {
           {receiverName}에게
           <br />
           편지를 전달했어요!
-          <Sub>레터링으로 편지에 담긴 진심을 수놓았어요</Sub>
+          <Sub>{subText}</Sub>
         </Title>
         <ImageWrapper>
           <Image src="/assets/send/send_complete.png" fill alt="편지" />
@@ -30,10 +43,10 @@ const SendCompletePage = () => {
       <ButtonWrapper>
         <Button
           buttonType="primary"
-          text="홈으로 돌아가기"
-          onClick={() => {
-            router.push("/planet");
-          }}
+          text={
+            isGuest ? '회원가입하고 더 많은 기능 이용하기' : '홈으로 돌아가기'
+          }
+          onClick={handleComplete}
         />
       </ButtonWrapper>
     </Layout>
@@ -53,7 +66,7 @@ const Layout = styled.div`
   overflow-x: hidden;
   padding-bottom: 40px;
   background: ${(props) => props.theme.colors.bg};
-  background-image: url("/assets/send/img_send_background.png");
+  background-image: url('/assets/send/img_send_background.png');
   background-size: cover;
   background-position: bottom 80px center;
   background-repeat: no-repeat;
