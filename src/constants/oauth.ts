@@ -14,7 +14,7 @@ export const OAUTH = [
     icon: '/assets/icons/ic_google.svg',
     size: 32,
     miniSize: 16,
-    profile: '/assets/icons/ic_googler.svg',
+    profile: '/assets/icons/ic_google.svg',
     label: '구글로 시작하기'
   },
   {

@@ -119,7 +119,7 @@ export const setInitUserToast = () => {
 /* anonymousSendLetterCode */
 export const setAnonymousSendLetterCode = (anonymousSendLetterCode: string) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('letterCode', anonymousSendLetterCode);
+    localStorage.setItem('anonymousSendLetterCode', anonymousSendLetterCode);
   }
 };
 
