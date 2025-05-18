@@ -6,6 +6,7 @@ import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';
 import { SEND_COMPLETE_SUBTEXT } from '@/constants/send/message';
 import { sendLetterState } from '@/recoil/letterStore';
+import { float, letterFloat } from '@/styles/animation';
 import { theme } from '@/styles/theme';
 import { OAuthType } from '@/types/login';
 import Image from 'next/image';
@@ -171,6 +172,7 @@ const ImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: ${letterFloat} 2s ease-in-out infinite;
 
   @media (max-height: 680px) {
     width: 400px;
