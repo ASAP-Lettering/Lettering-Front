@@ -9,12 +9,14 @@ import { float } from '@/styles/animation';
 
 interface OauthButtonProps {
   loginType: OAuthType;
+  shape?: 'circle' | 'list';
   bgColor: string;
   icon: string;
   size: number;
+  label?: string;
 }
 const OauthButton = (props: OauthButtonProps) => {
-  const { loginType, bgColor, icon, size } = props;
+  const { loginType, shape = 'circle', bgColor, icon, size, label } = props;
 
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
@@ -87,10 +89,21 @@ const OauthButton = (props: OauthButtonProps) => {
 
   return (
     <Wrapper>
-      {recentLogin === loginType && <Bubble>최근에 로그인했어요</Bubble>}
-      <SocialButton $bgColor={bgColor} onClick={handleLogin}>
-        <SocialIcon src={icon} width={size} height={size} alt={loginType} />
-      </SocialButton>
+      {shape === 'circle' && recentLogin === loginType && (
+        <Bubble>최근에 로그인했어요</Bubble>
+      )}
+      <Box onClick={handleLogin}>
+        <SocialButton $bgColor={bgColor} $shape={shape}>
+          <SocialIcon
+            src={icon}
+            width={size}
+            height={size}
+            $size={size}
+            alt={loginType}
+          />
+        </SocialButton>
+        {shape === 'list' && <ButtonLabel>{label}</ButtonLabel>}
+      </Box>
     </Wrapper>
   );
 };
@@ -98,17 +111,21 @@ const OauthButton = (props: OauthButtonProps) => {
 export default OauthButton;
 
 const Wrapper = styled.div`
-  width: 69px;
-  height: 69px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const SocialButton = styled.button<{ $bgColor: string }>`
-  width: 69px;
-  height: 69px;
+const Box = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
+const SocialButton = styled.div<{ $bgColor: string; $shape?: string }>`
+  width: ${({ $shape }) => ($shape === 'list' ? '31px' : '69px')};
+  height: ${({ $shape }) => ($shape === 'list' ? '31px' : '69px')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,10 +136,9 @@ const SocialButton = styled.button<{ $bgColor: string }>`
   transition: background-color 0.3s;
 `;
 
-const SocialIcon = styled(Image)`
-  width: 100%;
-  height: 100%;
-  padding: 0 16px;
+const SocialIcon = styled(Image)<{ $size: number }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
   object-fit: contain;
 `;
 
@@ -152,4 +168,10 @@ const Bubble = styled.div`
     border-style: solid;
     border-color: ${theme.colors.blue} transparent transparent transparent;
   }
+`;
+
+const ButtonLabel = styled.span`
+  margin-left: 12px;
+  color: ${theme.colors.white};
+  ${theme.fonts.body02};
 `;
