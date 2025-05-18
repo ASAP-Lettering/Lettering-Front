@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { theme } from '@/styles/theme';
 import Input from '@/components/common/Input';
@@ -23,6 +23,7 @@ import { postImage } from '@/api/image/image';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { draftModalState } from '@/recoil/draftStore';
 import DraftButton from '@/components/draft/DraftButton';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 
 const SendContentPage = () => {
   const router = useRouter();
@@ -425,7 +426,19 @@ const SendContentPage = () => {
   );
 };
 
-export default SendContentPage;
+export default function SendContentPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendContentPage />
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;

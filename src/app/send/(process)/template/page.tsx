@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import Button from '@/components/common/Button';
@@ -10,6 +10,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { sendLetterState, useSsrComplectedState } from '@/recoil/letterStore';
 import LetterTemplateList from '@/components/letter/LetterTemplateList';
 import { ALL_TEMPLATES } from '@/constants/templates';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 
 const SendTemplatePage = () => {
   const router = useRouter();
@@ -123,7 +124,19 @@ const SendTemplatePage = () => {
   );
 };
 
-export default SendTemplatePage;
+export default function SendTemplatePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendTemplatePage />
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;

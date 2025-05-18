@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import Button from '@/components/common/Button';
@@ -13,6 +13,7 @@ import { sendLetterState } from '@/recoil/letterStore';
 import useKakaoSDK from '@/hooks/useKakaoSDK';
 import { userState } from '@/recoil/userStore';
 import { getLetterShareStatus } from '@/api/letter/share';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 
 const SendPreviewPage = () => {
   const router = useRouter();
@@ -205,7 +206,19 @@ const SendPreviewPage = () => {
   );
 };
 
-export default SendPreviewPage;
+export default function SendPreviewPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendPreviewPage />
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;

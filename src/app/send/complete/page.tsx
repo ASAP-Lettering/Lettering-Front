@@ -2,6 +2,7 @@
 
 import BottomSheet from '@/components/common/BottomSheet';
 import Button from '@/components/common/Button';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';
 import { SEND_COMPLETE_SUBTEXT } from '@/constants/send/message';
@@ -11,7 +12,7 @@ import { theme } from '@/styles/theme';
 import { OAuthType } from '@/types/login';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
@@ -111,7 +112,19 @@ const SendCompletePage = () => {
   );
 };
 
-export default SendCompletePage;
+export default function SendCompletePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendCompletePage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   display: flex;

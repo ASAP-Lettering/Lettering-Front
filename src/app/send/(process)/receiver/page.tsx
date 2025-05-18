@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { theme } from '@/styles/theme';
 import Input from '@/components/common/Input';
@@ -23,6 +23,7 @@ import { draftModalState } from '@/recoil/draftStore';
 import BottomSheet from '@/components/common/BottomSheet';
 import { checkKorean } from '@/utils/checkKorean';
 import DraftButton from '@/components/draft/DraftButton';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 
 const SendReceiverPage = () => {
   const router = useRouter();
@@ -307,7 +308,19 @@ const SendReceiverPage = () => {
   );
 };
 
-export default SendReceiverPage;
+export default function SendReceiverPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendReceiverPage />
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;
