@@ -51,6 +51,16 @@ const SendCompletePage = () => {
   return (
     <>
       <Layout>
+        {isGuest && (
+          <button onClick={() => router.push('/login')}>
+            <CloseIcon
+              src="/assets/icons/ic_x.svg"
+              width={24}
+              height={24}
+              alt="나가기"
+            />
+          </button>
+        )}
         <Container>
           <Title>
             {receiverName}에게
@@ -118,6 +128,14 @@ const Layout = styled.div`
   background-repeat: no-repeat;
   position: relative;
   z-index: 0;
+`;
+
+const CloseIcon = styled(Image)`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 10px;
+  right: 17px;
 `;
 
 const Container = styled.div`
