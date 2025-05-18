@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Letter from '@/components/letter/Letter';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { postSendLtter } from '@/api/send/send';
+import { postAnonymousSendLetter, postSendLetter } from '@/api/send/send';
 import { sendLetterState } from '@/recoil/letterStore';
 import useKakaoSDK from '@/hooks/useKakaoSDK';
 import { userState } from '@/recoil/userStore';
@@ -84,8 +84,20 @@ const SendPreviewPage = () => {
       // 1. 편지 전송 API 요청
       if (isGuest) {
         // 비회원 편지 저장 API 연동
+        const response = await postAnonymousSendLetter({
+          receiverName,
+          content,
+          images,
+          templateType
+        });
+        setLetterState((prevState) => ({
+          ...prevState,
+          letterId: response.data.letterCode
+        }));
+        letterCode = response.data.letterCode;
+        setLetterCode(response.data.letterCode);
       } else {
-        const response = await postSendLtter({
+        const response = await postSendLetter({
           draftId,
           receiverName,
           content,
@@ -99,7 +111,6 @@ const SendPreviewPage = () => {
         }));
         letterCode = response.data.letterCode;
         setLetterCode(response.data.letterCode);
-        console.log(response.data.letterCode);
       }
 
       // 2. 카카오 공유 로직 실행 (letterId 상태와 무관하게 항상 실행)
