@@ -13,7 +13,11 @@ import { Suspense, useState } from 'react';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import { signupState, userInfo } from '@/recoil/signupStore';
 import { signup } from '@/api/login/user';
-import { setTokens } from '@/utils/storage';
+import {
+  clearAnonymousSendLetterCode,
+  getAnonymousSendLetterCode,
+  setTokens
+} from '@/utils/storage';
 import { useToast } from '@/hooks/useToast';
 import { checkKorean } from '@/utils/checkKorean';
 
@@ -59,11 +63,13 @@ const SignupStep2 = () => {
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
-      realName: name
+      realName: name,
+      anonymousSendLetterCode: getAnonymousSendLetterCode() || null
     })
       .then((res) => {
         console.log('accessToken', res.data.accessToken);
         setTokens(res.data.accessToken, res.data.refreshToken);
+        clearAnonymousSendLetterCode();
         if (url) {
           router.push(`/signup/complete?url=${url}`);
         } else {
