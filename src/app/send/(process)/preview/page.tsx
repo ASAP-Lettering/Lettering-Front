@@ -148,7 +148,7 @@ const SendPreviewPage = () => {
           console.log(status);
           if (status.isShared) {
             console.log('완료');
-            router.push('/send/complete');
+            router.push(`/send/complete${isGuest ? '?guest=true' : ''}`);
             clearInterval(interval); // 폴링 중단
           }
         } catch (error) {
