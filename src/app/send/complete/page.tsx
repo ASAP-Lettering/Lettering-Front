@@ -7,9 +7,10 @@ import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';
 import { SEND_COMPLETE_SUBTEXT } from '@/constants/send/message';
 import { sendLetterState } from '@/recoil/letterStore';
-import { float, letterFloat } from '@/styles/animation';
+import { letterFloat } from '@/styles/animation';
 import { theme } from '@/styles/theme';
 import { OAuthType } from '@/types/login';
+import { clearAnonymousSendLetterCode } from '@/utils/storage';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -50,11 +51,16 @@ const SendCompletePage = () => {
     }
   };
 
+  const handleExit = () => {
+    router.push('/login');
+    clearAnonymousSendLetterCode();
+  };
+
   return (
     <>
       <Layout>
         {isGuest && (
-          <button onClick={() => router.push('/login')}>
+          <button onClick={handleExit}>
             <CloseIcon
               src="/assets/icons/ic_x.svg"
               width={24}

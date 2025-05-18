@@ -6,6 +6,7 @@ import { OAUTH } from '@/constants/oauth';
 import { sendLetterState } from '@/recoil/letterStore';
 import { theme } from '@/styles/theme';
 import { OAuthType } from '@/types/login';
+import { clearAnonymousSendLetterCode } from '@/utils/storage';
 import { useRouter } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -17,6 +18,7 @@ export default function Login() {
 
   /* 로그인 페이지에서 편지 쓰기 store 초기화 */
   useEffect(() => {
+    clearAnonymousSendLetterCode();
     setSendState({
       draftId: null,
       receiverName: '',

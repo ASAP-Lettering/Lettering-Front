@@ -14,6 +14,7 @@ import useKakaoSDK from '@/hooks/useKakaoSDK';
 import { userState } from '@/recoil/userStore';
 import { getLetterShareStatus } from '@/api/letter/share';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { setAnonymousSendLetterCode } from '@/utils/storage';
 
 const SendPreviewPage = () => {
   const router = useRouter();
@@ -96,6 +97,7 @@ const SendPreviewPage = () => {
         }));
         letterCode = response.data.letterCode;
         setLetterCode(response.data.letterCode);
+        setAnonymousSendLetterCode(response.data.letterCode);
       } else {
         const response = await postSendLetter({
           draftId,

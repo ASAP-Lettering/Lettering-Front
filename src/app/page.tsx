@@ -3,7 +3,7 @@
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import { getAccessToken } from '@/utils/storage';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 export default function Home() {
