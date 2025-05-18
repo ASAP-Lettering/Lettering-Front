@@ -34,6 +34,13 @@ const SignupStep2 = () => {
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
 
+  const [anonymousCode, setAnonymousCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const code = getAnonymousSendLetterCode();
+    setAnonymousCode(code);
+  }, []);
+
   const handleButtonClick = () => {
     if (canSignin()) {
       setIsBottomUp(true);
@@ -64,7 +71,7 @@ const SignupStep2 = () => {
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
       realName: name,
-      anonymousSendLetterCode: getAnonymousSendLetterCode() || null
+      anonymousSendLetterCode: anonymousCode
     })
       .then((res) => {
         console.log('accessToken', res.data.accessToken);
