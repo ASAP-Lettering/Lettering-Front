@@ -4,4 +4,5 @@ export interface RegisterDataType {
   privatePermission: boolean;
   marketingPermission: boolean;
   realName: string;
+  anonymousSendLetterCode: string | null;
 }

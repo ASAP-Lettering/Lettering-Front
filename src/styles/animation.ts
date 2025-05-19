@@ -23,3 +23,15 @@ export const float = keyframes`
     transform: translate(-50%, 0);
   }
 `;
+
+export const letterFloat = keyframes`
+   0% {
+      transform: translate(-50%, -48%);
+    }
+    50% {
+      transform: translate(-50%, -52%);
+    }
+    100% {
+      transform: translate(-50%, -48%);
+    }
+`;

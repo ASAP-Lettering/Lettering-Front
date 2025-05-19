@@ -1,7 +1,7 @@
-import { authClient } from '@/api/client';
+import client, { authClient } from '@/api/client';
 
 // 편지 쓰기
-export const postSendLtter = async ({
+export const postSendLetter = async ({
   receiverName,
   content,
   images,
@@ -20,5 +20,25 @@ export const postSendLtter = async ({
     images,
     templateType,
     draftId
+  });
+};
+
+// 비회원 편지 쓰기
+export const postAnonymousSendLetter = async ({
+  receiverName,
+  content,
+  images,
+  templateType
+}: {
+  receiverName: string;
+  content: string;
+  images: string[];
+  templateType: number;
+}) => {
+  return await client.post(`/api/v1/letters/anonymous/send`, {
+    receiverName,
+    content,
+    images,
+    templateType
   });
 };

@@ -3,16 +3,37 @@
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';
+import { sendLetterState } from '@/recoil/letterStore';
 import { theme } from '@/styles/theme';
 import { OAuthType } from '@/types/login';
-import { Suspense } from 'react';
+import { clearAnonymousSendLetterCode } from '@/utils/storage';
+import { useRouter } from 'next/navigation';
+import { Suspense, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
-const notReady = () => {
-  alert('준비 중입니다.');
-};
-
 export default function Login() {
+  const router = useRouter();
+  const [, setSendState] = useRecoilState(sendLetterState);
+
+  /* 로그인 페이지에서 편지 쓰기 store 초기화 */
+  useEffect(() => {
+    clearAnonymousSendLetterCode();
+    setSendState({
+      draftId: null,
+      receiverName: '',
+      content: '',
+      images: [] as string[],
+      previewImages: [] as string[],
+      templateType: 0,
+      letterId: null
+    });
+  }, []);
+
+  const handleGuestLetterStart = () => {
+    router.push('/send/receiver?guest=true');
+  };
+
   return (
     <Container>
       <ImageWrapper>
@@ -38,8 +59,8 @@ export default function Login() {
             ))}
           </Suspense>
         </OauthWrapper>
-        <LetterBtnText onClick={notReady}>
-          로그인 없이 편지 작성해보기
+        <LetterBtnText onClick={handleGuestLetterStart}>
+          로그인 없이 편지 보내기
         </LetterBtnText>
       </ImageWrapper>
     </Container>

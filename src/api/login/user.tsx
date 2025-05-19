@@ -15,14 +15,16 @@ export const signup = async ({
   servicePermission,
   privatePermission,
   marketingPermission,
-  realName
+  realName,
+  anonymousSendLetterCode
 }: RegisterDataType) => {
   return await client.post(`/api/v1/users`, {
     registerToken: registerToken,
     servicePermission: servicePermission,
     privatePermission: privatePermission,
     marketingPermission: marketingPermission,
-    realName: realName
+    realName: realName,
+    anonymousSendLetterCode: anonymousSendLetterCode
   });
 };
 

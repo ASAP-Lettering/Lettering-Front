@@ -116,6 +116,24 @@ export const setInitUserToast = () => {
   }
 };
 
+/* anonymousSendLetterCode */
+export const setAnonymousSendLetterCode = (anonymousSendLetterCode: string) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('anonymousSendLetterCode', anonymousSendLetterCode);
+  }
+};
+
+export const getAnonymousSendLetterCode = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('anonymousSendLetterCode');
+  }
+  return null;
+};
+
+export const clearAnonymousSendLetterCode = () => {
+  localStorage.removeItem('anonymousSendLetterCode');
+};
+
 export const getInitUserToast = (): string | null => {
   if (typeof window !== "undefined") {
     return sessionStorage.getItem("initUserToast");

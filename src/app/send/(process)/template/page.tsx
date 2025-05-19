@@ -1,18 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import Button from '@/components/common/Button';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Letter from '@/components/letter/Letter';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { sendLetterState, useSsrComplectedState } from '@/recoil/letterStore';
 import LetterTemplateList from '@/components/letter/LetterTemplateList';
 import { ALL_TEMPLATES } from '@/constants/templates';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 
 const SendTemplatePage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { receiverName, content, images, templateType } =
     useRecoilValue(sendLetterState);
   const setSendLetterState = useSetRecoilState(sendLetterState);
@@ -22,6 +24,8 @@ const SendTemplatePage = () => {
   const [template, setTemplate] = useState<number>(
     templateType || ALL_TEMPLATES[0]
   );
+
+  const isGuest = searchParams.get('guest') === 'true';
 
   /* SSR 완료 시 상태 업데이트 */
   const setSsrCompleted = useSsrComplectedState();
@@ -70,7 +74,8 @@ const SendTemplatePage = () => {
       ...prevState,
       templateType: template
     }));
-    router.push('/send/preview');
+
+    router.push(`/send/preview${isGuest ? '?guest=true' : ''}`);
   };
 
   return (
@@ -119,7 +124,19 @@ const SendTemplatePage = () => {
   );
 };
 
-export default SendTemplatePage;
+export default function SendTemplatePaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendTemplatePage />
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;

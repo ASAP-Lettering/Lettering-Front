@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { theme } from '@/styles/theme';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 import {
@@ -22,11 +22,12 @@ import { useToast } from '@/hooks/useToast';
 import { postImage } from '@/api/image/image';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { draftModalState } from '@/recoil/draftStore';
-import imageCompression from 'browser-image-compression';
 import DraftButton from '@/components/draft/DraftButton';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 
 const SendContentPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { showToast } = useToast();
   const [draftId, setDraftId] = useState<string | null>(null);
   const [receiver, setReceiver] = useState<string>('');
@@ -38,6 +39,8 @@ const SendContentPage = () => {
 
   const [isImageUploadLoading, setImageUploadLoading] =
     useState<boolean>(false); // 서버 이미지 업로드 상태
+
+  const isGuest = searchParams.get('guest') === 'true';
 
   const [draftModal, setDraftModal] = useRecoilState(draftModalState);
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
@@ -81,7 +84,7 @@ const SendContentPage = () => {
       }
     };
 
-    fetchGetDraftCount();
+    if (!isGuest) fetchGetDraftCount();
 
     if (draftKey) {
       fetchGetDraft();
@@ -263,7 +266,8 @@ const SendContentPage = () => {
       images: images,
       previewImages: previewImages
     }));
-    router.push('/send/template');
+
+    router.push(`/send/template${isGuest ? '?guest=true' : ''}`);
   };
 
   /* 임시 저장 삭제 핸들러 */
@@ -317,13 +321,15 @@ const SendContentPage = () => {
 
   return (
     <>
-      <DraftButton
-        handleSaveLetter={handleSaveLetter}
-        handleDraftBottom={handleDraftBottom}
-        isDraftDisabled={isDraftDisabled}
-        isImageUploadLoading={isImageUploadLoading}
-        tempCount={tempCount}
-      />
+      {!isGuest && (
+        <DraftButton
+          handleSaveLetter={handleSaveLetter}
+          handleDraftBottom={handleDraftBottom}
+          isDraftDisabled={isDraftDisabled}
+          isImageUploadLoading={isImageUploadLoading}
+          tempCount={tempCount}
+        />
+      )}
       <Container>
         <div>
           <Label>
@@ -420,7 +426,19 @@ const SendContentPage = () => {
   );
 };
 
-export default SendContentPage;
+export default function SendContentPaging() {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendContentPage />
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;

@@ -26,7 +26,8 @@ const Verify = () => {
       privatePermission: user.privatePermission,
       servicePermission: user.servicePermission,
       marketingPermission: user.marketingPermission,
-      realName: name
+      realName: name,
+      anonymousSendLetterCode: null
     })
       .then((res) => {
         console.log('accessToken', res.data.accessToken);
