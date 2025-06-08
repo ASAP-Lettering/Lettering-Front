@@ -267,7 +267,7 @@ const SendContentPage = () => {
       previewImages: previewImages
     }));
 
-    router.push(`/send/template${isGuest ? '?guest=true' : ''}`);
+    router.push(`${isGuest ? '/send/sender?guest=true' : '/send/template'}`);
   };
 
   /* 임시 저장 삭제 핸들러 */
@@ -294,7 +294,8 @@ const SendContentPage = () => {
       console.log('임시 저장 조회 성공', response.data);
 
       console.log('상태 변경됨');
-      setLetterState({
+      setLetterState((prev) => ({
+        ...prev,
         draftId: response.data.draftKey,
         receiverName: response.data.receiverName,
         content: response.data.content,
@@ -302,7 +303,7 @@ const SendContentPage = () => {
         previewImages: response.data.images,
         templateType: 0,
         letterId: null
-      });
+      }));
 
       // 각 input 상태 업데이트
       setDraftId(response.data.draftKey);

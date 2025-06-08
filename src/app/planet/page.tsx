@@ -76,6 +76,7 @@ const PlanetPage = () => {
     });
     setSendState({
       draftId: null,
+      senderName: '',
       receiverName: '',
       content: '',
       images: [] as string[],

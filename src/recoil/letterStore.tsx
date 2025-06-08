@@ -41,6 +41,7 @@ export const sendLetterState = atom({
   key: 'sendLetterState',
   default: {
     draftId: null as string | null,
+    senderName: null as string | null,
     receiverName: '',
     content: '',
     images: [] as string[],
