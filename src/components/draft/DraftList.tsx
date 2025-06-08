@@ -48,6 +48,7 @@ const DraftList = (props: DraftListProps) => {
         draftType === 'send'
           ? setLetterState({
               draftId: response.data.draftKey,
+              senderName: '',
               receiverName: response.data.receiverName,
               content: response.data.content,
               images: response.data.images,
