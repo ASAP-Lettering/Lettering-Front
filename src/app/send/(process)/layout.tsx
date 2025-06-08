@@ -1,10 +1,11 @@
 'use client';
 
+import Loader, { LoaderContainer } from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';
 import ProgressBar from '@/components/common/ProgressBar';
 import { theme } from '@/styles/theme';
 import { usePathname, useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 
 interface SendLayoutProps {
@@ -46,7 +47,19 @@ const SendLayout = ({ children }: SendLayoutProps) => {
   );
 };
 
-export default SendLayout;
+export default function SendLayouting({ children }: SendLayoutProps) {
+  return (
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      }
+    >
+      <SendLayout>{children}</SendLayout>
+    </Suspense>
+  );
+}
 
 const Container = styled.div`
   width: 100%;
