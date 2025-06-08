@@ -21,6 +21,7 @@ export default function Login() {
     clearAnonymousSendLetterCode();
     setSendState({
       draftId: null,
+      senderName: null,
       receiverName: '',
       content: '',
       images: [] as string[],

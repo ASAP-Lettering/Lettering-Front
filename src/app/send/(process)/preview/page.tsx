@@ -21,8 +21,15 @@ const SendPreviewPage = () => {
   const searchParams = useSearchParams();
   const isKakaoLoaded = useKakaoSDK();
   const [letterState, setLetterState] = useRecoilState(sendLetterState);
-  const { draftId, receiverName, content, images, templateType, letterId } =
-    useRecoilValue(sendLetterState);
+  const {
+    draftId,
+    senderName,
+    receiverName,
+    content,
+    images,
+    templateType,
+    letterId
+  } = useRecoilValue(sendLetterState);
   const { name } = useRecoilValue(userState);
   const [isImage, setIsImage] = useState<boolean>(false);
   const [letterCode, setLetterCode] = useState<string>('');
@@ -86,6 +93,7 @@ const SendPreviewPage = () => {
       if (isGuest) {
         // 비회원 편지 저장 API 연동
         const response = await postAnonymousSendLetter({
+          senderName,
           receiverName,
           content,
           images,
@@ -120,7 +128,7 @@ const SendPreviewPage = () => {
         requestUrl: location.origin + location.pathname,
         templateId: 112798,
         templateArgs: {
-          senderName: isGuest ? receiverName + ' 님께' : name + ' 님으로부터',
+          senderName: `${isGuest ? senderName : name}`,
           id: letterCode
         },
         serverCallbackArgs: {
@@ -204,7 +212,11 @@ const SendPreviewPage = () => {
             buttonType="primary"
             text="카카오로 편지 보내기"
             onClick={handleSendLetterAndShare}
-            disabled={!receiverName || !content || isLoading}
+            disabled={
+              isGuest
+                ? !receiverName || !content || !senderName || isLoading
+                : !receiverName || !content || isLoading
+            }
           >
             <Image
               src="/assets/icons/ic_kakao_talk.svg"

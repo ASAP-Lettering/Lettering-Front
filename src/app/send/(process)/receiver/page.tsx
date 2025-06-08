@@ -212,7 +212,8 @@ const SendReceiverPage = () => {
       console.log('임시 저장 조회 성공', response.data);
 
       console.log('상태 변경됨');
-      setLetterState({
+      setLetterState((prev) => ({
+        ...prev,
         draftId: response.data.draftKey,
         receiverName: response.data.receiverName,
         content: response.data.content,
@@ -220,7 +221,7 @@ const SendReceiverPage = () => {
         previewImages: response.data.images,
         templateType: 0,
         letterId: null
-      });
+      }));
 
       // 각 input 상태 업데이트
       setDraftId(response.data.draftKey);
@@ -250,7 +251,7 @@ const SendReceiverPage = () => {
       )}
       <Container>
         <Column>
-          <Label>편지를 받는 사람</Label>
+          <Label>{isGuest && 'To.'} 편지를 받는 사람</Label>
           <Input
             inputType="boxText"
             value={receiver}

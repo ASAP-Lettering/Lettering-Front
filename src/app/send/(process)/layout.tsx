@@ -3,7 +3,7 @@
 import NavigatorBar from '@/components/common/NavigatorBar';
 import ProgressBar from '@/components/common/ProgressBar';
 import { theme } from '@/styles/theme';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -13,12 +13,20 @@ interface SendLayoutProps {
 
 const SendLayout = ({ children }: SendLayoutProps) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isGuest = searchParams.get('guest') === 'true';
 
   const current =
     pathname === '/send/receiver'
       ? 1
       : pathname === '/send/content'
       ? 2
+      : isGuest
+      ? pathname === '/send/sender'
+        ? 3
+        : pathname === '/send/template'
+        ? 4
+        : null
       : pathname === '/send/template'
       ? 3
       : null;
@@ -30,7 +38,7 @@ const SendLayout = ({ children }: SendLayoutProps) => {
       </NavigatorBarWrapper>
       {current && (
         <ProgressBarWrapper>
-          <ProgressBar current={current} total={3} />
+          <ProgressBar current={current} total={isGuest ? 4 : 3} />
         </ProgressBarWrapper>
       )}
       {children}
