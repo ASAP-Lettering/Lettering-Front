@@ -20,7 +20,9 @@ export default withPlugins(
       withPWA,
       {
         pwa: {
-          dest: 'public'
+          dest: 'public',
+          register: true,
+          skipWaiting: true
         }
       }
     ],
