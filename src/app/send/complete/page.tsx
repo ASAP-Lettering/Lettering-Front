@@ -1,7 +1,7 @@
 'use client';
 
 import BottomSheet from '@/components/common/BottomSheet';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import OauthButton from '@/components/signup/OauthButton';
 import { OAUTH } from '@/constants/oauth';

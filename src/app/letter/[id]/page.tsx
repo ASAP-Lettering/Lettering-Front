@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteLetter, getSpaceLetter } from '@/api/letter/letter';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import Loader from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';

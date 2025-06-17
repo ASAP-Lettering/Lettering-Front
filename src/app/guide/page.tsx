@@ -1,7 +1,7 @@
 'use client';
 
 import BlinkTag from '@/components/common/BlinkingTag';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Check from '@/components/common/Check';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import GuideText from '@/components/common/GuideText';

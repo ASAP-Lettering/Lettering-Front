@@ -1,7 +1,7 @@
-import React from "react";
-import Button from "./Button";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
+import React from 'react';
+import Button from './Button/Button';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
 
 interface ConfirmModalProps {
   title: string;
@@ -16,10 +16,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   const {
     title,
     sub,
-    confirmText = "삭제",
-    cancelText = "취소",
+    confirmText = '삭제',
+    cancelText = '취소',
     onConfirm,
-    onCancel,
+    onCancel
   } = props;
   return (
     <ModalOverlay>

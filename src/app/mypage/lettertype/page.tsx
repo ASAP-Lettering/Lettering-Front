@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import Check from "@/components/common/Check";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import { theme } from "@/styles/theme";
-import { getCookie, setCookie } from "@/utils/storage";
-import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+import Button from '@/components/common/Button/Button';
+import Check from '@/components/common/Check';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import { theme } from '@/styles/theme';
+import { getCookie, setCookie } from '@/utils/storage';
+import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const LetterType = () => {
-  const type = getCookie("letter-tagtype");
+  const type = getCookie('letter-tagtype');
   const [isCheckedBox, setIsCheckedBox] = useState(false); // false라면 이름만, true라면 이름과 날짜
   const router = useRouter();
   const [isAbled, setisAbled] = useState(false);
@@ -23,9 +23,9 @@ const LetterType = () => {
   };
 
   useEffect(() => {
-    if (type === "1" && isCheckedBox) {
+    if (type === '1' && isCheckedBox) {
       setisAbled(true);
-    } else if (type === "2" && !isCheckedBox) {
+    } else if (type === '2' && !isCheckedBox) {
       setisAbled(true);
     } else {
       setisAbled(false);
@@ -34,25 +34,25 @@ const LetterType = () => {
 
   useEffect(() => {
     if (type !== null) {
-      if (type === "1") {
+      if (type === '1') {
         setIsCheckedBox(false);
-      } else if (type === "2") {
+      } else if (type === '2') {
         setIsCheckedBox(true);
       }
     } else {
-      setCookie("letter-tagtype", "1", 300);
+      setCookie('letter-tagtype', '1', 300);
     }
   }, []);
 
   const handleSumbit = () => {
     if (isCheckedBox) {
-      setCookie("letter-tagtype", "2", 300);
-      console.log("이름과날짜");
+      setCookie('letter-tagtype', '2', 300);
+      console.log('이름과날짜');
     } else {
-      setCookie("letter-tagtype", "1", 300);
-      console.log("이름만");
+      setCookie('letter-tagtype', '1', 300);
+      console.log('이름만');
     }
-    router.push("/mypage");
+    router.push('/mypage');
   };
 
   return (

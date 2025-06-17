@@ -5,7 +5,7 @@ import {
   deleteSentLetters,
   getSentLetter
 } from '@/api/mypage/user';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';

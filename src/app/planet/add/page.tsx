@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import Input from "@/components/common/Input";
-import Button from "@/components/common/Button";
-import PlanetPalette from "@/components/planet/PlanetPalette";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { postNewSpace } from "@/api/planet/space/space";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import Input from '@/components/common/Input';
+import Button from '@/components/common/Button/Button';
+import PlanetPalette from '@/components/planet/PlanetPalette';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { postNewSpace } from '@/api/planet/space/space';
 
 const PlanetAddPage = () => {
   const router = useRouter();
-  const [planet, setPlanet] = useState<string>("");
+  const [planet, setPlanet] = useState<string>('');
   const [templateType, setTemplateType] = useState<number>(0);
 
   const handleChangeType = (id: number) => {
@@ -31,14 +31,14 @@ const PlanetAddPage = () => {
     try {
       const response = await postNewSpace({
         spaceName: planet,
-        templateType: templateType,
+        templateType: templateType
       });
-      console.log("새 행성 추가 성공:", response.data);
-      console.log("templateType", templateType);
+      console.log('새 행성 추가 성공:', response.data);
+      console.log('templateType', templateType);
       // 추가 완료 후 페이지 이동
-      router.push("/planet");
+      router.push('/planet');
     } catch (error) {
-      console.error("새 행성 추가 실패:", error);
+      console.error('새 행성 추가 실패:', error);
     }
   };
 

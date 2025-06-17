@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import NavigatorBar from '@/components/common/NavigatorBar';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PlanetBox from '@/components/planet/PlanetBox';
 import Loader, { LoaderContainer } from '@/components/common/Loader';

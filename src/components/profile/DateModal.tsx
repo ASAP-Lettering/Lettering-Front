@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import NewItemPicker from "../signup/NewItemPicker";
-import Button from "../common/Button";
-import Calendar from "./Calendar";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import NewItemPicker from '../signup/NewItemPicker';
+import Button from '../common/Button/Button';
+import Calendar from './Calendar';
+import { motion } from 'framer-motion';
 
 interface ModalProps {
   confirmText?: string;
@@ -18,13 +18,13 @@ interface ModalProps {
 
 const Modal = (props: ModalProps) => {
   const {
-    confirmText = "선택 완료",
+    confirmText = '선택 완료',
     onConfirm,
     onDateChange,
     onClose,
     initialDate,
     initialMonth,
-    initialYear,
+    initialYear
   } = props;
 
   const [selectedYear, setSelectedYear] = useState(initialYear);
@@ -44,7 +44,7 @@ const Modal = (props: ModalProps) => {
         parseInt(selectedYear),
         parseInt(selectedMonth),
         0
-      ).getDate(),
+      ).getDate()
     },
     (_, i) => (1 + i).toString()
   );
@@ -65,19 +65,19 @@ const Modal = (props: ModalProps) => {
     let month = selectedMonth;
     let date = selecetedDate;
     if (parseInt(selectedMonth) < 10) {
-      month = "0" + selectedMonth;
+      month = '0' + selectedMonth;
     }
     if (parseInt(selecetedDate) < 10) {
-      date = "0" + selecetedDate;
+      date = '0' + selecetedDate;
     }
     const fullDate = `${selectedYear}.${month}.${date}`;
     onDateChange(fullDate);
-    console.log("제출되었습니다", fullDate);
+    console.log('제출되었습니다', fullDate);
     onConfirm(fullDate);
   };
 
   useEffect(() => {
-    console.log(selectedYear + "." + selectedMonth + "." + selecetedDate);
+    console.log(selectedYear + '.' + selectedMonth + '.' + selecetedDate);
   }, [selecetedDate, selectedYear, selectedMonth]);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ const Modal = (props: ModalProps) => {
       if (!type) {
         handleSelectMonthChange(intMonth.toString());
       }
-      console.log("leftClick" + selectedMonth);
+      console.log('leftClick' + selectedMonth);
       setNewYearItem(intYear.toString());
       setNewMonthItem(intMonth.toString());
     } else {
@@ -103,7 +103,7 @@ const Modal = (props: ModalProps) => {
         intMonth = 12;
         if (!type) {
           handleSelectYearChange(intYear.toString());
-          handleSelectMonthChange("12");
+          handleSelectMonthChange('12');
         }
       }
       setNewYearItem(intYear.toString());
@@ -121,7 +121,7 @@ const Modal = (props: ModalProps) => {
       if (!type) {
         handleSelectMonthChange(intMonth.toString());
       }
-      console.log("rightClick" + selectedMonth);
+      console.log('rightClick' + selectedMonth);
       setNewYearItem(intYear.toString());
       setNewMonthItem(intMonth.toString());
     } else {
@@ -130,7 +130,7 @@ const Modal = (props: ModalProps) => {
         intMonth = 1;
         if (!type) {
           handleSelectYearChange(intYear.toString());
-          handleSelectMonthChange("1");
+          handleSelectMonthChange('1');
         }
       }
       setNewYearItem(intYear.toString());
@@ -146,15 +146,15 @@ const Modal = (props: ModalProps) => {
       transition={{ duration: 0.5 }}
     >
       <ModalContainer
-        initial={{ opacity: 0, y: "100vh" }}
+        initial={{ opacity: 0, y: '100vh' }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: "100vh" }}
+        exit={{ opacity: 0, y: '100vh' }}
         transition={{
-          type: "spring",
+          type: 'spring',
           stiffness: 170,
           damping: 20,
           bounce: 0.25,
-          duration: 0.6,
+          duration: 0.6
         }}
       >
         <Header>
@@ -164,12 +164,12 @@ const Modal = (props: ModalProps) => {
               onClick={handleLeftClick}
             />
             <HeaderTitle>
-              {selectedYear + ". " + selectedMonth}
+              {selectedYear + '. ' + selectedMonth}
               <IconButton
                 src={
                   type
-                    ? "/assets/profile/ic_arrow_up.svg"
-                    : "/assets/profile/ic_arrow_down.svg"
+                    ? '/assets/profile/ic_arrow_up.svg'
+                    : '/assets/profile/ic_arrow_down.svg'
                 }
                 onClick={() => {
                   setType(!type);
@@ -274,23 +274,23 @@ const Header = styled.div`
 `;
 
 const DateSwapWrapper = styled.div<{ isVisible: boolean }>`
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-    transition: opacity 0.1s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: opacity 0.1s ease-in-out;
 `;
 
 const HeaderTitle = styled.div`
-    display: flex;
-    gap: 8px;
-    justify-content: space-between;
-    width: 75px;
-    overflow: hidden;
-    min-width: 90px;
-    max-width: 90px;
-    ${(props) => props.theme.fonts.title02};
-    white-space: nowrap;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  width: 75px;
+  overflow: hidden;
+  min-width: 90px;
+  max-width: 90px;
+  ${(props) => props.theme.fonts.title02};
+  white-space: nowrap;
 `;
 
 const ContentWrapper = styled.div`
@@ -328,13 +328,13 @@ const PickedItemContainer = styled.div`
 `;
 
 const IconButton = styled.img`
-    cursor: pointer;
+  cursor: pointer;
 `;
 
 const ButtonWrapper = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
 `;
