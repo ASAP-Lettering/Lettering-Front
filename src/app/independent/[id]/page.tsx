@@ -1,7 +1,7 @@
 'use client';
 
 import { getIndependentLetter } from '@/api/letter/letter';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Loader from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';
 import Letter from '@/components/letter/Letter';

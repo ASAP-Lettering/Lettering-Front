@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Check from '@/components/common/Check';
 import { Suspense, useState } from 'react';
 import styled from 'styled-components';

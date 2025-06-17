@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import Button from "@/components/common/Button";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-import styled from "styled-components";
+import Button from '@/components/common/Button/Button';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import styled from 'styled-components';
 
 const VerifyComplete = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
 
   const handleButtonClick = () => {
     router.push(`/verify/letter?url=${url}`);

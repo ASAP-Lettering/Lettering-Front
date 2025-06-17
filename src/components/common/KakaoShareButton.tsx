@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import Button from "./Button";
-import Image from "next/image";
-import styled from "styled-components";
-import { useRecoilValue } from "recoil";
-import { userState } from "@/recoil/userStore";
-import useKakaoSDK from "@/hooks/useKakaoSDK";
+import { useEffect, useState } from 'react';
+import Button from './Button/Button';
+import Image from 'next/image';
+import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
+import { userState } from '@/recoil/userStore';
+import useKakaoSDK from '@/hooks/useKakaoSDK';
 
-type buttonType = "default" | "small" | "reshare";
+type buttonType = 'default' | 'small' | 'reshare';
 
 interface KakaoShareButtonProps {
   type?: buttonType;
@@ -15,9 +15,9 @@ interface KakaoShareButtonProps {
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
-  type = "default",
+  type = 'default',
   letterId,
-  width,
+  width
 }) => {
   const isKakaoLoaded = useKakaoSDK();
   const { name } = useRecoilValue(userState);
@@ -26,7 +26,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
     const { Kakao, location } = window;
 
     if (!Kakao || !Kakao.isInitialized()) {
-      console.error("Kakao is not initialized");
+      console.error('Kakao is not initialized');
       return;
     }
 
@@ -35,12 +35,12 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
       templateId: 112798,
       templateArgs: {
         senderName: name,
-        id: letterId,
-      },
+        id: letterId
+      }
     });
   };
 
-  return type === "default" ? (
+  return type === 'default' ? (
     <Button
       buttonType="primary"
       text="카카오로 편지 보내기"
@@ -53,7 +53,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
         alt="카카오"
       />
     </Button>
-  ) : type === "small" ? (
+  ) : type === 'small' ? (
     <ReShareBtnWrapper onClick={shareToKakao}>
       <img src="/assets/icons/ic_kakao_talk.svg" />
       편지 다시 보내기

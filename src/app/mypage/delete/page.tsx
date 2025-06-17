@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { deleteUser, logout } from "@/api/mypage/user";
-import Button from "@/components/common/Button";
-import Check from "@/components/common/Check";
-import Dropdown from "@/components/common/Dropdown";
-import Input from "@/components/common/Input";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import NavigatorBar from "@/components/common/NavigatorBar";
-import { theme } from "@/styles/theme";
+import { deleteUser, logout } from '@/api/mypage/user';
+import Button from '@/components/common/Button/Button';
+import Check from '@/components/common/Check';
+import Dropdown from '@/components/common/Dropdown';
+import Input from '@/components/common/Input';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import NavigatorBar from '@/components/common/NavigatorBar';
+import { theme } from '@/styles/theme';
 import {
   clearOnboarding,
   clearTokens,
   getRefreshToken,
-  removeCookie,
-} from "@/utils/storage";
-import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+  removeCookie
+} from '@/utils/storage';
+import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const DeleteAccount = () => {
-  const [selectedOption, setSelectedOption] = useState(""); //드롭다운
+  const [selectedOption, setSelectedOption] = useState(''); //드롭다운
   const options = [
-    "개인정보를 삭제하고 싶어요",
-    "서비스 이용이 불편해요",
-    "탈퇴 후 다시 가입할 예정이에요",
-    "서비스를 이용하지 않아요",
-    "그 외 기타",
+    '개인정보를 삭제하고 싶어요',
+    '서비스 이용이 불편해요',
+    '탈퇴 후 다시 가입할 예정이에요',
+    '서비스를 이용하지 않아요',
+    '그 외 기타'
   ];
-  const [textarea, setTextarea] = useState(""); //질문2
+  const [textarea, setTextarea] = useState(''); //질문2
   const [isCheckedBox, setIsCheckedBox] = useState(false); // 체크박스
   const [isAbled, setisAbled] = useState(false);
   const router = useRouter();
@@ -56,7 +56,7 @@ const DeleteAccount = () => {
         console.log(res.data);
         clearTokens();
         clearOnboarding();
-        router.push("/login");
+        router.push('/login');
       })
       .catch((err) => {
         console.log(err);
@@ -98,7 +98,7 @@ const DeleteAccount = () => {
         <SubTitle>
           회원 탈퇴 후에는 레터링에 저장된 행성과 편지들이
           <br />
-          모두 삭제되며, 삭제된 내용은 복구할 수 없어요{" "}
+          모두 삭제되며, 삭제된 내용은 복구할 수 없어요{' '}
         </SubTitle>
         <QuestionWrapper>
           <QuestionText>레터링을 탈퇴하는 이유를 말씀해주세요</QuestionText>
@@ -112,7 +112,7 @@ const DeleteAccount = () => {
         <QuestionWrapper>
           <QuestionText>
             더 나은 서비스를 위해 의견을 남겨주세요
-            <span>{textarea.length + " / 500"}</span>
+            <span>{textarea.length + ' / 500'}</span>
           </QuestionText>
           <InputWrapper>
             <Input

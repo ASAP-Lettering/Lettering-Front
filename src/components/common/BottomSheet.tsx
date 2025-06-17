@@ -2,7 +2,7 @@ import { useDragControls } from 'framer-motion';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { theme } from '@/styles/theme';
-import Button from './Button';
+import Button from './Button/Button';
 import Image from 'next/image';
 
 const BottomSheet = ({

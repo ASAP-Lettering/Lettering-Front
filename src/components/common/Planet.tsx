@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import Tag from './Tag';
-import Button from './Button';
+import Button from './Button/Button';
 import { useRouter } from 'next/navigation';
 import ConfirmModal from './ConfirmModal';
 import { useRecoilState, useSetRecoilState } from 'recoil';

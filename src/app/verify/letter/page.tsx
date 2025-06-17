@@ -6,7 +6,7 @@ import {
   verifyLetter
 } from '@/api/letter/letter';
 import { getMainId } from '@/api/planet/space/space';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import Letter from '@/components/letter/Letter';
 import { LetterType } from '@/types/letter';

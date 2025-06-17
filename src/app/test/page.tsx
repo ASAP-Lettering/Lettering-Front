@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { theme } from '@/styles/theme';
 import React, { useEffect, useState } from 'react';

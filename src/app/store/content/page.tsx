@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { theme } from '@/styles/theme';
 import Input from '@/components/common/Input';
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useRecoilState, useRecoilValue } from 'recoil';

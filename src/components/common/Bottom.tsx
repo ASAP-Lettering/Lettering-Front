@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import Tag from "./Tag";
-import Button from "./Button";
-import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import { Orbit } from "@/types/orbit";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Tag from './Tag';
+import Button from './Button/Button';
+import { theme } from '@/styles/theme';
+import { useRouter } from 'next/navigation';
+import { Orbit } from '@/types/orbit';
 
 interface BottomProps {
   orbitMessages: Orbit[] | null;
@@ -41,7 +41,7 @@ const Bottom = (props: BottomProps) => {
         </Title>
         {orbitMessages && orbitMessages?.length > 0 && (
           <EditButton onClick={() => setIsDeleteMode(!isDeleteMode)}>
-            {isDeleteMode ? "완료" : "수정"}
+            {isDeleteMode ? '완료' : '수정'}
           </EditButton>
         )}
       </Top>
@@ -74,7 +74,7 @@ const Bottom = (props: BottomProps) => {
           text="받은 편지 보관하기"
           height="60px"
           onClick={() => {
-            router.push("/store/sender");
+            router.push('/store/sender');
           }}
         />
         <Button
@@ -83,7 +83,7 @@ const Bottom = (props: BottomProps) => {
           width="131px"
           height="60px"
           text="편지 보내기"
-          onClick={() => router.push("/send/receiver")}
+          onClick={() => router.push('/send/receiver')}
         />
       </ButtonRow>
     </Container>

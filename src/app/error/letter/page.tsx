@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { getMainId } from "@/api/planet/space/space";
-import Button from "@/components/common/Button";
-import Loader, { LoaderContainer } from "@/components/common/Loader";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-import styled from "styled-components";
+import { getMainId } from '@/api/planet/space/space';
+import Button from '@/components/common/Button/Button';
+import Loader, { LoaderContainer } from '@/components/common/Loader';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import styled from 'styled-components';
 
 const ErrorLetterPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const url = searchParams.get('url');
 
   const goToHome = async () => {
     try {
       await getMainId();
-      router.push("/planet");
+      router.push('/planet');
     } catch (error) {
-      console.error("유효한 회원이 아닌 것으로 판단:", error);
+      console.error('유효한 회원이 아닌 것으로 판단:', error);
       router.push(`/login?url=${url}`);
     }
   };

@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Loader, { LoaderContainer } from '@/components/common/Loader';
 import NavigatorBar from '@/components/common/NavigatorBar';
 import { useRouter, useSearchParams } from 'next/navigation';

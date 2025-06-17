@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/common/Button';
+import Button from '@/components/common/Button/Button';
 import Loader from '@/components/common/Loader';
 import Pagination from '@/components/letter/Pagination';
 
