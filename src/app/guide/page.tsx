@@ -12,10 +12,12 @@ import Tag from '@/components/common/Tag';
 import Toast from '@/components/common/Toast';
 import Letter from '@/components/letter/Letter';
 import NewItemPicker from '@/components/signup/NewItemPicker';
+import Picker from '@/components/timecapsule/Picker';
+import ItemPicker from '@/components/timecapsule/Picker';
 import { LETTER_DUMMY } from '@/constants/letterDummy';
 import { theme } from '@/styles/theme';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMeasure from 'react-use-measure';
 import styled from 'styled-components';
 
@@ -63,12 +65,16 @@ const GuidePage = () => {
   };
 
   //ItemPicker
-  const [item, setItem] = useState('item4');
+  const items = ['1', '2', '3', '4', '5', '6', '7', '8'];
+  const [selectedItem, setSelectedItem] = useState(items[0]);
 
-  const items = ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7'];
   const handleItemChange = (item: string) => {
-    setItem(item);
+    setSelectedItem(item);
   };
+
+  useEffect(() => {
+    console.log(selectedItem);
+  }, [selectedItem]);
 
   //Letter
   const letterData = LETTER_DUMMY[0];
@@ -208,11 +214,12 @@ const GuidePage = () => {
       />
       <h3>ItemPicker</h3>
       <PickedItemContainer>
-        <NewItemPicker
+        <Picker
           items={items}
-          defaultItem={'item4'}
-          unit=""
+          value={selectedItem}
           onChange={handleItemChange}
+          height={200}
+          visibleCount={3}
         />
       </PickedItemContainer>
       <h3>Letter</h3>
@@ -317,11 +324,8 @@ const SpaceBetween = styled.div`
 `;
 
 const PickedItemContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  position: relative;
+  width: 120px;
+  margin: 0 auto;
 `;
 
 const Background = styled.div`
