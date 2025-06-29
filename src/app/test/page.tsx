@@ -22,61 +22,69 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const page = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
-
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
+  const [platform, setPlatform] = useState<'ios' | 'android' | 'other'>(
+    'other'
+  );
+  const [isKakaoInApp, setIsKakaoInApp] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
-    const isAndroidDevice = /android/.test(userAgent);
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+    const isKakao = /kakaotalk/i.test(userAgent);
 
-    setIsIOS(isIOSDevice);
-    setIsAndroid(isAndroidDevice);
+    setPlatform(isIOS ? 'ios' : isAndroid ? 'android' : 'other');
+    setIsKakaoInApp(isKakao);
 
-    // Android에서만 beforeinstallprompt 이벤트 처리
-    if (isAndroidDevice) {
-      const handler = (e: any) => {
-        console.log('🔥 beforeinstallprompt 발생');
-        e.preventDefault();
-        setDeferredPrompt(e);
-      };
+    if (isKakao) {
+      if (isAndroid) {
+        const currentUrl = window.location.href;
+        const intentUrl = `intent://${currentUrl.replace(
+          /^https?:\/\//,
+          ''
+        )}#Intent;scheme=https;package=com.android.chrome;end`;
+        window.location.href = intentUrl;
+      } else if (isIOS) {
+        alert(
+          '화면 우측 하단 공유하기 메뉴에서 "Safari로 열기"를 선택해주세요.'
+        );
+      }
+    } else {
+      if (isAndroid) {
+        const handler = (e: any) => {
+          e.preventDefault();
+          setDeferredPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handler);
+        return () => window.removeEventListener('beforeinstallprompt', handler);
+      }
 
-      window.addEventListener('beforeinstallprompt', handler);
-      return () => {
-        window.removeEventListener('beforeinstallprompt', handler);
-      };
+      // 외부 브라우저일 경우 진입 시 설치 모달 자동 오픈
+      setShowModal(true);
     }
   }, []);
 
-  const handleInstallClick = async () => {
-    if (isAndroid && deferredPrompt) {
+  const handleInstall = async () => {
+    if (platform === 'android' && deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      console.log('Android 사용자 선택:', outcome);
+      console.log('설치 결과:', outcome);
+      if (outcome === 'accepted') {
+        alert('설치가 완료되었습니다!');
+      } else {
+        alert('설치가 취소되었습니다.');
+      }
       setDeferredPrompt(null);
       setShowModal(false);
-    } else if (isIOS) {
-      // iOS는 안내만
-      alert(
-        'iPhone 사용자는 Safari에서 공유 버튼을 눌러 [홈 화면에 추가]를 선택해주세요!'
-      );
+    } else if (platform === 'ios') {
+      alert('하단 공유 버튼을 누르고 "홈 화면에 추가"를 선택해주세요.');
       setShowModal(false);
     } else {
-      alert('설치 기능이 현재 환경에서 지원되지 않습니다.');
+      alert('현재 환경에서는 설치가 지원되지 않습니다.');
       setShowModal(false);
-    }
-  };
-
-  const handleShowModal = () => {
-    if (isAndroid && deferredPrompt) {
-      setShowModal(true);
-    } else if (isIOS) {
-      setShowModal(true);
-    } else {
-      alert('브라우저가 아직 설치를 허용하지 않았습니다.');
     }
   };
 
@@ -86,19 +94,19 @@ const page = () => {
       <Button
         buttonType="primary"
         text="앱 설치하기"
-        onClick={handleShowModal}
+        onClick={() => setShowModal(true)}
       />
       {showModal && (
         <ConfirmModal
-          title="PWA 설치하기"
+          title="앱 설치하기"
           sub={
-            isIOS
-              ? 'Safari 공유 버튼을 눌러 [홈 화면에 추가]를 선택해주세요.'
-              : '홈 화면에 추가하시겠어요?'
+            platform === 'ios'
+              ? '홈 화면에 추가하시겠어요?'
+              : '앱을 설치하시겠어요?'
           }
-          confirmText={isIOS ? '알겠습니다' : '설치하기'}
+          confirmText="설치하기"
           cancelText="취소"
-          onConfirm={handleInstallClick}
+          onConfirm={handleInstall}
           onCancel={() => setShowModal(false)}
         />
       )}
@@ -114,7 +122,8 @@ const Container = styled.div`
   padding: 100px 30px;
   height: 100vh;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 20px;
   background-image: url('/assets/login/login_bg.png');
   background-size: cover;
   background-position: center;
@@ -126,5 +135,6 @@ const Container = styled.div`
 
 const Title = styled.h1`
   color: ${theme.colors.white};
+  ${theme.fonts.title01}
   text-align: center;
 `;
